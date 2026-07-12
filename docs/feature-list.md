@@ -22,7 +22,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 ## Wireframed, ready to spec
 
 1. Auth & Onboarding — 🟢 spec + plan + tasks all complete (`specs/001-auth-onboarding/`, branch `001-auth-onboarding`, `playm8z - Auth & Onboarding.dc.html`) — 40 tasks across Setup/Foundational/US1(P1)/US2(P2)/US3(P3)/Polish; not yet implemented (implementation is gated on every other feature below also reaching this point)
-2. Error Pages (404/500/403/maintenance) — ✅
+2. Error Pages (404/500/403/maintenance) — 📝 spec written (`specs/002-error-pages/`, branch `002-error-pages`, `support/playm8z - Error Pages.dc.html`), not yet planned
 3. Home — ✅
 4. Browse — ✅
 5. Post a Game — ✅

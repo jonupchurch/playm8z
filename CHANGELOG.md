@@ -218,6 +218,24 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   project-wide gate; implementation still waits on every other feature
   reaching the same point.
 
+- Adopted a merge-back workflow for the spec-writing phase: each
+  feature branch merges to `main` (no PR needed, solo project)
+  immediately after its `spec.md`/`plan.md`/`tasks.md` are complete,
+  rather than staying open until every feature is done. Keeps
+  `docs/feature-list.md`/`status.md`/`CHANGELOG.md` coherent across the
+  whole spec-writing marathon instead of fragmenting across ~26
+  branches. Merged `001-auth-onboarding` into `main` under this rule.
+- Ran `/speckit-specify` for Error Pages (404/500/403/maintenance):
+  `spec.md` on branch `002-error-pages`. Four states (not-found,
+  server-error, access-denied, maintenance) as one shared component per
+  the source wireframe, prioritized by real-world frequency. Bakes in
+  real HTTP status codes per state, an access-check-before-existence
+  rule so unauthorized visitors can't distinguish a real vs. fake
+  `/admin/*` route via 403 vs. 404, and defers the maintenance flag's
+  storage/toggle UI to the not-yet-spec'd Admin Settings feature.
+  Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
+  markers.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

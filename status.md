@@ -358,13 +358,31 @@ helper — built as a ready-to-call function since no write-action route
 exists yet to consume it). `docs/feature-list.md` updated to 🟢. This is
 the first feature to have a complete spec/plan/tasks trio.
 
+**Workflow decision**: each feature branch merges to `main` right after
+its spec/plan/tasks are complete (no PR needed, solo project), instead
+of all ~26 branches staying open until the whole gate is satisfied.
+`001-auth-onboarding` merged to `main` under this rule (fast-forward,
+no conflicts). Keeps the tracking docs coherent throughout the
+spec-writing phase.
+
+**Error Pages: spec done** (2026-07-12, branch `002-error-pages`,
+`specs/002-error-pages/`) — 404/500/403/maintenance as four states of
+one shared component (`support/playm8z - Error Pages.dc.html`),
+prioritized 404 > 500 > 403 > maintenance by real-world frequency. Real
+HTTP status codes per state; an access-check-before-existence rule so
+an unauthorized visitor can't tell a real `/admin/*` route from a fake
+one via 403 vs. 404; the maintenance flag itself is left to the
+not-yet-spec'd Admin Settings feature — this spec only defines what
+happens when it reads as "on."
+
 ## Next up
 
-- The same specify→plan→tasks sequence repeats for every other feature
-  in `docs/feature-list.md` — per the project-wide gate (constitution
-  v1.0.0), implementation doesn't begin on *any* feature (including
-  Auth & Onboarding, despite being fully tasked) until all of them have
-  this done.
+- Error Pages: `/speckit-plan` next, then `/speckit-tasks`, then merge
+  to `main` — same sequence as Auth & Onboarding.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
