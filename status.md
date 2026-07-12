@@ -393,13 +393,25 @@ test) → US4/P4 maintenance(3) → Polish(3). `docs/feature-list.md`
 updated to 🟢. Error Pages is the second feature with a complete
 spec/plan/tasks trio.
 
+**Home: spec + plan done** (2026-07-12, branch `003-home`,
+`specs/003-home/`) — scoped to just the hero/search/trending/live-feed
+area (nav/footer are Design System infrastructure, out of scope).
+Simplified the wireframe's "online" dot to a decorative
+posting-is-open indicator before planning, avoiding a real presence
+system touching shared auth code for a cosmetic detail. Plan adds a
+new minimal `postings` table (Home defines it, Post a Game extends it
+later — same pattern as Auth & Onboarding/Error Pages), does all
+search/filter/sort client-side over one server fetch per page load (no
+new API route), and redirects logged-out visitors to `/login` until
+Landing exists.
+
 ## Next up
 
-- Merge `002-error-pages` into `main`, then move on to feature #3
-  (Home) — same specify→plan→tasks→merge sequence repeats for every
-  other feature in `docs/feature-list.md` — per the project-wide gate
-  (constitution v1.0.0), implementation doesn't begin on *any* feature
-  until all of them have this done.
+- Home: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

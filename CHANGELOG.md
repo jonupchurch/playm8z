@@ -261,6 +261,26 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   write-gate helper) → US4/P4 maintenance (3) → Polish (3). Error Pages
   is the second feature to clear the project-wide gate.
 
+- Ran `/speckit-specify` for Home: `spec.md` on branch `003-home`.
+  Scoped down from the wireframe to just the hero/search/trending/
+  live-feed content area — the nav/footer are Design System
+  infrastructure (exempt per `docs/feature-list.md`), and the
+  wireframe's "Groups" nav link doesn't apply (platform-wide deferred).
+  Caught and simplified one scope risk before planning: the wireframe's
+  "online" dot was originally going to need a real per-host presence/
+  last-active system touching shared auth code — simplified to a
+  decorative indicator tied to "posting is open" instead, since every
+  card shown is already filtered to open postings. Quality checklist
+  passed first try, zero `[NEEDS CLARIFICATION]` markers.
+- Ran `/speckit-plan` for Home: `research.md` (client-side search/
+  filter/sort over one server-side fetch per page load, no new API
+  route; a new minimal `postings` table that Home defines and the
+  future Post a Game feature will extend, same pattern as Auth &
+  Onboarding/Error Pages; unauthenticated visitors at `/` redirect to
+  `/login` until Landing exists; Trending computed via a live `GROUP
+  BY` aggregate, never cached/stale), `data-model.md`, `quickstart.md`.
+  No `contracts/` — no new fetch-based API surface.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
