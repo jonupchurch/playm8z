@@ -145,3 +145,14 @@ messaging blocked until verified?), and where in Auth & Onboarding the
 verify-your-email step lives. Not designed by a wireframe; to be designed
 at implementation time, likely alongside a `/speckit-plan` for the Auth
 feature.
+
+## Posting drafts (future state)
+
+The "Post a Game" wireframe (`playm8z - Post a Game.dc.html`) shows a
+"Save as draft" button alongside Publish, but the Posting data model
+(established across Home, Browse, and Post a Game) has no draft status
+— only `open | full | closed`. Adding real draft support would also
+need a "My Drafts" surface (most naturally on Profile, not yet
+spec'd). Excluded from Post a Game's spec (`005-post-game`) rather than
+building a partial version of it; revisit if a later feature (Profile)
+wants it.
