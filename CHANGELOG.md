@@ -143,13 +143,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   ready-to-spec list.
 - `resources/guidelines.md`/`resources/sitemap.md` regenerated to fold
   in all 7 newly-wireframed pages (a new §12 "Additional screens"
-  section, updated IA/route map and file→feature map). Flagged: Public
-  Profile carries new scope (a Follow toggle, host-initiated "Invite to
-  a party," a mutual-connections sidebar) not previously discussed; and
-  the regeneration dropped `guidelines.md` §4.6 (loading/error
-  patterns) since it wasn't sourced from a wireframe — the decision
-  still stands (`docs/future-work.md`), just no longer physically in
-  `guidelines.md`.
+  section, updated IA/route map and file→feature map). Confirmed:
+  Public Profile's new scope (a Follow toggle, host-initiated "Invite
+  to a party," a mutual-connections sidebar) is in scope. Re-added
+  `guidelines.md` §4.6 (loading/error patterns), dropped by the
+  regeneration since it wasn't sourced from a wireframe, with a note
+  flagging it won't survive a future regen automatically.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

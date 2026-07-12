@@ -48,16 +48,15 @@ page (`/news/:slug`), Admin Settings, and Moderator audit log.
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
 on this list.
 
-**Designed 2026-07-12** (originally added as `resources/guidelines.md`
-§4.6, a reusable design-system pattern rather than per-page wireframes,
-per the user's direction): loading skeletons, delayed-skeleton timing,
-fetch-error state (distinct from the Empty state), pending-submit
-button state, and submit success/error — no longer an open question.
-The §4.6 section itself was since dropped from `guidelines.md` by a
-later full regeneration pass (it wasn't sourced from any wireframe, so
-the regen didn't know to keep it); the decision still stands, recorded
-in `status.md`'s fourth gap-analysis pass and this file — flagged to the
-user whether to re-add it to `guidelines.md` directly.
+**Designed 2026-07-12** (`resources/guidelines.md` §4.6, a reusable
+design-system pattern rather than per-page wireframes, per the user's
+direction): loading skeletons, delayed-skeleton timing, fetch-error
+state (distinct from the Empty state), pending-submit button state, and
+submit success/error — no longer an open question. §4.6 was briefly
+dropped by a later full regeneration pass (not sourced from any
+wireframe, so the regen didn't know to keep it) and re-added by hand
+the same day, with a note in `guidelines.md` itself flagging that it
+won't survive a future regen automatically.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Blocked
 Users.dc.html`): view/search blocked users, block flow (pick → confirm,

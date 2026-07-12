@@ -43,15 +43,15 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 20. Admin News — ✅
 21. Admin Content Pages — ✅
 22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
-    — note: this wireframe introduces **new scope** beyond a read-only
-    profile view: a **Follow** toggle (a social-graph relationship
-    distinct from blocking), a host-initiated **"Invite to a party"**
-    action (distinct from the existing applicant-initiated "Apply for a
-    slot"), and a "You have in common" mutual-connections sidebar. None
-    of this was in the original product description — flag for
-    confirmation before/during that feature's spec. Also shows "Player
-    reviews" (post-session ratings) as *display only*; the rating
-    *submission* flow itself is still deferred (`docs/future-work.md`).
+    — this wireframe's extra scope beyond a read-only profile view is
+    **confirmed in scope** (2026-07-12): a **Follow** toggle (a
+    social-graph relationship distinct from blocking — `User` needs a
+    following/follower relation whenever this is planned), a
+    host-initiated **"Invite to a party"** action (distinct from the
+    existing applicant-initiated "Apply for a slot"), and a "You have in
+    common" mutual-connections sidebar. Also shows "Player reviews"
+    (post-session ratings) as *display only*; the rating *submission*
+    flow itself is still deferred (`docs/future-work.md`).
 23. News article detail (`/news/:slug`) — ✅ (`playm8z - News Article.dc.html`)
 24. Admin Settings — ✅ (General/maintenance mode, moderation & auto-flag
     rules, roles & access, feature flags, safety)
