@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder,textarea::placeholder{color:#6b5a45;}
+  input,textarea,select{font-family:'Sora',sans-serif;}
+  select option{background:#1a130c;color:#fbeeda;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Post a game</button>
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">V</div>
+    </div>
+  </div>
+
+  <!-- ===== PROFILE HEADER ===== -->
+  <div style="border-bottom:1px solid #2c2418;background:radial-gradient(circle at 20% -60%,rgba(255,107,26,0.12),transparent 55%);">
+    <div style="max-width:1080px;margin:0 auto;padding:32px 32px 0;">
+      <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="width:88px;height:88px;border-radius:22px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:38px;flex:none;box-shadow:0 12px 30px -12px rgba(255,107,26,0.7);">V</div>
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:0;">Vex_00</h1>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#4ec96a;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:3px 10px;border-radius:999px;"><span style="width:7px;height:7px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>Online</span>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;margin-top:5px;">@vex · level 24 · joined 2024</div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;line-height:1.6;margin:12px 0 0;max-width:560px;">Controller main chasing Radiant. Serious about ranked but allergic to toxicity — I'd rather lose with good comms than win with a rager. Also down for chill co-op nights.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+          <div style="display:flex;gap:22px;">
+            <div style="text-align:center;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;color:#4ec96a;">4.9</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">rating</div></div>
+            <div style="text-align:center;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;">128</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">sessions</div></div>
+            <div style="text-align:center;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;">17</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">groups</div></div>
+          </div>
+          <button onClick="{{ goAccount }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:9px 18px;border-radius:10px;cursor:pointer;">Edit profile</button>
+        </div>
+      </div>
+
+      <!-- tabs -->
+      <div style="display:flex;gap:4px;margin-top:26px;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONTENT ===== -->
+  <div style="max-width:1080px;margin:0 auto;padding:28px 32px 80px;">
+
+    <!-- ===== OVERVIEW ===== -->
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- games you play -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;">Games I play</div>
+            <button style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff6b1a;background:transparent;border:none;cursor:pointer;">+ Add game</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <sc-for list="{{ games }}" as="g" hint-placeholder-count="4">
+              <div style="background:#20180e;border:1px solid #2c2418;border-radius:13px;overflow:hidden;">
+                <div style="height:8px;background:{{ g.banner }};"></div>
+                <div style="padding:13px 14px;">
+                  <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;margin-bottom:6px;">{{ g.name }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#ffb000;">{{ g.rank }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">· {{ g.hours }}</span></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- my postings preview -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;">Active postings</div>
+            <button onClick="{{ goPostings }}" style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;background:transparent;border:none;cursor:pointer;">view all →</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ activePostings }}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#20180e;border:1px solid #2c2418;border-radius:12px;">
+                <div style="flex:1;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:2px;">{{ p.game }}</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">{{ p.title }}</div></div>
+                <span style="{{ p.statusStyle }}">{{ p.statusLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- demographics sidebar -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;">Public info</div>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;color:#6b5a45;">visible to all</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">REGION</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">EU-West · CET</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">AGE GROUP</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">18+</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">PRONOUNS</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">they/them</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:6px;">LANGUAGES</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">English</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">German</span></div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:6px;">PLATFORMS</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">PC</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">Tabletop</span></div></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ===== MY POSTINGS ===== -->
+    <sc-if value="{{ isPostings }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <sc-for list="{{ myPostings }}" as="p" hint-placeholder-count="3">
+        <div style="background:#1f1710;border:1px solid #2c2418;border-radius:16px;padding:18px;display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;">{{ p.game }}</span>
+            <span style="{{ p.statusStyle }}">{{ p.statusLabel }}</span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;line-height:1.25;margin-bottom:7px;">{{ p.title }}</div>
+          <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 12px;flex:1;">{{ p.blurb }}</p>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;margin-bottom:14px;">{{ p.seatText }} · {{ p.applicants }} applicants</div>
+          <div style="display:flex;gap:8px;">
+            <button style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:10px;border-radius:10px;cursor:pointer;">Edit</button>
+            <button style="{{ p.manageStyle }}">{{ p.manageLabel }}</button>
+          </div>
+        </div>
+      </sc-for>
+      <button style="border:1px dashed #3a2c1a;background:transparent;border-radius:16px;padding:18px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:#8a7c68;">
+        <span style="font-size:28px;color:#ff6b1a;line-height:1;">+</span>
+        <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#c9b892;">Post a new game</span>
+      </button>
+    </div>
+    </sc-if>
+
+    <!-- ===== FAVORITES ===== -->
+    <sc-if value="{{ isFavorites }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <sc-for list="{{ favorites }}" as="f" hint-placeholder-count="3">
+          <div style="background:#1f1710;border:1px solid #2c2418;border-radius:16px;padding:18px;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px;">
+              <div style="width:38px;height:38px;border-radius:11px;background:{{ f.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:15px;flex:none;">{{ f.initial }}</div>
+              <div style="flex:1;min-width:0;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;">{{ f.host }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">{{ f.regionLabel }}</div></div>
+              <button onClick="{{ f.onUnsave }}" style="background:transparent;border:none;cursor:pointer;color:#ff3b6b;font-size:18px;line-height:1;flex:none;">♥</button>
+            </div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;margin-bottom:4px;">{{ f.game }}</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;line-height:1.25;margin-bottom:12px;flex:1;">{{ f.title }}</div>
+            <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px;border-radius:10px;cursor:pointer;">View listing</button>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+      <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:64px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">No saved postings yet.</div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 18px;">Tap the heart on any listing to save it here.</p>
+          <button onClick="{{ goBrowse }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">Browse games</button>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <!-- ===== ACCOUNT ===== -->
+    <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:720px;display:flex;flex-direction:column;gap:18px;">
+
+      <!-- personal info -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:24px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px;">Personal information</div>
+        <p style="font-family:'Sora',sans-serif;font-size:13px;color:#8a7c68;margin:0 0 20px;">Some of this is public — control what shows under Privacy below.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Display name</label><input defaultValue="Vex_00" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Username</label><input defaultValue="@vex" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Email</label><input type="email" defaultValue="vex@example.com" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Region</label><select style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;appearance:none;cursor:pointer;"><option>EU-West</option><option>NA-East</option><option>NA-West</option><option>Asia</option><option>Oceania</option></select></div>
+          <div style="grid-column:1 / -1;"><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Bio</label><textarea rows="3" defaultValue="Controller main chasing Radiant. Serious about ranked but allergic to toxicity." style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;resize:vertical;line-height:1.5;"></textarea></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:18px;"><button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">Save changes</button></div>
+      </div>
+
+      <!-- password -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:24px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin-bottom:20px;">Change password</div>
+        <div style="display:flex;flex-direction:column;gap:16px;max-width:420px;">
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Current password</label><input type="password" defaultValue="password" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">New password</label><input type="password" placeholder="At least 8 characters" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+          <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Confirm new password</label><input type="password" placeholder="Re-enter new password" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:18px;"><button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">Update password</button></div>
+      </div>
+
+      <!-- privacy -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:24px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin-bottom:20px;">Privacy</div>
+        <div style="display:flex;flex-direction:column;">
+          <sc-for list="{{ privacyRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #221a10;">
+              <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">{{ r.label }}</div><div style="font-family:'Sora',sans-serif;font-size:12px;color:#8a7c68;">{{ r.desc }}</div></div>
+              <button onClick="{{ r.onToggle }}" style="background:transparent;border:none;cursor:pointer;padding:0;flex:none;"><span style="{{ r.track }}"><span style="{{ r.knob }}"></span></span></button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- connected accounts -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:24px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin-bottom:20px;">Connected accounts</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:#20180e;border:1px solid #2c2418;border-radius:12px;">
+            <span style="width:32px;height:32px;border-radius:9px;background:#5865f2;flex:none;"></span>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">Discord</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">Voice chat &amp; instant LFG pings · coming soon</div></div>
+            <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;background:#5865f2;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;">Connect</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:#20180e;border:1px solid #2c2418;border-radius:12px;">
+            <span style="width:32px;height:32px;border-radius:9px;background:#1b2838;border:1px solid #2c3a4a;flex:none;"></span>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">Steam</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#4ec96a;">Connected · syncs your library</div></div>
+            <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#b49c6a;background:transparent;border:1px solid #3a2c1a;padding:9px 16px;border-radius:9px;cursor:pointer;">Disconnect</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- danger zone -->
+      <div style="background:rgba(255,59,107,0.05);border:1px solid rgba(255,59,107,0.3);border-radius:16px;padding:24px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#ff7ea0;margin-bottom:6px;">Danger zone</div>
+        <p style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;margin:0 0 16px;">Deactivating hides your profile and postings. You can reactivate anytime by logging in.</p>
+        <div style="display:flex;gap:10px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.5);padding:10px 18px;border-radius:10px;cursor:pointer;">Deactivate account</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff3b6b;background:transparent;border:none;padding:10px 8px;cursor:pointer;">Delete permanently</button>
+        </div>
+      </div>
+
+    </div>
+    </sc-if>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    tab: 'overview',
+    favs: [1,2,3],
+    privacy: { showAge:true, showRegion:true, showOnline:true, discoverable:true }
+  };
+
+  seg(active){
+    const b = "font-family:'Sora',sans-serif;font-weight:600;font-size:14px;padding:10px 16px;border-radius:10px 10px 0 0;cursor:pointer;transition:all .15s;background:transparent;";
+    return active ? b+"color:#fbeeda;border:1px solid #2c2418;border-bottom:1px solid #140f0a;position:relative;top:1px;" : b+"color:#8a7c68;border:1px solid transparent;";
+  }
+
+  renderVals(){
+    const s = this.state;
+
+    const tabDefs = [['overview','Overview'],['postings','My postings'],['favorites','Saved'],['account','Account']];
+    const tabs = tabDefs.map(([k,label])=>({ label, style:this.seg(s.tab===k), onClick:()=>this.setState({tab:k}) }));
+
+    const games = [
+      { name:'Valorant', rank:'Diamond 1', hours:'340h', banner:'linear-gradient(90deg,#ff6b1a,#ff3b6b)' },
+      { name:'Counter-Strike 2', rank:'Legendary Eagle', hours:'510h', banner:'linear-gradient(90deg,#ffb000,#ff6b1a)' },
+      { name:'Helldivers 2', rank:'Lvl 62', hours:'120h', banner:'linear-gradient(90deg,#ffb000,#ff3b6b)' },
+      { name:'Deep Rock Galactic', rank:'Promoted', hours:'80h', banner:'linear-gradient(90deg,#ff3b6b,#ff6b1a)' }
+    ];
+
+    const statusStyle = (st)=>{
+      if (st==='open') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:3px 9px;border-radius:999px;flex:none;";
+      if (st==='full') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.3);padding:3px 9px;border-radius:999px;flex:none;";
+      return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#6b5a45;background:#241a10;border:1px solid #2c2418;padding:3px 9px;border-radius:999px;flex:none;";
+    };
+    const statusLabel = { open:'Open', full:'Full', closed:'Closed' };
+
+    const postingsRaw = [
+      { game:'Valorant', title:'Ranked grind — Diamond push', blurb:'Looking for 2 committed players to climb from Plat to Diamond.', status:'open', seatText:'2/5 open', applicants:6 },
+      { game:'Helldivers 2', title:'Weekend Helldive customs', blurb:'Full squad running Helldive difficulty modifiers for fun.', status:'full', seatText:'0/4 open', applicants:11 },
+      { game:'Counter-Strike 2', title:'Premier 5-stack (closed)', blurb:'Season wrapped up — thanks to everyone who ran with us.', status:'closed', seatText:'—', applicants:23 }
+    ];
+    const myPostings = postingsRaw.map(p=>({
+      ...p,
+      statusStyle: statusStyle(p.status),
+      statusLabel: statusLabel[p.status],
+      manageLabel: p.status==='closed' ? 'Reopen' : 'Close',
+      manageStyle: "flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.4);padding:10px;border-radius:10px;cursor:pointer;"
+    }));
+    const activePostings = myPostings.filter(p=>p.status!=='closed');
+
+    const allFavs = [
+      { id:1, host:'Mara', initial:'M', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', game:'Helldivers 2', title:'Casual dives — all welcome', regionLabel:'NA-West' },
+      { id:2, host:'Wren', initial:'W', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', game:'Pathfinder 2e', title:'Age of Ashes campaign', regionLabel:'EU-West' },
+      { id:3, host:'Priya', initial:'P', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', game:'Magic: The Gathering', title:'Commander pod (EDH)', regionLabel:'NA-West' }
+    ];
+    const favorites = allFavs.filter(f=>s.favs.includes(f.id)).map(f=>({
+      ...f, onUnsave: ()=>this.setState({ favs: s.favs.filter(x=>x!==f.id) })
+    }));
+
+    const p = s.privacy;
+    const track = (on)=> "width:40px;height:23px;border-radius:999px;flex:none;position:relative;display:inline-block;transition:all .15s;"+(on?"background:linear-gradient(120deg,#ffb000,#ff6b1a);":"background:#241a10;border:1px solid #3a2c1a;");
+    const knob = (on)=> "position:absolute;top:2px;left:"+(on?'19px':'2px')+";width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.4);";
+    const privDefs = [
+      ['showAge','Show age group','Display 18+ on your public profile'],
+      ['showRegion','Show region','Let players see your region & timezone'],
+      ['showOnline','Show online status','Appear online when you\u2019re active'],
+      ['discoverable','Discoverable profile','Let others find you in search']
+    ];
+    const privacyRows = privDefs.map(([k,label,desc])=>({
+      label, desc, track:track(p[k]), knob:knob(p[k]),
+      onToggle: ()=>this.setState({ privacy: { ...p, [k]: !p[k] } })
+    }));
+
+    return {
+      tabs,
+      isOverview: s.tab==='overview',
+      isPostings: s.tab==='postings',
+      isFavorites: s.tab==='favorites',
+      isAccount: s.tab==='account',
+      goAccount: ()=>this.setState({tab:'account'}),
+      goPostings: ()=>this.setState({tab:'postings'}),
+      goBrowse: ()=>this.setState({tab:'overview'}),
+      games, myPostings, activePostings,
+      favorites, hasFavs: favorites.length>0, noFavs: favorites.length===0,
+      privacyRows
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">moderator</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="margin-bottom:22px;">
+      <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">User management</h1>
+      <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">View, moderate, and administer every player account.</p>
+    </div>
+
+    <!-- stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;">{{ total }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">total users</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#4ec96a;">{{ activeCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">active</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ffb000;">{{ flaggedCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">flagged</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ff3b6b;">{{ bannedCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">banned</div></div>
+    </div>
+
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;min-width:280px;flex:1;max-width:360px;">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search name, handle, or email…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:10px 0;" />
+      </div>
+      <div style="display:flex;gap:6px;">
+        <sc-for list="{{ filters }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+      <!-- header -->
+      <div style="display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1.1fr 1fr 2fr;gap:12px;padding:12px 18px;border-bottom:1px solid #2c2418;background:#20180e;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#6b5a45;">
+        <div>User</div><div>Email</div><div>Region</div><div>Content</div><div>Status</div><div style="text-align:right;">Actions</div>
+      </div>
+      <!-- rows -->
+      <sc-for list="{{ rows }}" as="u" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1.1fr 1fr 2fr;gap:12px;padding:13px 18px;border-bottom:1px solid #221a10;align-items:center;">
+          <div onClick="{{ u.onOpen }}" style="display:flex;align-items:center;gap:11px;cursor:pointer;min-width:0;">
+            <div style="width:36px;height:36px;border-radius:11px;background:{{ u.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;flex:none;">{{ u.initial }}</div>
+            <div style="min-width:0;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ u.name }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ u.handle }} · {{ u.joined }}</div></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ u.email }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;">{{ u.region }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">{{ u.postings }} posts · {{ u.forum }} threads</div>
+          <div><span style="{{ u.statusStyle }}">{{ u.statusLabel }}</span></div>
+          <!-- actions -->
+          <div style="display:flex;justify-content:flex-end;">
+            <sc-if value="{{ u.confirming }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:#ff7ea0;">Delete?</span>
+                <button onClick="{{ u.onConfirmDelete }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:12px;color:#fff;background:#ff3b6b;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;">Yes</button>
+                <button onClick="{{ u.onCancelDelete }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:#241a10;border:1px solid #3a2c1a;padding:6px 12px;border-radius:8px;cursor:pointer;">No</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ u.notConfirming }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <button onClick="{{ u.onOpen }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:#241a10;border:1px solid #2c2418;padding:7px 11px;border-radius:8px;cursor:pointer;">View</button>
+                <button onClick="{{ u.onToggleBan }}" style="{{ u.banStyle }}">{{ u.banLabel }}</button>
+                <button onClick="{{ u.onDelete }}" title="Delete" style="width:30px;height:30px;font-family:'Sora',sans-serif;font-size:15px;color:#8a7c68;background:transparent;border:1px solid #2c2418;border-radius:8px;cursor:pointer;line-height:1;">🗑</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:48px 20px;font-family:'Sora',sans-serif;color:#8a7c68;">No users match your search.</div>
+      </sc-if>
+    </div>
+  </main>
+
+  <!-- ===== USER DRAWER ===== -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(8,6,4,0.6);backdrop-filter:blur(2px);z-index:40;"></div>
+    <aside class="sb" style="position:fixed;top:0;right:0;width:440px;max-width:92vw;height:100vh;background:#140f0a;border-left:1px solid #2c2418;z-index:41;overflow-y:auto;box-shadow:-30px 0 80px -40px rgba(0,0,0,0.9);">
+      <div style="padding:22px;border-bottom:1px solid #2c2418;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:13px;">
+            <div style="width:52px;height:52px;border-radius:15px;background:{{ dUser.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:20px;">{{ dUser.initial }}</div>
+            <div><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;">{{ dUser.name }}</span><span style="{{ dUser.statusStyle }}">{{ dUser.statusLabel }}</span></div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ dUser.handle }} · {{ dUser.email }}</div></div>
+          </div>
+          <button onClick="{{ closeDrawer }}" style="width:32px;height:32px;font-size:16px;color:#8a7c68;background:#241a10;border:1px solid #2c2418;border-radius:9px;cursor:pointer;line-height:1;">✕</button>
+        </div>
+        <div style="display:flex;gap:22px;margin-bottom:16px;">
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">{{ dUser.joined }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">joined</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">{{ dUser.region }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">region</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:{{ dUser.reportColor }};">{{ dUser.reports }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">reports</div></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onClick="{{ onDrawerBan }}" style="{{ dUser.banStyleWide }}">{{ dUser.banLabel }}</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:10px 16px;border-radius:10px;cursor:pointer;">Message</button>
+          <button onClick="{{ onDrawerDelete }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.4);padding:10px 16px;border-radius:10px;cursor:pointer;">Delete</button>
+        </div>
+      </div>
+
+      <!-- drawer tabs -->
+      <div style="display:flex;gap:4px;padding:14px 22px 0;border-bottom:1px solid #2c2418;">
+        <sc-for list="{{ drawerTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+      </div>
+
+      <!-- postings -->
+      <sc-if value="{{ showPostings }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:18px 22px;">
+        <sc-if value="{{ hasPostings }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ dPostings }}" as="p" hint-placeholder-count="2">
+            <div style="background:#1a130c;border:1px solid #2c2418;border-radius:12px;padding:14px;">
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:3px;">{{ p.game }}</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">{{ p.title }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ p.meta }}</span>
+                <button onClick="{{ p.onRemove }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:11px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.35);padding:5px 10px;border-radius:7px;cursor:pointer;">Remove</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noPostings }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;padding:32px;font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;">No postings.</div></sc-if>
+      </div>
+      </sc-if>
+
+      <!-- forum -->
+      <sc-if value="{{ showForum }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:18px 22px;">
+        <sc-if value="{{ hasForum }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ dForum }}" as="p" hint-placeholder-count="2">
+            <div style="background:#1a130c;border:1px solid #2c2418;border-radius:12px;padding:14px;">
+              <div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:6px;">{{ p.title }}</div>
+              <p style="font-family:'Sora',sans-serif;font-size:12px;color:#8a7c68;line-height:1.5;margin:0 0 9px;">{{ p.snippet }}</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ p.meta }}</span>
+                <button onClick="{{ p.onRemove }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:11px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.35);padding:5px 10px;border-radius:7px;cursor:pointer;">Remove</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noForum }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;padding:32px;font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;">No forum posts.</div></sc-if>
+      </div>
+      </sc-if>
+    </aside>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query:'', filter:'all', selected:null, drawerTab:'postings', pendingDelete:null, users:null, hidden:[] };
+
+  seed(){
+    return [
+      { id:1, name:'Vex_00', handle:'@vex', email:'vex@example.com', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', region:'EU-West', joined:'2024', status:'active', reports:0,
+        postings:[{game:'Valorant',title:'Ranked grind — Diamond push',meta:'2/5 open · 2m ago'},{game:'Helldivers 2',title:'Weekend Helldive customs',meta:'Full · 3d ago'}],
+        forum:[{title:'Valorant meta — agent tier list debate',snippet:'Is duelist-heavy still viable after the patch?',meta:'88 replies'}] },
+      { id:2, name:'Mara', handle:'@mara', email:'mara@example.com', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', region:'NA-West', joined:'2025', status:'active', reports:0,
+        postings:[{game:'Helldivers 2',title:'Casual dives — all welcome',meta:'2/4 open · 5m ago'}],
+        forum:[{title:'Weeknight Helldivers crew',snippet:'Building a reliable 4-stack for evenings.',meta:'12 replies'}] },
+      { id:3, name:'Kellen', handle:'@kellen', email:'kellen@example.com', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', region:'NA-East', joined:'2024', status:'active', reports:0,
+        postings:[{game:"Baldur's Gate 3",title:'Honour Mode campaign',meta:'4/5 filled · 12m ago'}], forum:[] },
+      { id:4, name:'ToxicTyler', handle:'@ttyler', email:'tyler@example.com', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', region:'NA-East', joined:'2026', status:'flagged', reports:4,
+        postings:[{game:'Valorant',title:'Need carries, no bots',meta:'flagged · 1h ago'}],
+        forum:[{title:'Why is everyone in this rank so bad?',snippet:'Genuine question, the matchmaking is broken.',meta:'reported ×3'}] },
+      { id:5, name:'Wren', handle:'@wren', email:'wren@example.com', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', region:'EU-West', joined:'2025', status:'active', reports:0,
+        postings:[{game:'Pathfinder 2e',title:'Age of Ashes campaign',meta:'3/5 open · 25m ago'}], forum:[] },
+      { id:6, name:'Spammer99', handle:'@spam99', email:'noreply@spam.biz', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', region:'Asia', joined:'2026', status:'banned', reports:9,
+        postings:[{game:'—',title:'FREE SKINS CLICK HERE',meta:'removed · spam'}],
+        forum:[{title:'CHEAP BOOSTING SERVICE 🔥',snippet:'DM me for cheap rank boosting, all regions.',meta:'removed'}] },
+      { id:7, name:'Bex', handle:'@bex', email:'bex@example.com', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', region:'Oceania', joined:'2025', status:'active', reports:0,
+        postings:[{game:'Overwatch 2',title:'Morning quick play',meta:'2/5 open · 45m ago'}], forum:[] },
+      { id:8, name:'Rin', handle:'@rin', email:'rin@example.com', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', region:'Asia', joined:'2024', status:'flagged', reports:2,
+        postings:[{game:'League of Legends',title:'Flex queue — climbing to Plat',meta:'3/5 open · 30m ago'}],
+        forum:[{title:'Looking for a semi-serious team',snippet:'Plat-ish, scheduled scrims twice a week.',meta:'14 replies'}] }
+    ];
+  }
+
+  get users(){ return this.state.users || (this.state.users = this.seed()); }
+
+  statusStyle(st){
+    if(st==='active') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:3px 9px;border-radius:999px;";
+    if(st==='flagged') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#e6c74e;background:rgba(230,199,78,0.12);border:1px solid rgba(230,199,78,0.4);padding:3px 9px;border-radius:999px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.42);padding:3px 9px;border-radius:999px;";
+  }
+  statusLabel(st){ return st==='active'?'Active':(st==='flagged'?'Flagged':'Banned'); }
+  filterChip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+
+  renderVals(){
+    const s = this.state;
+    const users = this.users;
+    const q = s.query.trim().toLowerCase();
+
+    const filtered = users.filter(u=>{
+      const mf = s.filter==='all' || u.status===s.filter;
+      const mq = !q || (u.name+' '+u.handle+' '+u.email).toLowerCase().includes(q);
+      return mf && mq;
+    });
+
+    const banBtn = (banned)=> banned
+      ? "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:7px 11px;border-radius:8px;cursor:pointer;"
+      : "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#ff7ea0;background:rgba(255,59,107,0.1);border:1px solid rgba(255,59,107,0.4);padding:7px 11px;border-radius:8px;cursor:pointer;";
+
+    const rows = filtered.map(u=>({
+      ...u,
+      initial: u.name.charAt(0).toUpperCase(),
+      postings: u.postings.length,
+      forum: u.forum.length,
+      statusStyle: this.statusStyle(u.status),
+      statusLabel: this.statusLabel(u.status),
+      banStyle: banBtn(u.status==='banned'),
+      banLabel: u.status==='banned' ? 'Unban' : 'Ban',
+      confirming: s.pendingDelete===u.id,
+      notConfirming: s.pendingDelete!==u.id,
+      onOpen: ()=>this.setState({selected:u.id, drawerTab:'postings'}),
+      onToggleBan: ()=>this.toggleBan(u.id),
+      onDelete: ()=>this.setState({pendingDelete:u.id}),
+      onConfirmDelete: ()=>this.setState({ users: users.filter(x=>x.id!==u.id), pendingDelete:null, selected: s.selected===u.id?null:s.selected }),
+      onCancelDelete: ()=>this.setState({pendingDelete:null})
+    }));
+
+    const total = users.length;
+    const activeCount = users.filter(u=>u.status==='active').length;
+    const flaggedCount = users.filter(u=>u.status==='flagged').length;
+    const bannedCount = users.filter(u=>u.status==='banned').length;
+
+    const filters = [['all','All'],['active','Active'],['flagged','Flagged'],['banned','Banned']]
+      .map(([k,label])=>({ label, style:this.filterChip(s.filter===k), onClick:()=>this.setState({filter:k}) }));
+
+    // drawer
+    const sel = users.find(u=>u.id===s.selected);
+    let dUser=null, dPostings=[], dForum=[];
+    if (sel){
+      dUser = {
+        ...sel,
+        statusStyle:this.statusStyle(sel.status), statusLabel:this.statusLabel(sel.status),
+        reportColor: sel.reports>0 ? '#ff7ea0' : '#fbeeda',
+        banLabel: sel.status==='banned'?'Unban user':'Ban user',
+        banStyleWide: sel.status==='banned'
+          ? "font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#8fe0a3,#4ec96a);border:none;padding:10px 16px;border-radius:10px;cursor:pointer;flex:1;"
+          : "font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;background:#ff3b6b;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;flex:1;"
+      };
+      dPostings = sel.postings.map((p,i)=>({ ...p, onRemove:()=>this.hide(sel.id,'p',i) })).filter((p,i)=>!s.hidden.includes(sel.id+':p:'+i));
+      dForum = sel.forum.map((p,i)=>({ ...p, onRemove:()=>this.hide(sel.id,'f',i) })).filter((p,i)=>!s.hidden.includes(sel.id+':f:'+i));
+    }
+
+    const drawerTabs = [['postings','Postings'],['forum','Forum posts']]
+      .map(([k,label])=>{
+        const active = s.drawerTab===k;
+        const b="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;padding:9px 14px;border-radius:9px 9px 0 0;cursor:pointer;background:transparent;";
+        return { label, onClick:()=>this.setState({drawerTab:k}), style: active? b+"color:#fbeeda;border:1px solid #2c2418;border-bottom:1px solid #140f0a;position:relative;top:1px;" : b+"color:#8a7c68;border:1px solid transparent;" };
+      });
+
+    return {
+      total, activeCount, flaggedCount, bannedCount,
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      filters, rows, isEmpty: rows.length===0,
+      drawerOpen: !!sel, closeDrawer:()=>this.setState({selected:null}),
+      dUser: dUser || {}, dPostings, dForum,
+      drawerTabs,
+      showPostings: s.drawerTab==='postings', showForum: s.drawerTab==='forum',
+      hasPostings: dPostings.length>0, noPostings: dPostings.length===0,
+      hasForum: dForum.length>0, noForum: dForum.length===0,
+      onDrawerBan: ()=>sel&&this.toggleBan(sel.id),
+      onDrawerDelete: ()=>{ if(sel){ this.setState({ users: users.filter(x=>x.id!==sel.id), selected:null }); } }
+    };
+  }
+
+  toggleBan(id){
+    this.setState({ users: this.users.map(u=> u.id===id ? { ...u, status: u.status==='banned'?'active':'banned' } : u) });
+  }
+  hide(id,type,i){
+    this.setState({ hidden: this.state.hidden.concat(id+':'+type+':'+i) });
+  }
+}
+</script>
+</body>
+</html>

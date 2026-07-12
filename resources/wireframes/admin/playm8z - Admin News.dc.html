@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder,textarea::placeholder{color:#6b5a45;}
+  input,textarea{font-family:'Sora',sans-serif;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>News</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">editor</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="min-width:0;display:grid;grid-template-columns:308px 1fr;min-height:100vh;">
+
+    <!-- posts list -->
+    <div style="border-right:1px solid #2c2418;display:flex;flex-direction:column;background:#140f0a;">
+      <div style="padding:22px 20px 14px;flex:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;margin:0;">News feed</h1>
+          <button onClick="{{ newPost }}" style="display:flex;align-items:center;gap:6px;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:7px 12px;border-radius:9px;cursor:pointer;"><span style="font-size:14px;line-height:1;">＋</span> New</button>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <sc-for list="{{ filters }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+      <div class="sb" style="flex:1;overflow-y:auto;padding:0 12px 16px;">
+        <sc-for list="{{ postList }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ p.onClick }}" style="{{ p.rowStyle }}">
+            <div style="width:44px;height:44px;border-radius:11px;background:{{ p.cover }};flex:none;position:relative;">
+              <sc-if value="{{ p.pinned }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#ffb000;border:2px solid #140f0a;display:flex;align-items:center;justify-content:center;font-size:8px;">📌</span></sc-if>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13.5px;line-height:1.3;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ p.title }}</div>
+              <div style="display:flex;align-items:center;gap:7px;"><span style="{{ p.statusStyle }}">{{ p.statusLabel }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ p.date }}</span></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- editor -->
+    <div class="sb" style="overflow-y:auto;padding:26px 32px 60px;min-width:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;">{{ editorTitle }}</div>
+        <sc-if value="{{ isExisting }}" hint-placeholder-val="{{ false }}"><span style="{{ draftStatusStyle }}">{{ draftStatusLabel }}</span></sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start;">
+        <!-- form -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- cover -->
+          <div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">Cover</label>
+            <div style="height:120px;border-radius:14px;background:{{ draft.cover }};position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:12px;margin-bottom:10px;">
+              <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,0,0,0.06),rgba(0,0,0,0.06) 8px,transparent 8px,transparent 16px);"></div>
+              <button style="position:relative;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#140f0a;background:rgba(255,255,255,0.85);border:none;padding:7px 12px;border-radius:8px;cursor:pointer;">Replace image</button>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">or pick a color:</span>
+              <sc-for list="{{ coverSwatches }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}"></button></sc-for>
+            </div>
+          </div>
+
+          <!-- title -->
+          <div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Title</label>
+            <input value="{{ draft.title }}" onInput="{{ onTitle }}" placeholder="Announcement headline…" style="width:100%;background:#1a130c;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:600;color:#fbeeda;outline:none;" />
+          </div>
+
+          <!-- category + excerpt -->
+          <div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Category</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+              <sc-for list="{{ categoryChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+            </div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Excerpt</label>
+            <input value="{{ draft.excerpt }}" onInput="{{ onExcerpt }}" maxlength="120" placeholder="One-line summary shown in the feed…" style="width:100%;background:#1a130c;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;" />
+          </div>
+
+          <!-- body -->
+          <div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Body</label>
+            <div style="display:flex;gap:4px;margin-bottom:8px;">
+              <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#8a7c68;background:#1a130c;border:1px solid #2c2418;padding:6px 11px;border-radius:8px;cursor:pointer;">B</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;font-style:italic;color:#8a7c68;background:#1a130c;border:1px solid #2c2418;padding:6px 11px;border-radius:8px;cursor:pointer;">i</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:#8a7c68;background:#1a130c;border:1px solid #2c2418;padding:6px 11px;border-radius:8px;cursor:pointer;">H2</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:#8a7c68;background:#1a130c;border:1px solid #2c2418;padding:6px 11px;border-radius:8px;cursor:pointer;">🔗</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:#8a7c68;background:#1a130c;border:1px solid #2c2418;padding:6px 11px;border-radius:8px;cursor:pointer;">• List</span>
+            </div>
+            <textarea value="{{ draft.body }}" onInput="{{ onBody }}" rows="9" placeholder="Write the full announcement…" style="width:100%;background:#1a130c;border:1px solid #3a2c1a;border-radius:10px;padding:14px;font-size:14px;color:#fbeeda;outline:none;resize:vertical;line-height:1.65;"></textarea>
+          </div>
+
+          <!-- publish settings -->
+          <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:18px;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Publish settings</div>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Status</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+              <sc-for list="{{ statusSeg }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ isScheduled }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-bottom:14px;"><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Publish date</label><input value="{{ draft.date }}" onInput="{{ onDate }}" placeholder="e.g. Jul 20, 2026" style="width:220px;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:10px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+            </sc-if>
+            <button onClick="{{ togglePin }}" style="display:flex;align-items:center;gap:11px;background:transparent;border:none;padding:0;cursor:pointer;">
+              <span style="{{ pinTrack }}"><span style="{{ pinKnob }}"></span></span>
+              <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;">Pin to top of feed</span>
+            </button>
+          </div>
+
+          <!-- footer actions -->
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onClick="{{ save }}" style="{{ primaryStyle }}">{{ primaryLabel }}</button>
+            <button onClick="{{ saveDraft }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:12px 20px;border-radius:11px;cursor:pointer;">Save draft</button>
+            <sc-if value="{{ isExisting }}" hint-placeholder-val="{{ false }}"><button onClick="{{ del }}" style="margin-left:auto;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.4);padding:12px 18px;border-radius:11px;cursor:pointer;">Delete</button></sc-if>
+          </div>
+        </div>
+
+        <!-- live preview -->
+        <div style="position:sticky;top:0;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#6b5a45;margin-bottom:12px;">Feed preview</div>
+          <div style="background:#1f1710;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+            <div style="height:120px;background:{{ draft.cover }};position:relative;">
+              <sc-if value="{{ draft.pinned }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;left:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ffb000;padding:3px 9px;border-radius:6px;">📌 Pinned</span></sc-if>
+            </div>
+            <div style="padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;"><span style="{{ previewCatStyle }}">{{ draft.category }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ previewDate }}</span></div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;line-height:1.25;margin-bottom:8px;color:{{ previewTitleColor }};">{{ previewTitle }}</div>
+              <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 14px;">{{ previewExcerpt }}</p>
+              <div style="display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid #2c2418;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;">P</div><span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">playm8z team</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { posts:null, selId:1, draft:null, filter:'all' };
+
+  seed(){
+    return [
+      { id:1, title:'playm8z is now in open beta!', category:'Announcement', status:'published', date:'Jul 10, 2026', pinned:true, cover:'linear-gradient(135deg,#ffb000,#ff6b1a)', excerpt:'Anyone can now post games and find their party — no invite code needed.', body:'After months of closed testing, playm8z is officially open to everyone. Post the games you want to play, filter by vibe, region and more, and match with players who actually fit.\n\nThank you to our beta crew for the feedback — this is just the start.' },
+      { id:2, title:'New: filter by tabletop & TTRPGs', category:'Update', status:'published', date:'Jul 8, 2026', pinned:false, cover:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', excerpt:'D&D, Pathfinder, board games and more now have first-class filters.', body:'Browse now supports dedicated Tabletop and TTRPG genres, plus an in-person "Tabletop" platform option so you can find a local table as easily as an online lobby.' },
+      { id:3, title:'Summer Co-op Fest — win prizes', category:'Event', status:'scheduled', date:'Jul 20, 2026', pinned:false, cover:'linear-gradient(135deg,#35d0e0,#ff6b1a)', excerpt:'Two weeks of community co-op challenges with in-game rewards.', body:'Team up, complete co-op challenges across supported games, and climb the community leaderboard for prizes. Full details drop on launch day.' },
+      { id:4, title:'Discord integration preview', category:'Update', status:'draft', date:'—', pinned:false, cover:'linear-gradient(135deg,#ff3b6b,#ffb000)', excerpt:'Auto-create voice channels and get LFG pings straight in Discord.', body:'We\u2019re building deep Discord integration: link your server, auto-spin voice channels for a party, and pipe join requests into a channel. Sharing an early look soon.' }
+    ];
+  }
+  get posts(){ return this.state.posts || (this.state.posts = this.seed()); }
+  blank(){ return { id:null, title:'', category:'Announcement', status:'draft', date:'—', pinned:false, cover:'linear-gradient(135deg,#ffb000,#ff6b1a)', excerpt:'', body:'' }; }
+  get draft(){
+    if(this.state.draft) return this.state.draft;
+    const p = this.posts.find(x=>x.id===this.state.selId);
+    this.state.draft = p ? { ...p } : this.blank();
+    return this.state.draft;
+  }
+
+  statusStyle(st){
+    if(st==='published') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:3px 9px;border-radius:6px;";
+    if(st==='scheduled') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:3px 9px;border-radius:6px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:3px 9px;border-radius:6px;";
+  }
+  statusLabel(st){ return st.charAt(0).toUpperCase()+st.slice(1); }
+  chip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 12px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+  catColor(cat){ return {Announcement:'#ffb000',Update:'#ff6b1a',Event:'#35d0e0',Community:'#ff3b6b','Patch Notes':'#8fe0a3'}[cat]||'#ffb000'; }
+
+  setField(k){ return (e)=>this.setState({ draft: { ...this.draft, [k]: e.target.value } }); }
+
+  renderVals(){
+    const s = this.state;
+    const posts = this.posts;
+    const draft = this.draft;
+
+    const list = posts.filter(p=> s.filter==='all' || p.status===s.filter);
+    const postList = list.map(p=>({
+      ...p,
+      statusStyle:this.statusStyle(p.status), statusLabel:this.statusLabel(p.status),
+      rowStyle: "display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:13px;cursor:pointer;margin-bottom:2px;"+(p.id===s.selId && s.draft && s.draft.id===p.id ? "background:#20180e;border:1px solid #ff6b1a;" : (p.id===s.selId?"background:#20180e;border:1px solid #2c2418;":"border:1px solid transparent;")),
+      onClick: ()=>this.setState({ selId:p.id, draft:{ ...p } })
+    }));
+
+    const coverOpts = ['linear-gradient(135deg,#ffb000,#ff6b1a)','linear-gradient(135deg,#ff6b1a,#ff3b6b)','linear-gradient(135deg,#ff3b6b,#ffb000)','linear-gradient(135deg,#35d0e0,#ff6b1a)'];
+    const coverSwatches = coverOpts.map(g=>({
+      onClick: ()=>this.setState({ draft:{ ...draft, cover:g } }),
+      style: "width:26px;height:26px;border-radius:8px;cursor:pointer;background:"+g+";"+(draft.cover===g?"box-shadow:0 0 0 2px #140f0a,0 0 0 4px #ffb000;":"box-shadow:0 0 0 1px #2c2418;")
+    }));
+
+    const cats = ['Announcement','Update','Event','Community','Patch Notes'];
+    const categoryChips = cats.map(c=>({ label:c, style:this.chip(draft.category===c), onClick:()=>this.setState({ draft:{ ...draft, category:c } }) }));
+
+    const statusSeg = [['draft','Draft'],['published','Published'],['scheduled','Scheduled']]
+      .map(([k,label])=>({ label, style:this.chip(draft.status===k), onClick:()=>this.setState({ draft:{ ...draft, status:k } }) }));
+
+    const pinOn = draft.pinned;
+    const pinTrack = "width:40px;height:23px;border-radius:999px;flex:none;position:relative;display:inline-block;transition:all .15s;"+(pinOn?"background:linear-gradient(120deg,#ffb000,#ff6b1a);":"background:#241a10;border:1px solid #3a2c1a;");
+    const pinKnob = "position:absolute;top:2px;left:"+(pinOn?'19px':'2px')+";width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.4);";
+
+    const isExisting = !!draft.id;
+    const save = (forceStatus)=>{
+      const d = forceStatus ? { ...draft, status:forceStatus } : draft;
+      if(d.id){
+        this.setState({ posts: posts.map(p=>p.id===d.id?{ ...d }:p), draft:{ ...d } });
+      } else {
+        const id = Math.max(0, ...posts.map(p=>p.id))+1;
+        const np = { ...d, id };
+        this.setState({ posts: posts.concat(np), selId:id, draft:{ ...np } });
+      }
+    };
+
+    return {
+      filters: [['all','All'],['published','Published'],['draft','Drafts'],['scheduled','Scheduled']].map(([k,label])=>({ label, style:this.chip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      postList,
+      newPost: ()=>this.setState({ selId:null, draft:this.blank() }),
+      editorTitle: isExisting ? 'Edit post' : 'New post',
+      isExisting,
+      draftStatusStyle:this.statusStyle(draft.status), draftStatusLabel:this.statusLabel(draft.status),
+      draft,
+      onTitle:this.setField('title'), onExcerpt:this.setField('excerpt'), onBody:this.setField('body'), onDate:this.setField('date'),
+      coverSwatches, categoryChips, statusSeg,
+      isScheduled: draft.status==='scheduled',
+      togglePin: ()=>this.setState({ draft:{ ...draft, pinned:!draft.pinned } }),
+      pinTrack, pinKnob,
+      primaryLabel: draft.status==='published' ? (isExisting?'Update':'Publish') : (draft.status==='scheduled'?'Schedule':'Publish now'),
+      primaryStyle: "font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:12px 24px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);",
+      save: ()=>save(draft.status==='draft'?'published':null),
+      saveDraft: ()=>save('draft'),
+      del: ()=>{ if(draft.id){ this.setState({ posts:posts.filter(p=>p.id!==draft.id), selId:null, draft:this.blank() }); } },
+      // preview
+      previewTitle: draft.title || 'Your headline appears here',
+      previewTitleColor: draft.title ? '#fbeeda' : '#6b5a45',
+      previewExcerpt: draft.excerpt || 'Add an excerpt to summarize this post for the feed.',
+      previewDate: draft.status==='published' ? draft.date : (draft.status==='scheduled' ? ('Scheduled · '+(draft.date||'—')) : 'Draft'),
+      previewCatStyle: (()=>{ const c=this.catColor(draft.category); return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:"+c+";background:color-mix(in srgb,"+c+" 14%,transparent);border:1px solid color-mix(in srgb,"+c+" 38%,transparent);padding:3px 9px;border-radius:999px;"; })()
+    };
+  }
+}
+</script>
+</body>
+</html>

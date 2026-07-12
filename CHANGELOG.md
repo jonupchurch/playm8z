@@ -36,7 +36,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (listing-creation form), "Forum" (logged-in-only discussion board),
   and "Listing" (single LFG listing detail view) — alongside the
   existing Home and Browse wireframes and the Dark/Light theme + style
-  guide comps. More wireframes (Groups, admin CMS pages) still incoming.
+  guide comps.
+- Added "Inbox" (messages) and "Profile" (user profile) wireframes, plus
+  four admin CMS wireframes under `resources/wireframes/admin/`: Admin
+  Forum (forum moderation), Admin News (news feed content editing),
+  Admin Postings (posting/listing moderation), and Admin Users (user
+  management). Groups wireframe still incoming.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

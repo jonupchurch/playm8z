@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Postings <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ffb000;padding:1px 6px;border-radius:5px;">{{ pending }}</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">moderator</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="margin-bottom:22px;">
+      <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">Posting moderation</h1>
+      <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Review reported &amp; auto-flagged game postings. Approve, remove, or action the author.</p>
+    </div>
+
+    <!-- stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ffb000;">{{ pending }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">in queue</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ff3b6b;">{{ reportedCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">user-reported</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#e6c74e;">{{ flaggedCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">auto-flagged</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#8fe0a3;">{{ removedToday }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">removed today</div></div>
+    </div>
+
+    <!-- filters -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <sc-for list="{{ filters }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+    </div>
+
+    <!-- queue -->
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <sc-for list="{{ rows }}" as="p" hint-placeholder-count="5">
+        <div style="background:#1a130c;border:1px solid {{ p.edge }};border-radius:16px;padding:18px 20px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                <span style="{{ p.sevStyle }}">{{ p.sevLabel }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;">{{ p.game }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">· {{ p.posted }}</span>
+              </div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;margin-bottom:5px;">{{ p.title }}</div>
+              <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 12px;">{{ p.blurb }}</p>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:7px;background:{{ p.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;">{{ p.authorInitial }}</div><span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ p.author }}</span></div>
+                <span style="width:1px;height:14px;background:#2c2418;"></span>
+                <sc-for list="{{ p.reasonChips }}" as="r" hint-placeholder-count="2"><span style="{{ r.style }}">{{ r.label }}</span></sc-for>
+              </div>
+              <sc-if value="{{ p.hasAuto }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px;margin-top:10px;background:rgba(230,199,78,0.08);border:1px solid rgba(230,199,78,0.3);border-radius:9px;padding:8px 12px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#e6c74e;">AUTO-FLAG</span><span style="font-family:'Sora',sans-serif;font-size:12px;color:#d9cbb2;">{{ p.autoFlag }}</span></div>
+              </sc-if>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:none;width:130px;">
+              <button onClick="{{ p.onView }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #2c2418;padding:9px;border-radius:9px;cursor:pointer;">Review</button>
+              <button onClick="{{ p.onApprove }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:9px;border-radius:9px;cursor:pointer;">Approve</button>
+              <button onClick="{{ p.onRemove }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;background:#ff3b6b;border:none;padding:9px;border-radius:9px;cursor:pointer;">Remove</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:72px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:rgba(78,201,106,0.14);border:1px solid rgba(78,201,106,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><span style="color:#4ec96a;font-size:26px;font-weight:700;">✓</span></div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px;">Queue clear!</div>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Nothing to review in this filter. Nice work.</p>
+      </div>
+    </sc-if>
+  </main>
+
+  <!-- ===== REVIEW DRAWER ===== -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(8,6,4,0.6);backdrop-filter:blur(2px);z-index:40;"></div>
+    <aside class="sb" style="position:fixed;top:0;right:0;width:460px;max-width:94vw;height:100vh;background:#140f0a;border-left:1px solid #2c2418;z-index:41;overflow-y:auto;box-shadow:-30px 0 80px -40px rgba(0,0,0,0.9);">
+      <div style="padding:22px;border-bottom:1px solid #2c2418;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
+          <span style="{{ d.sevStyle }}">{{ d.sevLabel }}</span>
+          <button onClick="{{ closeDrawer }}" style="width:32px;height:32px;font-size:16px;color:#8a7c68;background:#241a10;border:1px solid #2c2418;border-radius:9px;cursor:pointer;line-height:1;">✕</button>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;margin-bottom:5px;">{{ d.game }} · {{ d.posted }}</div>
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;line-height:1.2;margin:0 0 12px;">{{ d.title }}</h2>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;line-height:1.6;margin:0;">{{ d.blurb }}</p>
+      </div>
+
+      <!-- why flagged -->
+      <div style="padding:20px 22px;border-bottom:1px solid #2c2418;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Why it's here</div>
+        <sc-if value="{{ d.hasAuto }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;background:rgba(230,199,78,0.08);border:1px solid rgba(230,199,78,0.3);border-radius:9px;padding:9px 12px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#e6c74e;">AUTO-FLAG</span><span style="font-family:'Sora',sans-serif;font-size:13px;color:#d9cbb2;">{{ d.autoFlag }}</span></div>
+        </sc-if>
+        <sc-if value="{{ d.hasReports }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <sc-for list="{{ d.reports }}" as="r" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;">
+                <span style="{{ r.style }}">{{ r.label }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">reported by {{ r.by }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ d.noReports }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;">No user reports — surfaced by the automated filter only.</div></sc-if>
+      </div>
+
+      <!-- author -->
+      <div style="padding:20px 22px;border-bottom:1px solid #2c2418;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Author</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:44px;height:44px;border-radius:13px;background:{{ d.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:17px;">{{ d.authorInitial }}</div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">{{ d.author }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ d.authorMeta }}</div></div>
+        </div>
+        <div style="display:flex;gap:20px;">
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:{{ d.warnColor }};">{{ d.priorWarnings }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">prior warnings</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">{{ d.totalPosts }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">total posts</div></div>
+        </div>
+      </div>
+
+      <!-- actions -->
+      <div style="padding:20px 22px;display:flex;flex-direction:column;gap:10px;">
+        <button onClick="{{ d.onApprove }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.45);padding:12px;border-radius:11px;cursor:pointer;">Approve &amp; clear reports</button>
+        <button onClick="{{ d.onRemove }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fff;background:#ff3b6b;border:none;padding:12px;border-radius:11px;cursor:pointer;">Remove posting</button>
+        <div style="display:flex;gap:10px;">
+          <button onClick="{{ d.onWarn }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#e6c74e;background:transparent;border:1px solid rgba(230,199,78,0.4);padding:11px;border-radius:11px;cursor:pointer;">Warn author</button>
+          <button onClick="{{ d.onBan }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.4);padding:11px;border-radius:11px;cursor:pointer;">Ban author</button>
+        </div>
+      </div>
+    </aside>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { filter:'all', selected:null, queue:null, removedToday:3, toast:null };
+
+  seed(){
+    return [
+      { id:1, game:'—', title:'FREE SKINS CLICK HERE ►►', blurb:'Get free Valorant points and skins, limited time! Visit freevp-skins.biz and enter your login to claim now.', author:'Spammer99', authorInitial:'S', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', posted:'8m ago', kind:'reported', sev:'high', autoFlag:'Matched banned-phrase & external-link filter', authorMeta:'Account 2 days old · @spam99', priorWarnings:0, totalPosts:14,
+        reports:[{reason:'Scam / phishing',by:'Mara'},{reason:'Spam',by:'Kellen'},{reason:'Spam',by:'Nova'}] },
+      { id:2, game:'Valorant', title:'Need carries, no bots or trash players', blurb:'Only add me if you\u2019re actually good, tired of hardstuck losers dragging me down. Iron players don\u2019t bother, you\u2019re the problem.', author:'ToxicTyler', authorInitial:'T', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', posted:'25m ago', kind:'reported', sev:'high', autoFlag:null, authorMeta:'@ttyler · joined 2026', priorWarnings:2, totalPosts:31,
+        reports:[{reason:'Harassment',by:'Sy'},{reason:'Harassment',by:'Bex'}] },
+      { id:3, game:'CS2', title:'Cheap rank boosting — all regions, DM', blurb:'Professional boosting service, any rank to any rank. Cheap prices, fast delivery. DM for rates.', author:'BoostKing', authorInitial:'B', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', posted:'1h ago', kind:'flagged', sev:'high', autoFlag:'Matched boosting/paid-service keywords', authorMeta:'Account 5 days old', priorWarnings:1, totalPosts:6,
+        reports:[] },
+      { id:4, game:'Valorant', title:'LF chill duo, silver, just for fun :)', blurb:'New to the game, looking for a patient duo partner to learn with. No pressure, just want to have fun and improve.', author:'newbie_jane', authorInitial:'J', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', posted:'2h ago', kind:'flagged', sev:'low', autoFlag:'New account · first post (routine check)', authorMeta:'Account 1 day old', priorWarnings:0, totalPosts:1,
+        reports:[] },
+      { id:5, game:'Sea of Thieves', title:'Pirate crew — 18+ only (jk 13 is fine)', blurb:'Looking for a mature crew, adults preferred but honestly any age welcome, my little brother plays too.', author:'Dane', authorInitial:'D', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', posted:'3h ago', kind:'reported', sev:'high', autoFlag:null, authorMeta:'@dane · joined 2025', priorWarnings:0, totalPosts:12,
+        reports:[{reason:'Underage / safety',by:'Priya'}] },
+      { id:6, game:'Minecraft', title:'epic gamer moments xd join my discord', blurb:'join the server for giveaways and epic content, link in bio, we do daily events and stuff subscribe too', author:'memer42', authorInitial:'M', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', posted:'4h ago', kind:'reported', sev:'med', autoFlag:null, authorMeta:'@memer42 · joined 2026', priorWarnings:1, totalPosts:22,
+        reports:[{reason:'Off-topic',by:'Juno'},{reason:'Spam',by:'Bex'}] },
+      { id:7, game:'Magic: The Gathering', title:'Commander pod (EDH) — precons welcome', blurb:'Looking for 2 for a chill Commander pod. Precons totally fine, we just want a friendly game.', author:'Priya', authorInitial:'P', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', posted:'5h ago', kind:'reported', sev:'med', autoFlag:null, authorMeta:'@priya · joined 2025', priorWarnings:0, totalPosts:8,
+        reports:[{reason:'Inappropriate',by:'anonymous'}] }
+    ];
+  }
+  get queue(){ return this.state.queue || (this.state.queue = this.seed()); }
+
+  sevStyle(sev){
+    if(sev==='high') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.45);padding:3px 9px;border-radius:6px;";
+    if(sev==='med') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#e6c74e;background:rgba(230,199,78,0.12);border:1px solid rgba(230,199,78,0.4);padding:3px 9px;border-radius:6px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:3px 9px;border-radius:6px;";
+  }
+  sevLabel(sev){ return sev==='high'?'High priority':(sev==='med'?'Medium':'Low / routine'); }
+  edge(sev){ return sev==='high'?'rgba(255,59,107,0.3)':(sev==='med'?'rgba(230,199,78,0.25)':'#2c2418'); }
+
+  reasonSev(reason){
+    const r = reason.toLowerCase();
+    if(r.includes('scam')||r.includes('harass')||r.includes('underage')||r.includes('safety')) return 'high';
+    if(r.includes('spam')||r.includes('inappropriate')) return 'med';
+    return 'low';
+  }
+  reasonStyle(reason){
+    const sev = this.reasonSev(reason);
+    if(sev==='high') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.12);border:1px solid rgba(255,59,107,0.4);padding:3px 9px;border-radius:999px;";
+    if(sev==='med') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#e6c74e;background:rgba(230,199,78,0.12);border:1px solid rgba(230,199,78,0.4);padding:3px 9px;border-radius:999px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:3px 9px;border-radius:999px;";
+  }
+  filterChip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+
+  resolve(id, kind){
+    this.setState({
+      queue: this.queue.filter(p=>p.id!==id),
+      selected: this.state.selected===id ? null : this.state.selected,
+      removedToday: kind==='remove' ? this.state.removedToday+1 : this.state.removedToday
+    });
+  }
+
+  renderVals(){
+    const s = this.state;
+    const queue = this.queue;
+    const list = queue.filter(p=> s.filter==='all' || (s.filter==='reported'&&p.kind==='reported') || (s.filter==='flagged'&&p.kind==='flagged'));
+
+    const decorate = (p)=>({
+      ...p,
+      sevStyle:this.sevStyle(p.sev), sevLabel:this.sevLabel(p.sev), edge:this.edge(p.sev),
+      hasAuto: !!p.autoFlag,
+      reasonChips: p.reports.map(r=>({ label:r.reason, style:this.reasonStyle(r.reason) }))
+    });
+
+    const rows = list.map(p=>({
+      ...decorate(p),
+      onView:()=>this.setState({selected:p.id}),
+      onApprove:()=>this.resolve(p.id,'approve'),
+      onRemove:()=>this.resolve(p.id,'remove')
+    }));
+
+    const sel = queue.find(p=>p.id===s.selected);
+    let d = {};
+    if(sel){
+      const dec = decorate(sel);
+      d = {
+        ...dec,
+        reports: sel.reports.map(r=>({ ...r, label:r.reason, style:this.reasonStyle(r.reason) })),
+        hasReports: sel.reports.length>0, noReports: sel.reports.length===0,
+        warnColor: sel.priorWarnings>0 ? '#e6c74e' : '#fbeeda',
+        onApprove:()=>this.resolve(sel.id,'approve'),
+        onRemove:()=>this.resolve(sel.id,'remove'),
+        onWarn:()=>this.resolve(sel.id,'approve'),
+        onBan:()=>this.resolve(sel.id,'remove')
+      };
+    }
+
+    return {
+      pending: queue.length,
+      reportedCount: queue.filter(p=>p.kind==='reported').length,
+      flaggedCount: queue.filter(p=>p.kind==='flagged').length,
+      removedToday: s.removedToday,
+      filters: [['all','All'],['reported','User-reported'],['flagged','Auto-flagged']].map(([k,label])=>({ label, style:this.filterChip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      rows, hasItems: rows.length>0, isEmpty: rows.length===0,
+      drawerOpen: !!sel, closeDrawer:()=>this.setState({selected:null}),
+      d
+    };
+  }
+}
+</script>
+</body>
+</html>

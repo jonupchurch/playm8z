@@ -50,9 +50,12 @@ The user described what playm8z actually is: gamers browse/post games,
 post one-off LFG listings, post/browse persistent Groups (distinct from
 LFG), a logged-in-only Forum, and a handful of admin-editable content
 pages. `resources/wireframes/` currently has Home, Browse, Post a Game,
-Forum, and Listing (single LFG listing detail view) — plus a Dark/Light
-theme + style guide in `resources/design/`. No wireframes yet for
-Groups or admin CMS pages; the user is actively posting more.
+Forum, Listing (single LFG listing detail view), Inbox (messages), and
+Profile — plus four admin pages under `resources/wireframes/admin/`:
+Admin Forum (moderation), Admin News (content editing), Admin Postings
+(moderation), Admin Users (management). Also a Dark/Light theme + style
+guide in `resources/design/`. No wireframe yet for Groups; the user is
+actively posting more.
 
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for the rest of the wireframes (Groups, admin
