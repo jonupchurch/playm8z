@@ -511,13 +511,19 @@ database-level unique constraint. Second writer of Blocked Users'
 `reports` entity. Drops the wireframe's fake best-answer badge, keeps
 the real by-likes "Top" sort. Subscribe stores a preference only.
 
+**Forum Thread: tasks done** (2026-07-12) — `tasks.md`, 28 tasks:
+Setup(1) → Foundational(5) → US1/P1 read+sort(7) → US2/P2 reply+
+quote(5) → US3/P3 like+report(7) → Polish(3). `docs/feature-list.md`
+updated to 🟢. Forum Thread is the tenth feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Forum Thread: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `010-forum-thread` into `main`, then move on to feature #11
+  (Inbox / messaging) — same specify→plan→tasks→merge sequence repeats
+  for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

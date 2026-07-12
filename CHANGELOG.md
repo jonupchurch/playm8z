@@ -426,6 +426,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   mechanism exists yet. Quality checklist passed first try, zero
   `[NEEDS CLARIFICATION]` markers. No `contracts/`.
 
+- Ran `/speckit-tasks` for Forum Thread: `tasks.md` — 28 tasks: Setup
+  (1) → Foundational (5: new tables + migration, validation schemas,
+  the thread-read query, view-count increment) → US1/P1 read+sort (7)
+  → US2/P2 reply+quote (5) → US3/P3 like+report (7) → Polish (3). Forum
+  Thread is the tenth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
