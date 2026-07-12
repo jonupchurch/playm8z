@@ -361,6 +361,17 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   US2/P2 Q&A (7) → US3/P3 capacity correctness (3) → Polish (3).
   Listing detail is the sixth feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Profile + Account settings: `research.md`
+  (four real routes sharing a layout, not the wireframe's single-page
+  client tabs; password-change re-verification; deactivation/
+  reactivation touches `src/auth.ts`, the second feature to do so
+  after Auth & Onboarding's Google `profile()` callback; email changes
+  reuse Auth & Onboarding's verification-email helper; posting edits
+  reuse Post a Game's validation schemas rather than duplicating them),
+  `data-model.md` (extends `user` with `bio`/`createdAt`/four privacy
+  booleans/`deactivatedAt`; new `userGames` and `savedListings`
+  tables), `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

@@ -457,13 +457,27 @@ Setup(1) → Foundational(5) → US1/P1 apply+withdraw(8) → US2/P2 Q&A(7)
 updated to 🟢. Listing detail is the sixth feature with a complete
 spec/plan/tasks trio.
 
+**Profile + Account settings: spec + plan done** (2026-07-12, branch
+`007-profile-and-account-settings`) — four real routes under
+`/profile` sharing a layout (Overview, My postings, Saved, Account),
+not the wireframe's client-side tabs. Resolved a previously-open
+question via the user: "Deactivate" and "Delete permanently" collapse
+into one action (ADR 0005 makes true deletion impossible anyway).
+Introduces `userGames` and `savedListings` — the latter retroactively
+un-defers Listing detail's "Save" action (that feature's docs were
+corrected accordingly). Omits rating/sessions/groups/level and
+pronouns/languages/timezone (nothing computes or collects any of them
+yet); omits Connected Accounts (Steam/Discord already deferred).
+Second feature to touch `src/auth.ts` (deactivation/reactivation on
+login), after Auth & Onboarding's Google `profile()` callback.
+
 ## Next up
 
-- Merge `006-listing-detail` into `main`, then move on to feature #7
-  (Profile + Account settings) — same specify→plan→tasks→merge
-  sequence repeats for every other feature in `docs/feature-list.md`
-  — per the project-wide gate (constitution v1.0.0), implementation
-  doesn't begin on *any* feature until all of them have this done.
+- Profile: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
