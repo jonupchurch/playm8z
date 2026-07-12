@@ -141,6 +141,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   what the block-based Content Page editor supports, so it's now its
   own feature. All five moved into `docs/feature-list.md`'s
   ready-to-spec list.
+- `resources/guidelines.md`/`resources/sitemap.md` regenerated to fold
+  in all 7 newly-wireframed pages (a new §12 "Additional screens"
+  section, updated IA/route map and file→feature map). Flagged: Public
+  Profile carries new scope (a Follow toggle, host-initiated "Invite to
+  a party," a mutual-connections sidebar) not previously discussed; and
+  the regeneration dropped `guidelines.md` §4.6 (loading/error
+  patterns) since it wasn't sourced from a wireframe — the decision
+  still stands (`docs/future-work.md`), just no longer physically in
+  `guidelines.md`.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

@@ -220,6 +220,23 @@ scaffold — user confirmed). Four more wireframes are actively in
 progress, not deferred: public profile page, news article detail, Admin
 Settings, and Moderator audit log (moved out of `docs/future-work.md`).
 
+**`guidelines.md`/`sitemap.md` regenerated (2026-07-12)** to fold in all
+7 newly-wireframed pages (Landing, News Article, Public Profile, Blocked
+Users, Error Pages, Admin Settings, Admin Audit Log) as a new §12
+"Additional screens" section, with updated IA/route map and file→feature
+map. Two things worth noting from that pass:
+- The Public Profile wireframe carries **new scope** not previously
+  discussed: a **Follow** toggle (social graph, distinct from blocking),
+  a host-initiated **"Invite to a party"** action (distinct from
+  applicant-initiated "Apply for a slot"), and a "You have in common"
+  mutual-connections sidebar. Flagged in `docs/feature-list.md` for
+  confirmation before that feature is spec'd.
+- The regeneration **dropped `guidelines.md` §4.6** ("Loading & error
+  patterns" — my earlier addition, not sourced from any wireframe, so
+  the regen didn't preserve it). The decision itself still stands
+  (recorded here and in `docs/future-work.md`), just no longer physically
+  present in `guidelines.md` — asked the user whether to re-add it there.
+
 ## Next up
 
 - Fold in the four in-progress wireframes (public profile, news article

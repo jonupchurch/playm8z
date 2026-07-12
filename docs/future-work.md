@@ -32,8 +32,12 @@ they can be spec'd/built:
 
 - Groups/Clans (browse/detail/create) — see above, the one already known.
 - Password reset (`/reset`).
-- Post-session rating/review flow — confirmed by the user (2026-07-12)
-  as an explicit future-state feature, not just undesigned.
+- Post-session rating/review **submission** flow — confirmed by the user
+  (2026-07-12) as an explicit future-state feature, not just undesigned.
+  Clarified by the Public Profile wireframe (added later 2026-07-12):
+  the *display* of ratings ("Player reviews," star ratings + comments) is
+  already designed and lives on that page — only the flow that actually
+  produces a rating after a session is what's deferred.
 - Mobile-specific layouts.
 
 **Moved to `docs/feature-list.md` (2026-07-12)**, now wireframed and
@@ -44,11 +48,16 @@ page (`/news/:slug`), Admin Settings, and Moderator audit log.
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
 on this list.
 
-**Designed 2026-07-12** (`resources/guidelines.md` §4.6, added as a
-reusable design-system pattern rather than per-page wireframes, per the
-user's direction): loading skeletons, delayed-skeleton timing,
+**Designed 2026-07-12** (originally added as `resources/guidelines.md`
+§4.6, a reusable design-system pattern rather than per-page wireframes,
+per the user's direction): loading skeletons, delayed-skeleton timing,
 fetch-error state (distinct from the Empty state), pending-submit
 button state, and submit success/error — no longer an open question.
+The §4.6 section itself was since dropped from `guidelines.md` by a
+later full regeneration pass (it wasn't sourced from any wireframe, so
+the regen didn't know to keep it); the decision still stands, recorded
+in `status.md`'s fourth gap-analysis pass and this file — flagged to the
+user whether to re-add it to `guidelines.md` directly.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Blocked
 Users.dc.html`): view/search blocked users, block flow (pick → confirm,

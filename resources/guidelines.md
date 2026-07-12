@@ -120,15 +120,6 @@ These recur across nearly every screen — build them once.
 - **Empty states:** dashed `--border` box, centered; success queues use a green ✓ circle ("Queue clear!", "Inbox zero!").
 - **Imagery:** none shipped. Covers/banners use brand gradients; real product art/screenshots are placeholders. In build, wire real images with graceful gradient fallbacks.
 
-### 4.6 Loading & error patterns
-Not covered by any wireframe — every prototype renders as if its data is already in memory (it filters a hardcoded array with zero network delay). Defined here directly rather than per-page, since the same handful of states recur everywhere data is fetched or submitted.
-
-- **Skeleton loading:** same footprint as the real card/row it replaces (same radius, padding, grid position) so layout doesn't jump on swap-in — `--surface-2` blocks standing in for avatar/title/body, pulsing opacity (~0.5→1, 1.4s ease-in-out infinite), no shimmer sweep. Show the same default count as the page's real grid (e.g. Browse's 9-card grid → 9 skeleton cards). Applies to: Home/Browse/Listing feeds, Forum/Forum Thread lists, Profile tabs, Inbox conversation list, News grid, all admin queues/tables.
-- **Delayed skeleton:** only render it after ~150–200ms of waiting, so fast responses never flash one.
-- **Fetch-error state:** visually distinct from the dashed-border **Empty state** above — solid `--surface` card, `--pop`/orange icon accent, short warm copy ("Lost connection to the servers"), gradient-fill "Retry" button (Buttons pattern) that re-triggers the fetch. Full-page failures also get a secondary ghost "Back to home" button. Inline/widget-level failures (e.g. Home's Trending row) use a compact one-line variant instead: icon + text + small ghost "Retry" link.
-- **Pending submit:** buttons that trigger a mutation (Publish listing, Apply for a slot, Post reply, Send message, Login/Signup, admin Approve/Remove/Ban/Dismiss, Profile/Account Save) keep their existing fill/size (no layout shift) but swap label to a short in-progress verb ("Publishing…", "Sending…") and go non-interactive (~0.85 opacity, `not-allowed`) while in flight.
-- **Submit success/error:** reuse the confirmation-flip convention already designed on a couple of screens (Listing detail's "Application sent ✓ / Withdraw", Content Page's "✓ Saved") for success. On failure, flip instead to a muted/`--pop`-tinted label ("Couldn't send — Retry") that resubmits on click.
-
 ---
 
 ## 5. Data models (suggested)
@@ -186,7 +177,8 @@ Group        id, name, ... // designed later
 ## 6. Information architecture / routes
 
 **Public / authed:**
-- `/` Home (search-first) — `playm8z - Home.dc.html`
+- `/` (logged-out) Marketing landing — `playm8z - Landing.dc.html` → redirects authed users to Home
+- `/` (authed) Home (search-first) — `playm8z - Home.dc.html`
 - `/browse` Browse & search — `playm8z - Browse.dc.html`
 - `/post` Post a game — `playm8z - Post a Game.dc.html`
 - `/listing/:id` Listing detail + apply — `playm8z - Listing.dc.html`
@@ -196,8 +188,12 @@ Group        id, name, ... // designed later
 - `/messages` Inbox — `playm8z - Inbox.dc.html`
 - `/notifications` Notifications — `playm8z - Notifications & Report.dc.html`
 - `/news` News feed — `playm8z - News.dc.html`
+- `/news/:slug` News article — `playm8z - News Article.dc.html`
 - `/p/:slug` Content pages (About/Privacy/Terms/Guidelines…) — `playm8z - Content Page.dc.html`
+- `/u/:handle` Public profile (read-only) — `playm8z - Public Profile.dc.html`
+- `/settings/blocked` Blocked users — `playm8z - Blocked Users.dc.html`
 - `/login` `/signup` + onboarding — `playm8z - Auth & Onboarding.dc.html`
+- `/404` `/500` `/maintenance` Error states — `playm8z - Error Pages.dc.html`
 - Report modal — global overlay, from `playm8z - Notifications & Report.dc.html`
 
 **Admin (`/admin/*`, role ≥ moderator):**
@@ -208,8 +204,10 @@ Group        id, name, ... // designed later
 - `/admin/reports` — `playm8z - Admin Reports.dc.html`
 - `/admin/news` — `playm8z - Admin News.dc.html`
 - `/admin/content` — `playm8z - Admin Content Pages.dc.html`
+- `/admin/settings` Settings — `playm8z - Admin Settings.dc.html`
+- `/admin/audit` Audit log — `playm8z - Admin Audit Log.dc.html`
 
-**Not yet designed:** Groups/Clans, logged-out marketing landing, post-session rating flow, Discord connect flow, admin settings (auto-flag rules/roles), audit log, ban-appeals, 404/error.
+**Not yet designed:** Groups/Clans (index/detail/create), password reset, standalone post-session rating flow (reviews are shown on the public profile), Discord connect flow, ban-appeals queue, mobile-specific layouts.
 
 ---
 
@@ -356,7 +354,12 @@ When implementing these, follow §4 (design system) and the established shell/ca
 | playm8z - Inbox | `/messages` | messaging |
 | playm8z - Notifications & Report | `/notifications` + global modal | notifications, reporting |
 | playm8z - News | `/news` | news reader |
+| playm8z - News Article | `/news/:slug` | article reader |
 | playm8z - Content Page | `/p/:slug` | static pages + inline edit |
+| playm8z - Public Profile | `/u/:handle` | read-only profile |
+| playm8z - Blocked Users | `/settings/blocked` | block management |
+| playm8z - Landing | `/` (logged-out) | marketing landing |
+| playm8z - Error Pages | `/404`,`/500`,`/maintenance` | error states |
 | playm8z - Auth & Onboarding | `/login`,`/signup` | auth + onboarding |
 | playm8z - Admin Dashboard | `/admin` | overview |
 | playm8z - Admin Users | `/admin/users` | user admin |
@@ -365,5 +368,57 @@ When implementing these, follow §4 (design system) and the established shell/ca
 | playm8z - Admin Reports | `/admin/reports` | report triage |
 | playm8z - Admin News | `/admin/news` | news CMS |
 | playm8z - Admin Content Pages | `/admin/content` | pages CMS |
+| playm8z - Admin Settings | `/admin/settings` | config, auto-flag rules, roles, flags |
+| playm8z - Admin Audit Log | `/admin/audit` | moderation/action history |
 
 *(`.dc.html` files are prototypes; reference them for layout/behavior, re-implement for production.)*
+
+---
+
+## 12. Additional screens (added after v1)
+
+These followed the initial set; same design system, shell, and component patterns apply.
+
+### 12.1 Landing (logged-out) — `playm8z - Landing.dc.html`
+- **Purpose:** convert first-time visitors; the public front door (funnels to `/signup`).
+- **Sections:** nav (Log in + "Sign up free") → hero with an **animated rotating word** ("Play anything / ranked / campaigns / raids / board games / one-shots") + dual CTAs + a floating live-listing-card demo → trust bar (players / games / parties this week / avg rating) → How it works (3 steps) → Why playm8z (4 feature cards incl. **Discord "SOON"**) → Browse by genre tiles (with live counts, incl. TTRPG/Tabletop) → testimonials (player + GM) → final CTA band → full footer (**Groups marked "soon"**).
+- **Note:** the only interactive bit is the timed headline word cycle; everything else is marketing content. Groups is intentionally deferred here.
+
+### 12.2 News article — `playm8z - News Article.dc.html`
+- **Purpose:** read a single published `NewsPost` (opens from a News-feed card, `/news/:slug`).
+- **Layout:** top **reading-progress bar** (fills on scroll) → header (back-to-news, category/date/read-time, title, author row with **Like** toggle+count, **Save** toggle, share) → full-width gradient cover → article body rendering the block types (lead paragraph, h2 sections, bulleted list, callout, pull-quote) → tags + share → **Keep reading** (3 related cards) → subscribe strip.
+- **Data:** NewsPost with `body(blocks)`; related NewsPost[].
+
+### 12.3 Public profile — `playm8z - Public Profile.dc.html`
+- **Purpose:** the read-only view of another player (what "View profile" opens everywhere).
+- **Header:** avatar + online dot, name/handle/level/member-since, bio; **visitor actions**: Invite to a party (primary), Message, **Follow** toggle, and a **⋯ overflow** (Share / ⚑ Report / ⛔ Block — into those flows). Stats: rating (+review count), sessions, groups, reliability.
+- **Main:** Games they play (rank + hours) · **Open parties** they host (Request buttons) · **Player reviews** (post-session star ratings + comments — the output of the rating flow).
+- **Sidebar:** Public info honoring privacy flags (region/timezone, age, pronouns, languages, platforms) + "You have in common" (mutual friends + shared games); footer note that only public fields show.
+
+### 12.4 Blocked users — `playm8z - Blocked Users.dc.html`
+- **Purpose:** user-facing block management (Account / Privacy).
+- **Page:** "what blocking does" info callout, live count, search, and a list of blocked users (greyed avatar, handle, blocked date, reason chip) each with **Unblock**; empty state.
+- **Block modal (reusable, from any profile/message):** two steps — pick (search players → choose) then confirm (user card + explanation + "Also report to moderators" checkbox → "Block user" / "Block & report").
+- **Unblock modal:** focused confirm (regains access) with Cancel / Unblock.
+- **Data:** `User.blockedIds[]`; blocking also gates messaging, applications, and content visibility both directions.
+
+### 12.5 Error pages — `playm8z - Error Pages.dc.html`
+- **Purpose:** 404 / 500 / 403 / maintenance states in one file.
+- **Shared layout:** logo, a "disconnected pawns" motif (amber pawn linked to a faded grey one by a broken dashed line), big gradient status code, title, message, two actions. Gamer-native copy per state; 500 shows an **error ref** for support; maintenance ties to the Settings maintenance-mode toggle.
+- **Note:** the top-right state switcher is a **review aid only** — production renders the state matching the HTTP status.
+
+### 12.6 Admin Settings — `playm8z - Admin Settings.dc.html`
+- **Purpose:** platform configuration; the control layer behind moderation + features.
+- **Sections (left section-nav):** **General** (site name, tagline, support email, default theme, **maintenance mode** toggle) · **Moderation & auto-flag** (toggles for the four auto-flag filters, editable **banned-phrases** list, **auto-hide-after-N-reports** stepper, auto-escalate severity threshold) · **Roles & access** (team list with per-person role dropdown Admin/Moderator/Support/Viewer, remove, email invite) · **Features** (feature-flag toggles: open signups, Discord [beta], groups, ratings, forum, tabletop filters) · **Safety** (min signup age, email verification, default discoverability, auto-hide reported content, blocklist sync).
+- **Wiring:** these values drive what the moderation queues surface and which features are live. Maps to `settings.*` config.
+
+### 12.7 Admin Audit Log — `playm8z - Admin Audit Log.dc.html`
+- **Purpose:** immutable history of every moderation/admin action (linked from the dashboard).
+- **Toolbar:** search (actor/action/target), actor dropdown (each mod + System), category filters (All / Moderation / Content / Access / System), Export CSV.
+- **Log:** grouped by day; each entry = icon, actor (bold) + action + highlighted target, optional reason, color-coded category chip, timestamp, and an **expandable** detail panel (target IDs, before/after for role & setting changes, prior warnings, reversibility, source, hashed IP).
+- **Data:** append-only `AuditEntry` written by every admin action across the suite. Suggested model:
+
+```
+AuditEntry  id, actorId, action, category(moderation|content|access|system),
+            targetType, targetId, targetLabel, reason?, meta{}, createdAt
+```

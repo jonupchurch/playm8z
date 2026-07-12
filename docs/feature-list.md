@@ -12,9 +12,12 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 ## Exempt from the gate (infrastructure, not product surface)
 
 - **Design System / shared UI primitives** — nav shell, admin shell,
-  buttons, cards, tags, toggles, the `resources/guidelines.md` §4.6
-  loading/error patterns. Built directly, like the initial app/db/auth
-  scaffold, per the constitution's infrastructure-only exception.
+  buttons, cards, tags, toggles, and the loading/error patterns (skeleton
+  loading, fetch-error state, pending-submit buttons — see `status.md`'s
+  fourth gap-analysis pass; this was briefly in `guidelines.md` §4.6 but
+  dropped by the latest regeneration, see note below). Built directly,
+  like the initial app/db/auth scaffold, per the constitution's
+  infrastructure-only exception.
 
 ## Wireframed, ready to spec
 
@@ -40,6 +43,15 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 20. Admin News — ✅
 21. Admin Content Pages — ✅
 22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
+    — note: this wireframe introduces **new scope** beyond a read-only
+    profile view: a **Follow** toggle (a social-graph relationship
+    distinct from blocking), a host-initiated **"Invite to a party"**
+    action (distinct from the existing applicant-initiated "Apply for a
+    slot"), and a "You have in common" mutual-connections sidebar. None
+    of this was in the original product description — flag for
+    confirmation before/during that feature's spec. Also shows "Player
+    reviews" (post-session ratings) as *display only*; the rating
+    *submission* flow itself is still deferred (`docs/future-work.md`).
 23. News article detail (`/news/:slug`) — ✅ (`playm8z - News Article.dc.html`)
 24. Admin Settings — ✅ (General/maintenance mode, moderation & auto-flag
     rules, roles & access, feature flags, safety)
