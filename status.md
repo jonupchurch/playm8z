@@ -498,10 +498,16 @@ computed at read time, distinct from the real moderator-controlled
 PINNED column. New Thread modal follows Blocked Users' dialog pattern.
 Drops the wireframe's "online" stat and Discord widget.
 
+**Forum index: tasks done** (2026-07-12) — `tasks.md`, 22 tasks:
+Setup(1) → Foundational(5) → US1/P1 browse+search+filter+sort(8) →
+US2/P2 create-thread(5) → Polish(3). `docs/feature-list.md` updated to
+🟢. Forum index is the ninth feature with a complete spec/plan/tasks
+trio.
+
 ## Next up
 
-- Forum index: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
+- Merge `009-forum-index` into `main`, then move on to feature #10
+  (Forum Thread) — same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.

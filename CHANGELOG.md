@@ -408,6 +408,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   `data-model.md` (new `forumThreads` table), `quickstart.md`. No
   `contracts/`.
 
+- Ran `/speckit-tasks` for Forum index: `tasks.md` — 22 tasks: Setup
+  (1) → Foundational (5: new table + migration, category const,
+  validation schemas, the search query) → US1/P1 browse+search+
+  filter+sort (8) → US2/P2 create-thread (5) → Polish (3). Forum index
+  is the ninth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
