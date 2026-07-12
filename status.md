@@ -491,10 +491,17 @@ Setup(1) → Foundational(5) → US1/P1 view+search+unblock(6) → US2/P2
 block-new(5) → Polish(3). `docs/feature-list.md` updated to 🟢. Blocked
 Users is the eighth feature with a complete spec/plan/tasks trio.
 
+**Forum index: spec + plan done** (2026-07-12, branch
+`009-forum-index`) — browse/search/filter/sort forum threads, public
+to read. Server-side URL-driven filtering (Browse's pattern). HOT is
+computed at read time, distinct from the real moderator-controlled
+PINNED column. New Thread modal follows Blocked Users' dialog pattern.
+Drops the wireframe's "online" stat and Discord widget.
+
 ## Next up
 
-- Merge `008-blocked-users` into `main`, then move on to feature #9
-  (Forum index) — same specify→plan→tasks→merge sequence repeats for
+- Forum index: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.

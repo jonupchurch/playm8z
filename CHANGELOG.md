@@ -399,6 +399,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   view+search+unblock (6) → US2/P2 block-new (5) → Polish (3). Blocked
   Users is the eighth feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Forum index: `research.md` (categories as a
+  hardcoded const, not a table; server-side URL-driven filtering,
+  Browse's pattern, since threads accumulate indefinitely; HOT computed
+  at read time rather than a stored/scheduled-job flag, distinct from
+  the real moderator-controlled PINNED column; New Thread modal follows
+  Blocked Users' established dialog-accessibility pattern),
+  `data-model.md` (new `forumThreads` table), `quickstart.md`. No
+  `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
