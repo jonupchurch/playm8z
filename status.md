@@ -424,13 +424,23 @@ Foundational(5) → US1/P1 search+filter+sort(7) → US2/P2 pills(3) →
 US3/P3 empty-state(3) → Polish(3). `docs/feature-list.md` updated to
 🟢. Browse is the fourth feature with a complete spec/plan/tasks trio.
 
+**Post a Game: spec + plan done** (2026-07-12, branch `005-post-game`,
+`specs/005-post-game/`) — the listing-creation form; extends the
+shared `postings` table with its last fields (tags, recurring,
+voiceLink), and is the first feature to actually consume Auth &
+Onboarding's unverified-email write-action gate. Publishing is a
+Server Action (not an API route); the live preview reuses the shared
+listing-card component; game-suggestion quick-picks reuse the same
+most-common-games aggregate as Home/Browse. "Save as draft" excluded
+from scope (no draft state exists), logged to `docs/future-work.md`.
+
 ## Next up
 
-- Merge `004-browse` into `main`, then move on to feature #5 (Post a
-  Game) — same specify→plan→tasks→merge sequence repeats for every
-  other feature in `docs/feature-list.md` — per the project-wide gate
-  (constitution v1.0.0), implementation doesn't begin on *any* feature
-  until all of them have this done.
+- Post a Game: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

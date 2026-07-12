@@ -314,6 +314,23 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (3) → US3/P3 empty state (3) → Polish (3). Browse is the fourth
   feature to clear the project-wide gate.
 
+- Ran `/speckit-specify` for Post a Game: `spec.md` on branch
+  `005-post-game`. The listing-creation form, extending the shared
+  `postings` table with its last fields (tags, recurring, voiceLink) —
+  first feature to actually consume Auth & Onboarding's unverified-
+  email write-action gate. Corrects Age group to 18+/21+ (ADR 0002);
+  excludes "Save as draft" from scope (logged to
+  `docs/future-work.md` — no draft state exists in the Posting model).
+  Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
+  markers.
+- Ran `/speckit-plan` for Post a Game: `research.md` (a Server Action
+  for publishing rather than an API route; game-suggestion quick-picks
+  reuse the same most-common-games aggregate as Home/Browse instead of
+  a hardcoded list; the live preview reuses the shared listing-card
+  component rather than duplicating it; the Group size/Spots open
+  relationship is re-validated server-side, never trusting client-side
+  clamping alone), `data-model.md`, `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
