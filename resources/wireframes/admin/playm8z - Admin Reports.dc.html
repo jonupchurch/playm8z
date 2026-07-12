@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>News</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">{{ openCount }}</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">moderator</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="margin-bottom:22px;">
+      <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">Reports</h1>
+      <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Every user report across postings, forum, profiles &amp; messages — triage in one place.</p>
+    </div>
+
+    <!-- stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ffb000;">{{ openCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">open reports</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#ff3b6b;">{{ highCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">high priority</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#8fe0a3;">{{ resolvedToday }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">resolved today</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;">6m</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">avg response</div></div>
+    </div>
+
+    <!-- filters -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+      <sc-for list="{{ filters }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+    </div>
+
+    <!-- queue -->
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <sc-for list="{{ rows }}" as="p" hint-placeholder-count="6">
+        <div style="background:#1a130c;border:1px solid {{ p.edge }};border-radius:16px;padding:18px 20px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="{{ p.sevStyle }}">{{ p.sevLabel }}</span>
+                <span style="{{ p.typeStyle }}">{{ p.typeLabel }}</span>
+                <span style="{{ p.reasonStyle }}">{{ p.reason }}</span>
+                <sc-if value="{{ p.multi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#ffd08a;background:rgba(255,176,0,0.12);border:1px solid rgba(255,176,0,0.4);padding:3px 8px;border-radius:6px;">{{ p.countLabel }}</span></sc-if>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-left:auto;">{{ p.time }}</span>
+              </div>
+              <!-- reporter note -->
+              <div style="display:flex;gap:9px;margin-bottom:10px;">
+                <div style="width:24px;height:24px;border-radius:7px;background:{{ p.reporterAvatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:10px;flex:none;">{{ p.reporterInitial }}</div>
+                <div style="min-width:0;"><span style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c68;">{{ p.reporter }} reported:</span> <span style="font-family:'Sora',sans-serif;font-size:13px;color:#d9cbb2;">“{{ p.note }}”</span></div>
+              </div>
+              <!-- target content -->
+              <div style="display:flex;gap:9px;background:#20180e;border:1px solid #2c2418;border-radius:11px;padding:11px 13px;">
+                <div style="width:26px;height:26px;border-radius:8px;background:{{ p.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;flex:none;">{{ p.ownerInitial }}</div>
+                <div style="min-width:0;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:2px;">{{ p.owner }} · {{ p.context }}</div><p style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;line-height:1.5;margin:0;">{{ p.snippet }}</p></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:none;width:130px;">
+              <button onClick="{{ p.onView }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #2c2418;padding:9px;border-radius:9px;cursor:pointer;">Review</button>
+              <button onClick="{{ p.onDismiss }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#b49c6a;background:transparent;border:1px solid #3a2c1a;padding:9px;border-radius:9px;cursor:pointer;">Dismiss</button>
+              <button onClick="{{ p.onRemove }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;background:#ff3b6b;border:none;padding:9px;border-radius:9px;cursor:pointer;">Remove</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:72px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:rgba(78,201,106,0.14);border:1px solid rgba(78,201,106,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><span style="color:#4ec96a;font-size:26px;font-weight:700;">✓</span></div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px;">Inbox zero!</div>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">No open reports in this filter.</p>
+      </div>
+    </sc-if>
+  </main>
+
+  <!-- ===== REVIEW DRAWER ===== -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(8,6,4,0.6);backdrop-filter:blur(2px);z-index:40;"></div>
+    <aside class="sb" style="position:fixed;top:0;right:0;width:460px;max-width:94vw;height:100vh;background:#140f0a;border-left:1px solid #2c2418;z-index:41;overflow-y:auto;box-shadow:-30px 0 80px -40px rgba(0,0,0,0.9);">
+      <div style="padding:22px;border-bottom:1px solid #2c2418;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="{{ d.sevStyle }}">{{ d.sevLabel }}</span><span style="{{ d.typeStyle }}">{{ d.typeLabel }}</span><span style="{{ d.reasonStyle }}">{{ d.reason }}</span></div>
+          <button onClick="{{ closeDrawer }}" style="width:32px;height:32px;font-size:16px;color:#8a7c68;background:#241a10;border:1px solid #2c2418;border-radius:9px;cursor:pointer;line-height:1;flex:none;">✕</button>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">Reported {{ d.time }} · {{ d.context }}</div>
+      </div>
+
+      <!-- reporters -->
+      <div style="padding:20px 22px;border-bottom:1px solid #2c2418;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">{{ d.reporterHeading }}</div>
+        <div style="display:flex;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:11px;padding:12px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:{{ d.reporterAvatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:12px;flex:none;">{{ d.reporterInitial }}</div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:3px;">{{ d.reporter }}</div><p style="font-family:'Sora',sans-serif;font-size:13px;color:#d9cbb2;line-height:1.55;margin:0;">“{{ d.note }}”</p></div>
+        </div>
+        <sc-if value="{{ d.multi }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;margin-top:10px;">{{ d.othersLabel }}</div></sc-if>
+      </div>
+
+      <!-- reported content -->
+      <div style="padding:20px 22px;border-bottom:1px solid #2c2418;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Reported content</div>
+        <div style="display:flex;gap:9px;background:rgba(255,59,107,0.06);border:1px solid rgba(255,59,107,0.3);border-radius:11px;padding:12px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:{{ d.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:12px;flex:none;">{{ d.ownerInitial }}</div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:3px;">{{ d.owner }} · {{ d.context }}</div><p style="font-family:'Sora',sans-serif;font-size:14px;color:#fbeeda;line-height:1.55;margin:0;">{{ d.snippet }}</p></div>
+        </div>
+        <button style="display:flex;align-items:center;gap:6px;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#ff6b1a;background:transparent;border:none;padding:10px 0 0;cursor:pointer;">Open in {{ d.moduleLabel }} moderation →</button>
+      </div>
+
+      <!-- owner -->
+      <div style="padding:20px 22px;border-bottom:1px solid #2c2418;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Reported user</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:44px;height:44px;border-radius:13px;background:{{ d.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:17px;">{{ d.ownerInitial }}</div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">{{ d.owner }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ d.ownerMeta }}</div></div>
+        </div>
+        <div style="display:flex;gap:20px;">
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:{{ d.warnColor }};">{{ d.priorWarnings }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">prior warnings</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:{{ d.reportColor }};">{{ d.totalReports }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">total reports</div></div>
+        </div>
+      </div>
+
+      <!-- actions -->
+      <div style="padding:20px 22px;display:flex;flex-direction:column;gap:10px;">
+        <button onClick="{{ d.onDismiss }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#b49c6a;background:#241a10;border:1px solid #3a2c1a;padding:12px;border-radius:11px;cursor:pointer;">Dismiss — no violation</button>
+        <button onClick="{{ d.onRemove }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fff;background:#ff3b6b;border:none;padding:12px;border-radius:11px;cursor:pointer;">Remove content</button>
+        <div style="display:flex;gap:10px;">
+          <button onClick="{{ d.onWarn }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#e6c74e;background:transparent;border:1px solid rgba(230,199,78,0.4);padding:11px;border-radius:11px;cursor:pointer;">Warn user</button>
+          <button onClick="{{ d.onBan }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff7ea0;background:transparent;border:1px solid rgba(255,59,107,0.4);padding:11px;border-radius:11px;cursor:pointer;">Ban user</button>
+        </div>
+      </div>
+    </aside>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { filter:'all', selected:null, queue:null, resolvedToday:9 };
+
+  seed(){
+    return [
+      { id:1, targetType:'posting', reason:'Scam / phishing', sev:'high', time:'8m ago', count:3, context:'Valorant posting', moduleLabel:'Postings',
+        reporter:'Mara', reporterInitial:'M', reporterAvatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', note:'Phishing link, asks you to enter your login to claim skins.',
+        owner:'Spammer99', ownerInitial:'S', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', ownerMeta:'Account 2 days old · @spam99', priorWarnings:0, totalReports:9,
+        snippet:'FREE SKINS CLICK HERE ► freevp-skins.biz — enter your login to claim' },
+      { id:2, targetType:'forum', reason:'Harassment', sev:'high', time:'12m ago', count:2, context:'Reply in “Valorant meta debate”', moduleLabel:'Forum',
+        reporter:'Vex_00', reporterInitial:'V', reporterAvatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', note:'Calling people NPCs and telling them to uninstall. Pure toxicity.',
+        owner:'ToxicTyler', ownerInitial:'T', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', ownerMeta:'@ttyler · joined 2026', priorWarnings:2, totalReports:11,
+        snippet:'everyone who disagrees with me is a bronze npc, uninstall and touch grass' },
+      { id:3, targetType:'message', reason:'Harassment', sev:'high', time:'40m ago', count:1, context:'Direct message', moduleLabel:'Messages',
+        reporter:'Bex', reporterInitial:'B', reporterAvatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', note:'Sent me threatening DMs after I declined their party request.',
+        owner:'ToxicTyler', ownerInitial:'T', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', ownerMeta:'@ttyler · joined 2026', priorWarnings:2, totalReports:11,
+        snippet:'you\u2019ll regret not inviting me, I know where you queue' },
+      { id:4, targetType:'user', reason:'Impersonation', sev:'med', time:'1h ago', count:2, context:'Profile', moduleLabel:'Users',
+        reporter:'Nova', reporterInitial:'N', reporterAvatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', note:'Pretending to be official staff to scam people.',
+        owner:'fake_admin', ownerInitial:'F', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', ownerMeta:'@playm8z-staff · joined 2026', priorWarnings:0, totalReports:4,
+        snippet:'handle: @playm8z-staff · bio: “Official moderator, DM me your password to verify.”' },
+      { id:5, targetType:'forum', reason:'Spam', sev:'med', time:'1h ago', count:3, context:'Thread in “Groups & Clans”', moduleLabel:'Forum',
+        reporter:'Ash', reporterInitial:'A', reporterAvatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', note:'Nitro giveaway scam thread, external link.',
+        owner:'Spammer99', ownerInitial:'S', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', ownerMeta:'Account 2 days old · @spam99', priorWarnings:0, totalReports:9,
+        snippet:'FREE NITRO giveaway 🎁 join my discord — gift-nitro-free.biz/claim' },
+      { id:6, targetType:'posting', reason:'Underage / safety', sev:'high', time:'3h ago', count:1, context:'Sea of Thieves posting', moduleLabel:'Postings',
+        reporter:'Priya', reporterInitial:'P', reporterAvatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', note:'Advertised as 18+ but says 13-year-olds are welcome. Safety concern.',
+        owner:'Dane', ownerInitial:'D', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', ownerMeta:'@dane · joined 2025', priorWarnings:0, totalReports:1,
+        snippet:'Pirate crew — 18+ only (jk 13 is fine, my little brother plays too)' },
+      { id:7, targetType:'message', reason:'Spam', sev:'low', time:'5h ago', count:1, context:'Direct message', moduleLabel:'Messages',
+        reporter:'Sy', reporterInitial:'S', reporterAvatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', note:'Unsolicited boosting advertisement in my DMs.',
+        owner:'BoostKing', ownerInitial:'B', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', ownerMeta:'Account 5 days old', priorWarnings:1, totalReports:6,
+        snippet:'cheap rank boosting all regions, dm me for rates 🚀' },
+      { id:8, targetType:'user', reason:'Inappropriate', sev:'med', time:'6h ago', count:1, context:'Profile', moduleLabel:'Users',
+        reporter:'Kira', reporterInitial:'K', reporterAvatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', note:'Offensive language in their public bio.',
+        owner:'edgelord_xx', ownerInitial:'E', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', ownerMeta:'@edgelord_xx · joined 2026', priorWarnings:1, totalReports:3,
+        snippet:'bio: “here to ruin your games and your day, cope harder”' }
+    ];
+  }
+  get queue(){ return this.state.queue || (this.state.queue = this.seed()); }
+
+  sevStyle(sev){
+    if(sev==='high') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.45);padding:3px 9px;border-radius:6px;";
+    if(sev==='med') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#e6c74e;background:rgba(230,199,78,0.12);border:1px solid rgba(230,199,78,0.4);padding:3px 9px;border-radius:6px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:3px 9px;border-radius:6px;";
+  }
+  sevLabel(sev){ return sev==='high'?'High priority':(sev==='med'?'Medium':'Low'); }
+  edge(sev){ return sev==='high'?'rgba(255,59,107,0.3)':(sev==='med'?'rgba(230,199,78,0.25)':'#2c2418'); }
+  typeMeta(t){ return { posting:['#ffb000','Posting'], forum:['#35d0e0','Forum'], user:['#ff3b6b','Profile'], message:['#b49c6a','Message'] }[t]; }
+  typeStyle(t){ const c=this.typeMeta(t)[0]; return "font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;color:"+c+";background:color-mix(in srgb,"+c+" 14%,transparent);border:1px solid color-mix(in srgb,"+c+" 40%,transparent);padding:3px 8px;border-radius:6px;"; }
+  reasonSev(reason){ const r=reason.toLowerCase(); if(r.includes('scam')||r.includes('harass')||r.includes('phish')||r.includes('underage')||r.includes('safety')||r.includes('imperson')) return 'high'; if(r.includes('spam')||r.includes('inappropriate')) return 'med'; return 'low'; }
+  reasonStyle(reason){
+    const sev=this.reasonSev(reason);
+    if(sev==='high') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.12);border:1px solid rgba(255,59,107,0.4);padding:3px 9px;border-radius:999px;";
+    if(sev==='med') return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#e6c74e;background:rgba(230,199,78,0.12);border:1px solid rgba(230,199,78,0.4);padding:3px 9px;border-radius:999px;";
+    return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:3px 9px;border-radius:999px;";
+  }
+  filterChip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+  resolve(id){ this.setState({ queue:this.queue.filter(p=>p.id!==id), selected:this.state.selected===id?null:this.state.selected, resolvedToday:this.state.resolvedToday+1 }); }
+
+  renderVals(){
+    const s = this.state;
+    const queue = this.queue;
+    const list = queue.filter(p=> s.filter==='all' || p.targetType===s.filter);
+
+    const decorate = (p)=>({
+      ...p,
+      sevStyle:this.sevStyle(p.sev), sevLabel:this.sevLabel(p.sev), edge:this.edge(p.sev),
+      typeStyle:this.typeStyle(p.targetType), typeLabel:this.typeMeta(p.targetType)[1].toUpperCase(),
+      reasonStyle:this.reasonStyle(p.reason),
+      multi: p.count>1, countLabel: p.count+' reports', othersLabel: '＋ '+(p.count-1)+' other'+(p.count-1>1?'s':'')+' reported this',
+      reporterHeading: p.count>1 ? 'Top reporter' : 'Reporter',
+      warnColor: p.priorWarnings>0?'#e6c74e':'#fbeeda',
+      reportColor: p.totalReports>=5?'#ff7ea0':'#fbeeda'
+    });
+
+    const rows = list.map(p=>({
+      ...decorate(p),
+      onView:()=>this.setState({selected:p.id}),
+      onDismiss:()=>this.resolve(p.id),
+      onRemove:()=>this.resolve(p.id)
+    }));
+
+    const sel = queue.find(p=>p.id===s.selected);
+    let d = {};
+    if(sel){ d = { ...decorate(sel), onDismiss:()=>this.resolve(sel.id), onRemove:()=>this.resolve(sel.id), onWarn:()=>this.resolve(sel.id), onBan:()=>this.resolve(sel.id) }; }
+
+    return {
+      openCount: queue.length,
+      highCount: queue.filter(p=>p.sev==='high').length,
+      resolvedToday: s.resolvedToday,
+      filters: [['all','All'],['posting','Postings'],['forum','Forum'],['user','Profiles'],['message','Messages']].map(([k,label])=>({ label, style:this.filterChip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      rows, hasItems: rows.length>0, isEmpty: rows.length===0,
+      drawerOpen: !!sel, closeDrawer:()=>this.setState({selected:null}), d
+    };
+  }
+}
+</script>
+</body>
+</html>

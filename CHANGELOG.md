@@ -38,10 +38,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   existing Home and Browse wireframes and the Dark/Light theme + style
   guide comps.
 - Added "Inbox" (messages) and "Profile" (user profile) wireframes, plus
-  four admin CMS wireframes under `resources/wireframes/admin/`: Admin
+  five admin CMS wireframes under `resources/wireframes/admin/`: Admin
   Forum (forum moderation), Admin News (news feed content editing),
-  Admin Postings (posting/listing moderation), and Admin Users (user
-  management). Groups wireframe still incoming.
+  Admin Postings (posting/listing moderation), Admin Users (user
+  management), and Admin Reports (user/content reports).
+- Deferred "Groups" (persistent guilds/clans, distinct from one-off LFG
+  listings) to `docs/future-work.md` — no wireframe was made for it, and
+  it's explicitly out of scope for the first spec.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

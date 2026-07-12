@@ -47,20 +47,24 @@ yet.
 ## Product vision (informal, not yet a spec)
 
 The user described what playm8z actually is: gamers browse/post games,
-post one-off LFG listings, post/browse persistent Groups (distinct from
-LFG), a logged-in-only Forum, and a handful of admin-editable content
-pages. `resources/wireframes/` currently has Home, Browse, Post a Game,
-Forum, Listing (single LFG listing detail view), Inbox (messages), and
-Profile — plus four admin pages under `resources/wireframes/admin/`:
-Admin Forum (moderation), Admin News (content editing), Admin Postings
-(moderation), Admin Users (management). Also a Dark/Light theme + style
-guide in `resources/design/`. No wireframe yet for Groups; the user is
-actively posting more.
+post one-off LFG listings, browse/search them, a logged-in-only Forum,
+and a handful of admin-editable content pages. `resources/wireframes/`
+currently has Home, Browse, Post a Game, Forum, Listing (single LFG
+listing detail view), Inbox (messages), and Profile — plus five admin
+pages under `resources/wireframes/admin/`: Admin Forum (moderation),
+Admin News (content editing), Admin Postings (moderation), Admin Users
+(management), and Admin Reports. Also a Dark/Light theme + style guide
+in `resources/design/`. The user is actively posting more.
+
+"Groups" (persistent guilds/clans, distinct from one-off LFG listings)
+was initially assumed in scope (inferred from the wireframe nav bar's
+separate "Groups" tab) but the user has explicitly deferred it — see
+`docs/future-work.md`. No wireframe was made for it.
 
 Scope for the first `/speckit-specify` run is still an open question —
-the user chose to wait for the rest of the wireframes (Groups, admin
-pages) before deciding how to cut the first vertical slice, per the
-constitution's Scope Discipline principle.
+the user chose to wait for wireframes to stop arriving before deciding
+how to cut the first vertical slice, per the constitution's Scope
+Discipline principle.
 
 ## Next up
 
