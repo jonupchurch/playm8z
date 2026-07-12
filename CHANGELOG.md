@@ -393,6 +393,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
   markers. No `contracts/`.
 
+- Ran `/speckit-tasks` for Blocked Users: `tasks.md` — 20 tasks: Setup
+  (1) → Foundational (5: new tables + migration, validation schemas,
+  candidate search, a link added to Profile's Account page) → US1/P1
+  view+search+unblock (6) → US2/P2 block-new (5) → Polish (3). Blocked
+  Users is the eighth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

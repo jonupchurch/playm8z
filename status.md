@@ -486,10 +486,15 @@ the Block relationship as a queryable entity; enforcement elsewhere
 (Home/Browse/Listing detail/future Inbox/Forum) is explicitly out of
 scope, flagged as a follow-up those docs may need.
 
+**Blocked Users: tasks done** (2026-07-12) — `tasks.md`, 20 tasks:
+Setup(1) → Foundational(5) → US1/P1 view+search+unblock(6) → US2/P2
+block-new(5) → Polish(3). `docs/feature-list.md` updated to 🟢. Blocked
+Users is the eighth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Blocked Users: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
+- Merge `008-blocked-users` into `main`, then move on to feature #9
+  (Forum index) — same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.
