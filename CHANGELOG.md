@@ -288,6 +288,24 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   click-through (7) → US2/P2 trending (5) → US3/P3 empty state (4) →
   Polish (3). Home is the third feature to clear the project-wide gate.
 
+- Ran `/speckit-specify` for Browse: `spec.md` on branch `004-browse`.
+  Full faceted discovery, public (no auth required, unlike Home) —
+  corrects the wireframe's Age group facet to 18+/21+ (ADR 0002) and
+  reinterprets "Soonest" sort against Posting's `scheduledDate` field
+  rather than the wireframe sample data's conflation with recency.
+  Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
+  markers.
+- Ran `/speckit-plan` for Browse: `research.md` (server-side, URL-
+  search-param-driven filtering instead of Home's client-side approach
+  — Browse is the full/comprehensive surface, not a small recent slice;
+  a debounced keyword field; relocating and extending Home's
+  listing-card component into a shared location rather than
+  duplicating it; Zod-validating every facet value before it reaches
+  the query builder, since this is the first feature where visitor-
+  controlled input shapes a real `WHERE` clause), `data-model.md`
+  (extends `postings` with genre/ageGroup/timeSlots/platform/
+  micRequired/scheduledDate), `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
