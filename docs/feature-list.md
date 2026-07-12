@@ -21,7 +21,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 
 ## Wireframed, ready to spec
 
-1. Auth & Onboarding — 📝 spec + plan written (`specs/001-auth-onboarding/`, branch `001-auth-onboarding`), not yet tasked (`playm8z - Auth & Onboarding.dc.html`)
+1. Auth & Onboarding — 🟢 spec + plan + tasks all complete (`specs/001-auth-onboarding/`, branch `001-auth-onboarding`, `playm8z - Auth & Onboarding.dc.html`) — 40 tasks across Setup/Foundational/US1(P1)/US2(P2)/US3(P3)/Polish; not yet implemented (implementation is gated on every other feature below also reaching this point)
 2. Error Pages (404/500/403/maintenance) — ✅
 3. Home — ✅
 4. Browse — ✅

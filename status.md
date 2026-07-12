@@ -1,7 +1,9 @@
 # Status
 
 **Phase**: Infrastructure scaffold complete, constitution ratified.
-First feature spec (Auth & Onboarding) in progress.
+Auth & Onboarding is the first feature to clear the full spec/plan/tasks
+gate; implementation still waits on every other feature reaching the
+same point.
 **Last updated**: 2026-07-12
 
 ## Where things stand
@@ -347,13 +349,22 @@ surfaced worth recording:
   buildable/testable now; Resend gets wired up for real once a domain
   exists.
 
+**Auth & Onboarding: tasks done** (2026-07-12) — `tasks.md` generated,
+40 tasks: Setup (1) → Foundational (7, schema migration + shared
+validations/email-abstraction/auth-form shell) → US1/P1 sign-up +
+onboarding (17, the MVP slice) → US2/P2 login (6) → US3/P3 skip-onboarding
+(3) → Polish (6, including the unverified-email write-action gate
+helper — built as a ready-to-call function since no write-action route
+exists yet to consume it). `docs/feature-list.md` updated to 🟢. This is
+the first feature to have a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Auth & Onboarding: `/speckit-tasks` next, then the same
-  specify→plan→tasks sequence repeats for every other feature in
-  `docs/feature-list.md` — per the project-wide gate (constitution
-  v1.0.0), implementation doesn't begin on *any* feature until all of
-  them have this done.
+- The same specify→plan→tasks sequence repeats for every other feature
+  in `docs/feature-list.md` — per the project-wide gate (constitution
+  v1.0.0), implementation doesn't begin on *any* feature (including
+  Auth & Onboarding, despite being fully tasked) until all of them have
+  this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

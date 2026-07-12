@@ -208,6 +208,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   `verificationToken`), `contracts/api.md`, `quickstart.md`. Discovered
   no git-branch-creation hook is actually configured in this repo
   despite the constitution assuming one — branches are created by hand.
+- Ran `/speckit-tasks` for Auth & Onboarding: `tasks.md` — 40 tasks
+  across Setup, Foundational, and the three prioritized user stories
+  (P1 sign-up + onboarding, P2 login, P3 skip-onboarding), plus a Polish
+  phase. Includes the reusable unverified-email write-action gate
+  helper as its own task, since no consuming write-action route exists
+  yet in this codebase to wire it into. Auth & Onboarding now has a
+  complete spec/plan/tasks trio — first feature to clear the
+  project-wide gate; implementation still waits on every other feature
+  reaching the same point.
 
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
