@@ -182,6 +182,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   first (schema push + production build against a throwaway database
   with the same placeholders) before trusting it in Actions. Confirmed
   green on the first live GitHub Actions run.
+- Synced the constitution's Technology Constraints with the actual
+  Vercel/Neon/CI setup (it was still missing the deployment picture
+  entirely) and closed out a stale reference to CI being unwired.
+  v0.3.1-draft → v0.3.2-draft, patch-level.
+- **Ratified the constitution: v1.0.0**, `RATIFICATION_DATE` 2026-07-12.
+  Six amendments (branching rule, feature granularity, project-wide
+  spec/plan/tasks gate, test-framework closure, technology-constraints
+  sync) had already proven out through real work before ratification.
+- Confirmed pulling the Design System / Brand Identity design-tool
+  files into `resources/design/` — pending the user exporting them
+  from the design tool, same as every other wireframe this session.
+- Picked Auth & Onboarding as the first feature to run through
+  `/speckit-specify` (foundational, blocks nearly everything else).
 
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.

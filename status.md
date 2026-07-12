@@ -1,7 +1,7 @@
 # Status
 
-**Phase**: Initial infrastructure scaffold complete. No product spec
-yet.
+**Phase**: Infrastructure scaffold complete, constitution ratified.
+First feature spec (Auth & Onboarding) in progress.
 **Last updated**: 2026-07-12
 
 ## Where things stand
@@ -25,18 +25,19 @@ yet.
 - GitHub Spec Kit installed (Claude Code integration, PowerShell
   scripts) — `.specify/` and `.claude/skills/speckit-*` match the
   sibling project InterruptVector's setup.
-- Constitution drafted (`.specify/memory/constitution.md`, v0.3.1-draft,
-  **unratified**) — structural process principles only; playm8z's
-  actual product/MVP scope is not yet defined. Amended three times on
-  2026-07-12: a git branching rule (feature branches via Spec Kit's own
-  hook, merged to `main` on completion, no PR review needed solo) and a
-  feature-granularity default (roughly one feature per wireframed
-  page); then strengthening "specify→plan→tasks before implementation"
-  from a per-feature gate into a **project-wide** one — every
-  currently-scoped feature's spec/plan/tasks must all be done before
-  implementation begins on *any* of them; then a patch-level update
-  closing out Principle V's "no test framework installed" note (see
-  testing bullet below).
+- **Constitution ratified** (`.specify/memory/constitution.md`,
+  **v1.0.0**, ratified 2026-07-12) — structural process principles;
+  playm8z's actual full MVP scope beyond that is captured informally in
+  `resources/guidelines.md`/`status.md`/`docs/adr/`, formalized
+  feature-by-feature via `/speckit-specify`. Amended six times before
+  ratification, all on 2026-07-12: a git branching rule (feature
+  branches via Spec Kit's own hook, merged to `main` on completion, no
+  PR review needed solo) and a feature-granularity default (roughly one
+  feature per wireframed page); strengthening "specify→plan→tasks
+  before implementation" from a per-feature gate into a
+  **project-wide** one; closing out Principle V's test-framework gap;
+  syncing Technology Constraints with the actual Vercel/Neon/CI setup;
+  then ratification itself.
 - `.gitignore` copied from InterruptVector and committed by itself
   (commit `53cb372`). The full scaffold (app/db/auth/Spec Kit/draft
   constitution) is committed as `d3b9039`.
@@ -309,18 +310,39 @@ map. Two things surfaced from that pass, both resolved same day:
   **re-added by hand**, with a note in the file itself flagging that it
   won't survive a future regen automatically.
 
+**Sweep for open items (2026-07-12)**, at the user's request — resolved:
+- **Constitution ratified** — see above.
+- **First `/speckit-specify` scope decided**: Auth & Onboarding, since
+  it's foundational and blocks nearly everything else (posting,
+  applying, messaging all assume a logged-in user). Now in progress —
+  see Next up.
+- **Design System / Brand Identity design files**: user confirmed
+  pulling the design-tool source files into `resources/design/`
+  (alongside the already-present Dark/Light Theme sheets). I can't
+  generate/fetch these myself — they come from the same external design
+  tool that's produced every other `.dc.html` file this session, so
+  this is waiting on the user to export/drop them in, same as every
+  other wireframe.
+
+Still-open minor sub-questions, deliberately left unresolved (not urgent
+— surface if a relevant `/speckit-plan` touches them, don't assume
+either answer): whether freeing an accepted roster member re-opens
+editing on that posting; whether a `scheduledDate` further out than 30
+days extends a posting's expiry; whether Profile's "deactivate" and
+"delete" stay two distinct user-facing actions or collapse into one.
+Email verification's gated-UX and provider choice remain deferred to
+the Auth feature's own implementation, not urgent now.
+
 ## Next up
 
-- Fold in the four in-progress wireframes (public profile, news article
-  detail, Admin Settings, audit log) as they land, updating
-  `docs/feature-list.md`.
-- Once wireframes stop arriving: start running `/speckit-specify` /
-  `/speckit-plan` / `/speckit-tasks` per feature in `docs/feature-list.md`,
-  in the grouped order proposed (foundational → core loop → identity →
-  community → comms → content → admin). No implementation begins until
-  every feature in scope is fully specified, planned, and tasked.
-- Review and ratify (or amend) the draft constitution.
-- Decide on and install a test framework.
+- Auth & Onboarding is the first feature being taken through
+  `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` →
+  `/speckit-tasks`. Per the project-wide gate (constitution v1.0.0),
+  every other feature in `docs/feature-list.md` needs the same full
+  treatment before implementation begins on *any* of them — this is
+  the start of a long sequence, not a one-off.
+- Awaiting the user to drop the Design System / Brand Identity
+  `.dc.html` files into `resources/design/`.
 
 ## Blockers
 

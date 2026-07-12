@@ -1,21 +1,20 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 0.3.1-draft → 0.3.2-draft
-Status: DRAFT — not yet ratified. Awaiting explicit user review/approval
-  before RATIFICATION_DATE is set and this becomes v1.0.0.
-Modified principles: V. Test Discipline — CI is no longer an open gap;
-  `.github/workflows/ci.yml` runs typecheck/lint/Vitest/Playwright on
-  every push and PR, confirmed green.
+Version change: 0.3.2-draft → 1.0.0
+Status: RATIFIED. The user explicitly approved this constitution as-is,
+  after five prior amendments (branching rule, feature granularity,
+  project-wide spec/plan/tasks gate, test-framework closure, technology
+  constraints sync) had already proven out through real work (Vercel/
+  Neon setup, Google OAuth, Vitest/Playwright, CI). RATIFICATION_DATE is
+  today; no content changed beyond the version/status/date fields
+  themselves and removing now-resolved draft-only TODOs.
+Modified principles: n/a (ratification only, no principle content
+  changed)
 Added principles: n/a
 Added sections: n/a
-Modified sections: Technology Constraints — added the deployment/hosting
-  picture that was missing (Vercel project, Neon Postgres for Production/
-  Preview via Marketplace vs. local Postgres for local dev, current live
-  domain), and closed out the CI note to match Principle V.
+Modified sections: n/a (version/status footer only)
 Removed sections: n/a
-PATCH-level: clarifies existing text to match reality (infra work done
-  in a prior session turn), no new guidance or principles.
 Provenance note: this constitution's PROCESS (the six principles' shape,
   the ADR/changelog/status.md discipline, the spec-kit phase order) was
   structurally adapted from the sibling project InterruptVector
@@ -26,12 +25,13 @@ Provenance note: this constitution's PROCESS (the six principles' shape,
   InterruptVector's product-specific rules (its sandboxed-code-execution
   principle, its tank-battle MVP scope) are carried over, since playm8z
   is a different product with its own scope still to be defined.
-Still open, deliberately left as TODOs below:
-  - What playm8z actually is (problem statement, MVP scope) — Principle
-    IV's discipline rule is ratified; its content is largely captured
-    informally in `resources/guidelines.md`, `status.md`, and
-    `docs/adr/`, pending a formal `/speckit-specify` run per feature.
-  - RATIFICATION_DATE, pending explicit user approval of this draft.
+Still open, deliberately left as a TODO below:
+  - What playm8z actually is beyond the process principles (full MVP
+    scope) — Principle IV's discipline rule is ratified; its content is
+    largely captured informally in `resources/guidelines.md`,
+    `status.md`, and `docs/adr/`, formalized feature-by-feature as
+    `/speckit-specify` runs against `docs/feature-list.md` (starting
+    with Auth & Onboarding).
 Templates requiring updates:
   ✅ .specify/templates/plan-template.md — Constitution Check gate is
      generic (no hardcoded principle names), compatible as-is.
@@ -242,6 +242,5 @@ ADRs, specs, and plans are authored (or substantively reconciled)
 through this project's own process, so the "process produced this"
 record stays genuine.
 
-**Version**: 0.3.2-draft (DRAFT — not yet ratified) | **Ratified**:
-TODO(RATIFICATION_DATE) — pending explicit user approval | **Last
-Amended**: 2026-07-12
+**Version**: 1.0.0 | **Ratified**: 2026-07-12 | **Last Amended**:
+2026-07-12
