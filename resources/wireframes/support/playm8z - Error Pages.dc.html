@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100vh;font-family:'Sora',sans-serif;color:#fbeeda;background-image:radial-gradient(circle at 50% 20%,rgba(255,107,26,0.13),transparent 55%);display:flex;flex-direction:column;">
+
+  <!-- preview switcher (review aid) -->
+  <div style="position:fixed;top:14px;right:14px;z-index:60;display:flex;align-items:center;gap:6px;background:rgba(26,19,12,0.9);border:1px solid #2c2418;border-radius:11px;padding:5px 6px 5px 11px;backdrop-filter:blur(8px);">
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#6b5a45;margin-right:2px;">Preview</span>
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+  </div>
+
+  <!-- top logo -->
+  <div style="padding:22px 32px;">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:30px;height:28px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:16px;height:13px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:18px;height:14px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+  </div>
+
+  <!-- centered content -->
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 24px 80px;">
+
+    <!-- disconnected-pawns motif -->
+    <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:34px;animation:floaty 4s ease-in-out infinite;">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+        <span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-3px;box-shadow:0 0 20px -4px rgba(255,176,0,0.6);"></span>
+        <span style="width:44px;height:34px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;padding-bottom:16px;">
+        <span style="width:6px;height:2px;background:#5c4a33;border-radius:2px;"></span>
+        <span style="width:6px;height:2px;background:#5c4a33;border-radius:2px;"></span>
+        <span style="width:6px;height:2px;background:#3a2c1a;border-radius:2px;"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0.4;filter:grayscale(0.3);">
+        <span style="width:19px;height:19px;border-radius:50%;background:#6b5a45;margin-bottom:-3px;"></span>
+        <span style="width:38px;height:30px;background:#6b5a45;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span>
+      </div>
+    </div>
+
+    <!-- code -->
+    <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.32em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">{{ eyebrow }}</div>
+    <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:104px;line-height:0.9;letter-spacing:-0.03em;background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;">{{ code }}</div>
+
+    <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.01em;margin:0 0 12px;max-width:520px;">{{ title }}</h1>
+    <p style="font-family:'Sora',sans-serif;font-size:16px;color:#b49c6a;line-height:1.65;margin:0 0 30px;max-width:480px;">{{ message }}</p>
+
+    <!-- actions -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:13px 26px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">{{ primaryLabel }}</button>
+      <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:13px 24px;border-radius:12px;cursor:pointer;">{{ secondaryLabel }}</button>
+    </div>
+
+    <!-- footer note -->
+    <div style="margin-top:28px;font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;line-height:1.7;">
+      {{ footNote }}<br>
+      <sc-if value="{{ showRef }}" hint-placeholder-val="{{ false }}"><span style="color:#5c554c;">Error ref: {{ refCode }}</span></sc-if>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { view:'500' };
+
+  content(){
+    return {
+      '404': {
+        eyebrow:'Party not found', code:'404',
+        title:'This lobby is empty',
+        message:'The page you\u2019re looking for got disbanded, moved, or never existed. Let\u2019s find you a new party.',
+        primaryLabel:'Back to home', secondaryLabel:'Browse games',
+        footNote:'Lost? Try search or the browse page.', showRef:false, refCode:''
+      },
+      '500': {
+        eyebrow:'Critical hit', code:'500',
+        title:'Something broke on our end',
+        message:'Our server took an unexpected hit. It\u2019s not you — the team\u2019s already been pinged. Give it a moment and try again.',
+        primaryLabel:'Try again', secondaryLabel:'Back to home',
+        footNote:'If this keeps happening, let us know.', showRef:true, refCode:'p8z-5f2a91c'
+      },
+      '403': {
+        eyebrow:'Access denied', code:'403',
+        title:'You don\u2019t have access to this',
+        message:'This page needs a different account or permission level. Try logging in, or head back to safer ground.',
+        primaryLabel:'Log in', secondaryLabel:'Back to home',
+        footNote:'Think this is a mistake? Contact support.', showRef:false, refCode:''
+      },
+      'maint': {
+        eyebrow:'Down for maintenance', code:'BRB',
+        title:'We\u2019re re-rolling the servers',
+        message:'playm8z is briefly offline for scheduled upgrades. We\u2019ll be back online shortly — thanks for your patience.',
+        primaryLabel:'Check status', secondaryLabel:'Follow updates',
+        footNote:'Estimated back by 03:00 UTC.', showRef:false, refCode:''
+      }
+    };
+  }
+
+  tabBtn(active){
+    const b="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:5px 10px;border-radius:7px;cursor:pointer;transition:all .15s;border:none;";
+    return active ? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);" : b+"color:#b49c6a;background:#241a10;";
+  }
+
+  renderVals(){
+    const c = this.content()[this.state.view];
+    return {
+      ...c,
+      tabs: [['404','404'],['500','500'],['403','403'],['maint','Maint']].map(([k,label])=>({ label, style:this.tabBtn(this.state.view===k), onClick:()=>this.setState({view:k}) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

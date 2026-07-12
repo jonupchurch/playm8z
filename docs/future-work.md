@@ -45,5 +45,27 @@ they can be spec'd/built:
 - Admin Settings (auto-flag/banned-phrase rules, roles & permissions).
 - Moderator audit log.
 - Ban-appeals queue.
-- 404/500 error pages.
 - Mobile-specific layouts.
+
+**Designed 2026-07-12** (`resources/wireframes/support/playm8z - Error
+Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
+on this list.
+
+## Loading states (open question, not yet designed)
+
+Every wireframe shows fully-populated data instantly (the prototypes
+filter a hardcoded in-memory array with zero network delay), so nothing
+designs what shows during an actual data fetch: initial page-load
+skeletons (Home/Browse/Listing/Forum/Profile/Inbox/News/admin queues),
+filter/search results while a query is in flight, or button/form pending
+states while a mutation (publish listing, apply to a slot, post a reply,
+send a message, login/signup, admin moderation actions) is submitting.
+Also open: a genuine fetch-failure error state (distinct from Browse's
+already-designed zero-results empty state) — e.g. "Couldn't load
+listings — retry."
+
+Recommended (not yet actioned): rather than wireframing this per-page,
+add generic reusable patterns to the design system (§4.5-style) — a
+skeleton-card loading state and an error-banner/retry state — and apply
+them consistently, the same way buttons/tags/cards are already reused
+across screens.

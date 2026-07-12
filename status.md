@@ -90,10 +90,21 @@ distillation as sufficient.
 
 **Decision (ADR 0001, `docs/adr/0001-game-as-free-text-keyword.md`):**
 `game` is a free-text/keyword field, not a curated `Game` catalog entity.
-No admin Games-management page and no per-game hub page (`/games/:slug`)
-are planned — Browse's keyword search/filter over postings is what
-satisfies "browse games." This supersedes `guidelines.md` §5's suggested
-`Game` entity and `Posting.gameId` foreign key.
+No admin Games-management page — Browse's keyword search/filter over
+postings is what satisfies "browse games." A per-game hub page
+(`/games/:slug`) is parked as maybe-later (`docs/future-work.md`), same
+non-committed status as Groups. This supersedes `guidelines.md` §5's
+suggested `Game` entity and `Posting.gameId` foreign key.
+
+`resources/wireframes/support/playm8z - Error Pages.dc.html` (added
+2026-07-12) designs 404, 500, 403, and a maintenance/down page — closes
+that item on the not-yet-designed list. Still open, not yet designed
+anywhere: loading states (page-load skeletons, in-flight
+filter/search, pending submit buttons) and a genuine fetch-failure
+error state distinct from Browse's already-designed zero-results empty
+state. Recommended approach (not yet actioned): add these as reusable
+design-system patterns rather than per-page wireframes — see
+`docs/future-work.md`.
 
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding

@@ -66,6 +66,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   free-text/keyword field, not a curated catalog entity — no admin
   Games-management page, no per-game hub page. Supersedes
   `guidelines.md` §5's suggested `Game` entity/`gameId` foreign key.
+- Added `resources/wireframes/support/playm8z - Error Pages.dc.html` —
+  404, 500, 403, and a maintenance/down page. Removed from
+  `docs/future-work.md`'s not-yet-designed list; added a new open
+  question there instead — loading states (skeletons, pending
+  buttons/forms) and a genuine fetch-error state aren't designed
+  anywhere yet, distinct from Browse's already-designed empty state.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
