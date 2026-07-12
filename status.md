@@ -478,13 +478,21 @@ deactivate(7) → Polish(3). `docs/feature-list.md` updated to 🟢.
 Profile is the seventh feature with a complete spec/plan/tasks trio —
 the largest one specced so far.
 
+**Blocked Users: spec + plan done** (2026-07-12, branch
+`008-blocked-users`) — introduces `blocks` and `reports` (first writer
+of the latter, via "Also report" — no review UI, that's Notifications
+& Report's job). First real modal-dialog UI in this project. Defines
+the Block relationship as a queryable entity; enforcement elsewhere
+(Home/Browse/Listing detail/future Inbox/Forum) is explicitly out of
+scope, flagged as a follow-up those docs may need.
+
 ## Next up
 
-- Merge `007-profile-and-account-settings` into `main`, then move on
-  to feature #8 (Blocked Users) — same specify→plan→tasks→merge
-  sequence repeats for every other feature in `docs/feature-list.md`
-  — per the project-wide gate (constitution v1.0.0), implementation
-  doesn't begin on *any* feature until all of them have this done.
+- Blocked Users: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

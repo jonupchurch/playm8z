@@ -380,6 +380,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   the seventh feature to clear the project-wide gate — the largest
   feature specced so far.
 
+- Ran `/speckit-specify` and `/speckit-plan` for Blocked Users:
+  `spec.md`/`plan.md` on branch `008-blocked-users`. Introduces
+  `blocks` and `reports` (first writer of the latter, via the "Also
+  report" checkbox — no review/queue UI, that's Notifications &
+  Report's job). Drops the wireframe's fake per-block reason taxonomy
+  down to a simple report flag. This project's first real modal-dialog
+  UI (focus trap, `role="dialog"`, Escape-to-close). Defines the Block
+  relationship as a queryable entity; enforcing it elsewhere (Home,
+  Browse, Listing detail, future Inbox/Forum) is explicitly out of
+  scope and noted as a follow-up those features' docs may need.
+  Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
+  markers. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
