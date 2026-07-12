@@ -330,17 +330,30 @@ either answer): whether freeing an accepted roster member re-opens
 editing on that posting; whether a `scheduledDate` further out than 30
 days extends a posting's expiry; whether Profile's "deactivate" and
 "delete" stay two distinct user-facing actions or collapse into one.
-Email verification's gated-UX and provider choice remain deferred to
-the Auth feature's own implementation, not urgent now.
+
+**Auth & Onboarding: spec + plan done** (2026-07-12, branch
+`001-auth-onboarding`, `specs/001-auth-onboarding/`). Two things
+surfaced worth recording:
+- **No git-branch-creation hook is actually wired up** in this repo
+  (no `.specify/extensions.yml`), despite the constitution describing
+  branch creation as automatic via a Spec Kit hook. Branches need
+  creating by hand (`git checkout -b NNN-short-name`) before running
+  `create-new-feature.ps1`, for this and every future feature.
+- **Resend (email provider for verification emails) is picked but not
+  provisioned** — Vercel Marketplace requires a domain you own to send
+  from, and no domain exists yet (the custom-domain question was
+  separately deferred). Not a design gap: the plan includes a
+  console-log fallback (research.md #1) so the feature is fully
+  buildable/testable now; Resend gets wired up for real once a domain
+  exists.
 
 ## Next up
 
-- Auth & Onboarding is the first feature being taken through
-  `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` →
-  `/speckit-tasks`. Per the project-wide gate (constitution v1.0.0),
-  every other feature in `docs/feature-list.md` needs the same full
-  treatment before implementation begins on *any* of them — this is
-  the start of a long sequence, not a one-off.
+- Auth & Onboarding: `/speckit-tasks` next, then the same
+  specify→plan→tasks sequence repeats for every other feature in
+  `docs/feature-list.md` — per the project-wide gate (constitution
+  v1.0.0), implementation doesn't begin on *any* feature until all of
+  them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

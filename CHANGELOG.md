@@ -195,6 +195,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   from the design tool, same as every other wireframe this session.
 - Picked Auth & Onboarding as the first feature to run through
   `/speckit-specify` (foundational, blocks nearly everything else).
+- Ran `/speckit-specify` for Auth & Onboarding: `spec.md` on branch
+  `001-auth-onboarding`, quality checklist passed first try, zero
+  `[NEEDS CLARIFICATION]` markers.
+- Ran `/speckit-plan` for Auth & Onboarding: `research.md` (Resend
+  picked as the email provider via Vercel Marketplace discover, though
+  actual provisioning is blocked on domain ownership — a console-log
+  fallback is planned instead so the feature is buildable now;
+  resolved how Google sign-ups get a handle; resolved where the
+  unverified-user write gate lives), `data-model.md` (extends the
+  existing `user` table, no new tables beyond Auth.js's own
+  `verificationToken`), `contracts/api.md`, `quickstart.md`. Discovered
+  no git-branch-creation hook is actually configured in this repo
+  despite the constitution assuming one — branches are created by hand.
 
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
