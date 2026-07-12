@@ -98,13 +98,13 @@ suggested `Game` entity and `Posting.gameId` foreign key.
 
 `resources/wireframes/support/playm8z - Error Pages.dc.html` (added
 2026-07-12) designs 404, 500, 403, and a maintenance/down page — closes
-that item on the not-yet-designed list. Still open, not yet designed
-anywhere: loading states (page-load skeletons, in-flight
-filter/search, pending submit buttons) and a genuine fetch-failure
-error state distinct from Browse's already-designed zero-results empty
-state. Recommended approach (not yet actioned): add these as reusable
-design-system patterns rather than per-page wireframes — see
-`docs/future-work.md`.
+that item on the not-yet-designed list.
+
+Loading/pending/fetch-error states (page-load skeletons, in-flight
+filter/search, pending submit buttons, submit success/error) are now
+specified too, per the user's direction to handle them as a reusable
+design-system pattern rather than per-page wireframes —
+`resources/guidelines.md` §4.6.
 
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding

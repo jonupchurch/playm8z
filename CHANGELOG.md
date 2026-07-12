@@ -67,11 +67,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Games-management page, no per-game hub page. Supersedes
   `guidelines.md` §5's suggested `Game` entity/`gameId` foreign key.
 - Added `resources/wireframes/support/playm8z - Error Pages.dc.html` —
-  404, 500, 403, and a maintenance/down page. Removed from
-  `docs/future-work.md`'s not-yet-designed list; added a new open
-  question there instead — loading states (skeletons, pending
-  buttons/forms) and a genuine fetch-error state aren't designed
-  anywhere yet, distinct from Browse's already-designed empty state.
+  404, 500, 403, and a maintenance/down page.
+- Added `resources/guidelines.md` §4.6 "Loading & error patterns" — a
+  reusable design-system spec (not per-page wireframes) for skeleton
+  loading, delayed-skeleton timing, a fetch-error state distinct from
+  the existing Empty state, pending-submit buttons, and submit
+  success/error, covering every data-fetching/mutating page at once.
+  Resolves the open loading-states question in `docs/future-work.md`.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

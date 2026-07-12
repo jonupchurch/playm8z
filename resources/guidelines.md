@@ -120,6 +120,15 @@ These recur across nearly every screen — build them once.
 - **Empty states:** dashed `--border` box, centered; success queues use a green ✓ circle ("Queue clear!", "Inbox zero!").
 - **Imagery:** none shipped. Covers/banners use brand gradients; real product art/screenshots are placeholders. In build, wire real images with graceful gradient fallbacks.
 
+### 4.6 Loading & error patterns
+Not covered by any wireframe — every prototype renders as if its data is already in memory (it filters a hardcoded array with zero network delay). Defined here directly rather than per-page, since the same handful of states recur everywhere data is fetched or submitted.
+
+- **Skeleton loading:** same footprint as the real card/row it replaces (same radius, padding, grid position) so layout doesn't jump on swap-in — `--surface-2` blocks standing in for avatar/title/body, pulsing opacity (~0.5→1, 1.4s ease-in-out infinite), no shimmer sweep. Show the same default count as the page's real grid (e.g. Browse's 9-card grid → 9 skeleton cards). Applies to: Home/Browse/Listing feeds, Forum/Forum Thread lists, Profile tabs, Inbox conversation list, News grid, all admin queues/tables.
+- **Delayed skeleton:** only render it after ~150–200ms of waiting, so fast responses never flash one.
+- **Fetch-error state:** visually distinct from the dashed-border **Empty state** above — solid `--surface` card, `--pop`/orange icon accent, short warm copy ("Lost connection to the servers"), gradient-fill "Retry" button (Buttons pattern) that re-triggers the fetch. Full-page failures also get a secondary ghost "Back to home" button. Inline/widget-level failures (e.g. Home's Trending row) use a compact one-line variant instead: icon + text + small ghost "Retry" link.
+- **Pending submit:** buttons that trigger a mutation (Publish listing, Apply for a slot, Post reply, Send message, Login/Signup, admin Approve/Remove/Ban/Dismiss, Profile/Account Save) keep their existing fill/size (no layout shift) but swap label to a short in-progress verb ("Publishing…", "Sending…") and go non-interactive (~0.85 opacity, `not-allowed`) while in flight.
+- **Submit success/error:** reuse the confirmation-flip convention already designed on a couple of screens (Listing detail's "Application sent ✓ / Withdraw", Content Page's "✓ Saved") for success. On failure, flip instead to a muted/`--pop`-tinted label ("Couldn't send — Retry") that resubmits on click.
+
 ---
 
 ## 5. Data models (suggested)
