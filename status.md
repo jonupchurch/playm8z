@@ -28,8 +28,8 @@ yet.
   **unratified**) — structural process principles only; playm8z's
   actual product/MVP scope is not yet defined.
 - `.gitignore` copied from InterruptVector and committed by itself
-  (commit `53cb372`). Everything else scaffolded in this session is
-  still uncommitted, pending review.
+  (commit `53cb372`). The full scaffold (app/db/auth/Spec Kit/draft
+  constitution) is committed as `d3b9039`.
 
 ## Known gaps / accepted limitations
 
@@ -51,8 +51,6 @@ yet.
   MVP scope — nothing product-shaped should be built before this per
   the constitution's Scope Discipline principle.
 - Decide on and install a test framework.
-- Commit the scaffolded app (pending review of what's currently
-  untracked).
 
 ## Blockers
 
