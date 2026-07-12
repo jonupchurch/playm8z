@@ -189,3 +189,13 @@ feature (`resources/wireframes/support/playm8z - Notifications &
 Report.dc.html`) — Listing detail (`006-listing-detail`) doesn't build
 report submission itself; that belongs to whichever feature specs
 `Report` properly.
+
+**Update 2026-07-12**: Blocked Users (`008-blocked-users`) turned out
+to need a minimal version of `Report` after all (its "Also report to
+moderators" checkbox), and became that entity's first writer —
+`targetType='user'` rows only, no review/queue UI. Listing detail's
+own Report button is **not** retroactively un-deferred by this — that
+remains a separate decision, since it'd need its own `targetType`
+('posting') wiring and this hasn't been revisited yet. Whoever picks
+this up next should check whether reusing Blocked Users' `Report`
+table (rather than waiting for Notifications & Report) makes sense.
