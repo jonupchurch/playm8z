@@ -57,6 +57,11 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   design-system tokens, suggested data models, full route map, and a
   per-screen spec for every page. Expanded `docs/future-work.md` with
   its full "not-yet-designed" list (§10).
+- Added `resources/sitemap.md` — a full site tree with access-level
+  markers (public/authed/admin), global elements, and key page-to-page
+  flows; cross-confirms guidelines.md's route map and surfaces a few
+  more undesigned pages (public profile, news article detail, password
+  reset), folded into `docs/future-work.md`.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

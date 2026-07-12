@@ -71,13 +71,22 @@ post-signup onboarding flow) — plus
 admin pages live under `resources/wireframes/admin/`: Admin Dashboard,
 Admin Forum, Admin News, Admin Postings, Admin Users, Admin Content
 Pages, Admin Reports. Also a Dark/Light theme + style guide in
-`resources/design/` (guidelines.md references a separate canonical
-"Design System" file and a "Brand Identity" file that aren't present in
-this repo — worth asking the user whether those are coming or whether
-guidelines.md §4's distillation is sufficient).
+`resources/design/`.
 
-"Groups" was deferred to `docs/future-work.md`, along with the rest of
-the §10 not-yet-designed list above.
+`resources/sitemap.md` (also added 2026-07-12) cross-confirms the same
+IA/route map as guidelines.md §6, plus a couple of undesigned pages
+guidelines.md didn't call out on its own (now folded into
+`docs/future-work.md`): a public profile page (`/u/:handle`), a news
+article detail page (`/news/:slug`), and password reset. It also
+resolves the "Design System"/"Brand Identity" file question from
+earlier: its status summary lists both as **designed** (they exist in
+the design tool) but neither was copied into `resources/design/` in
+this repo — only the Dark/Light Theme sheets were. Worth asking the
+user whether to pull those two in as well, or treat guidelines.md §4's
+distillation as sufficient.
+
+"Groups" and the rest of the not-yet-designed list live in
+`docs/future-work.md`.
 
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding

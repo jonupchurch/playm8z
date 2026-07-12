@@ -14,19 +14,25 @@ Groups | Forum`), but no wireframe was made and the user deferred it to
 future functionality rather than including it in the first spec. Confirmed
 "designed later" in `resources/guidelines.md` §1 and §10.
 
-## Not-yet-designed (per `resources/guidelines.md` §10)
+## Not-yet-designed (per `resources/guidelines.md` §10 and `resources/sitemap.md`)
 
 No wireframe exists yet for any of these — a design pass is needed before
 they can be spec'd/built:
 
 - Groups/Clans (browse/detail/create) — see above, the one already known.
 - Logged-out marketing landing page (the "Discovery" direction from the
-  brand exploration).
+  brand exploration) — redirects authed users to Home.
+- Public profile page (`/u/:handle`) — read-only variant of the Profile
+  wireframe's Overview tab, honoring privacy flags; noted in both
+  guidelines.md §7.7 and sitemap.md as a needed but undesigned variant.
+- News article detail page (`/news/:slug`) — the News wireframe only
+  covers the feed/list view.
+- Password reset (`/reset`).
 - Post-session rating/review flow.
 - Discord connect flow (Discord is referenced as "coming soon" in several
   wireframes but isn't functional).
 - Admin Settings (auto-flag/banned-phrase rules, roles & permissions).
 - Moderator audit log.
 - Ban-appeals queue.
-- 404/error pages.
+- 404/500 error pages.
 - Mobile-specific layouts.
