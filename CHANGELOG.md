@@ -281,6 +281,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   BY` aggregate, never cached/stale), `data-model.md`, `quickstart.md`.
   No `contracts/` — no new fetch-based API surface.
 
+- Ran `/speckit-tasks` for Home: `tasks.md` — 24 tasks: Setup (1, a
+  local postings-seed script since Post a Game doesn't exist yet) →
+  Foundational (4: postings table + migration, the open-postings
+  reader, the page-shell redirect) → US1/P1 search+filter+sort+
+  click-through (7) → US2/P2 trending (5) → US3/P3 empty state (4) →
+  Polish (3). Home is the third feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
