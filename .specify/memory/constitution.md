@@ -1,19 +1,21 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 0.3.0-draft → 0.3.1-draft
+Version change: 0.3.1-draft → 0.3.2-draft
 Status: DRAFT — not yet ratified. Awaiting explicit user review/approval
   before RATIFICATION_DATE is set and this becomes v1.0.0.
-Modified principles: V. Test Discipline — the "current gap: no test
-  framework installed" note is resolved (Vitest + Playwright installed
-  and verified, matching the sibling project); CI enforcement remains
-  an open gap, called out explicitly instead.
+Modified principles: V. Test Discipline — CI is no longer an open gap;
+  `.github/workflows/ci.yml` runs typecheck/lint/Vitest/Playwright on
+  every push and PR, confirmed green.
 Added principles: n/a
 Added sections: n/a
-Modified sections: Technology Constraints — same resolution reflected
-  there (Vitest + Playwright installed; no CI runner wired up yet).
+Modified sections: Technology Constraints — added the deployment/hosting
+  picture that was missing (Vercel project, Neon Postgres for Production/
+  Preview via Marketplace vs. local Postgres for local dev, current live
+  domain), and closed out the CI note to match Principle V.
 Removed sections: n/a
-PATCH-level: clarifies existing text to match reality, no new guidance.
+PATCH-level: clarifies existing text to match reality (infra work done
+  in a prior session turn), no new guidance or principles.
 Provenance note: this constitution's PROCESS (the six principles' shape,
   the ADR/changelog/status.md discipline, the spec-kit phase order) was
   structurally adapted from the sibling project InterruptVector
@@ -29,9 +31,6 @@ Still open, deliberately left as TODOs below:
     IV's discipline rule is ratified; its content is largely captured
     informally in `resources/guidelines.md`, `status.md`, and
     `docs/adr/`, pending a formal `/speckit-specify` run per feature.
-  - CI enforcement (typecheck/lint/test gating merges, per Principle V)
-    — not yet wired up, even though the test frameworks themselves are
-    installed.
   - RATIFICATION_DATE, pending explicit user approval of this draft.
 Templates requiring updates:
   ✅ .specify/templates/plan-template.md — Constitution Check gate is
@@ -130,8 +129,11 @@ aspiration.
 
 Vitest (unit/integration) and Playwright (e2e) are installed, matching
 the sibling project's pattern — `npm test` / `npm run test:watch` /
-`npm run test:e2e`. CI enforcement (gating merges on green) is not yet
-wired up; see Technology Constraints.
+`npm run test:e2e`. CI (`.github/workflows/ci.yml`, GitHub Actions) runs
+typecheck, lint, Vitest, and Playwright on every push and PR; see
+Technology Constraints. Branch protection making these checks required
+before merge isn't configured (not very actionable solo, with no
+collaborators to protect against).
 
 ### VI. Legible History
 
@@ -154,18 +156,23 @@ behind the actual code.
 Next.js (App Router) with TypeScript in strict mode; Tailwind CSS for
 styling; npm as the package manager; `src/` layout with the `@/*` import
 alias. Validation at every trust boundary uses Zod (Principle II).
-Persistence is PostgreSQL (local dev via a locally installed Postgres
-server), queried through Drizzle ORM (`drizzle-orm` + `drizzle-kit`,
-schema at `src/db/schema.ts`, migrations in `drizzle/`). Auth is Auth.js
-v5 (`next-auth`) via `@auth/drizzle-adapter`, with two providers: Google
-OAuth and a native Credentials (email + password, hashed with
-`bcrypt-ts`) provider; because Credentials sessions can't be looked up
-through adapter-backed database sessions, sessions use the JWT
-strategy. `.env.local` (gitignored) holds real secrets; `.env.example`
-(committed) documents every required variable with no real values.
+Persistence is PostgreSQL, queried through Drizzle ORM (`drizzle-orm` +
+`drizzle-kit`, schema at `src/db/schema.ts`, migrations in `drizzle/`).
+Local dev uses a locally installed Postgres server; Production/Preview
+on Vercel use Neon Postgres, provisioned via the Vercel Marketplace —
+deliberately kept separate, not unified, so local dev has no network
+dependency. Auth is Auth.js v5 (`next-auth`) via `@auth/drizzle-adapter`,
+with two providers: Google OAuth and a native Credentials (email +
+password, hashed with `bcrypt-ts`) provider; because Credentials
+sessions can't be looked up through adapter-backed database sessions,
+sessions use the JWT strategy. `.env.local` (gitignored) holds real
+secrets; `.env.example` (committed) documents every required variable
+with no real values. Deployed on Vercel (project
+`jupchurch-7994s-projects/playm8z`), currently live at the default
+`https://playm8z.vercel.app` domain — no custom domain connected yet.
 
-Vitest + Playwright are installed (see Principle V); no CI runner is
-wired up yet to enforce them on every push.
+Vitest + Playwright are installed (see Principle V), enforced by CI
+(`.github/workflows/ci.yml`, GitHub Actions) on every push and PR.
 
 ## Development Workflow
 
@@ -235,6 +242,6 @@ ADRs, specs, and plans are authored (or substantively reconciled)
 through this project's own process, so the "process produced this"
 record stays genuine.
 
-**Version**: 0.3.1-draft (DRAFT — not yet ratified) | **Ratified**:
+**Version**: 0.3.2-draft (DRAFT — not yet ratified) | **Ratified**:
 TODO(RATIFICATION_DATE) — pending explicit user approval | **Last
 Amended**: 2026-07-12
