@@ -31,17 +31,17 @@ No wireframe exists yet for any of these — a design pass is needed before
 they can be spec'd/built:
 
 - Groups/Clans (browse/detail/create) — see above, the one already known.
-- Public profile page (`/u/:handle`) — read-only variant of the Profile
-  wireframe's Overview tab, honoring privacy flags; noted in both
-  guidelines.md §7.7 and sitemap.md as a needed but undesigned variant.
-- News article detail page (`/news/:slug`) — the News wireframe only
-  covers the feed/list view.
 - Password reset (`/reset`).
 - Post-session rating/review flow — confirmed by the user (2026-07-12)
   as an explicit future-state feature, not just undesigned.
-- Admin Settings (auto-flag/banned-phrase rules, roles & permissions).
-- Moderator audit log.
 - Mobile-specific layouts.
+
+**Moved to `docs/feature-list.md` (2026-07-12)** — no longer deferred, the
+user is actively wireframing these now: public profile page (`/u/:handle`),
+news article detail page (`/news/:slug`), Admin Settings, and Moderator
+audit log. They stay off this future-work list until wireframed, at which
+point they join the spec/plan/tasks queue like everything else in
+`docs/feature-list.md`.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Error
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
@@ -104,8 +104,9 @@ Raised by the user alongside the blocked-mid-conversation behavior below:
 an admin ability to open a user's profile and see their messages, posts,
 and interactions (a fuller investigative view than the existing per-module
 moderation drawers) would help moderation, but is explicitly future
-state, not needed now. Distinct from the already-listed "Moderator audit
-log" (which logs moderator *actions*, not a user's own content/history).
+state, not needed now. Distinct from "Moderator audit log" (which logs
+moderator *actions*, not a user's own content/history) — that one is no
+longer deferred, see `docs/feature-list.md`.
 
 ## User `reliabilityPct` (future state)
 

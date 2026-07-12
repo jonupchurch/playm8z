@@ -126,6 +126,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   feature's spec.md/plan.md/tasks.md must all be complete before
   implementation begins on any feature, not just before that feature's
   own implementation.
+- Added `docs/feature-list.md` — tracks the ~22-26 proposed features
+  (one per wireframed page, grouped by dependency order) against the
+  project-wide spec/plan/tasks gate. Design System / shared UI
+  primitives is exempt (infrastructure, built directly). Moved public
+  profile, news article detail, Admin Settings, and Moderator audit log
+  out of `docs/future-work.md`'s deferred list since the user is
+  actively wireframing them now, not deferring them.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

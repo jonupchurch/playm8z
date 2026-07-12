@@ -202,17 +202,25 @@ future state (no change from before).
   committed — see `docs/future-work.md`). Applies at the Zod validation
   boundary per the constitution's Principle II.
 
-Scope for the first `/speckit-specify` run is still an open question —
-the user chose to wait for wireframes to stop arriving before deciding
-how to cut the first vertical slice, per the constitution's Scope
-Discipline principle. `guidelines.md` §11's file→feature map is a strong
-candidate starting point for how to slice specs once that happens.
+**Feature list confirmed (2026-07-12):** `docs/feature-list.md` tracks the
+~22-26 features against the constitution's project-wide spec/plan/tasks
+gate — every one needs a complete spec.md/plan.md/tasks.md before
+implementation begins on *any* of them. Design System / shared UI
+primitives is exempt (infrastructure, built directly, like the initial
+scaffold — user confirmed). Four more wireframes are actively in
+progress, not deferred: public profile page, news article detail, Admin
+Settings, and Moderator audit log (moved out of `docs/future-work.md`).
 
 ## Next up
 
-- Resume once wireframes stop arriving: re-open the first-spec scope
-  question (single slice vs. broader) before running `/speckit-specify`,
-  informed by `guidelines.md`.
+- Fold in the four in-progress wireframes (public profile, news article
+  detail, Admin Settings, audit log) as they land, updating
+  `docs/feature-list.md`.
+- Once wireframes stop arriving: start running `/speckit-specify` /
+  `/speckit-plan` / `/speckit-tasks` per feature in `docs/feature-list.md`,
+  in the grouped order proposed (foundational → core loop → identity →
+  community → comms → content → admin). No implementation begins until
+  every feature in scope is fully specified, planned, and tasked.
 - Review and ratify (or amend) the draft constitution.
 - Decide on and install a test framework.
 
