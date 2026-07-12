@@ -180,7 +180,8 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   every push and PR, using CI-only placeholder auth env vars (no real
   secrets, no GitHub Secrets setup needed). Verified the flow locally
   first (schema push + production build against a throwaway database
-  with the same placeholders) before trusting it in Actions.
+  with the same placeholders) before trusting it in Actions. Confirmed
+  green on the first live GitHub Actions run.
 
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.

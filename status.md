@@ -112,6 +112,11 @@ yet.
   — note this triggers CI, it doesn't yet enforce a required check on
   branch protection (GitHub branch protection rules aren't configured
   — not really actionable solo without collaborators to protect against).
+  **Confirmed live on GitHub Actions**: first run (triggered by the
+  commit that added the workflow) went fully green — every step
+  (checkout, setup-node, `npm ci`, typecheck, lint, Drizzle push,
+  Vitest, Playwright browser install, Playwright e2e) succeeded on the
+  first try, no fixes needed.
 
 ## Known gaps / accepted limitations
 
