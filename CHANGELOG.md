@@ -74,6 +74,22 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   the existing Empty state, pending-submit buttons, and submit
   success/error, covering every data-fetching/mutating page at once.
   Resolves the open loading-states question in `docs/future-work.md`.
+- Added `resources/wireframes/support/playm8z - Blocked Users.dc.html`
+  — blocked-users list/search, block flow (pick → confirm, optional
+  "also report"), unblock confirmation, empty states.
+- ADR 0002 (`docs/adr/0002-minimum-age-18-plus.md`): playm8z is 18+
+  only — the 13+ age tier is dropped; `ageGroup` is `18|21`, with 21+
+  as an optional stricter tag rather than a platform minimum.
+  Supersedes `guidelines.md` §5's `ageGroup(13|18|21)`.
+- ADR 0003 (`docs/adr/0003-posting-30-day-expiration.md`): postings
+  auto-expire 30 days after creation unless manually closed or renewed.
+- Confirmed and logged several scope decisions in
+  `docs/future-work.md`: post-session rating and monetized/premium
+  accounts are explicit future-state features; notification emails are
+  scoped to registration/verification only for now; email-verification
+  design/implementation is delegated to Claude Code, pending an
+  email-provider choice; recurring sessions are descriptive-only (no
+  scheduling engine).
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

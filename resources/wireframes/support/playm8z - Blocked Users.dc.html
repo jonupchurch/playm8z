@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">V</div>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:720px;margin:0 auto;padding:26px 32px 80px;">
+
+    <!-- breadcrumb -->
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;margin-bottom:18px;">
+      <a href="#" style="color:#b49c6a;">Account</a> <span style="color:#4a3d2c;">/</span> <a href="#" style="color:#b49c6a;">Privacy</a> <span style="color:#4a3d2c;">/</span> <span style="color:#8a7c68;">Blocked users</span>
+    </div>
+
+    <!-- header -->
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+      <div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:0 0 4px;">Blocked users</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">{{ countLabel }}</p>
+      </div>
+      <button onClick="{{ openBlock }}" style="display:flex;align-items:center;gap:7px;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 18px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);"><span style="font-size:15px;line-height:1;">＋</span> Block a user</button>
+    </div>
+
+    <!-- info callout -->
+    <div style="display:flex;gap:12px;background:rgba(255,107,26,0.06);border:1px solid rgba(255,107,26,0.25);border-radius:14px;padding:16px 18px;margin-bottom:22px;">
+      <span style="font-size:18px;flex:none;">🛡️</span>
+      <div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;margin-bottom:5px;">When you block someone</div>
+        <p style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;line-height:1.6;margin:0;">They can't message you, apply to your parties, or invite you. You won't see their postings, forum posts, or profile. They aren't told they've been blocked.</p>
+      </div>
+    </div>
+
+    <!-- search -->
+    <sc-if value="{{ hasAny }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;margin-bottom:16px;max-width:320px;">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search blocked users…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:10px 0;" />
+      </div>
+    </sc-if>
+
+    <!-- list -->
+    <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+      <sc-for list="{{ rows }}" as="u" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:13px;padding:15px 18px;border-bottom:1px solid #221a10;">
+          <div style="width:44px;height:44px;border-radius:12px;background:{{ u.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;flex:none;filter:grayscale(0.35);opacity:0.85;">{{ u.initial }}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">{{ u.name }}</span><sc-if value="{{ u.hasReason }}" hint-placeholder-val="{{ false }}"><span style="{{ u.reasonStyle }}">{{ u.reason }}</span></sc-if></div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-top:2px;">{{ u.handle }} · blocked {{ u.date }}</div>
+          </div>
+          <button onClick="{{ u.onUnblock }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:9px 16px;border-radius:10px;cursor:pointer;flex:none;">Unblock</button>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <!-- empty (no blocks at all) -->
+    <sc-if value="{{ noneAtAll }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:64px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+        <div style="font-size:32px;margin-bottom:12px;">🕊️</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px;">No blocked users</div>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 18px;">Anyone you block will show up here. You can unblock them anytime.</p>
+        <button onClick="{{ openBlock }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">Block a user</button>
+      </div>
+    </sc-if>
+
+    <!-- empty (search no match) -->
+    <sc-if value="{{ noMatch }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:48px 20px;font-family:'Sora',sans-serif;color:#8a7c68;">No blocked users match “{{ query }}”.</div>
+    </sc-if>
+
+  </div>
+
+  <!-- ===== BLOCK MODAL ===== -->
+  <sc-if value="{{ blockOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeBlock }}" style="position:fixed;inset:0;background:rgba(8,6,4,0.65);backdrop-filter:blur(3px);z-index:50;"></div>
+    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:440px;max-width:92vw;max-height:84vh;display:flex;flex-direction:column;background:#160f0a;border:1px solid #2c2418;border-radius:18px;z-index:51;box-shadow:0 40px 100px -40px rgba(0,0,0,0.9);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #2c2418;flex:none;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;">{{ blockHeading }}</div>
+        <button onClick="{{ closeBlock }}" style="width:32px;height:32px;font-size:16px;color:#8a7c68;background:#241a10;border:1px solid #2c2418;border-radius:9px;cursor:pointer;line-height:1;">✕</button>
+      </div>
+
+      <!-- STEP: pick -->
+      <sc-if value="{{ blockPick }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:16px 20px 8px;flex:none;">
+          <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;">
+            <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+            <input value="{{ blockQuery }}" onInput="{{ onBlockQuery }}" placeholder="Search players to block…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:11px 0;" />
+          </div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:6px 12px 8px;min-height:140px;">
+          <sc-for list="{{ candidates }}" as="c" hint-placeholder-count="5">
+            <button onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:12px;width:100%;background:transparent;border:none;padding:10px 8px;cursor:pointer;text-align:left;border-radius:11px;" style-hover="background:#20180e;">
+              <div style="width:36px;height:36px;border-radius:11px;background:{{ c.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;flex:none;">{{ c.initial }}</div>
+              <div style="flex:1;min-width:0;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">{{ c.name }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ c.handle }}</div></div>
+              <span style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#ff7ea0;">Block</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ noCandidates }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;padding:28px;font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;">No players found.</div></sc-if>
+        </div>
+      </sc-if>
+
+      <!-- STEP: confirm -->
+      <sc-if value="{{ blockConfirm }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:20px;flex:1;overflow-y:auto;">
+          <div style="display:flex;align-items:center;gap:12px;background:#1a130c;border:1px solid #2c2418;border-radius:12px;padding:14px;margin-bottom:16px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:{{ selAvatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;flex:none;">{{ selInitial }}</div>
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">{{ selName }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ selHandle }}</div></div>
+          </div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;line-height:1.6;margin:0 0 14px;">Block <b style="color:#fbeeda;">{{ selName }}</b>? They won't be able to message you, apply to your parties, or see your content — and you won't see theirs.</p>
+          <button onClick="{{ toggleReport }}" style="display:flex;align-items:center;gap:11px;background:transparent;border:none;padding:0;cursor:pointer;"><span style="{{ reportBox }}"></span><span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;">Also report this user to moderators</span></button>
+        </div>
+      </sc-if>
+
+      <!-- footer -->
+      <div style="padding:14px 20px 18px;border-top:1px solid #2c2418;flex:none;display:flex;gap:10px;">
+        <sc-if value="{{ blockConfirm }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ backToPick }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#b49c6a;background:#241a10;border:1px solid #3a2c1a;padding:12px 20px;border-radius:11px;cursor:pointer;">Back</button>
+          <button onClick="{{ confirmBlock }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fff;background:#ff3b6b;border:none;padding:12px;border-radius:11px;cursor:pointer;">{{ confirmBlockLabel }}</button>
+        </sc-if>
+        <sc-if value="{{ blockPick }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ closeBlock }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#b49c6a;background:#241a10;border:1px solid #3a2c1a;padding:12px;border-radius:11px;cursor:pointer;">Cancel</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== UNBLOCK MODAL ===== -->
+  <sc-if value="{{ unblockOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ cancelUnblock }}" style="position:fixed;inset:0;background:rgba(8,6,4,0.65);backdrop-filter:blur(3px);z-index:50;"></div>
+    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;max-width:92vw;background:#160f0a;border:1px solid #2c2418;border-radius:18px;z-index:51;box-shadow:0 40px 100px -40px rgba(0,0,0,0.9);overflow:hidden;">
+      <div style="padding:22px 22px 8px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:{{ unblockAvatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;flex:none;">{{ unblockInitial }}</div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">Unblock {{ unblockName }}?</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ unblockHandle }}</div></div>
+        </div>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;line-height:1.6;margin:0;">They'll be able to message you, apply to your parties, and see your content again. You can re-block them anytime.</p>
+      </div>
+      <div style="padding:16px 22px 20px;display:flex;gap:10px;">
+        <button onClick="{{ cancelUnblock }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:12px;border-radius:11px;cursor:pointer;">Cancel</button>
+        <button onClick="{{ confirmUnblock }}" style="flex:1;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:12px;border-radius:11px;cursor:pointer;">Unblock</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    query:'',
+    blocked:[
+      { id:1, name:'ToxicTyler', handle:'@ttyler', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', date:'Jul 8', reason:'Harassment' },
+      { id:2, name:'Spammer99', handle:'@spam99', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', date:'Jul 5', reason:'Spam' },
+      { id:3, name:'edgelord_xx', handle:'@edgelord_xx', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', date:'Jun 30', reason:'' }
+    ],
+    blockOpen:false, blockStep:'pick', blockQuery:'', blockSel:null, alsoReport:false,
+    unblockTarget:null
+  };
+
+  get candidatePool(){
+    return [
+      { id:'p1', name:'Dane', handle:'@dane', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:'p2', name:'memer42', handle:'@memer42', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)' },
+      { id:'p3', name:'BoostKing', handle:'@boostking', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)' },
+      { id:'p4', name:'randomTroll', handle:'@rtroll', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { id:'p5', name:'Rin', handle:'@rin', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)' },
+      { id:'p6', name:'fake_admin', handle:'@playm8z-staff', avatar:'linear-gradient(135deg,#ff3b6b,#ffb000)' }
+    ];
+  }
+
+  reasonStyle(){
+    return "font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.12);border:1px solid rgba(255,59,107,0.4);padding:2px 8px;border-radius:5px;";
+  }
+
+  renderVals(){
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const filtered = s.blocked.filter(u=>!q || (u.name+' '+u.handle).toLowerCase().includes(q));
+
+    const rows = filtered.map(u=>({
+      ...u,
+      initial:u.name.charAt(0).toUpperCase(),
+      hasReason:!!u.reason, reasonStyle:this.reasonStyle(),
+      onUnblock:()=>this.setState({unblockTarget:u})
+    }));
+
+    const bq = s.blockQuery.trim().toLowerCase();
+    const candidates = this.candidatePool
+      .filter(c=> !s.blocked.some(b=>b.name===c.name))
+      .filter(c=> !bq || (c.name+' '+c.handle).toLowerCase().includes(bq))
+      .map(c=>({ ...c, initial:c.name.charAt(0).toUpperCase(), onPick:()=>this.setState({blockSel:c, blockStep:'confirm'}) }));
+
+    const sel = s.blockSel;
+    const ut = s.unblockTarget;
+
+    return {
+      countLabel: s.blocked.length===0 ? 'You haven\u2019t blocked anyone' : (s.blocked.length+' '+(s.blocked.length===1?'person':'people')+' blocked'),
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      hasAny: s.blocked.length>0,
+      hasResults: rows.length>0,
+      noneAtAll: s.blocked.length===0,
+      noMatch: s.blocked.length>0 && rows.length===0,
+      rows,
+
+      // block modal
+      openBlock: ()=>this.setState({blockOpen:true, blockStep:'pick', blockQuery:'', blockSel:null, alsoReport:false}),
+      closeBlock: ()=>this.setState({blockOpen:false}),
+      blockOpen: s.blockOpen,
+      blockPick: s.blockStep==='pick', blockConfirm: s.blockStep==='confirm',
+      blockHeading: s.blockStep==='confirm' ? 'Confirm block' : 'Block a user',
+      blockQuery: s.blockQuery, onBlockQuery:(e)=>this.setState({blockQuery:e.target.value}),
+      candidates, noCandidates: candidates.length===0,
+      selName: sel?sel.name:'', selHandle: sel?sel.handle:'', selAvatar: sel?sel.avatar:'', selInitial: sel?sel.name.charAt(0).toUpperCase():'',
+      alsoReport: s.alsoReport, toggleReport:()=>this.setState({alsoReport:!s.alsoReport}),
+      reportBox: "width:20px;height:20px;border-radius:6px;flex:none;"+(s.alsoReport?"background:linear-gradient(120deg,#ffb000,#ff6b1a);box-shadow:inset 0 0 0 2px #160f0a,0 0 0 1px #ff6b1a;":"border:1.5px solid #3a2c1a;"),
+      backToPick: ()=>this.setState({blockStep:'pick'}),
+      confirmBlockLabel: s.alsoReport ? 'Block & report' : 'Block user',
+      confirmBlock: ()=>{
+        if(!sel) return;
+        const nb = { id:Date.now(), name:sel.name, handle:sel.handle, avatar:sel.avatar, date:'just now', reason: s.alsoReport?'Reported':'' };
+        this.setState({ blocked:[nb].concat(s.blocked), blockOpen:false, blockSel:null, blockStep:'pick', alsoReport:false, blockQuery:'' });
+      },
+
+      // unblock modal
+      unblockOpen: !!ut,
+      unblockName: ut?ut.name:'', unblockHandle: ut?ut.handle:'', unblockAvatar: ut?ut.avatar:'', unblockInitial: ut?ut.name.charAt(0).toUpperCase():'',
+      cancelUnblock: ()=>this.setState({unblockTarget:null}),
+      confirmUnblock: ()=>this.setState({ blocked:s.blocked.filter(b=>b.id!==ut.id), unblockTarget:null })
+    };
+  }
+}
+</script>
+</body>
+</html>

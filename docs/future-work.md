@@ -46,6 +46,8 @@ they can be spec'd/built:
 - Moderator audit log.
 - Ban-appeals queue.
 - Mobile-specific layouts.
+- Post-session rating/review flow — confirmed by the user (2026-07-12)
+  as an explicit future-state feature, not just undesigned.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Error
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
@@ -56,3 +58,37 @@ reusable design-system pattern rather than per-page wireframes, per the
 user's direction): loading skeletons, delayed-skeleton timing,
 fetch-error state (distinct from the Empty state), pending-submit
 button state, and submit success/error — no longer an open question.
+
+**Designed 2026-07-12** (`resources/wireframes/support/playm8z - Blocked
+Users.dc.html`): view/search blocked users, block flow (pick → confirm,
+with an "also report" option), unblock confirm modal, empty states — no
+longer on this list.
+
+## Monetized / premium accounts
+
+No pricing, premium tier, or ads anywhere in the design. Confirmed by the
+user (2026-07-12): playm8z is free for now; monetized accounts are an
+explicit future-state feature, not a current concern.
+
+## Notification email scope (narrowed, not fully deferred)
+
+Confirmed by the user (2026-07-12): only the registration/verification
+email is in scope right now. Every other `Notification` type (join,
+accepted, reply, mention, message, rating, news, system — per
+`resources/guidelines.md` §5) stays in-app-only for now; emailing any of
+them, and any notification-preferences settings UI to control that, is
+future work.
+
+## Email verification — design/implementation delegated
+
+The user asked me to design/implement the email-verification flow "as I
+see fit" (2026-07-12) rather than specifying it themselves. The DB already
+has Auth.js's `verificationToken` table migrated in, so the mechanism is
+half-built; this still needs: an actual transactional-email provider
+(none chosen yet — a Vercel Marketplace integration is the natural fit
+when this is picked up), the UX around what's gated on verification
+(e.g. does an unverified user get full access with a nag, or is posting/
+messaging blocked until verified?), and where in Auth & Onboarding the
+verify-your-email step lives. Not designed by a wireframe; to be designed
+at implementation time, likely alongside a `/speckit-plan` for the Auth
+feature.

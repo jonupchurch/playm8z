@@ -106,6 +106,38 @@ specified too, per the user's direction to handle them as a reusable
 design-system pattern rather than per-page wireframes —
 `resources/guidelines.md` §4.6.
 
+`resources/wireframes/support/playm8z - Blocked Users.dc.html` (added
+2026-07-12) designs the blocked-users list/search, block flow (pick user
+→ confirm, with an "also report" option), and unblock confirmation —
+resolving that gap from the second business-requirements pass below.
+
+**Second gap-analysis pass (2026-07-12), all resolved:**
+- **ADR 0002** (`docs/adr/0002-minimum-age-18-plus.md`): playm8z is 18+
+  only, at least on paper — the 13+ age tier is dropped entirely.
+  `ageGroup` is `18|21`, not `13|18|21`; 21+ remains an optional stricter
+  tag a host can apply, not a platform-wide minimum. Supersedes
+  `guidelines.md` §5's `ageGroup(13|18|21)`. The Auth & Onboarding and
+  Browse/Post-a-Game wireframes' age-related controls need a small
+  revision to drop the 13+ option — not yet done.
+- **ADR 0003** (`docs/adr/0003-posting-30-day-expiration.md`): a
+  `Posting` auto-expires 30 days after creation unless manually closed
+  or renewed (renew resets the window). No wireframe shows a "Renew"
+  action yet — needs a small addition alongside the existing
+  Close/Reopen actions on Profile → My postings.
+- **Recurring session = descriptive only.** Confirmed: the `recurring`
+  toggle on Post a Game is purely informational, not a scheduling
+  engine — no auto-repost/instance-generation logic needed.
+- **Post-session rating, monetized/premium accounts** — both confirmed
+  explicit future-state features, not current scope. See
+  `docs/future-work.md`.
+- **Notification email scope narrowed**: only the registration/
+  verification email is in scope now; every other notification type
+  stays in-app-only. See `docs/future-work.md`.
+- **Email verification** — design/implementation delegated to me by the
+  user rather than specified; still needs an email-provider choice and
+  a decided UX (what's gated pre-verification). See
+  `docs/future-work.md`.
+
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope
