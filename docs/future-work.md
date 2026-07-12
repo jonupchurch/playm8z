@@ -157,15 +157,28 @@ spec'd). Excluded from Post a Game's spec (`005-post-game`) rather than
 building a partial version of it; revisit if a later feature (Profile)
 wants it.
 
-## Saved / bookmarked listings (future state)
+## ~~Saved / bookmarked listings~~ — resolved, no longer deferred
 
-The "Listing" wireframe (`playm8z - Listing.dc.html`) shows a "Save"
+~~The "Listing" wireframe (`playm8z - Listing.dc.html`) shows a "Save"
 action alongside Share and Report in the apply panel. Not connected to
-anything already decided in this project (no `SavedListing` entity,
-no "My Saved" surface anywhere in `resources/guidelines.md`) — same
-reasoning as Post a Game's deferred "Save as draft." Excluded from
-Listing detail's spec (`006-listing-detail`); revisit if a later
-feature (Profile) wants it.
+anything already decided in this project...~~ **Resolved 2026-07-12**:
+the Profile wireframe (`playm8z - Profile.dc.html`) turned out to have
+a full "Saved" tab all along — Profile's spec (`007-profile-and-
+account-settings`) introduces the `SavedListing` entity, and Listing
+detail's (`006-listing-detail`) docs were corrected to un-defer its
+"Save" action accordingly (see that feature's spec/plan/data-model for
+the amendment). No longer future work.
+
+## Pronouns, languages, timezone on profile (future state)
+
+The Profile wireframe's read-only "Public info" sidebar shows
+pronouns, languages, and timezone, per `resources/guidelines.md`'s
+suggested `User` fields — but no onboarding step or editor anywhere in
+this project actually collects them (Auth & Onboarding never asked for
+them, and Profile's own editable Account form doesn't include them
+either). Omitted from Profile's spec (`007-profile-and-account-
+settings`) rather than displaying fabricated values; revisit as a
+combined onboarding + profile-editing addition if ever prioritized.
 
 ## In-listing report submission (future state)
 
