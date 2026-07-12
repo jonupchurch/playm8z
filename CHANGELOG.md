@@ -487,6 +487,18 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Polish (3). News feed is the thirteenth feature to clear the
   project-wide gate.
 
+- Ran `/speckit-specify` and `/speckit-plan` for Content Page:
+  `spec.md`/`plan.md` on branch `014-content-page`. A slug-based public
+  page block-rendered from a single JSONB column (not a normalized
+  per-block table, since blocks are always read/written together).
+  First real consumer of Error Pages' `require-role.ts`. Batched
+  local-state editing (matching the wireframe exactly) — one atomic
+  save per edit session, not per-keystroke. A draft page is
+  indistinguishable from a nonexistent slug for non-admin visitors,
+  both hitting Error Pages' 404. Scopes page creation out entirely to
+  the future Admin Content Pages feature. Quality checklist passed
+  first try, zero `[NEEDS CLARIFICATION]` markers. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

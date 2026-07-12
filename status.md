@@ -558,10 +558,17 @@ account-independent write action.
 subscribe(5) → Polish(3). `docs/feature-list.md` updated to 🟢. News
 feed is the thirteenth feature with a complete spec/plan/tasks trio.
 
+**Content Page: spec + plan done** (2026-07-12, branch
+`014-content-page`) — slug-based public page block-rendered from a
+JSONB column. First real consumer of Error Pages' `require-role.ts`.
+Batched local-state editing (matching the wireframe exactly). A draft
+page is indistinguishable from a nonexistent slug for non-admins.
+Scopes page creation out to the future Admin Content Pages feature.
+
 ## Next up
 
-- Merge `013-news-feed` into `main`, then move on to feature #14
-  (Content Page) — same specify→plan→tasks→merge sequence repeats for
+- Content Page: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.
