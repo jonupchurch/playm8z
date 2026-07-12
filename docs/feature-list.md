@@ -26,7 +26,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 3. Home — 🟢 spec + plan + tasks all complete (`specs/003-home/`, branch `003-home`, `playm8z - Home.dc.html`) — 24 tasks across Setup/Foundational/US1(P1) search+filter+sort/US2(P2) trending/US3(P3) empty-state/Polish; not yet implemented
 4. Browse — 🟢 spec + plan + tasks all complete (`specs/004-browse/`, branch `004-browse`, `playm8z - Browse.dc.html`) — 22 tasks across Setup/Foundational/US1(P1) search+filter+sort/US2(P2) pills/US3(P3) empty-state/Polish; not yet implemented
 5. Post a Game — 🟢 spec + plan + tasks all complete (`specs/005-post-game/`, branch `005-post-game`, `playm8z - Post a Game.dc.html`) — 20 tasks across Setup/Foundational/US1(P1) happy-path publish/US2(P2) auth+verification gate/US3(P3) validation guardrails/Polish; not yet implemented
-6. Listing detail — ✅ (`playm8z - Listing.dc.html`)
+6. Listing detail — 📝 spec + plan written (`specs/006-listing-detail/`, branch `006-listing-detail`, `playm8z - Listing.dc.html`), not yet tasked
 7. Profile + Account settings — ✅
 8. Blocked Users — ✅
 9. Forum index — ✅ (`playm8z - Forum.dc.html`)

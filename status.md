@@ -440,13 +440,24 @@ auth+verification gate(3) → US3/P3 validation guardrails(2) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Post a Game is the
 fifth feature with a complete spec/plan/tasks trio.
 
+**Listing detail: spec + plan done** (2026-07-12, branch
+`006-listing-detail`, `specs/006-listing-detail/`) — introduces
+`applications`/`questions` (first real writes to either), derives the
+roster from host + accepted applications rather than a separate
+`RosterSlot` table (ADR 0004 already removed the only field it would
+have carried). Drops all wireframe roster role labels and host
+mini-profile stats (rating/sessions/reliability/level — nothing
+computes any of them yet). Accept/decline/remove-roster-member is
+Inbox's job; Report/Save deferred to `docs/future-work.md`. Second and
+third consumer of Auth & Onboarding's write gate.
+
 ## Next up
 
-- Merge `005-post-game` into `main`, then move on to feature #6
-  (Listing detail) — same specify→plan→tasks→merge sequence repeats
-  for every other feature in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- Listing detail: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

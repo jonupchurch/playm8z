@@ -339,6 +339,22 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   gate (3) → US3/P3 validation guardrails (2) → Polish (3). Post a Game
   is the fifth feature to clear the project-wide gate.
 
+- Ran `/speckit-specify` and `/speckit-plan` for Listing detail:
+  `spec.md`/`plan.md` on branch `006-listing-detail`. Introduces
+  `applications` and `questions` (this feature's first real writes),
+  and derives the roster from the host plus accepted applications
+  rather than a separate `RosterSlot` table — ADR 0004 already removed
+  the only field (role) that table would have carried beyond what
+  `applications` tracks. Drops the wireframe's per-slot role labels
+  and all host mini-profile stats (rating/sessions/reliability/level —
+  none computed anywhere yet). Defers accept/decline/remove-roster-
+  member to Inbox/messaging, and Report/Save to `docs/future-work.md`.
+  Second and third real consumer of Auth & Onboarding's unverified-
+  email write gate; extends `Application.status` with a `withdrawn`
+  value distinct from `declined`. Quality checklist passed first try,
+  zero `[NEEDS CLARIFICATION]` markers. No `contracts/` — all writes
+  are Server Actions.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
