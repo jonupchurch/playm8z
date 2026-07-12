@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --disable-git --agents-md --yes)",
+      "Bash(rm -rf /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp)",
+      "Bash(mkdir -p /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp)",
+      "Bash(npx create-next-app@latest /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp --typescript --tailwind --eslint --app --src-dir --import-alias @/* --use-npm --disable-git --agents-md --yes)"
+    ]
+  }
+}

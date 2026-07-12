@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Post a game</button>
+    </div>
+  </div>
+
+  <!-- ===== SEARCH HEADER ===== -->
+  <div style="border-bottom:1px solid #2c2418;background:radial-gradient(circle at 30% -40%,rgba(255,107,26,0.1),transparent 60%);">
+    <div style="max-width:1320px;margin:0 auto;padding:28px 32px 24px;">
+      <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:0 0 4px;">Browse open games</h1>
+      <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 18px;">Search and filter every live party looking for players — video games, tabletop &amp; TTRPGs.</p>
+      <div style="display:flex;align-items:center;gap:12px;background:#1a130c;border:1.5px solid #3a2c1a;border-radius:13px;padding:7px 7px 7px 16px;max-width:720px;">
+        <span style="width:16px;height:16px;border-radius:50%;border:2px solid #8a7355;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search games, players, keywords — e.g. ‘chill co-op’, ‘ranked mic’…" style="flex:1;background:transparent;border:none;outline:none;font-family:'Sora',sans-serif;font-size:15px;color:#fbeeda;padding:8px 0;" />
+        <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:9px;cursor:pointer;flex:none;">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BODY: sidebar + results ===== -->
+  <div style="max-width:1320px;margin:0 auto;padding:24px 32px 72px;display:grid;grid-template-columns:284px 1fr;gap:28px;align-items:start;">
+
+    <!-- ===== FILTER SIDEBAR ===== -->
+    <aside class="sb" style="position:sticky;top:78px;max-height:calc(100vh - 96px);overflow-y:auto;background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">Filters</span>
+        <button onClick="{{ clearAll }}" style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff6b1a;background:transparent;border:none;cursor:pointer;padding:0;">Clear all</button>
+      </div>
+
+      <!-- Vibe -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">Casual vs serious</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ vibeSeg }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Game -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:8px;">Game</div>
+        <div style="display:flex;flex-direction:column;">
+          <sc-for list="{{ gameChecks }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:none;padding:6px 2px;cursor:pointer;text-align:left;">
+              <span style="{{ c.box }}"></span>
+              <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;flex:1;">{{ c.label }}</span>
+              <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ c.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Genre -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">Genre</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ genreChips }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:8px;">Location / region</div>
+        <div style="display:flex;flex-direction:column;">
+          <sc-for list="{{ regionChecks }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:none;padding:6px 2px;cursor:pointer;text-align:left;">
+              <span style="{{ c.box }}"></span>
+              <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;flex:1;">{{ c.label }}</span>
+              <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ c.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Time slots -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">When they play</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ slotChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Age group -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">Age group</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ ageSeg }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Open slots -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">Open slots</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ openSeg }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Platform -->
+      <div style="margin-bottom:18px;border-top:1px solid #2c2418;padding-top:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">Platform</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <sc-for list="{{ platformSeg }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- Mic toggle -->
+      <div style="border-top:1px solid #2c2418;padding-top:16px;">
+        <button onClick="{{ toggleMic }}" style="display:flex;align-items:center;gap:12px;width:100%;background:transparent;border:none;padding:0;cursor:pointer;">
+          <span style="{{ micTrack }}"><span style="{{ micKnob }}"></span></span>
+          <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;">Mic required only</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== RESULTS ===== -->
+    <main>
+      <!-- results toolbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+        <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;"><span style="color:#fbeeda;font-weight:700;">{{ count }}</span> parties · <span style="color:#4ec96a;">{{ liveCount }} live</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6b5a45;">Sort</span>
+          <sc-for list="{{ sortChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- active filter pills -->
+      <sc-if value="{{ hasPills }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">
+          <sc-for list="{{ pills }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.onRemove }}" style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ffd08a;background:rgba(255,176,0,0.12);border:1px solid rgba(255,176,0,0.4);padding:5px 11px;border-radius:999px;cursor:pointer;">{{ p.label }} <span style="color:#ff9c5a;font-size:13px;line-height:1;">×</span></button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- results grid -->
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <sc-for list="{{ listings }}" as="l" hint-placeholder-count="9">
+            <div style="background:#1f1710;border:1px solid #2c2418;border-radius:16px;padding:18px;display:flex;flex-direction:column;" style-hover="border-color:rgba(255,107,26,0.5);">
+              <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px;">
+                <div style="width:40px;height:40px;border-radius:12px;background:{{ l.avatar }};display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#140f0a;font-size:16px;flex:none;">{{ l.initial }}</div>
+                <div style="flex:1;min-width:0;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">{{ l.host }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">{{ l.ago }} · {{ l.regionLabel }}</div></div>
+                <span style="{{ l.dot }}"></span>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;margin-bottom:4px;">{{ l.game }} · {{ l.genre }}</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;line-height:1.25;margin-bottom:7px;">{{ l.title }}</div>
+              <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 14px;flex:1;">{{ l.blurb }}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+                <span style="{{ l.vibeStyle }}">{{ l.vibeLabel }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.3);padding:4px 10px;border-radius:999px;">{{ l.slotLabel }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 10px;border-radius:999px;">{{ l.seatText }}</span>
+              </div>
+              <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px;border-radius:11px;cursor:pointer;">Request to join</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:72px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;margin-bottom:8px;">No parties match those filters.</div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 18px;">Loosen a filter, or post the game yourself and let players come to you.</p>
+          <div style="display:flex;gap:10px;justify-content:center;">
+            <button onClick="{{ clearAll }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:11px 20px;border-radius:11px;cursor:pointer;">Clear filters</button>
+            <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">Post a game</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query:'', vibe:'any', age:'any', open:'any', platform:'any', micOnly:false, sort:'recent', games:[], genres:[], regions:[], slots:[] };
+
+  get data() {
+    return [
+      { id:1, host:'Vex_00', initial:'V', game:'Valorant', genre:'FPS', title:'Ranked grind — Diamond push', blurb:'Need 2 for a serious climb. Comms over ego.', serious:'serious', region:'eu-west', regionLabel:'EU-West', age:'18', slot:'evening', platform:'pc', mic:true, seats:2, total:5, mins:2, avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { id:2, host:'Mara', initial:'M', game:'Helldivers 2', genre:'Co-op PvE', title:'Casual dives — all welcome', blurb:'Blow stuff up and laugh. No pressure, any level.', serious:'fun', region:'na-west', regionLabel:'NA-West', age:'18', slot:'evening', platform:'cross', mic:false, seats:2, total:4, mins:5, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:3, host:'Kellen', initial:'K', game:"Baldur's Gate 3", genre:'RPG', title:'Honour Mode campaign', blurb:'Long-haul co-op run, voice on Discord. Committed but chill.', serious:'serious', region:'na-east', regionLabel:'NA-East', age:'18', slot:'weekend', platform:'pc', mic:true, seats:4, total:5, mins:12, avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)' },
+      { id:4, host:'Nova', initial:'N', game:'Deep Rock Galactic', genre:'Co-op PvE', title:'Rock & Stone, greenbeards welcome', blurb:'Mining, laughs, good times. Teach the new folks.', serious:'fun', region:'na-east', regionLabel:'NA-East', age:'13', slot:'late', platform:'pc', mic:true, seats:3, total:4, mins:8, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:5, host:'Pip', initial:'P', game:'Lethal Company', genre:'Co-op PvE', title:'Chaos & screaming', blurb:'Pure fun, expect zero survival skill. Mic + humor required.', serious:'fun', region:'eu-west', regionLabel:'EU-West', age:'18', slot:'late', platform:'pc', mic:true, seats:1, total:4, mins:1, avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)' },
+      { id:6, host:'Sy', initial:'S', game:'Valorant', genre:'FPS', title:'Unrated just for fun', blurb:'Warmups and goofing around. No rank pressure.', serious:'fun', region:'na-west', regionLabel:'NA-West', age:'13', slot:'afternoon', platform:'pc', mic:false, seats:1, total:5, mins:20, avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)' },
+      { id:7, host:'Dane', initial:'D', game:'Sea of Thieves', genre:'Party', title:'Pirate shenanigans', blurb:'Sailing, singing, occasional betrayal. All aboard.', serious:'fun', region:'eu-east', regionLabel:'EU-East', age:'13', slot:'evening', platform:'cross', mic:true, seats:2, total:4, mins:15, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:8, host:'Rin', initial:'R', game:'League of Legends', genre:'MOBA', title:'Flex queue — climbing to Plat', blurb:'Duo/flex, positive attitudes only. We review VODs.', serious:'serious', region:'asia', regionLabel:'Asia', age:'18', slot:'evening', platform:'pc', mic:true, seats:3, total:5, mins:30, avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { id:9, host:'Bex', initial:'B', game:'Overwatch 2', genre:'FPS', title:'Morning quick play', blurb:'Early-bird casual games before work. Chill lobby.', serious:'fun', region:'oceania', regionLabel:'Oceania', age:'13', slot:'morning', platform:'cross', mic:false, seats:2, total:5, mins:45, avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)' },
+      { id:10, host:'Juno', initial:'J', game:'Minecraft', genre:'Sandbox', title:'Cozy survival server', blurb:'Building a town together. Family-friendly, no griefing.', serious:'fun', region:'na-east', regionLabel:'NA-East', age:'13', slot:'afternoon', platform:'cross', mic:false, seats:3, total:6, mins:7, avatar:'linear-gradient(135deg,#ff3b6b,#ffb000)' },
+      { id:11, host:'Ash', initial:'A', game:'Elden Ring', genre:'RPG', title:'Co-op boss runs (mature)', blurb:'Jolly cooperation. Late-night, adults, no rage.', serious:'serious', region:'eu-west', regionLabel:'EU-West', age:'21', slot:'late', platform:'pc', mic:true, seats:1, total:3, mins:18, avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { id:12, host:'Cleo', initial:'C', game:'Sea of Thieves', genre:'Party', title:'Weekend voyages', blurb:'Console crew, relaxed sailing every Saturday.', serious:'fun', region:'na-west', regionLabel:'NA-West', age:'18', slot:'weekend', platform:'console', mic:true, seats:2, total:4, mins:22, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:13, host:'GM_Dave', initial:'G', game:'D&D 5e', genre:'TTRPG', title:'Curse of Strahd — weekly', blurb:'Roll20 table, story-focused, newcomers welcome. Session zero this week.', serious:'serious', region:'na-east', regionLabel:'NA-East', age:'18', slot:'evening', platform:'pc', mic:true, seats:4, total:6, mins:9, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:14, host:'Wren', initial:'W', game:'Pathfinder 2e', genre:'TTRPG', title:'Age of Ashes adventure path', blurb:'Long-form AP for tactical combat lovers. Foundry VTT, voice required.', serious:'serious', region:'eu-west', regionLabel:'EU-West', age:'21', slot:'weekend', platform:'pc', mic:true, seats:3, total:5, mins:25, avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { id:15, host:'Marlow', initial:'M', game:'Call of Cthulhu', genre:'TTRPG', title:'One-shot horror night', blurb:'Spooky in-person one-shot, no experience needed. Snacks provided.', serious:'fun', region:'na-west', regionLabel:'NA-West', age:'18', slot:'late', platform:'table', mic:false, seats:2, total:4, mins:14, avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)' },
+      { id:16, host:'Tess', initial:'T', game:'Gloomhaven', genre:'Tabletop', title:'Legacy campaign — 1 seat open', blurb:'Weekly in-person legacy group. Bring your character sheet.', serious:'serious', region:'na-east', regionLabel:'NA-East', age:'18', slot:'weekend', platform:'table', mic:false, seats:1, total:4, mins:40, avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)' },
+      { id:17, host:'Bruno', initial:'B', game:'Catan', genre:'Tabletop', title:'Board game café meetup', blurb:'Casual Catan + snacks. All experience levels, friendly table.', serious:'fun', region:'eu-east', regionLabel:'EU-East', age:'13', slot:'afternoon', platform:'table', mic:false, seats:2, total:4, mins:55, avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { id:18, host:'Priya', initial:'P', game:'Magic: The Gathering', genre:'Tabletop', title:'Commander pod (EDH)', blurb:'Looking for 2 for a chill Commander pod. Precons totally fine.', serious:'fun', region:'na-west', regionLabel:'NA-West', age:'18', slot:'evening', platform:'table', mic:true, seats:2, total:4, mins:33, avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)' },
+      { id:19, host:'Karl', initial:'K', game:'Warhammer 40k', genre:'Tabletop', title:'2000pt matched play', blurb:'Bring your army for friendly practice ahead of the tournament.', serious:'serious', region:'eu-west', regionLabel:'EU-West', age:'21', slot:'weekend', platform:'table', mic:false, seats:1, total:2, mins:60, avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)' }
+    ];
+  }
+
+  ago(m){ return m < 60 ? m + 'm ago' : Math.floor(m/60) + 'h ago'; }
+
+  seg(active){
+    const b = "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;transition:all .15s;";
+    return active ? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  box(active){
+    const b = "width:16px;height:16px;border-radius:5px;flex:none;display:inline-block;";
+    return active ? b+"background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;box-shadow:inset 0 0 0 2px #140f0a,0 0 0 1px #ff6b1a;" : b+"background:transparent;border:1.5px solid #3a2c1a;";
+  }
+
+  toggleIn(key, val){
+    const arr = this.state[key];
+    const next = arr.includes(val) ? arr.filter(x=>x!==val) : arr.concat(val);
+    this.setState({ [key]: next });
+  }
+
+  renderVals(){
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const openMin = { any:0, '1':1, '2':2, '3':3 }[s.open] || 0;
+
+    const match = (l) => {
+      const mq = !q || (l.game+' '+l.title+' '+l.host+' '+l.blurb+' '+l.genre).toLowerCase().includes(q);
+      const mv = s.vibe==='any' || l.serious===s.vibe;
+      const mg = !s.games.length || s.games.includes(l.game);
+      const mn = !s.genres.length || s.genres.includes(l.genre);
+      const mr = !s.regions.length || s.regions.includes(l.region);
+      const mt = !s.slots.length || s.slots.includes(l.slot);
+      const ma = s.age==='any' || l.age===s.age;
+      const mo = (l.total - l.seats) >= openMin;
+      const mp = s.platform==='any' || l.platform===s.platform;
+      const mm = !s.micOnly || l.mic;
+      return mq&&mv&&mg&&mn&&mr&&mt&&ma&&mo&&mp&&mm;
+    };
+
+    let listings = this.data.filter(match);
+    if (s.sort==='seats') listings = listings.slice().sort((a,b)=>(b.total-b.seats)-(a.total-a.seats));
+    else if (s.sort==='soon') listings = listings.slice().sort((a,b)=>a.mins-b.mins);
+    else listings = listings.slice().sort((a,b)=>a.mins-b.mins);
+
+    const vibeStyleFor = (x)=> x==='serious'
+      ? "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.42);padding:4px 10px;border-radius:999px;"
+      : "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:4px 10px;border-radius:999px;";
+    const slotName = { morning:'Mornings', afternoon:'Afternoons', evening:'Evenings', late:'Late night', weekend:'Weekends' };
+
+    const view = listings.map(l=>({
+      ...l,
+      ago: this.ago(l.mins),
+      vibeLabel: l.serious==='serious'?'Serious':'Fun',
+      vibeStyle: vibeStyleFor(l.serious),
+      slotLabel: slotName[l.slot],
+      seatText: (l.total-l.seats)+'/'+l.total+' open',
+      dot: "width:9px;height:9px;border-radius:50%;flex:none;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"
+    }));
+
+    // counts helper
+    const cnt = (fn)=> this.data.filter(fn).length;
+
+    // option lists
+    const gameNames = [...new Set(this.data.map(d=>d.game))];
+    const genreNames = [...new Set(this.data.map(d=>d.genre))];
+    const regionOpts = [['na-east','NA-East'],['na-west','NA-West'],['eu-west','EU-West'],['eu-east','EU-East'],['asia','Asia'],['oceania','Oceania']];
+    const slotOpts = [['morning','Mornings'],['afternoon','Afternoons'],['evening','Evenings'],['late','Late night'],['weekend','Weekends']];
+
+    const gameChecks = gameNames.map(g=>({ label:g, count:cnt(d=>d.game===g), box:this.box(s.games.includes(g)), onClick:()=>this.toggleIn('games',g) }));
+    const regionChecks = regionOpts.map(([k,label])=>({ label, count:cnt(d=>d.region===k), box:this.box(s.regions.includes(k)), onClick:()=>this.toggleIn('regions',k) }));
+    const genreChips = genreNames.map(g=>({ label:g, style:this.seg(s.genres.includes(g)), onClick:()=>this.toggleIn('genres',g) }));
+    const slotChips = slotOpts.map(([k,label])=>({ label, style:this.seg(s.slots.includes(k)), onClick:()=>this.toggleIn('slots',k) }));
+
+    const segList = (opts,cur,key)=>opts.map(([k,label])=>({ label, style:this.seg(cur===k), onClick:()=>this.setState({[key]:k}) }));
+
+    // active pills
+    const pills = [];
+    if (s.vibe!=='any') pills.push({ label: s.vibe==='serious'?'Serious':'Casual', onRemove:()=>this.setState({vibe:'any'}) });
+    s.games.forEach(g=>pills.push({ label:g, onRemove:()=>this.toggleIn('games',g) }));
+    s.genres.forEach(g=>pills.push({ label:g, onRemove:()=>this.toggleIn('genres',g) }));
+    s.regions.forEach(k=>pills.push({ label:(regionOpts.find(r=>r[0]===k)||[])[1]||k, onRemove:()=>this.toggleIn('regions',k) }));
+    s.slots.forEach(k=>pills.push({ label:slotName[k], onRemove:()=>this.toggleIn('slots',k) }));
+    if (s.age!=='any') pills.push({ label:s.age+'+', onRemove:()=>this.setState({age:'any'}) });
+    if (s.open!=='any') pills.push({ label:s.open+'+ open', onRemove:()=>this.setState({open:'any'}) });
+    if (s.platform!=='any') pills.push({ label:{pc:'PC',console:'Console',cross:'Cross-play',table:'Tabletop'}[s.platform], onRemove:()=>this.setState({platform:'any'}) });
+    if (s.micOnly) pills.push({ label:'Mic required', onRemove:()=>this.setState({micOnly:false}) });
+
+    const micOn = s.micOnly;
+
+    return {
+      query:s.query,
+      onSearch:(e)=>this.setState({query:e.target.value}),
+      vibeSeg: segList([['any','Any'],['fun','Casual'],['serious','Serious']], s.vibe, 'vibe'),
+      ageSeg: segList([['any','Any'],['13','13+'],['18','18+'],['21','21+']], s.age, 'age'),
+      openSeg: segList([['any','Any'],['1','1+'],['2','2+'],['3','3+']], s.open, 'open'),
+      platformSeg: segList([['any','Any'],['pc','PC'],['console','Console'],['cross','Cross-play'],['table','Tabletop']], s.platform, 'platform'),
+      gameChecks, regionChecks, genreChips, slotChips,
+      toggleMic:()=>this.setState({micOnly:!s.micOnly}),
+      micTrack: "width:38px;height:22px;border-radius:999px;flex:none;position:relative;transition:all .15s;"+(micOn?"background:linear-gradient(120deg,#ffb000,#ff6b1a);":"background:#241a10;border:1px solid #3a2c1a;"),
+      micKnob: "position:absolute;top:2px;left:"+(micOn?'18px':'2px')+";width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.4);",
+      sortChips: segList([['recent','Recent'],['seats','Open seats'],['soon','Soonest']], s.sort, 'sort'),
+      pills, hasPills: pills.length>0,
+      clearAll:()=>this.setState({ query:'', vibe:'any', age:'any', open:'any', platform:'any', micOnly:false, games:[], genres:[], regions:[], slots:[] }),
+      listings: view,
+      count: view.length,
+      liveCount: view.length,
+      hasResults: view.length>0,
+      isEmpty: view.length===0
+    };
+  }
+}
+</script>
+</body>
+</html>
