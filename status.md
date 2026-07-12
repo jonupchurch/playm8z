@@ -526,13 +526,19 @@ poll instead, real-time delivery logged as future work. Accepting a
 request is one atomic transaction. First real consumer of Blocked
 Users' block-enforcement contract.
 
+**Inbox / messaging: tasks done** (2026-07-12) — `tasks.md`, 31 tasks:
+Setup(1) → Foundational(5) → US1/P1 read+send(9) → US2/P2 start-
+conversation(6) → US3/P3 accept+decline(7) → Polish(3).
+`docs/feature-list.md` updated to 🟢. Inbox / messaging is the
+eleventh feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Inbox / messaging: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `011-inbox-messaging` into `main`, then move on to feature #12
+  (Notifications + Report modal) — same specify→plan→tasks→merge
+  sequence repeats for every other feature in `docs/feature-list.md`
+  — per the project-wide gate (constitution v1.0.0), implementation
+  doesn't begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

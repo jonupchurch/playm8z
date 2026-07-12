@@ -442,6 +442,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   contract), `data-model.md` (new `conversations`/`messages` tables),
   `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Inbox / messaging: `tasks.md` — 31 tasks:
+  Setup (1) → Foundational (5: new tables + migration, validation
+  schemas, the merged-list query, the authenticated layout) → US1/P1
+  read+send (9) → US2/P2 start-conversation (6) → US3/P3 accept+
+  decline (7) → Polish (3). Inbox / messaging is the eleventh feature
+  to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
