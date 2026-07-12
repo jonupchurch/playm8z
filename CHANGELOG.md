@@ -62,6 +62,10 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   flows; cross-confirms guidelines.md's route map and surfaces a few
   more undesigned pages (public profile, news article detail, password
   reset), folded into `docs/future-work.md`.
+- ADR 0001 (`docs/adr/0001-game-as-free-text-keyword.md`): `game` is a
+  free-text/keyword field, not a curated catalog entity — no admin
+  Games-management page, no per-game hub page. Supersedes
+  `guidelines.md` §5's suggested `Game` entity/`gameId` foreign key.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

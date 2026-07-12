@@ -88,6 +88,13 @@ distillation as sufficient.
 "Groups" and the rest of the not-yet-designed list live in
 `docs/future-work.md`.
 
+**Decision (ADR 0001, `docs/adr/0001-game-as-free-text-keyword.md`):**
+`game` is a free-text/keyword field, not a curated `Game` catalog entity.
+No admin Games-management page and no per-game hub page (`/games/:slug`)
+are planned — Browse's keyword search/filter over postings is what
+satisfies "browse games." This supersedes `guidelines.md` §5's suggested
+`Game` entity and `Posting.gameId` foreign key.
+
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope
