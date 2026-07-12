@@ -114,6 +114,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   edited once an applicant has been accepted; handle/username rules
   are unique, letters/numbers only, must start with a letter, max 24
   characters, and immutable once registered.
+- Amended the constitution (v0.1.0-draft → v0.2.0-draft): Development
+  Workflow now specifies a git branching rule (each feature on its own
+  Spec-Kit-created branch, merged to `main` on completion, no PR review
+  required for solo development) and a feature-granularity default
+  (roughly one feature per wireframed page/screen, a strong default not
+  a hard rule) to close feedback loops quickly and contain scope drift.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

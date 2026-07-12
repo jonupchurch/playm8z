@@ -1,16 +1,20 @@
 <!--
 Sync Impact Report
 ==================
-Version change: (none) → 0.1.0-draft
+Version change: 0.1.0-draft → 0.2.0-draft
 Status: DRAFT — not yet ratified. Awaiting explicit user review/approval
   before RATIFICATION_DATE is set and this becomes v1.0.0.
-Modified principles: n/a (initial draft)
-Added principles: I. Spec-Driven Development & Legible Architecture
-  (NON-NEGOTIABLE); II. Validated Trust Boundaries (NON-NEGOTIABLE);
-  III. Designed, Accessible Experience; IV. Scope Discipline
-  (NON-NEGOTIABLE); V. Test Discipline; VI. Legible History
-Added sections: Technology Constraints; Development Workflow; Governance
-Removed sections: n/a (initial draft)
+Modified principles: n/a
+Added principles: n/a (no new Core Principles this amendment)
+Added sections: n/a (expanded existing Development Workflow section only)
+Modified sections: Development Workflow — added a git branching rule
+  (each feature developed on its own Spec-Kit-created branch, merged to
+  `main` on completion, no PR-review step required for solo development)
+  and a feature-granularity default (cut features roughly one-per-
+  wireframed-page/screen where practical, to close feedback loops fast
+  and contain scope drift per Principle IV — a strong default, not a
+  hard rule).
+Removed sections: n/a
 Provenance note: this constitution's PROCESS (the six principles' shape,
   the ADR/changelog/status.md discipline, the spec-kit phase order) was
   structurally adapted from the sibling project InterruptVector
@@ -23,8 +27,9 @@ Provenance note: this constitution's PROCESS (the six principles' shape,
   is a different product with its own scope still to be defined.
 Still open, deliberately left as TODOs below:
   - What playm8z actually is (problem statement, MVP scope) — Principle
-    IV's discipline rule is ratified; its content is deferred to
-    /speckit-specify.
+    IV's discipline rule is ratified; its content is largely captured
+    informally in `resources/guidelines.md`, `status.md`, and
+    `docs/adr/`, pending a formal `/speckit-specify` run per feature.
   - Whether a test framework (Vitest/Playwright, matching the sibling
     project) gets adopted — noted as a gap in Technology Constraints,
     not yet installed.
@@ -174,6 +179,24 @@ initial scaffold, or a future de-risking spike) is the stated exception,
 built immediately since it isn't product surface — unless the project
 owner explicitly asks to implement something sooner.
 
+Each feature is developed on its own git branch — created automatically
+by Spec Kit's `/speckit-specify` branch-creation hook — and merged into
+`main` once that feature's tasks are complete. Because this is
+currently solo development, merges do not require a pull-request review
+step, but still land as a real merge into `main` rather than accumulating
+commits directly on `main` once a feature is underway. Non-feature work
+(documentation, ADRs, wireframes, constitution/spec-kit process files)
+continues to commit straight to `main`, since it isn't itself product
+surface.
+
+Features are cut **granularly** — as close to one feature per wireframed
+page/screen as practical — rather than bundling multiple pages into one
+feature. This is a strong default, not a hard rule: the goal is fast
+spec→plan→tasks→implement feedback loops and containing scope drift, per
+Principle IV (Scope Discipline). Deviate when pages are tightly coupled
+enough that splitting them would be artificial — justify the deviation
+inline when it happens.
+
 ## Governance
 
 This constitution supersedes all other project practices. Amendments
@@ -204,6 +227,6 @@ ADRs, specs, and plans are authored (or substantively reconciled)
 through this project's own process, so the "process produced this"
 record stays genuine.
 
-**Version**: 0.1.0-draft (DRAFT — not yet ratified) | **Ratified**:
+**Version**: 0.2.0-draft (DRAFT — not yet ratified) | **Ratified**:
 TODO(RATIFICATION_DATE) — pending explicit user approval | **Last
 Amended**: 2026-07-12

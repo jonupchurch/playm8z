@@ -25,9 +25,13 @@ yet.
 - GitHub Spec Kit installed (Claude Code integration, PowerShell
   scripts) — `.specify/` and `.claude/skills/speckit-*` match the
   sibling project InterruptVector's setup.
-- Constitution drafted (`.specify/memory/constitution.md`, v0.1.0-draft,
+- Constitution drafted (`.specify/memory/constitution.md`, v0.2.0-draft,
   **unratified**) — structural process principles only; playm8z's
-  actual product/MVP scope is not yet defined.
+  actual product/MVP scope is not yet defined. Amended 2026-07-12 to add
+  a git branching rule (feature branches via Spec Kit's own hook, merged
+  to `main` on completion, no PR review needed solo) and a
+  feature-granularity default (roughly one feature per wireframed page)
+  to the Development Workflow section.
 - `.gitignore` copied from InterruptVector and committed by itself
   (commit `53cb372`). The full scaffold (app/db/auth/Spec Kit/draft
   constitution) is committed as `d3b9039`.
