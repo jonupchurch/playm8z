@@ -107,6 +107,21 @@ moderation drawers) would help moderation, but is explicitly future
 state, not needed now. Distinct from the already-listed "Moderator audit
 log" (which logs moderator *actions*, not a user's own content/history).
 
+## User `reliabilityPct` (future state)
+
+`resources/guidelines.md` §5's `User` entity includes `reliabilityPct`,
+shown on host mini-profiles (Listing detail). Confirmed by the user
+(2026-07-12): this is future state, not current scope — there's no
+mechanism to compute it yet anyway (it would naturally depend on
+post-session ratings, already deferred, and/or no-show tracking). Leave
+it out of the MVP profile display rather than building a placeholder.
+
+## Handle change (future state, maybe)
+
+Confirmed by the user (2026-07-12) alongside the handle format rules (see
+`status.md`): handles cannot be changed once registered for now. Allowing
+a later change is a possible future state, not committed.
+
 ## Email verification — design/implementation delegated
 
 The user asked me to design/implement the email-verification flow "as I

@@ -104,6 +104,16 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 - Resolved the logged-out marketing landing page: no bespoke design
   needed, it's just another `ContentPage` via the existing Content
   Pages system. Groups re-confirmed as future state.
+- ADR 0005 (`docs/adr/0005-no-hard-deletes.md`): nothing is ever
+  hard-deleted platform-wide — every delete-shaped action is a
+  disable/soft-delete instead, generalizing the blocked-conversation
+  and permanent-ban behaviors into one stated principle.
+- Confirmed more scope decisions: hosts can remove an accepted roster
+  member (freeing the slot); `reliabilityPct` is deferred to future
+  state (no mechanism exists to compute it yet); a posting can't be
+  edited once an applicant has been accepted; handle/username rules
+  are unique, letters/numbers only, must start with a letter, max 24
+  characters, and immutable once registered.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

@@ -169,6 +169,32 @@ bespoke design — it's just another `ContentPage` using the already-designed
 Content Pages system, not a distinct feature. Groups re-confirmed as
 future state (no change from before).
 
+**Fourth gap-analysis pass (2026-07-12), all resolved:**
+- **Hosts can remove an accepted roster member** (e.g. a no-show/flake),
+  freeing that slot back up — resolves the roster-removal question left
+  open from the third pass.
+- **ADR 0005** (`docs/adr/0005-no-hard-deletes.md`): nothing is ever
+  hard-deleted, platform-wide — every "delete"-shaped action (user
+  account, posting, forum thread/reply, content page, etc.) is a
+  disable/soft-delete instead, retained for moderation/audit and to
+  avoid orphaned references. Generalizes the already-decided
+  blocked-mid-conversation-freeze and permanent-ban behaviors into one
+  stated principle.
+- **`reliabilityPct` deferred to future state** — no mechanism exists to
+  compute it yet (would depend on rating, already deferred, and/or
+  no-show tracking); leave it out of the MVP profile display. See
+  `docs/future-work.md`.
+- **No editing a posting once an applicant has been accepted.** Before
+  that, the host can edit freely; once someone's accepted onto the
+  roster, the listing is locked. (Whether removing the last accepted
+  member re-opens editing wasn't addressed — don't assume either answer
+  if it comes up.)
+- **Handle/username rules**: must be unique; letters and numbers only,
+  must start with a letter; max 24 characters; cannot be changed once
+  registered (allowing a later change is a possible future state, not
+  committed — see `docs/future-work.md`). Applies at the Zod validation
+  boundary per the constitution's Principle II.
+
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope
