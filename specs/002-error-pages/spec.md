@@ -47,13 +47,13 @@ A visitor who isn't logged in, or is logged in but lacks the required role, foll
 
 **Why this priority**: Happens less often than a missing page or a server hiccup, but matters for anyone who's been sent an admin/moderator link, or whose session expired mid-visit.
 
-**Independent Test**: As a logged-out visitor, request an authenticated-only route; as a logged-in non-moderator, request an `/admin/*` route; confirm both show the branded 403 page, the first offering "Log in" and both offering "Back to home".
+**Independent Test**: As a logged-out visitor, request an authenticated-only route; as a logged-in non-moderator, request an `/admin/*` route; confirm both show the same branded "access denied" page (401 for the first case, 403 for the second — FR-008), the first offering "Log in" and both offering "Back to home".
 
 **Acceptance Scenarios**:
 
 1. **Given** a visitor who is not logged in, **When** they request a route that requires authentication, **Then** they see the branded "access denied" page with a "Log in" action and a "Back to home" action.
 2. **Given** a visitor who is logged in but does not hold the required role, **When** they request a route restricted to a higher role (e.g., any `/admin/*` page, which requires moderator or higher), **Then** they see the same branded "access denied" page.
-3. **Given** an unauthorized visitor requests any `/admin/*` path, **When** the system checks access, **Then** the access check happens before route existence is considered, so a nonexistent `/admin/*` path shown to an unauthorized visitor still renders 403, not 404 — an unauthorized visitor cannot use the response to learn whether a given admin route exists.
+3. **Given** an unauthorized visitor requests any `/admin/*` path, **When** the system checks access, **Then** the access check happens before route existence is considered, so a nonexistent `/admin/*` path shown to an unauthorized visitor still renders the same "access denied" page (not "not found") — an unauthorized visitor cannot use the response to learn whether a given admin route exists.
 
 ---
 
@@ -91,7 +91,7 @@ An admin has enabled a platform-wide maintenance flag (via the future Admin Sett
 - **FR-005**: The "server error" response MUST carry an actual server-error (500) status on the wire.
 - **FR-006**: System MUST render a branded "access denied" page when a visitor requests a route that requires authentication they don't have, or a role/permission level higher than theirs, offering a "Log in" action and a "Back to home" action.
 - **FR-007**: The access check for a role- or auth-gated route MUST be evaluated before that route's existence is considered, so an unauthorized visitor sees "access denied" rather than "not found" for both real and nonexistent paths under a gated area (e.g., `/admin/*`) — this prevents an unauthorized visitor from using the response to learn what does or doesn't exist there.
-- **FR-008**: The "access denied" response MUST carry an actual access-denied (403) status on the wire.
+- **FR-008**: The "access denied" response MUST carry the status matching *why* access was denied: an actual not-authenticated (401) status for the not-logged-in case, and an actual access-denied (403) status for the insufficient-role case — both rendering the same shared visual page (FR-013), since correct status codes don't require different copy.
 - **FR-009**: System MUST support a platform-wide maintenance flag (owned and toggled by the future Admin Settings feature — this feature only reads its current value) that, when enabled, renders a branded "down for maintenance" page for every route except `/admin/*`.
 - **FR-010**: While the maintenance flag is enabled, `/admin/*` routes MUST remain reachable for a session holding moderator role or higher, so maintenance mode can be disabled again.
 - **FR-011**: The maintenance page MUST display an optional estimated-return message when one has been configured, and a generic "back shortly" message when none has been configured.
@@ -116,7 +116,8 @@ An admin has enabled a platform-wide maintenance flag (via the future Admin Sett
 
 ## Assumptions
 
-- A single "access denied" state covers both "not logged in" and "logged in but insufficient role," matching the source wireframe's single page (whose copy offers "Log in" as the primary action either way) — this feature does not build a separate "please log in" experience distinct from 403.
+- A single "access denied" *visual* state covers both "not logged in" and "logged in but insufficient role," matching the source wireframe's single page (whose copy offers "Log in" as the primary action either way) — this feature does not build a separate-looking "please log in" experience. The two cases still carry different HTTP statuses (401 vs. 403, FR-008), since that distinction is free to get right and doesn't require different content.
+- This feature's four states apply to full-page navigation (a visitor loading a page in their browser). API/data-endpoint error responses (JSON error bodies from route handlers other features define) are a separate, per-endpoint concern with their own status codes and are not rendered through this feature's shared UI.
 - The maintenance flag's storage and toggle UI are fully owned by the future Admin Settings feature (`resources/guidelines.md` §12.6); this feature only specifies that such a flag exists and what it does when read as "on."
 - Automated error monitoring/alerting (e.g., paging a team when server errors spike) is out of scope — only the user-facing page and a correlatable reference code are covered here.
 - Content-privacy-driven restrictions (a private profile, a blocked user's content) are a different concern, handled by their own features (Public Profile, Blocked Users), not the route-level access check this feature covers.
