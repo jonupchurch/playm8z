@@ -4,7 +4,9 @@
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --disable-git --agents-md --yes)",
       "Bash(rm -rf /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp)",
       "Bash(mkdir -p /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp)",
-      "Bash(npx create-next-app@latest /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp --typescript --tailwind --eslint --app --src-dir --import-alias @/* --use-npm --disable-git --agents-md --yes)"
+      "Bash(npx create-next-app@latest /c/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/fdab8ac1-f986-4f45-87fa-80a6fa7e7cb8/scratchpad/nextapp --typescript --tailwind --eslint --app --src-dir --import-alias @/* --use-npm --disable-git --agents-md --yes)",
+      "Bash(cp -r specs/002-error-pages /tmp/spec-002-backup)",
+      "Bash(cp -r specs/002-error-pages/* \"C:/Users/jonmu/AppData/Local/Temp/claude/d--Codelib-playm8z/eb8ddf33-dd7a-4eab-818d-58068b1aedeb/scratchpad/spec-002-backup/\")"
     ]
   }
 }
