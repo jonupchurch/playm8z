@@ -306,6 +306,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (extends `postings` with genre/ageGroup/timeSlots/platform/
   micRequired/scheduledDate), `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Browse: `tasks.md` — 22 tasks: Setup (1,
+  extending Home's seed script) → Foundational (5: extended postings
+  columns + migration, the searchParams Zod schema, relocating/
+  extending the shared listing-card component, the faceted query
+  builder) → US1/P1 search+filter+sort+click-through (7) → US2/P2 pills
+  (3) → US3/P3 empty state (3) → Polish (3). Browse is the fourth
+  feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

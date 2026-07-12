@@ -419,13 +419,18 @@ extends Home's listing-card component into a shared location rather
 than duplicating it. Age group corrected to 18+/21+ (ADR 0002);
 "Soonest" sort mapped to Posting's `scheduledDate` field.
 
+**Browse: tasks done** (2026-07-12) — `tasks.md`, 22 tasks: Setup(1) →
+Foundational(5) → US1/P1 search+filter+sort(7) → US2/P2 pills(3) →
+US3/P3 empty-state(3) → Polish(3). `docs/feature-list.md` updated to
+🟢. Browse is the fourth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Browse: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `004-browse` into `main`, then move on to feature #5 (Post a
+  Game) — same specify→plan→tasks→merge sequence repeats for every
+  other feature in `docs/feature-list.md` — per the project-wide gate
+  (constitution v1.0.0), implementation doesn't begin on *any* feature
+  until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
