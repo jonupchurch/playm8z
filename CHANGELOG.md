@@ -165,13 +165,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   status) and set `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` locally and on
   Vercel (Production + Preview). Verified end-to-end that the sign-in
   flow correctly redirects to Google's real consent screen.
+- First production deploy is live at `https://playm8z.vercel.app`.
+  Registered its origin/redirect URI with the same Google OAuth client
+  and verified the Google sign-in flow end-to-end in production too.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
   constitution's Test Discipline principle).
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
-- Google OAuth's production redirect URI still needs adding to the
-  Google Cloud Console client once the real deployed domain is known.
 - No CI configured yet.
-- Nothing deployed — Vercel project + Neon DB are provisioned and
-  ready, but no `vercel deploy` has been run yet.
+- No custom domain connected — deliberately deferred, live at
+  `https://playm8z.vercel.app` only.

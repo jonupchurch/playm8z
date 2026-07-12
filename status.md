@@ -53,9 +53,10 @@ yet.
   overwrote `.env.local` with the Neon dev vars, wiping the local
   `DATABASE_URL`/`AUTH_SECRET`; restored `.env.local` to the local
   Postgres connection string (confirmed working) plus a freshly
-  generated local `AUTH_SECRET`. Domain (playm8z.com) deliberately not
-  connected yet — deploy to the default `*.vercel.app` URL for now, per
-  the user's choice.
+  generated local `AUTH_SECRET`. Custom domain (playm8z.com)
+  deliberately not connected yet, per the user's choice — the project
+  is deployed to its default `https://playm8z.vercel.app` production
+  domain for now.
   Also: `vercel integration add neon` auto-installed Neon's Claude Code
   skills (`.claude/skills/neon`, `.claude/skills/neon-postgres`) as
   absolute-path symlinks into `.agents/skills/` — gitignored rather than
@@ -64,19 +65,22 @@ yet.
   `vercel integration add neon` (or `npx skills add
   https://github.com/neondatabase/agent-skills`) to reinstall locally if
   needed on another machine.
-
-- **Google OAuth configured and verified working** (2026-07-12): client
-  created in Google Cloud Console (Testing publish status — test users
-  must be added there for anyone besides the owner to sign in), with
-  `http://localhost:3000`/`http://localhost:3000/api/auth/callback/google`
-  registered. `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` set in `.env.local`
-  and on Vercel (Production + Preview). Verified end-to-end: hitting
-  `/api/auth/signin/google` (POST with a valid CSRF token) correctly
-  redirects to Google's real consent screen with the right `client_id`
-  and `redirect_uri`. **Still needed**: once the first deploy happens
-  and the real production domain is known, add a second
-  origin/redirect-URI pair to the same Google OAuth client for that
-  domain — the localhost one won't work in production.
+- **First production deploy done** (2026-07-12, by the user, outside
+  this session): `https://playm8z.vercel.app` is live and serving
+  (verified `200 OK`), running against the Neon database provisioned
+  above.
+- **Google OAuth configured and verified working, locally and in
+  production** (2026-07-12): client created in Google Cloud Console
+  (Testing publish status — test users must be added there for anyone
+  besides the owner to sign in), with both
+  `http://localhost:3000`/`.../api/auth/callback/google` **and**
+  `https://playm8z.vercel.app`/`.../api/auth/callback/google`
+  registered as origins/redirect URIs. `AUTH_GOOGLE_ID`/
+  `AUTH_GOOGLE_SECRET` set in `.env.local` and on Vercel (Production +
+  Preview). Verified end-to-end on both: hitting `/api/auth/signin/google`
+  (POST with a valid CSRF token) correctly redirects to Google's real
+  consent screen with the right `client_id`/`redirect_uri` for each
+  environment.
 
 ## Known gaps / accepted limitations
 
@@ -86,8 +90,8 @@ yet.
   (with a `passwordHash`) — the schema and auth config support it, but
   no route/UI does yet.
 - No CI configured yet.
-- Nothing deployed yet — Vercel project + Neon DB are provisioned and
-  ready, but no `vercel deploy` has been run.
+- No custom domain connected — live at `https://playm8z.vercel.app`
+  only, per the user's choice (deliberately deferred, not a gap).
 
 ## Product vision (informal, not yet a spec)
 
