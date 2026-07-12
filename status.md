@@ -451,13 +451,19 @@ computes any of them yet). Accept/decline/remove-roster-member is
 Inbox's job; Report/Save deferred to `docs/future-work.md`. Second and
 third consumer of Auth & Onboarding's write gate.
 
+**Listing detail: tasks done** (2026-07-12) — `tasks.md`, 27 tasks:
+Setup(1) → Foundational(5) → US1/P1 apply+withdraw(8) → US2/P2 Q&A(7)
+→ US3/P3 capacity correctness(3) → Polish(3). `docs/feature-list.md`
+updated to 🟢. Listing detail is the sixth feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Listing detail: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `006-listing-detail` into `main`, then move on to feature #7
+  (Profile + Account settings) — same specify→plan→tasks→merge
+  sequence repeats for every other feature in `docs/feature-list.md`
+  — per the project-wide gate (constitution v1.0.0), implementation
+  doesn't begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

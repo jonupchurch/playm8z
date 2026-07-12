@@ -355,6 +355,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   zero `[NEEDS CLARIFICATION]` markers. No `contracts/` — all writes
   are Server Actions.
 
+- Ran `/speckit-tasks` for Listing detail: `tasks.md` — 27 tasks: Setup
+  (1) → Foundational (5: new tables + migration, validation schemas,
+  roster derivation, the page shell) → US1/P1 apply+withdraw (8) →
+  US2/P2 Q&A (7) → US3/P3 capacity correctness (3) → Polish (3).
+  Listing detail is the sixth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
