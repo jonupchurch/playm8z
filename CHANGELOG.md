@@ -236,6 +236,22 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Quality checklist passed first try, zero `[NEEDS CLARIFICATION]`
   markers.
 
+- Ran `/speckit-plan` for Error Pages: reading `node_modules/next/dist/
+  docs/` (per AGENTS.md's instruction to verify current API shape
+  rather than assume it) surfaced Next.js 16's actual native mechanism
+  — `not-found.tsx`, `error.tsx`/`global-error.tsx` (with auto-generated
+  `error.digest` doubling as the spec's reference code), and
+  `forbidden.tsx`/`unauthorized.tsx` behind `experimental.
+  authInterrupts`. This is *why* spec.md's FR-008 was corrected
+  (separate commit) before finishing the plan: Next.js already splits
+  401 (not logged in) from 403 (wrong role) natively, both rendering
+  the same shared page, which is more correct than the original
+  single-403 requirement. Added a minimal `settings` table (data-model.md)
+  for the maintenance flag — read-only for this feature, owned by the
+  future Admin Settings feature — read via `proxy.ts` (Next 16's renamed
+  `middleware.ts`) with a short-TTL cache rather than a DB hit per
+  request.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

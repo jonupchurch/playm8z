@@ -375,10 +375,21 @@ one via 403 vs. 404; the maintenance flag itself is left to the
 not-yet-spec'd Admin Settings feature — this spec only defines what
 happens when it reads as "on."
 
+**Error Pages: plan done** (2026-07-12) — reading the actual installed
+Next.js 16 docs (per AGENTS.md) surfaced its native mechanism for all
+four states (`not-found.tsx`, `error.tsx`+`global-error.tsx` using
+auto-generated `error.digest` as the reference code, `forbidden.tsx`+
+`unauthorized.tsx` behind `experimental.authInterrupts`), which is *why*
+spec.md's FR-008 got corrected first (403-for-both → 401/403 split,
+same shared visual page) — the framework already does the more-correct
+thing for free. Added a minimal `settings` table for the maintenance
+flag, read-only for this feature and owned by the future Admin Settings
+feature; read via `proxy.ts` with a short-TTL cache.
+
 ## Next up
 
-- Error Pages: `/speckit-plan` next, then `/speckit-tasks`, then merge
-  to `main` — same sequence as Auth & Onboarding.
+- Error Pages: `/speckit-tasks` next, then merge to `main` — same
+  sequence as Auth & Onboarding.
 - After that, the same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
