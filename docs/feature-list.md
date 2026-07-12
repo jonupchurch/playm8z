@@ -30,7 +30,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 7. Profile + Account settings — 🟢 spec + plan + tasks all complete (`specs/007-profile-and-account-settings/`, branch `007-profile-and-account-settings`, `playm8z - Profile.dc.html`) — 35 tasks across Setup/Foundational/US1(P1) edit profile+games+password+email/US2(P2) manage postings/US3(P3) saved listings/US4(P4) privacy+deactivate/Polish; not yet implemented
 8. Blocked Users — 🟢 spec + plan + tasks all complete (`specs/008-blocked-users/`, branch `008-blocked-users`, `support/playm8z - Blocked Users.dc.html`) — 20 tasks across Setup/Foundational/US1(P1) view+search+unblock/US2(P2) block-new/Polish; not yet implemented
 9. Forum index — 🟢 spec + plan + tasks all complete (`specs/009-forum-index/`, branch `009-forum-index`, `playm8z - Forum.dc.html`) — 22 tasks across Setup/Foundational/US1(P1) browse+search+filter+sort/US2(P2) create-thread/Polish; not yet implemented
-10. Forum Thread — ✅
+10. Forum Thread — 📝 spec + plan written (`specs/010-forum-thread/`, branch `010-forum-thread`, `playm8z - Forum Thread.dc.html`), not yet tasked
 11. Inbox / messaging — ✅
 12. Notifications + Report modal — ✅ (`support/playm8z - Notifications & Report.dc.html`)
 13. News feed (public) — ✅

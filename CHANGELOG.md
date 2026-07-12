@@ -414,6 +414,18 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   filter+sort (8) → US2/P2 create-thread (5) → Polish (3). Forum index
   is the ninth feature to clear the project-wide gate.
 
+- Ran `/speckit-specify` and `/speckit-plan` for Forum Thread:
+  `spec.md`/`plan.md` on branch `010-forum-thread`. Reading a thread is
+  public; replying, liking, reporting, and subscribing are all gated.
+  Models likes as a real per-user relationship with a database-level
+  unique constraint (not just an app-level check, to close a race
+  condition), second writer of Blocked Users' `reports` entity
+  (`targetType='forum'`), drops the wireframe's fake "TOP REPLY"/
+  best-answer badge (keeping the real "Top" by-likes sort), and
+  Subscribe stores a preference only since no notification-delivery
+  mechanism exists yet. Quality checklist passed first try, zero
+  `[NEEDS CLARIFICATION]` markers. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

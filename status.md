@@ -504,10 +504,17 @@ US2/P2 create-thread(5) → Polish(3). `docs/feature-list.md` updated to
 🟢. Forum index is the ninth feature with a complete spec/plan/tasks
 trio.
 
+**Forum Thread: spec + plan done** (2026-07-12, branch
+`010-forum-thread`) — read a thread (public) + reply/like/report/
+subscribe (gated). Likes are a real per-user relationship with a
+database-level unique constraint. Second writer of Blocked Users'
+`reports` entity. Drops the wireframe's fake best-answer badge, keeps
+the real by-likes "Top" sort. Subscribe stores a preference only.
+
 ## Next up
 
-- Merge `009-forum-index` into `main`, then move on to feature #10
-  (Forum Thread) — same specify→plan→tasks→merge sequence repeats for
+- Forum Thread: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.
