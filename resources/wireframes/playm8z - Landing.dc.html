@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;overflow-x:hidden;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 40px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">News</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;padding:8px 10px;">Log in</a>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 20px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Sign up free</button>
+    </div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <div style="position:relative;background:radial-gradient(circle at 75% 10%,rgba(255,59,107,0.12),transparent 45%),radial-gradient(circle at 15% 30%,rgba(255,107,26,0.13),transparent 50%);">
+    <div style="max-width:1200px;margin:0 auto;padding:72px 40px 80px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;background:rgba(255,107,26,0.1);border:1px solid rgba(255,107,26,0.3);padding:6px 13px;border-radius:999px;margin-bottom:22px;"><span style="width:7px;height:7px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>4,300+ players online now</div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:60px;line-height:1.02;letter-spacing:-0.03em;margin:0 0 20px;">Find your people.<br>Play <span style="background:linear-gradient(110deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">{{ word }}</span>.</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:18px;color:#b49c6a;line-height:1.6;max-width:500px;margin:0 0 30px;">playm8z matches you with players who fit — casual or competitive, any game, any table. Post what you want to play, set the vibe, and assemble your party.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:15px 30px;border-radius:13px;cursor:pointer;box-shadow:0 10px 28px -10px rgba(255,107,26,0.8);">Get started — it's free</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:16px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:15px 26px;border-radius:13px;cursor:pointer;">Browse games</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:26px;">
+          <div style="display:flex;">
+            <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);border:2px solid #140f0a;"></div>
+            <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);border:2px solid #140f0a;margin-left:-10px;"></div>
+            <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ff3b6b,#ffb000);border:2px solid #140f0a;margin-left:-10px;"></div>
+            <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff3b6b);border:2px solid #140f0a;margin-left:-10px;"></div>
+          </div>
+          <span style="font-family:'Space Mono',monospace;font-size:12px;color:#8a7c68;">Join 48,000+ gamers already matched</span>
+        </div>
+      </div>
+
+      <!-- floating listing card -->
+      <div style="position:relative;animation:floaty 5s ease-in-out infinite;">
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.3);border-radius:18px;padding:20px;box-shadow:0 40px 90px -40px rgba(0,0,0,0.9);">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:17px;">M</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">Mara</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">hosting · NA-West</div></div>
+            <span style="width:9px;height:9px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;margin-bottom:4px;">Helldivers 2 · Co-op</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Casual dives — all welcome</div>
+          <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 14px;">Here to blow stuff up and laugh. All skill levels welcome.</p>
+          <div style="display:flex;gap:6px;margin-bottom:14px;"><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:4px 10px;border-radius:999px;">Fun</span><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 10px;border-radius:999px;">2/4 open</span></div>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px;border-radius:11px;cursor:pointer;">Request to join</button>
+        </div>
+        <!-- mini secondary card -->
+        <div style="position:absolute;bottom:-28px;left:-34px;background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:13px 15px;box-shadow:0 20px 50px -24px rgba(0,0,0,0.9);display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">W</div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;">Pathfinder 2e</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8fbfe0;">TTRPG · EU-West</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- trust bar -->
+    <div style="border-top:1px solid #2c2418;border-bottom:1px solid #2c2418;background:rgba(26,19,12,0.5);">
+      <div style="max-width:1000px;margin:0 auto;padding:24px 40px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:20px;text-align:center;">
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">48,000+</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">players</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">320+</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">games &amp; tables</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">12,400</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">parties formed this week</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">4.9★</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;">avg teammate rating</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <div style="max-width:1100px;margin:0 auto;padding:80px 40px;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#ff9c5a;margin-bottom:12px;">How it works</div>
+      <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:36px;letter-spacing:-0.02em;margin:0;">From solo to squad in three steps</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:28px;">
+          <div style="width:48px;height:48px;border-radius:14px;background:{{ st.bg }};display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;">{{ st.icon }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;margin-bottom:8px;">STEP {{ st.n }}</div>
+          <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;margin:0 0 9px;">{{ st.title }}</h3>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;line-height:1.6;margin:0;">{{ st.body }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===== FEATURES ===== -->
+  <div style="background:rgba(26,19,12,0.5);border-top:1px solid #2c2418;border-bottom:1px solid #2c2418;">
+    <div style="max-width:1100px;margin:0 auto;padding:80px 40px;">
+      <div style="text-align:center;margin-bottom:48px;">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#ff9c5a;margin-bottom:12px;">Why playm8z</div>
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:36px;letter-spacing:-0.02em;margin:0;">Built for every kind of player</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;">
+        <sc-for list="{{ features }}" as="f" hint-placeholder-count="4">
+          <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:26px;display:flex;gap:18px;">
+            <div style="width:46px;height:46px;border-radius:13px;background:{{ f.bg }};display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">{{ f.icon }}</div>
+            <div><div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;"><h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin:0;">{{ f.title }}</h3><sc-if value="{{ f.soon }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:2px 7px;border-radius:5px;">SOON</span></sc-if></div><p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;line-height:1.6;margin:0;">{{ f.body }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BROWSE BY ===== -->
+  <div style="max-width:1100px;margin:0 auto;padding:80px 40px;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
+      <div><div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#ff9c5a;margin-bottom:12px;">Something for everyone</div><h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.02em;margin:0;">Browse by genre</h2></div>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;">See all games →</a>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;">
+      <sc-for list="{{ genres }}" as="g" hint-placeholder-count="8">
+        <div style="flex:1 1 180px;background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:20px;cursor:pointer;" style-hover="border-color:rgba(255,107,26,0.5);">
+          <div style="width:36px;height:8px;border-radius:999px;background:{{ g.bar }};margin-bottom:14px;"></div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;margin-bottom:3px;">{{ g.name }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">{{ g.count }} live parties</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <div style="background:rgba(26,19,12,0.5);border-top:1px solid #2c2418;border-bottom:1px solid #2c2418;">
+    <div style="max-width:1100px;margin:0 auto;padding:72px 40px;">
+      <div style="text-align:center;margin-bottom:40px;"><h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.02em;margin:0;">Loved by players &amp; game masters</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+        <sc-for list="{{ quotes }}" as="q" hint-placeholder-count="3">
+          <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+            <div style="color:#ffb000;font-size:13px;margin-bottom:12px;">★★★★★</div>
+            <p style="font-family:'Sora',sans-serif;font-size:14px;color:#e4d3ba;line-height:1.6;margin:0 0 16px;">“{{ q.text }}”</p>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:9px;background:{{ q.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:12px;">{{ q.initial }}</div><div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">{{ q.name }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ q.role }}</div></div></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FINAL CTA ===== -->
+  <div style="max-width:1100px;margin:0 auto;padding:90px 40px;">
+    <div style="background:linear-gradient(135deg,rgba(255,176,0,0.12),rgba(255,59,107,0.1));border:1px solid rgba(255,107,26,0.35);border-radius:24px;padding:56px 40px;text-align:center;position:relative;overflow:hidden;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Assemble your party</div>
+      <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:42px;line-height:1.1;letter-spacing:-0.02em;margin:0 0 16px;">Your next session is one click away.</h2>
+      <p style="font-family:'Sora',sans-serif;font-size:17px;color:#b49c6a;max-width:460px;margin:0 auto 30px;line-height:1.6;">Free to join. No credit card. Just better games with better people.</p>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:16px 36px;border-radius:14px;cursor:pointer;box-shadow:0 12px 32px -10px rgba(255,107,26,0.8);">Sign up free</button>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div style="border-top:1px solid #2c2418;background:#120d08;">
+    <div style="max-width:1100px;margin:0 auto;padding:44px 40px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:26px;height:24px;position:relative;"><div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:16px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div></div><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span></div>
+        <p style="font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;line-height:1.6;margin:0;max-width:240px;">Find people to play anything with. Assemble your party.</p>
+      </div>
+      <div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8a7c68;margin-bottom:12px;">Product</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Browse</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#6b5a45;">Groups (soon)</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Forum</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">News</a></div></div>
+      <div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8a7c68;margin-bottom:12px;">Company</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">About</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Careers</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Community Guidelines</a></div></div>
+      <div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8a7c68;margin-bottom:12px;">Legal</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Privacy</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Terms</a><a href="#" style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;">Safety Center</a></div></div>
+    </div>
+    <div style="border-top:1px solid #2c2418;"><div style="max-width:1100px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#5c554c;">© 2026 playm8z · Discord integration coming soon</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#5c554c;">Made for gamers, by gamers</span></div></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { wordIdx:0 };
+  componentDidMount(){ this._t = setInterval(()=>this.setState(s=>({wordIdx:(s.wordIdx+1)%this.words.length})), 1800); }
+  componentWillUnmount(){ clearInterval(this._t); }
+  get words(){ return ['anything','ranked','campaigns','raids','board games','one-shots']; }
+
+  renderVals(){
+    return {
+      word: this.words[this.state.wordIdx],
+      steps: [
+        { n:'1', icon:'📣', bg:'rgba(255,176,0,0.14)', title:'Post or find a game', body:'List the game you want to play, or browse thousands of live parties looking for players.' },
+        { n:'2', icon:'🎯', bg:'rgba(255,107,26,0.14)', title:'Match on your terms', body:'Filter by vibe, region, platform, time slot and age. Find people who actually fit.' },
+        { n:'3', icon:'🎮', bg:'rgba(255,59,107,0.14)', title:'Play together', body:'Coordinate in chat, jump in, and rate each other after. Build a crew that sticks.' }
+      ],
+      features: [
+        { icon:'🎲', bg:'rgba(255,176,0,0.14)', title:'Every game & table', body:'From FPS and MOBAs to D&D, board games and TTRPGs — online or in person.' },
+        { icon:'⚖️', bg:'rgba(255,107,26,0.14)', title:'Casual or serious', body:'Say whether you\u2019re here to chill or to climb — and only match with people who feel the same.' },
+        { icon:'⭐', bg:'rgba(255,59,107,0.14)', title:'Real profiles & ratings', body:'Reputation, reliability scores and reviews mean fewer no-shows and fewer ragers.' },
+        { icon:'🎧', bg:'rgba(53,208,224,0.12)', title:'Discord integration', soon:true, body:'Auto-create voice channels and get LFG pings right where your friends already hang out.' }
+      ],
+      genres: [
+        { name:'FPS', count:'1.2k', bar:'linear-gradient(90deg,#ffb000,#ff6b1a)' },
+        { name:'RPG', count:'840', bar:'linear-gradient(90deg,#ff6b1a,#ff3b6b)' },
+        { name:'Co-op PvE', count:'760', bar:'linear-gradient(90deg,#ffb000,#ff3b6b)' },
+        { name:'MOBA', count:'510', bar:'linear-gradient(90deg,#ff3b6b,#ff6b1a)' },
+        { name:'TTRPG', count:'430', bar:'linear-gradient(90deg,#ff6b1a,#ffb000)' },
+        { name:'Tabletop', count:'380', bar:'linear-gradient(90deg,#ffb000,#ff6b1a)' },
+        { name:'Party', count:'290', bar:'linear-gradient(90deg,#ff3b6b,#ffb000)' },
+        { name:'Sandbox', count:'210', bar:'linear-gradient(90deg,#ffb000,#ff3b6b)' }
+      ],
+      quotes: [
+        { text:'Found a weeknight Helldivers crew in a day. We\u2019ve played together every week since.', name:'Mara', role:'Co-op main', initial:'M', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+        { text:'As a GM, filling a D&D table used to take weeks. On playm8z it took one afternoon.', name:'GM_Dave', role:'Dungeon Master', initial:'G', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)' },
+        { text:'The vibe filter is genius. No more tryhards in my chill lobbies or vice versa.', name:'Vex_00', role:'Ranked grinder', initial:'V', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

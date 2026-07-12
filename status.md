@@ -171,10 +171,19 @@ resolving that gap from the second business-requirements pass below.
   "ban-appeals queue" not-yet-designed item; it isn't undesigned, it's
   intentionally not an in-app feature.
 
-**Resolved (2026-07-12):** the logged-out marketing landing page needs no
-bespoke design — it's just another `ContentPage` using the already-designed
-Content Pages system, not a distinct feature. Groups re-confirmed as
-future state (no change from before).
+**Reversed (2026-07-12, later same day):** the logged-out marketing
+landing page turned out to need bespoke design after all —
+`resources/wireframes/playm8z - Landing.dc.html` is a real marketing page
+(hero, stats, three-step explainer, genre browse, testimonials, CTA),
+well beyond the block-based Content Page editor. It's its own feature in
+`docs/feature-list.md` now, not a `ContentPage`. Groups re-confirmed as
+future state (no change).
+
+**Five more wireframes landed (2026-07-12):** Public Profile, News
+Article, Admin Settings (turned out to have real substance: General/
+maintenance mode, moderation & auto-flag rules, roles & access, feature
+flags, safety), Moderator Audit Log, and the Landing page above — all
+moved into `docs/feature-list.md`'s "wireframed, ready to spec" list.
 
 **Fourth gap-analysis pass (2026-07-12), all resolved:**
 - **Hosts can remove an accepted roster member** (e.g. a no-show/flake),

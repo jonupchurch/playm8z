@@ -39,13 +39,17 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 19. Admin Reports — ✅
 20. Admin News — ✅
 21. Admin Content Pages — ✅
-
-## Wireframe in progress (2026-07-12)
-
-22. Public profile page (`/u/:handle`)
-23. News article detail (`/news/:slug`)
-24. Admin Settings
-25. Moderator audit log
+22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
+23. News article detail (`/news/:slug`) — ✅ (`playm8z - News Article.dc.html`)
+24. Admin Settings — ✅ (General/maintenance mode, moderation & auto-flag
+    rules, roles & access, feature flags, safety)
+25. Moderator audit log — ✅ (`admin/playm8z - Admin Audit Log.dc.html`)
+26. Logged-out marketing landing page — ✅ (`playm8z - Landing.dc.html`)
+    — **reverses** the earlier call that this didn't need bespoke design.
+    It's a real marketing page (hero, live-feeling stats, three-step
+    explainer, genre browse, testimonials, final CTA) — materially more
+    than the block-based Content Page system supports. See
+    `docs/future-work.md` for the correction.
 
 ## Explicitly out of scope for now
 

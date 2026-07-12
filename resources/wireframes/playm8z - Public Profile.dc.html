@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">Y</div>
+    </div>
+  </div>
+
+  <!-- ===== PROFILE HEADER ===== -->
+  <div style="border-bottom:1px solid #2c2418;background:radial-gradient(circle at 20% -60%,rgba(255,107,26,0.12),transparent 55%);">
+    <div style="max-width:1000px;margin:0 auto;padding:34px 32px 26px;">
+      <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="position:relative;flex:none;">
+          <div style="width:92px;height:92px;border-radius:24px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:40px;box-shadow:0 12px 30px -12px rgba(255,107,26,0.7);">V</div>
+          <span style="position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:#4ec96a;border:3px solid #140f0a;box-shadow:0 0 10px #4ec96a;"></span>
+        </div>
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:0;">Vex_00</h1>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#8fe0a3;">● Online</span>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;margin-top:5px;">@vex · level 24 · member since 2024</div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;line-height:1.6;margin:12px 0 0;max-width:520px;">Controller main chasing Radiant. Serious about ranked but allergic to toxicity — I'd rather lose with good comms than win with a rager. Also down for chill co-op nights.</p>
+        </div>
+        <!-- actions -->
+        <div style="display:flex;flex-direction:column;gap:9px;align-items:stretch;min-width:190px;position:relative;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 18px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Invite to a party</button>
+          <div style="display:flex;gap:9px;">
+            <button style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;">Message</button>
+            <button onClick="{{ toggleFollow }}" style="{{ followStyle }}">{{ followLabel }}</button>
+            <button onClick="{{ toggleMenu }}" style="width:44px;font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#b49c6a;background:#1a130c;border:1px solid #3a2c1a;border-radius:11px;cursor:pointer;line-height:1;">⋯</button>
+          </div>
+          <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:96px;right:0;width:180px;background:#1a130c;border:1px solid #2c2418;border-radius:12px;box-shadow:0 20px 50px -20px rgba(0,0,0,0.9);overflow:hidden;z-index:10;">
+              <button style="display:flex;align-items:center;gap:9px;width:100%;font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;background:transparent;border:none;padding:11px 14px;cursor:pointer;text-align:left;">🔗 Share profile</button>
+              <button style="display:flex;align-items:center;gap:9px;width:100%;font-family:'Sora',sans-serif;font-size:13px;color:#ff9c5a;background:transparent;border:none;border-top:1px solid #221a10;padding:11px 14px;cursor:pointer;text-align:left;">⚑ Report user</button>
+              <button style="display:flex;align-items:center;gap:9px;width:100%;font-family:'Sora',sans-serif;font-size:13px;color:#ff7ea0;background:transparent;border:none;border-top:1px solid #221a10;padding:11px 14px;cursor:pointer;text-align:left;">⛔ Block user</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- stats -->
+      <div style="display:flex;gap:30px;margin-top:24px;flex-wrap:wrap;">
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;color:#4ec96a;">4.9</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">rating · {{ reviewCount }} reviews</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;">128</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">sessions</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;">17</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">groups</div></div>
+        <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;">96%</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">reliable</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONTENT ===== -->
+  <div style="max-width:1000px;margin:0 auto;padding:28px 32px 80px;display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      <!-- games -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Games Vex plays</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <sc-for list="{{ games }}" as="g" hint-placeholder-count="4">
+            <div style="background:#20180e;border:1px solid #2c2418;border-radius:13px;overflow:hidden;">
+              <div style="height:8px;background:{{ g.banner }};"></div>
+              <div style="padding:13px 14px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;margin-bottom:6px;">{{ g.name }}</div><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#ffb000;">{{ g.rank }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">· {{ g.hours }}</span></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- active postings -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Open parties</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ postings }}" as="p" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#20180e;border:1px solid #2c2418;border-radius:13px;">
+              <div style="flex:1;min-width:0;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:3px;">{{ p.game }}</div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;margin-bottom:5px;">{{ p.title }}</div><div style="display:flex;gap:6px;"><span style="{{ p.vibeStyle }}">{{ p.vibe }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:3px 9px;border-radius:999px;">{{ p.seats }}</span></div></div>
+              <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 16px;border-radius:10px;cursor:pointer;flex:none;">Request</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- reviews -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;">Player reviews</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:#ffb000;font-size:13px;">{{ starAvg }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">4.9 · {{ reviewCount }}</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;gap:12px;">
+              <div style="width:36px;height:36px;border-radius:10px;background:{{ r.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;flex:none;">{{ r.initial }}</div>
+              <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">{{ r.author }}</span><span style="color:#ffb000;font-size:11px;">{{ r.stars }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-left:auto;">{{ r.game }} · {{ r.ago }}</span></div>
+                <p style="font-family:'Sora',sans-serif;font-size:13px;color:#d9cbb2;line-height:1.55;margin:0;">{{ r.text }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <!-- sidebar: public info -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:20px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Public info</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">REGION</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">EU-West · CET</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">AGE GROUP</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">18+</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:3px;">PRONOUNS</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">they/them</div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:6px;">LANGUAGES</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">English</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">German</span></div></div>
+          <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:6px;">PLATFORMS</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 10px;border-radius:999px;">PC</span></div></div>
+        </div>
+      </div>
+
+      <!-- in common -->
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:20px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">You have in common</div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+          <div style="display:flex;">
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ffb000,#ff6b1a);border:2px solid #1a130c;display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;">K</div>
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);border:2px solid #1a130c;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;">M</div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-size:13px;color:#d9cbb2;">2 mutual friends</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#ffd08a;background:rgba(255,176,0,0.12);border:1px solid rgba(255,176,0,0.35);padding:3px 10px;border-radius:999px;">Valorant</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#ffd08a;background:rgba(255,176,0,0.12);border:1px solid rgba(255,176,0,0.35);padding:3px 10px;border-radius:999px;">Helldivers 2</span></div>
+      </div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:#5c554c;text-align:center;line-height:1.6;">Only shows what Vex has made public.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { following:false, menuOpen:false };
+
+  stars(n){ return '★★★★★☆☆☆☆☆'.slice(5-n, 10-n); }
+
+  renderVals(){
+    const s = this.state;
+    const games = [
+      { name:'Valorant', rank:'Diamond 1', hours:'340h', banner:'linear-gradient(90deg,#ff6b1a,#ff3b6b)' },
+      { name:'Counter-Strike 2', rank:'Legendary Eagle', hours:'510h', banner:'linear-gradient(90deg,#ffb000,#ff6b1a)' },
+      { name:'Helldivers 2', rank:'Lvl 62', hours:'120h', banner:'linear-gradient(90deg,#ffb000,#ff3b6b)' },
+      { name:'Deep Rock Galactic', rank:'Promoted', hours:'80h', banner:'linear-gradient(90deg,#ff3b6b,#ff6b1a)' }
+    ];
+    const vibeStyle = (v)=> v==='Serious'
+      ? "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.42);padding:3px 9px;border-radius:999px;"
+      : "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:3px 9px;border-radius:999px;";
+    const postings = [
+      { game:'Valorant', title:'Ranked grind — Diamond push', vibe:'Serious', vibeStyle:vibeStyle('Serious'), seats:'2/5 open' },
+      { game:'Helldivers 2', title:'Weeknight dives', vibe:'Fun', vibeStyle:vibeStyle('Fun'), seats:'1/4 open' }
+    ];
+    const reviews = [
+      { author:'Kellen', initial:'K', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', stars:this.stars(5), game:'Baldur\u2019s Gate 3', ago:'2d ago', text:'Great teammate — patient, positive, and actually communicates. Would party up again anytime.' },
+      { author:'Mara', initial:'M', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', stars:this.stars(5), game:'Helldivers 2', ago:'1w ago', text:'Super reliable and chill. Showed up on time and kept the vibe fun even when we wiped.' },
+      { author:'Jax', initial:'J', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', stars:this.stars(4), game:'Valorant', ago:'2w ago', text:'Solid comms and good calls. Takes ranked seriously but never tilts. Recommended.' }
+    ];
+
+    return {
+      games, postings, reviews,
+      reviewCount: reviews.length + 39,
+      starAvg: this.stars(5),
+      following: s.following,
+      toggleFollow: ()=>this.setState({following:!s.following}),
+      followLabel: s.following ? 'Following' : 'Follow',
+      followStyle: s.following
+        ? "flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:11px;border-radius:11px;cursor:pointer;"
+        : "flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;",
+      menuOpen: s.menuOpen,
+      toggleMenu: ()=>this.setState({menuOpen:!s.menuOpen})
+    };
+  }
+}
+</script>
+</body>
+</html>

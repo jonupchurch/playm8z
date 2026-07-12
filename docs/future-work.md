@@ -36,12 +36,9 @@ they can be spec'd/built:
   as an explicit future-state feature, not just undesigned.
 - Mobile-specific layouts.
 
-**Moved to `docs/feature-list.md` (2026-07-12)** — no longer deferred, the
-user is actively wireframing these now: public profile page (`/u/:handle`),
-news article detail page (`/news/:slug`), Admin Settings, and Moderator
-audit log. They stay off this future-work list until wireframed, at which
-point they join the spec/plan/tasks queue like everything else in
-`docs/feature-list.md`.
+**Moved to `docs/feature-list.md` (2026-07-12)**, now wireframed and
+ready to spec: public profile page (`/u/:handle`), news article detail
+page (`/news/:slug`), Admin Settings, and Moderator audit log.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Error
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
@@ -58,11 +55,15 @@ Users.dc.html`): view/search blocked users, block flow (pick → confirm,
 with an "also report" option), unblock confirm modal, empty states — no
 longer on this list.
 
-**Resolved 2026-07-12** — logged-out marketing landing page: no bespoke
-design/page needed. Confirmed by the user: the existing Content Pages
-system (public rendering + admin block-based editor, per
-`resources/guidelines.md` §7.11/§8.7) already handles this — a marketing
-landing is just another `ContentPage`, not a distinct feature.
+**Reversed 2026-07-12** — logged-out marketing landing page. Earlier the
+same day I'd concluded this needed no bespoke design (just another
+`ContentPage`); the user then designed
+`resources/wireframes/playm8z - Landing.dc.html` anyway, and it's a real
+marketing page (hero, live-feeling stats, three-step explainer, genre
+browse, testimonials, final CTA) — well beyond what the block-based
+Content Page editor (heading/paragraph/list/callout/quote/divider)
+supports. It's its own feature now, tracked in `docs/feature-list.md`,
+not a `ContentPage`.
 
 ## Monetized / premium accounts
 

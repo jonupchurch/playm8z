@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- reading progress -->
+  <div style="position:fixed;top:0;left:0;right:0;height:3px;z-index:30;background:transparent;"><div style="height:100%;width:{{ progress }};background:linear-gradient(120deg,#ffb000,#ff3b6b);transition:width .1s;"></div></div>
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">News</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Sign up free</button>
+    </div>
+  </div>
+
+  <!-- ===== ARTICLE ===== -->
+  <div style="max-width:760px;margin:0 auto;padding:24px 32px 40px;">
+    <a href="#" style="font-family:'Space Mono',monospace;font-size:12px;color:#b49c6a;display:inline-block;margin-bottom:22px;">← Back to News</a>
+
+    <!-- meta -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ffb000;background:rgba(255,176,0,0.13);border:1px solid rgba(255,176,0,0.4);padding:4px 12px;border-radius:999px;">Announcement</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">Jul 10, 2026 · 3 min read</span>
+    </div>
+
+    <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:42px;line-height:1.1;letter-spacing:-0.02em;margin:0 0 20px;">playm8z is now in open beta!</h1>
+
+    <!-- author + share -->
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:24px;border-bottom:1px solid #2c2418;margin-bottom:8px;">
+      <div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:15px;">P</div>
+      <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;">playm8z team</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">Product announcements</div></div>
+      <button onClick="{{ toggleLike }}" style="{{ likeStyle }}">♥ {{ likeCount }}</button>
+      <button onClick="{{ toggleSave }}" style="{{ saveStyle }}">{{ saveLabel }}</button>
+      <button style="width:38px;height:38px;font-size:14px;color:#b49c6a;background:#1a130c;border:1px solid #2c2418;border-radius:10px;cursor:pointer;">↗</button>
+    </div>
+  </div>
+
+  <!-- cover -->
+  <div style="max-width:900px;margin:0 auto 8px;padding:0 32px;">
+    <div style="height:340px;border-radius:20px;background:linear-gradient(135deg,#ffb000,#ff6b1a 55%,#ff3b6b);position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,0,0,0.05),rgba(0,0,0,0.05) 12px,transparent 12px,transparent 24px);"></div>
+      <span style="position:absolute;bottom:16px;right:18px;font-family:'Space Mono',monospace;font-size:11px;color:rgba(20,15,10,0.6);">cover image</span>
+    </div>
+  </div>
+
+  <!-- body -->
+  <div style="max-width:760px;margin:0 auto;padding:28px 32px 40px;">
+    <p style="font-family:'Sora',sans-serif;font-size:19px;color:#e4d3ba;line-height:1.7;margin:0 0 22px;font-weight:500;">After months of closed testing with a few thousand players, playm8z is officially open to everyone. No invite code, no waitlist — just post the games you want to play and find your party.</p>
+
+    <p style="font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.8;margin:0 0 24px;">We built playm8z because finding good people to play with is still weirdly hard. Discord servers are noisy, LFG channels scroll past in seconds, and randoms are a coin flip. We wanted a place where you say what you want to play and how you want to play it — and get matched with people who actually fit.</p>
+
+    <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.01em;margin:34px 0 14px;">What shipped for launch</h2>
+    <p style="font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.8;margin:0 0 16px;">Everything you need to go from solo to squad:</p>
+    <ul style="margin:0 0 24px;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:11px;">
+      <li style="display:flex;gap:12px;font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.6;"><span style="color:#ff6b1a;font-weight:700;flex:none;">›</span><span><b style="color:#fbeeda;">Post a game</b> — set the vibe, region, platform, time slots, party size and more.</span></li>
+      <li style="display:flex;gap:12px;font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.6;"><span style="color:#ff6b1a;font-weight:700;flex:none;">›</span><span><b style="color:#fbeeda;">Powerful search</b> — filter by casual vs serious, open slots, age group, mic and keywords.</span></li>
+      <li style="display:flex;gap:12px;font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.6;"><span style="color:#ff6b1a;font-weight:700;flex:none;">›</span><span><b style="color:#fbeeda;">Real profiles &amp; ratings</b> — reputation and reliability so you know who you're teaming with.</span></li>
+      <li style="display:flex;gap:12px;font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.6;"><span style="color:#ff6b1a;font-weight:700;flex:none;">›</span><span><b style="color:#fbeeda;">A community forum</b> — talk strategy, share clips, and organize groups.</span></li>
+    </ul>
+
+    <div style="display:flex;gap:12px;background:rgba(255,107,26,0.07);border:1px solid rgba(255,107,26,0.28);border-radius:14px;padding:18px 20px;margin:0 0 24px;">
+      <span style="font-size:20px;flex:none;">💡</span>
+      <p style="font-family:'Sora',sans-serif;font-size:15px;color:#e4d3ba;line-height:1.65;margin:0;">Not just video games — playm8z has first-class support for <b style="color:#fbeeda;">tabletop and TTRPGs</b> too, including an in-person option so you can find a local table as easily as an online lobby.</p>
+    </div>
+
+    <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.01em;margin:34px 0 14px;">What's next</h2>
+    <p style="font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.8;margin:0 0 20px;">We're already working on deep <b style="color:#fbeeda;">Discord integration</b> — auto-created voice channels for your party and LFG pings piped straight into your server. Groups &amp; clans are coming soon after, so your crews can have a permanent home.</p>
+
+    <blockquote style="margin:28px 0;padding:6px 0 6px 20px;border-left:3px solid #ff6b1a;font-family:'Sora',sans-serif;font-size:19px;font-style:italic;color:#fbeeda;line-height:1.6;">"The best gaming memories come from the people, not the games. We're here to help you find them."</blockquote>
+
+    <p style="font-family:'Sora',sans-serif;font-size:16px;color:#d9cbb2;line-height:1.8;margin:0 0 8px;">Huge thanks to our beta crew for the feedback that shaped all of this. This is just the start — see you in the lobby.</p>
+
+    <!-- tags + share -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:34px;padding-top:24px;border-top:1px solid #2c2418;">
+      <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#launch</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#beta</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#product</span></div>
+      <div style="display:flex;gap:8px;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;align-self:center;">Share:</span><button style="width:34px;height:34px;font-size:12px;color:#b49c6a;background:#1a130c;border:1px solid #2c2418;border-radius:9px;cursor:pointer;">𝕏</button><button style="width:34px;height:34px;font-size:12px;color:#b49c6a;background:#1a130c;border:1px solid #2c2418;border-radius:9px;cursor:pointer;">in</button><button style="width:34px;height:34px;font-size:12px;color:#b49c6a;background:#1a130c;border:1px solid #2c2418;border-radius:9px;cursor:pointer;">🔗</button></div>
+    </div>
+  </div>
+
+  <!-- related -->
+  <div style="border-top:1px solid #2c2418;background:rgba(26,19,12,0.5);">
+    <div style="max-width:1000px;margin:0 auto;padding:44px 32px 60px;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:18px;">Keep reading</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+        <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+          <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;cursor:pointer;" style-hover="border-color:rgba(255,107,26,0.5);">
+            <div style="height:110px;background:{{ r.cover }};"></div>
+            <div style="padding:15px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="{{ r.catStyle }}">{{ r.category }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ r.date }}</span></div><h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;line-height:1.3;margin:0 0 6px;">{{ r.title }}</h3><p style="font-family:'Sora',sans-serif;font-size:12.5px;color:#a99a80;line-height:1.5;margin:0;">{{ r.excerpt }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- subscribe -->
+  <div style="max-width:1000px;margin:0 auto;padding:44px 32px 70px;">
+    <div style="background:linear-gradient(120deg,rgba(255,176,0,0.09),rgba(255,59,107,0.06));border:1px solid rgba(255,107,26,0.28);border-radius:18px;padding:26px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:220px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:4px;">Never miss an update</div><p style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;margin:0;">News, events and patch notes, straight to your inbox.</p></div>
+      <div style="display:flex;gap:8px;flex:1;min-width:260px;"><input placeholder="you@example.com" style="flex:1;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;font-family:'Sora',sans-serif;" /><button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 20px;border-radius:10px;cursor:pointer;white-space:nowrap;">Subscribe</button></div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { liked:false, saved:false, progress:'0%' };
+
+  componentDidMount(){
+    this._onScroll = ()=>{
+      const el = document.scrollingElement || document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      const pct = max>0 ? Math.min(100, Math.round(el.scrollTop/max*100)) : 0;
+      this.setState({ progress: pct+'%' });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive:true });
+  }
+  componentWillUnmount(){ window.removeEventListener('scroll', this._onScroll); }
+
+  catStyle(c){ const col={Announcement:'#ffb000',Update:'#ff6b1a',Event:'#35d0e0','Patch Notes':'#8fe0a3',Community:'#ff3b6b'}[c]||'#ffb000'; return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:"+col+";background:color-mix(in srgb,"+col+" 14%,transparent);border:1px solid color-mix(in srgb,"+col+" 38%,transparent);padding:3px 9px;border-radius:999px;"; }
+
+  renderVals(){
+    const s = this.state;
+    return {
+      progress: s.progress,
+      liked:s.liked, toggleLike:()=>this.setState({liked:!s.liked}),
+      likeCount: 128 + (s.liked?1:0),
+      likeStyle: "display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:8px 13px;border-radius:10px;cursor:pointer;transition:all .12s;"+(s.liked?"color:#fff;background:#ff3b6b;border:none;":"color:#b49c6a;background:#1a130c;border:1px solid #2c2418;"),
+      saved:s.saved, toggleSave:()=>this.setState({saved:!s.saved}),
+      saveLabel: s.saved?'Saved':'Save',
+      saveStyle: "font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:8px 13px;border-radius:10px;cursor:pointer;transition:all .12s;"+(s.saved?"color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);":"color:#b49c6a;background:#1a130c;border:1px solid #2c2418;"),
+      related: [
+        { title:'New: filter by tabletop & TTRPGs', category:'Update', date:'Jul 8', excerpt:'D&D, Pathfinder and board games get first-class filters.', cover:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', catStyle:this.catStyle('Update') },
+        { title:'Summer Co-op Fest — win prizes', category:'Event', date:'Jul 20', excerpt:'Two weeks of community co-op challenges.', cover:'linear-gradient(135deg,#35d0e0,#ff6b1a)', catStyle:this.catStyle('Event') },
+        { title:'v1.2 — faster matchmaking & fixes', category:'Patch Notes', date:'Jul 4', excerpt:'Search is 40% faster and chips now persist.', cover:'linear-gradient(135deg,#ffb000,#ff3b6b)', catStyle:this.catStyle('Patch Notes') }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

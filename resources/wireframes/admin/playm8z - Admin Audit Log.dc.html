@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+  select option{background:#1a130c;color:#fbeeda;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Dashboard</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Audit log</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">owner</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+      <div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">Audit log</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Every moderation &amp; admin action, with who did it and why. Immutable.</p>
+      </div>
+      <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:10px 16px;border-radius:10px;cursor:pointer;">⭳ Export CSV</button>
+    </div>
+
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;min-width:240px;flex:1;max-width:320px;">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search actor, action, target…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:10px 0;" />
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select value="{{ actor }}" onChange="{{ onActor }}" style="background:#1a130c;border:1px solid #2c2418;border-radius:9px;padding:8px 12px;font-size:12px;color:#fbeeda;outline:none;cursor:pointer;font-family:'Space Mono',monospace;">
+          <option value="all">All actors</option><option value="You (Admin)">You</option><option value="Jordan Lee">Jordan Lee</option><option value="Sam Rivera">Sam Rivera</option><option value="System">System</option>
+        </select>
+        <sc-for list="{{ filters }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+      </div>
+    </div>
+
+    <!-- log -->
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:22px;">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#6b5a45;margin-bottom:10px;">{{ g.label }}</div>
+          <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+            <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="4">
+              <div style="border-bottom:1px solid #221a10;">
+                <div onClick="{{ e.onToggle }}" style="display:flex;align-items:center;gap:13px;padding:14px 16px;cursor:pointer;">
+                  <span style="width:34px;height:34px;border-radius:10px;background:{{ e.iconBg }};display:flex;align-items:center;justify-content:center;font-size:14px;flex:none;">{{ e.icon }}</span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Sora',sans-serif;font-size:14px;line-height:1.45;"><b style="font-weight:700;">{{ e.actor }}</b> <span style="color:#d9cbb2;">{{ e.action }}</span> <span style="color:#ff9c5a;font-weight:600;">{{ e.target }}</span></div>
+                    <sc-if value="{{ e.hasReason }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Sora',sans-serif;font-size:12px;color:#8a7c68;margin-top:2px;">{{ e.reason }}</div></sc-if>
+                  </div>
+                  <span style="{{ e.catStyle }}">{{ e.catLabel }}</span>
+                  <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;flex:none;width:56px;text-align:right;">{{ e.time }}</span>
+                  <span style="font-family:'Sora',sans-serif;font-size:12px;color:#6b5a45;flex:none;transform:{{ e.caret }};transition:transform .15s;">▸</span>
+                </div>
+                <sc-if value="{{ e.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 16px 16px 63px;">
+                    <div style="background:#0e0a06;border:1px solid #2c2418;border-radius:11px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;">
+                      <sc-for list="{{ e.meta }}" as="row" hint-placeholder-count="3">
+                        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:#6b5a45;white-space:nowrap;">{{ row.k }}</span>
+                        <span style="font-family:'Space Mono',monospace;font-size:12px;color:#d9cbb2;">{{ row.v }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:64px 20px;font-family:'Sora',sans-serif;color:#8a7c68;">No log entries match those filters.</div>
+    </sc-if>
+
+  </main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { filter:'all', actor:'all', query:'', open:{} };
+
+  seed(){
+    return [
+      { id:1, day:'Today', time:'4m', actor:'You (Admin)', icon:'🗑', iconBg:'rgba(255,59,107,0.14)', group:'moderation', cat:'Removal',
+        action:'removed posting', target:'“FREE SKINS CLICK HERE”', reason:'Phishing — matched banned-phrase & link filter',
+        meta:[['Target','Posting #4821'],['Author','Spammer99'],['Source','Auto-flag → manual review'],['IP','2a01:…:9f (hashed)']] },
+      { id:2, day:'Today', time:'20m', actor:'You (Admin)', icon:'⛔', iconBg:'rgba(255,59,107,0.14)', group:'moderation', cat:'Ban',
+        action:'banned', target:'Spammer99', reason:'Repeated boosting ads after warning',
+        meta:[['User','@spam99 · #1042'],['Type','Permanent'],['Prior warnings','1'],['Reversible','Yes — via appeals']] },
+      { id:3, day:'Today', time:'1h', actor:'Jordan Lee', icon:'⚑', iconBg:'rgba(230,199,78,0.14)', group:'moderation', cat:'Warning',
+        action:'warned', target:'ToxicTyler', reason:'Harassment in a Valorant forum reply',
+        meta:[['User','@ttyler · #0777'],['Warning #','3'],['Next step','Temp suspension']] },
+      { id:4, day:'Today', time:'2h', actor:'Sam Rivera', icon:'🔒', iconBg:'rgba(53,208,224,0.14)', group:'moderation', cat:'Lock',
+        action:'locked thread', target:'“politics mega-thread”', reason:'Repeated off-topic & heated reports',
+        meta:[['Thread','#3390 · Off-Topic'],['Replies','214'],['Reversible','Yes']] },
+      { id:5, day:'Today', time:'3h', actor:'You (Admin)', icon:'📰', iconBg:'rgba(255,176,0,0.14)', group:'content', cat:'Publish',
+        action:'published news', target:'“playm8z is now in open beta!”', reason:'',
+        meta:[['Post','#news-014'],['Category','Announcement'],['Pinned','Yes']] },
+      { id:6, day:'Today', time:'5h', actor:'Jordan Lee', icon:'👥', iconBg:'rgba(255,59,107,0.14)', group:'access', cat:'Role',
+        action:'changed role for', target:'Priya Shah', reason:'moderator → support',
+        meta:[['User','priya@playm8z.com'],['Before','Moderator'],['After','Support']] },
+      { id:7, day:'Today', time:'6h', actor:'You (Admin)', icon:'✓', iconBg:'rgba(78,201,106,0.14)', group:'moderation', cat:'Dismiss',
+        action:'dismissed a report on', target:'Priya\u2019s EDH posting', reason:'No violation found',
+        meta:[['Report','#r-2201'],['Reason cited','Inappropriate'],['Outcome','Kept']] },
+      { id:8, day:'Yesterday', time:'—', actor:'Sam Rivera', icon:'🗑', iconBg:'rgba(255,59,107,0.14)', group:'moderation', cat:'Removal',
+        action:'removed forum reply by', target:'randomTroll', reason:'Harassment',
+        meta:[['Reply','#reply-8842'],['Thread','Best beginner TTRPG?'],['Reports','1']] },
+      { id:9, day:'Yesterday', time:'—', actor:'You (Admin)', icon:'✎', iconBg:'rgba(180,156,106,0.14)', group:'content', cat:'Edit',
+        action:'edited content page', target:'“Community Guidelines”', reason:'Updated zero-tolerance section',
+        meta:[['Page','/guidelines'],['Blocks changed','2'],['Version','v7']] },
+      { id:10, day:'Yesterday', time:'—', actor:'System', icon:'⚙️', iconBg:'rgba(53,208,224,0.14)', group:'system', cat:'System',
+        action:'auto-hid a posting pending review', target:'“Need carries, no bots”', reason:'Hit 3-report threshold',
+        meta:[['Rule','Auto-hide after 3 reports'],['Posting','#4890'],['Status','Pending review']] },
+      { id:11, day:'Yesterday', time:'—', actor:'Jordan Lee', icon:'✓', iconBg:'rgba(78,201,106,0.14)', group:'moderation', cat:'Approve',
+        action:'approved posting by', target:'newbie_jane', reason:'False positive — new-account flag cleared',
+        meta:[['Posting','#4877'],['Flag','New account'],['Outcome','Kept']] },
+      { id:12, day:'Yesterday', time:'—', actor:'You (Admin)', icon:'🚩', iconBg:'rgba(180,156,106,0.14)', group:'access', cat:'Settings',
+        action:'changed setting', target:'Auto-hide threshold', reason:'2 → 3 reports',
+        meta:[['Setting','moderation.autoHide'],['Before','2'],['After','3']] }
+    ];
+  }
+
+  catStyle(cat){
+    const map = { Removal:'#ff3b6b', Ban:'#ff3b6b', Warning:'#e6c74e', Lock:'#35d0e0', Publish:'#ff6b1a', Role:'#ff3b6b', Dismiss:'#b49c6a', Edit:'#b49c6a', System:'#35d0e0', Approve:'#4ec96a', Settings:'#b49c6a' };
+    const c = map[cat]||'#b49c6a';
+    return "font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:"+c+";background:color-mix(in srgb,"+c+" 13%,transparent);border:1px solid color-mix(in srgb,"+c+" 38%,transparent);padding:3px 8px;border-radius:6px;flex:none;";
+  }
+  chip(active){ const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 12px;border-radius:9px;cursor:pointer;transition:all .15s;"; return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;"; }
+
+  renderVals(){
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const all = this.seed().filter(e=>{
+      const mf = s.filter==='all' || e.group===s.filter;
+      const ma = s.actor==='all' || e.actor===s.actor;
+      const mq = !q || (e.actor+' '+e.action+' '+e.target+' '+e.reason).toLowerCase().includes(q);
+      return mf && ma && mq;
+    });
+
+    const decorate = (e)=>({
+      ...e,
+      hasReason: !!e.reason,
+      catStyle: this.catStyle(e.cat), catLabel: e.cat,
+      open: !!s.open[e.id],
+      caret: s.open[e.id] ? 'rotate(90deg)' : 'rotate(0deg)',
+      meta: e.meta.map(([k,v])=>({ k, v })),
+      onToggle: ()=>this.setState({ open:{ ...s.open, [e.id]: !s.open[e.id] } })
+    });
+
+    const days = [];
+    ['Today','Yesterday'].forEach(day=>{
+      const items = all.filter(e=>e.day===day).map(decorate);
+      if(items.length) days.push({ label:day, items });
+    });
+
+    return {
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      actor:s.actor, onActor:(e)=>this.setState({actor:e.target.value}),
+      filters: [['all','All'],['moderation','Moderation'],['content','Content'],['access','Access'],['system','System']].map(([k,label])=>({ label, style:this.chip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      groups: days, hasItems: days.length>0, isEmpty: days.length===0
+    };
+  }
+}
+</script>
+</body>
+</html>

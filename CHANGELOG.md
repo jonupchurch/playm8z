@@ -133,6 +133,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   profile, news article detail, Admin Settings, and Moderator audit log
   out of `docs/future-work.md`'s deferred list since the user is
   actively wireframing them now, not deferring them.
+- Added five more wireframes: Public Profile, News Article, Admin
+  Settings, Moderator Audit Log, and a Landing page. Reverses the
+  earlier call that the logged-out landing page didn't need bespoke
+  design — `playm8z - Landing.dc.html` is a real marketing page (hero,
+  stats, three-step explainer, genre browse, testimonials, CTA), beyond
+  what the block-based Content Page editor supports, so it's now its
+  own feature. All five moved into `docs/feature-list.md`'s
+  ready-to-spec list.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
