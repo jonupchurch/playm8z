@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Post a game</button>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <div style="border-bottom:1px solid #2c2418;background:radial-gradient(circle at 25% -40%,rgba(255,59,107,0.09),transparent 60%);">
+    <div style="max-width:1240px;margin:0 auto;padding:28px 32px 22px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.01em;margin:0 0 4px;">Community forum</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Talk games, strategy, groups &amp; everything in between.</p>
+      </div>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:12px 22px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">+ New thread</button>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:1240px;margin:0 auto;padding:24px 32px 72px;display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start;">
+
+    <!-- ===== MAIN ===== -->
+    <main>
+      <!-- category selector -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+        <sc-for list="{{ categories }}" as="c" hint-placeholder-count="7">
+          <button onClick="{{ c.onClick }}" style="{{ c.style }}">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ c.dot }};flex:none;"></span>
+            <span>{{ c.label }}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:10px;opacity:0.7;">{{ c.count }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <!-- toolbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;max-width:280px;flex:1;">
+          <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+          <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search threads…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:9px 0;" />
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6b5a45;">Sort</span>
+          <sc-for list="{{ sortChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <!-- thread list -->
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+        <sc-for list="{{ threads }}" as="t" hint-placeholder-count="8">
+          <div style="display:flex;gap:14px;padding:16px 18px;border-bottom:1px solid #221a10;cursor:pointer;" style-hover="background:#20180e;">
+            <div style="width:42px;height:42px;border-radius:12px;background:{{ t.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;flex:none;">{{ t.initial }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;">
+                <sc-if value="{{ t.showBadge }}" hint-placeholder-val="{{ false }}"><span style="{{ t.badgeStyle }}">{{ t.badgeLabel }}</span></sc-if>
+                <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;line-height:1.3;">{{ t.title }}</span>
+              </div>
+              <p style="font-family:'Sora',sans-serif;font-size:12.5px;color:#8a7c68;line-height:1.5;margin:0 0 9px;">{{ t.snippet }}</p>
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="{{ t.catStyle }}">{{ t.catLabel }}</span>
+                <sc-for list="{{ t.tags }}" as="tag" hint-placeholder-count="2"><span style="font-family:'Space Mono',monospace;font-size:10px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 8px;border-radius:999px;">#{{ tag }}</span></sc-for>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-left:2px;">{{ t.author }} · {{ t.ago }}</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:8px;flex:none;padding-left:6px;">
+              <div style="display:flex;align-items:center;gap:5px;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:{{ t.replyColor }};">{{ t.replies }}</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:#6b5a45;">replies</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ t.viewsFmt }} views</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:64px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">No threads here yet.</div>
+          <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 18px;">Be the first to start the conversation.</p>
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:11px;cursor:pointer;">+ New thread</button>
+        </div>
+      </sc-if>
+    </main>
+
+    <!-- ===== RIGHT RAIL ===== -->
+    <aside style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Community</div>
+        <div style="display:flex;justify-content:space-between;">
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;">48.3k</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">members</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;">1,204</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">threads</div></div>
+          <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;color:#4ec96a;">892</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">online</div></div>
+        </div>
+      </div>
+
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Trending tags</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          <sc-for list="{{ trendingTags }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.onClick }}" style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:5px 11px;border-radius:999px;cursor:pointer;">#{{ t.label }}</button></sc-for>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(150deg,rgba(88,101,242,0.14),rgba(88,101,242,0.05));border:1px solid rgba(88,101,242,0.4);border-radius:16px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="width:26px;height:26px;border-radius:8px;background:#5865f2;flex:none;"></span><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;">Join the Discord</span></div>
+        <p style="font-family:'Sora',sans-serif;font-size:12px;color:#b0a898;line-height:1.55;margin:0 0 12px;">Live voice chat &amp; instant LFG pings. Integration coming soon.</p>
+        <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;background:#5865f2;border:none;padding:10px;border-radius:9px;cursor:pointer;">Connect Discord</button>
+      </div>
+    </aside>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { cat:'all', sort:'latest', query:'' };
+
+  get catMeta() {
+    return {
+      general:  { label:'General',            dot:'#ffb000' },
+      lfg:      { label:'Looking for Group',  dot:'#4ec96a' },
+      gametalk: { label:'Game Talk',          dot:'#35d0e0' },
+      tabletop: { label:'Tabletop & TTRPG',   dot:'#ff3b6b' },
+      groups:   { label:'Groups & Clans',     dot:'#ff6b1a' },
+      offtopic: { label:'Off-Topic',          dot:'#b49c6a' }
+    };
+  }
+
+  get data() {
+    return [
+      { id:1, cat:'general', title:'Welcome to playm8z — read before posting', snippet:'House rules, how matchmaking works, and how to keep the community friendly.', author:'Mods', initial:'P', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', tags:['rules'], replies:42, views:31000, likes:210, mins:30, pinned:true, hot:false },
+      { id:2, cat:'lfg', title:'Weeknight Helldivers crew — NA-West, mic', snippet:'Building a reliable 4-stack for evening dives. Any level, good vibes only.', author:'Mara', initial:'M', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', tags:['helldivers','na-west'], replies:12, views:340, likes:18, mins:5, pinned:false, hot:true },
+      { id:3, cat:'gametalk', title:'Valorant meta — agent tier list debate', snippet:'Is duelist-heavy still viable after the latest patch? Drop your comps.', author:'Vex_00', initial:'V', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', tags:['valorant','meta'], replies:88, views:5400, likes:132, mins:12, pinned:false, hot:true },
+      { id:4, cat:'tabletop', title:'Best beginner-friendly TTRPG in 2026?', snippet:'Want to introduce friends to the hobby. 5e, or something lighter?', author:'Wren', initial:'W', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', tags:['ttrpg','beginners'], replies:54, views:2100, likes:77, mins:22, pinned:false, hot:false },
+      { id:5, cat:'groups', title:'Recruiting: chill adult gaming guild (18+)', snippet:'Cross-game community, no drama, no minimum hours. Discord-based.', author:'Ash', initial:'A', avatar:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', tags:['recruiting','18+'], replies:9, views:410, likes:24, mins:40, pinned:false, hot:false },
+      { id:6, cat:'gametalk', title:'Elden Ring co-op boss order guide', snippet:'A friendly route for jolly cooperation runs, least to most brutal.', author:'Kellen', initial:'K', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', tags:['eldenring','guide'], replies:31, views:1800, likes:96, mins:55, pinned:false, hot:false },
+      { id:7, cat:'tabletop', title:'Commander pod etiquette — house rules', snippet:'How does your table handle table talk, threat assessment, and mana screw?', author:'Priya', initial:'P', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', tags:['mtg','edh'], replies:17, views:620, likes:33, mins:68, pinned:false, hot:false },
+      { id:8, cat:'general', title:'How do you deal with flaky teammates?', snippet:'People bail 10 minutes before session. What actually works to fix this?', author:'Sy', initial:'S', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', tags:['discussion'], replies:0, views:88, likes:4, mins:9, pinned:false, hot:false },
+      { id:9, cat:'offtopic', title:'What are you listening to while grinding?', snippet:'Share your best focus playlists and grind-session soundtracks.', author:'Bex', initial:'B', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', tags:['music'], replies:63, views:2900, likes:58, mins:75, pinned:false, hot:false },
+      { id:10, cat:'lfg', title:'Sunday board game night — EU-East, in person', snippet:'Hosting Catan + Gloomhaven at a café. 2 seats open, snacks provided.', author:'Bruno', initial:'B', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', tags:['tabletop','eu-east'], replies:6, views:190, likes:11, mins:88, pinned:false, hot:false },
+      { id:11, cat:'groups', title:'Looking for a semi-serious Valorant team', snippet:'Plat-ish, want scheduled scrims twice a week. Building long-term.', author:'Rin', initial:'R', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', tags:['valorant','team'], replies:14, views:500, likes:21, mins:100, pinned:false, hot:false },
+      { id:12, cat:'gametalk', title:'Deep Rock Galactic — best solo loadouts?', snippet:'Which class carries hardest solo on Haz 5? Rock and Stone.', author:'Nova', initial:'N', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', tags:['drg','loadout'], replies:0, views:45, likes:2, mins:3, pinned:false, hot:false }
+    ];
+  }
+
+  seg(active){
+    const b = "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;transition:all .15s;";
+    return active ? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  catChip(active){
+    const b = "display:flex;align-items:center;gap:8px;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;padding:9px 14px;border-radius:11px;cursor:pointer;transition:all .15s;";
+    return active ? b+"color:#fbeeda;background:#241a10;border:1px solid #ff6b1a;" : b+"color:#c9b892;background:#1a130c;border:1px solid #2c2418;";
+  }
+  ago(m){ return m<60 ? m+'m ago' : Math.floor(m/60)+'h ago'; }
+  fmt(n){ return n>=1000 ? (n/1000).toFixed(n>=10000?0:1)+'k' : ''+n; }
+
+  renderVals(){
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const cm = this.catMeta;
+
+    // category selector (All + each)
+    const counts = {};
+    this.data.forEach(t=>counts[t.cat]=(counts[t.cat]||0)+1);
+    const categories = [{ key:'all', label:'All', dot:'#fbeeda', count:this.data.length }]
+      .concat(Object.keys(cm).map(k=>({ key:k, label:cm[k].label, dot:cm[k].dot, count:counts[k]||0 })))
+      .map(c=>({ ...c, style:this.catChip(s.cat===c.key), onClick:()=>this.setState({cat:c.key}) }));
+
+    // filter
+    let list = this.data.filter(t=>{
+      const mc = s.cat==='all' || t.cat===s.cat;
+      const mq = !q || (t.title+' '+t.snippet+' '+t.author+' '+t.tags.join(' ')).toLowerCase().includes(q);
+      const mu = s.sort!=='unanswered' || t.replies===0;
+      return mc && mq && mu;
+    });
+    // sort: pinned first always
+    const rank = (t)=> t.pinned ? -1 : 1;
+    if (s.sort==='top') list = list.slice().sort((a,b)=> rank(a)-rank(b) || b.likes-a.likes);
+    else list = list.slice().sort((a,b)=> rank(a)-rank(b) || a.mins-b.mins);
+
+    const catStyleFor = (k)=>{
+      const c = cm[k].dot;
+      return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:"+c+";background:color-mix(in srgb,"+c+" 14%,transparent);border:1px solid color-mix(in srgb,"+c+" 38%,transparent);padding:3px 9px;border-radius:999px;";
+    };
+
+    const threads = list.map(t=>{
+      const badge = t.pinned ? { label:'PINNED', color:'#ffb000' } : (t.hot ? { label:'HOT', color:'#ff3b6b' } : null);
+      return {
+        ...t,
+        ago:this.ago(t.mins),
+        viewsFmt:this.fmt(t.views),
+        catLabel:cm[t.cat].label,
+        catStyle:catStyleFor(t.cat),
+        showBadge: !!badge,
+        badgeLabel: badge ? badge.label : '',
+        badgeStyle: badge ? "font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;color:#140f0a;background:"+badge.color+";padding:2px 7px;border-radius:4px;flex:none;" : '',
+        replyColor: t.replies===0 ? '#6b5a45' : '#ffb000'
+      };
+    });
+
+    const trendingTags = ['valorant','ttrpg','helldivers','recruiting','eldenring','edh']
+      .map(tag=>({ label:tag, onClick:()=>this.setState({ query:tag, cat:'all' }) }));
+
+    return {
+      categories,
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      sortChips: [['latest','Latest'],['top','Top'],['unanswered','Unanswered']].map(([k,label])=>({ label, style:this.seg(s.sort===k), onClick:()=>this.setState({sort:k}) })),
+      threads,
+      hasResults: threads.length>0,
+      isEmpty: threads.length===0,
+      trendingTags
+    };
+  }
+}
+</script>
+</body>
+</html>

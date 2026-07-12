@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  textarea::placeholder,input::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">Y</div>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:1140px;margin:0 auto;padding:22px 32px 80px;">
+
+    <!-- breadcrumb -->
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;margin-bottom:18px;">
+      <a href="#" style="color:#b49c6a;">Browse</a> <span style="color:#4a3d2c;">/</span> <a href="#" style="color:#b49c6a;">Valorant</a> <span style="color:#4a3d2c;">/</span> <span style="color:#8a7c68;">Ranked grind — Diamond push</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;">
+
+      <!-- ===== MAIN ===== -->
+      <main style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- header -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:24px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffb000,#ff6b1a,#ff3b6b);"></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;">Valorant · FPS</span>
+            <span style="display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#4ec96a;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:3px 10px;border-radius:999px;"><span style="width:7px;height:7px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>Live · recruiting</span>
+          </div>
+          <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:30px;line-height:1.15;letter-spacing:-0.01em;margin:0 0 16px;">Ranked grind — Diamond push</h1>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:18px;flex:none;">V</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">Vex_00</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#4ec96a;">★ 4.9</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">Posted 2m ago · EU-West</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- description -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:24px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">About this party</div>
+          <p style="font-family:'Sora',sans-serif;font-size:15px;color:#d9cbb2;line-height:1.7;margin:0 0 14px;">Looking for 2 committed players to climb from Plat to Diamond this act. I main Controller, so I need people comfortable on entry and sentinel roles. We'll play 2–3 nights a week, review the occasional VOD, and actually communicate.</p>
+          <p style="font-family:'Sora',sans-serif;font-size:15px;color:#d9cbb2;line-height:1.7;margin:0;">This is a serious-but-friendly group — comms over ego, no tilting, no smurfing. If you're consistent and coachable, rank is the easy part.</p>
+
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid #2c2418;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:12px;">What I'm looking for</div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ffb000;font-weight:700;flex:none;">✓</span><span style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;">Plat 2+ this act, working mic, comfortable calling</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ffb000;font-weight:700;flex:none;">✓</span><span style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;">Available weeknights ~20:00 CET, 2–3× per week</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ffb000;font-weight:700;flex:none;">✓</span><span style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;">Positive attitude, open to feedback, no rage-quitting</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- details -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:24px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Details</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px 16px;">
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">VIBE</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff7ea0;">Serious</div></div>
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">PLATFORM</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">PC</div></div>
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">REGION</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">EU-West</div></div>
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">AGE GROUP</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">18+</div></div>
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">WHEN</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">Weeknights · 20:00 CET</div></div>
+            <div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-bottom:4px;">MIC</div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#4ec96a;">Required</div></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#ranked</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#mic</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#recurring</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 11px;border-radius:999px;">#coachable</span>
+          </div>
+        </div>
+
+        <!-- roster -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;">Party roster</div>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">3 of 5 filled</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ roster }}" as="m" hint-placeholder-count="5">
+              <div style="{{ m.rowStyle }}">
+                <div style="{{ m.avatarStyle }}">{{ m.initial }}</div>
+                <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:{{ m.nameColor }};">{{ m.name }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ m.role }}</div></div>
+                <span style="{{ m.tagStyle }}">{{ m.tag }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Q&A -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:24px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">Questions for the host · {{ qCount }}</div>
+          <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:18px;">
+            <sc-for list="{{ questions }}" as="q" hint-placeholder-count="2">
+              <div style="display:flex;gap:11px;">
+                <div style="width:34px;height:34px;border-radius:10px;background:{{ q.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;flex:none;">{{ q.initial }}</div>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">{{ q.who }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ q.ago }}</span></div>
+                  <p style="font-family:'Sora',sans-serif;font-size:14px;color:#d9cbb2;line-height:1.55;margin:0;">{{ q.text }}</p>
+                  <sc-if value="{{ q.hasReply }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:9px;padding:10px 12px;background:#241a10;border-left:2px solid #ff6b1a;border-radius:0 8px 8px 0;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:3px;">Vex_00 replied</div><p style="font-family:'Sora',sans-serif;font-size:13px;color:#c9b892;line-height:1.5;margin:0;">{{ q.reply }}</p></div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;background:#0e0a06;border:1px solid #3a2c1a;border-radius:11px;padding:6px 6px 6px 14px;">
+            <input value="{{ qInput }}" onInput="{{ onQInput }}" placeholder="Ask a question…" style="flex:1;background:transparent;border:none;outline:none;font-size:14px;color:#fbeeda;padding:8px 0;" />
+            <button onClick="{{ ask }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:9px 16px;border-radius:9px;cursor:pointer;flex:none;">Ask</button>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- ===== APPLY PANEL ===== -->
+      <aside style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px;">
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.3);border-radius:18px;padding:22px;box-shadow:0 24px 60px -34px rgba(0,0,0,0.9);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;">2 spots open</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">of 5</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:18px;">
+            <sc-for list="{{ pips }}" as="p" hint-placeholder-count="5"><span style="{{ p }}"></span></sc-for>
+          </div>
+
+          <sc-if value="{{ notApplied }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:8px;">Message to Vex_00</label>
+              <textarea value="{{ message }}" onInput="{{ onMessage }}" rows="4" placeholder="Introduce yourself — rank, role, availability…" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:11px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;resize:vertical;line-height:1.5;font-family:'Sora',sans-serif;margin-bottom:12px;"></textarea>
+              <button onClick="{{ apply }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:13px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Apply for a slot</button>
+              <p style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;text-align:center;margin:12px 0 0;">Usually responds in ~10 min</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ applied }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;padding:6px 0 2px;">
+              <div style="width:48px;height:48px;border-radius:50%;background:rgba(78,201,106,0.14);border:1px solid rgba(78,201,106,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><span style="color:#4ec96a;font-size:24px;font-weight:700;">✓</span></div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;margin-bottom:6px;">Application sent!</div>
+              <p style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;line-height:1.55;margin:0 0 16px;">Vex_00 will review your request and message you if it's a fit.</p>
+              <button onClick="{{ withdraw }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;">Withdraw application</button>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #2c2418;">
+            <button style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:1px solid #2c2418;padding:9px;border-radius:9px;cursor:pointer;">Share</button>
+            <button style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:1px solid #2c2418;padding:9px;border-radius:9px;cursor:pointer;">Save</button>
+            <button style="flex:1;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:1px solid #2c2418;padding:9px;border-radius:9px;cursor:pointer;">Report</button>
+          </div>
+        </div>
+
+        <!-- host card -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:18px;padding:20px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:19px;flex:none;">V</div>
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">Vex_00</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">@vex · lvl 24</div></div>
+          </div>
+          <div style="display:flex;gap:18px;margin-bottom:16px;">
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#4ec96a;">4.9</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">rating</div></div>
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">128</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">sessions</div></div>
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">96%</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">reliable</div></div>
+          </div>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;">View profile</button>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    applied: false,
+    message: '',
+    qInput: '',
+    questions: [
+      { who:'Kira', initial:'K', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', ago:'8m ago', text:'What rank are the current members? Want to make sure I fit.', reply:'Two of us are Plat 3, one Diamond 1. You\u2019d be a great fit around there.' },
+      { who:'Jax', initial:'J', avatar:'linear-gradient(135deg,#ff6b1a,#ffb000)', ago:'20m ago', text:'Is Sunday an option or strictly weeknights?', reply:'' }
+    ]
+  };
+
+  renderVals() {
+    const s = this.state;
+
+    const roster = [
+      { name:'Vex_00', initial:'V', role:'Controller · Host', tag:'Host', filled:true, av:'linear-gradient(135deg,#ff6b1a,#ff3b6b)' },
+      { name:'Kira',   initial:'K', role:'Sentinel',          tag:'Member', filled:true, av:'linear-gradient(135deg,#ffb000,#ff3b6b)' },
+      { name:'Jax',    initial:'J', role:'Duelist',           tag:'Member', filled:true, av:'linear-gradient(135deg,#ffb000,#ff6b1a)' },
+      { name:'Open slot', initial:'+', role:'Entry / Initiator', tag:'Open', filled:false },
+      { name:'Open slot', initial:'+', role:'Flex',              tag:'Open', filled:false }
+    ].map(m => ({
+      ...m,
+      rowStyle: "display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;" + (m.filled ? "background:#20180e;border:1px solid #2c2418;" : "background:transparent;border:1px dashed #3a2c1a;"),
+      avatarStyle: m.filled
+        ? "width:38px;height:38px;border-radius:11px;background:"+m.av+";display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:15px;flex:none;"
+        : "width:38px;height:38px;border-radius:11px;background:#241a10;border:1px dashed #4a3d2c;display:flex;align-items:center;justify-content:center;font-weight:700;color:#6b5a45;font-size:18px;flex:none;",
+      nameColor: m.filled ? '#fbeeda' : '#8a7c68',
+      tagStyle: m.tag==='Host'
+        ? "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:3px 9px;border-radius:999px;flex:none;"
+        : (m.filled
+          ? "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#b49c6a;background:#241a10;border:1px solid #2c2418;padding:3px 9px;border-radius:999px;flex:none;"
+          : "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.12);border:1px solid rgba(255,107,26,0.4);padding:3px 9px;border-radius:999px;flex:none;")
+    }));
+
+    const pip = (filled) => "flex:1;height:8px;border-radius:999px;" + (filled ? "background:#3a2c1a;" : "background:linear-gradient(120deg,#ffb000,#ff6b1a);");
+    const pips = [pip(true), pip(true), pip(true), pip(false), pip(false)];
+
+    const questions = s.questions.map(q => ({ ...q, hasReply: !!q.reply }));
+
+    return {
+      applied: s.applied,
+      notApplied: !s.applied,
+      message: s.message,
+      onMessage: (e) => this.setState({ message: e.target.value }),
+      apply: () => this.setState({ applied: true }),
+      withdraw: () => this.setState({ applied: false }),
+      roster, pips,
+      questions,
+      qCount: s.questions.length,
+      qInput: s.qInput,
+      onQInput: (e) => this.setState({ qInput: e.target.value }),
+      ask: () => {
+        const t = s.qInput.trim();
+        if (!t) return;
+        this.setState({ questions: s.questions.concat({ who:'You', initial:'Y', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', ago:'just now', text:t, reply:'' }), qInput:'' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -44,12 +44,26 @@ yet.
 - Nothing deployed; local dev only, against the local Postgres
   instance.
 
+## Product vision (informal, not yet a spec)
+
+The user described what playm8z actually is: gamers browse/post games,
+post one-off LFG listings, post/browse persistent Groups (distinct from
+LFG), a logged-in-only Forum, and a handful of admin-editable content
+pages. `resources/wireframes/` currently has Home, Browse, Post a Game,
+Forum, and Listing (single LFG listing detail view) — plus a Dark/Light
+theme + style guide in `resources/design/`. No wireframes yet for
+Groups or admin CMS pages; the user is actively posting more.
+
+Scope for the first `/speckit-specify` run is still an open question —
+the user chose to wait for the rest of the wireframes (Groups, admin
+pages) before deciding how to cut the first vertical slice, per the
+constitution's Scope Discipline principle.
+
 ## Next up
 
+- Resume once wireframes stop arriving: re-open the first-spec scope
+  question (single slice vs. broader) before running `/speckit-specify`.
 - Review and ratify (or amend) the draft constitution.
-- Run `/speckit-specify` to define what playm8z actually is and its
-  MVP scope — nothing product-shaped should be built before this per
-  the constitution's Scope Discipline principle.
 - Decide on and install a test framework.
 
 ## Blockers

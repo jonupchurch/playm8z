@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder,textarea::placeholder{color:#6b5a45;}
+  input,textarea,select{font-family:'Sora',sans-serif;}
+  select option{background:#1a130c;color:#fbeeda;}
+  input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7) sepia(1) saturate(4) hue-rotate(340deg);cursor:pointer;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">Y</div>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:1180px;margin:0 auto;padding:34px 32px 80px;">
+    <div style="margin-bottom:26px;">
+      <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.01em;margin:0 0 4px;">Post a game</h1>
+      <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Tell players what you're running and who you're looking for. It goes live the moment you publish.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start;">
+
+      <!-- ===== FORM ===== -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- 1. Game & type -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">01 · What are you playing?</div>
+
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Game</label>
+          <input value="{{ game }}" onInput="{{ onGame }}" placeholder="e.g. Valorant, D&D 5e, Catan…" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;" />
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+            <sc-for list="{{ gameSuggestions }}" as="g" hint-placeholder-count="6"><button onClick="{{ g.onClick }}" style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:5px 11px;border-radius:999px;cursor:pointer;">{{ g.label }}</button></sc-for>
+          </div>
+
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin:18px 0 9px;">Genre</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <sc-for list="{{ genreChips }}" as="c" hint-placeholder-count="8"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+          </div>
+        </div>
+
+        <!-- 2. Listing details -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">02 · The pitch</div>
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Listing title</label>
+          <input value="{{ title }}" onInput="{{ onTitle }}" maxlength="60" placeholder="e.g. Casual dives — all welcome" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;" />
+          <div style="text-align:right;font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-top:5px;">{{ titleLen }}/60</div>
+
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin:12px 0 7px;">Description</label>
+          <textarea value="{{ desc }}" onInput="{{ onDesc }}" rows="3" maxlength="240" placeholder="Vibe, expectations, what you need from teammates…" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;resize:vertical;line-height:1.5;"></textarea>
+          <div style="text-align:right;font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;margin-top:5px;">{{ descLen }}/240</div>
+
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin:12px 0 7px;">Keywords / tags</label>
+          <input value="{{ tags }}" onInput="{{ onTags }}" placeholder="chill, no-toxicity, VOD review… (comma separated)" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;" />
+        </div>
+
+        <!-- 3. Who & how -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">03 · The vibe &amp; setup</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Casual or serious</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;"><sc-for list="{{ vibeSeg }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+            </div>
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Platform</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;"><sc-for list="{{ platformSeg }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;">
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Location / region</label>
+              <select value="{{ region }}" onChange="{{ onRegion }}" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;appearance:none;cursor:pointer;">
+                <option value="na-east">NA-East</option>
+                <option value="na-west">NA-West</option>
+                <option value="eu-west">EU-West</option>
+                <option value="eu-east">EU-East</option>
+                <option value="asia">Asia</option>
+                <option value="oceania">Oceania</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Age group</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;"><sc-for list="{{ ageSeg }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+            </div>
+          </div>
+
+          <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin:18px 0 9px;">When do you play?</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;"><sc-for list="{{ slotChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px;">
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Specific date (optional)</label>
+              <input type="date" value="{{ date }}" onInput="{{ onDate }}" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" />
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+              <button onClick="{{ toggleRecurring }}" style="display:flex;align-items:center;gap:11px;background:transparent;border:none;padding:0 0 4px;cursor:pointer;">
+                <span style="{{ recurTrack }}"><span style="{{ recurKnob }}"></span></span>
+                <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;">Recurring session</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Party size & comms -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#ff9c5a;margin-bottom:16px;">04 · Party &amp; comms</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Group size</label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <button onClick="{{ sizeDown }}" style="width:36px;height:36px;border-radius:9px;background:#241a10;border:1px solid #3a2c1a;color:#fbeeda;font-size:20px;cursor:pointer;line-height:1;">−</button>
+                <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;min-width:20px;text-align:center;">{{ size }}</span>
+                <button onClick="{{ sizeUp }}" style="width:36px;height:36px;border-radius:9px;background:#241a10;border:1px solid #3a2c1a;color:#fbeeda;font-size:20px;cursor:pointer;line-height:1;">+</button>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">players total</span>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:9px;">Spots open</label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <button onClick="{{ openDown }}" style="width:36px;height:36px;border-radius:9px;background:#241a10;border:1px solid #3a2c1a;color:#fbeeda;font-size:20px;cursor:pointer;line-height:1;">−</button>
+                <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;min-width:20px;text-align:center;">{{ open }}</span>
+                <button onClick="{{ openUp }}" style="width:36px;height:36px;border-radius:9px;background:#241a10;border:1px solid #3a2c1a;color:#fbeeda;font-size:20px;cursor:pointer;line-height:1;">+</button>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">looking for</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <button onClick="{{ toggleMic }}" style="display:flex;align-items:center;gap:11px;background:transparent;border:none;padding:0;cursor:pointer;margin-bottom:14px;">
+              <span style="{{ micTrack }}"><span style="{{ micKnob }}"></span></span>
+              <span style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;">Mic required</span>
+            </button>
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Voice channel <span style="font-weight:400;color:#6b5a45;">(optional)</span></label>
+            <div style="display:flex;align-items:center;gap:10px;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:0 14px;">
+              <span style="width:18px;height:18px;border-radius:5px;background:#5865f2;flex:none;"></span>
+              <input value="{{ voice }}" onInput="{{ onVoice }}" placeholder="Discord invite link" style="flex:1;background:transparent;border:none;outline:none;font-size:14px;color:#fbeeda;padding:12px 0;" />
+              <span style="font-family:'Space Mono',monospace;font-size:9px;color:#6b5a45;flex:none;">auto-connect later</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== LIVE PREVIEW + PUBLISH ===== -->
+      <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#6b5a45;">Live preview</div>
+
+        <!-- preview card -->
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.28);border-radius:16px;padding:18px;display:flex;flex-direction:column;box-shadow:0 24px 60px -34px rgba(0,0,0,0.9);">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;flex:none;">Y</div>
+            <div style="flex:1;min-width:0;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">You</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">just now · {{ regionLabel }}{{ ageMeta }}</div></div>
+            <span style="width:9px;height:9px;border-radius:50%;flex:none;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#ff9c5a;margin-bottom:4px;">{{ gameMeta }}</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;line-height:1.25;margin-bottom:7px;color:{{ titleColor }};">{{ titlePreview }}</div>
+          <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 14px;">{{ descPreview }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+            <span style="{{ vibeStyle }}">{{ vibeLabel }}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.3);padding:4px 10px;border-radius:999px;">{{ slotLabel }}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 10px;border-radius:999px;">{{ seatText }}</span>
+            <sc-if value="{{ mic }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:4px 10px;border-radius:999px;">Mic</span></sc-if>
+          </div>
+          <sc-if value="{{ hasTags }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+              <sc-for list="{{ tagList }}" as="t" hint-placeholder-count="3"><span style="font-family:'Space Mono',monospace;font-size:10px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:3px 9px;border-radius:999px;">#{{ t }}</span></sc-for>
+            </div>
+          </sc-if>
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px;border-radius:11px;cursor:pointer;">Request to join</button>
+        </div>
+
+        <!-- publish -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;">
+          <button style="{{ publishStyle }}">{{ publishLabel }}</button>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:transparent;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;margin-top:10px;">Save as draft</button>
+          <p style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;line-height:1.6;margin:12px 0 0;text-align:center;">{{ publishHint }}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { game:'', genre:'', title:'', desc:'', vibe:'fun', platform:'pc', region:'na-east', age:'18', slots:[], size:4, open:2, mic:false, voice:'', tags:'', date:'', recurring:false };
+
+  seg(active){
+    const b = "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:8px 13px;border-radius:999px;cursor:pointer;transition:all .15s;";
+    return active ? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  set(key){ return (e)=>this.setState({ [key]: e.target.value }); }
+  toggleSlot(k){ const a=this.state.slots; this.setState({ slots: a.includes(k)?a.filter(x=>x!==k):a.concat(k) }); }
+
+  renderVals(){
+    const s = this.state;
+    const regionMap = { 'na-east':'NA-East','na-west':'NA-West','eu-west':'EU-West','eu-east':'EU-East','asia':'Asia','oceania':'Oceania' };
+    const slotName = { morning:'Mornings', afternoon:'Afternoons', evening:'Evenings', late:'Late night', weekend:'Weekends' };
+
+    const genres = ['FPS','RPG','Co-op PvE','Party','MOBA','Sandbox','TTRPG','Tabletop'];
+    const genreChips = genres.map(g=>({ label:g, style:this.seg(s.genre===g), onClick:()=>this.setState({genre:g}) }));
+    const gameSuggestions = ['Valorant','Helldivers 2','D&D 5e','Baldur\u2019s Gate 3','Catan','Magic: The Gathering'].map(g=>({ label:g, onClick:()=>this.setState({game:g}) }));
+
+    const segList = (opts,cur,key)=>opts.map(([k,label])=>({ label, style:this.seg(cur===k), onClick:()=>this.setState({[key]:k}) }));
+    const slotChips = [['morning','Mornings'],['afternoon','Afternoons'],['evening','Evenings'],['late','Late night'],['weekend','Weekends']]
+      .map(([k,label])=>({ label, style:this.seg(s.slots.includes(k)), onClick:()=>this.toggleSlot(k) }));
+
+    const tagList = s.tags.split(',').map(t=>t.trim()).filter(Boolean).slice(0,6);
+
+    const vibeStyle = s.vibe==='serious'
+      ? "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.42);padding:4px 10px;border-radius:999px;"
+      : "font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:4px 10px;border-radius:999px;";
+
+    const slotLabel = s.slots.length ? s.slots.map(k=>slotName[k]).join(' · ') : 'Anytime';
+    const gameMeta = (s.game || 'Your game') + (s.genre ? ' · ' + s.genre : '');
+    const valid = s.game.trim() && s.title.trim();
+
+    const micOn = s.mic, recOn = s.recurring;
+    const track = (on)=> "width:38px;height:22px;border-radius:999px;flex:none;position:relative;transition:all .15s;"+(on?"background:linear-gradient(120deg,#ffb000,#ff6b1a);":"background:#241a10;border:1px solid #3a2c1a;");
+    const knob = (on)=> "position:absolute;top:2px;left:"+(on?'18px':'2px')+";width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.4);";
+
+    return {
+      game:s.game, onGame:this.set('game'),
+      gameSuggestions, genreChips,
+      title:s.title, onTitle:this.set('title'), titleLen:s.title.length,
+      desc:s.desc, onDesc:this.set('desc'), descLen:s.desc.length,
+      tags:s.tags, onTags:this.set('tags'), tagList, hasTags: tagList.length>0,
+      vibeSeg: segList([['fun','Casual'],['serious','Serious']], s.vibe, 'vibe'),
+      platformSeg: segList([['pc','PC'],['console','Console'],['cross','Cross-play'],['table','Tabletop']], s.platform, 'platform'),
+      ageSeg: segList([['13','13+'],['18','18+'],['21','21+']], s.age, 'age'),
+      slotChips,
+      region:s.region, onRegion:this.set('region'), regionLabel: regionMap[s.region],
+      date:s.date, onDate:this.set('date'),
+      voice:s.voice, onVoice:this.set('voice'),
+      size:s.size, open:s.open,
+      sizeUp:()=>this.setState({ size: Math.min(8, s.size+1) }),
+      sizeDown:()=>this.setState({ size: Math.max(2, s.size-1), open: Math.min(s.open, Math.max(2,s.size-1)-1) }),
+      openUp:()=>this.setState({ open: Math.min(s.size-1, s.open+1) }),
+      openDown:()=>this.setState({ open: Math.max(1, s.open-1) }),
+      mic:s.mic, toggleMic:()=>this.setState({mic:!s.mic}),
+      micTrack:track(micOn), micKnob:knob(micOn),
+      recurring:s.recurring, toggleRecurring:()=>this.setState({recurring:!s.recurring}),
+      recurTrack:track(recOn), recurKnob:knob(recOn),
+      // preview
+      gameMeta,
+      titlePreview: s.title || 'Your listing title',
+      titleColor: s.title ? '#fbeeda' : '#6b5a45',
+      descPreview: s.desc || 'Add a description so players know the vibe and what you need.',
+      vibeStyle, vibeLabel: s.vibe==='serious'?'Serious':'Fun',
+      slotLabel,
+      seatText: s.open + '/' + s.size + ' open',
+      ageMeta: ' · ' + s.age + '+',
+      // publish
+      publishStyle: valid
+        ? "width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:13px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);"
+        : "width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#6b5a45;background:#241a10;border:1px solid #3a2c1a;padding:13px;border-radius:11px;cursor:not-allowed;",
+      publishLabel: valid ? 'Publish listing →' : 'Publish listing',
+      publishHint: valid ? 'Live instantly · edit or close it anytime' : 'Add a game and a title to publish'
+    };
+  }
+}
+</script>
+</body>
+</html>

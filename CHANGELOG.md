@@ -32,6 +32,11 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   InterruptVector's constitution, with playm8z's own product scope left
   open pending `/speckit-specify`.
 - Copied `.gitignore` from InterruptVector (committed standalone).
+- Added three more wireframes to `resources/wireframes/`: "Post a Game"
+  (listing-creation form), "Forum" (logged-in-only discussion board),
+  and "Listing" (single LFG listing detail view) — alongside the
+  existing Home and Browse wireframes and the Dark/Light theme + style
+  guide comps. More wireframes (Groups, admin CMS pages) still incoming.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
