@@ -39,15 +39,11 @@ they can be spec'd/built:
 - News article detail page (`/news/:slug`) — the News wireframe only
   covers the feed/list view.
 - Password reset (`/reset`).
-- Post-session rating/review flow.
-- Discord connect flow (Discord is referenced as "coming soon" in several
-  wireframes but isn't functional).
-- Admin Settings (auto-flag/banned-phrase rules, roles & permissions).
-- Moderator audit log.
-- Ban-appeals queue.
-- Mobile-specific layouts.
 - Post-session rating/review flow — confirmed by the user (2026-07-12)
   as an explicit future-state feature, not just undesigned.
+- Admin Settings (auto-flag/banned-phrase rules, roles & permissions).
+- Moderator audit log.
+- Mobile-specific layouts.
 
 **Designed 2026-07-12** (`resources/wireframes/support/playm8z - Error
 Pages.dc.html`): 404, 500, 403, and a maintenance/down page — no longer
@@ -78,6 +74,34 @@ accepted, reply, mention, message, rating, news, system — per
 `resources/guidelines.md` §5) stays in-app-only for now; emailing any of
 them, and any notification-preferences settings UI to control that, is
 future work.
+
+## Steam & Discord social login (future state)
+
+The Auth & Onboarding wireframe has a working "Steam" button, and
+Profile's Connected Accounts shows Steam as "Connected · syncs your
+library" (Discord is separately labeled "coming soon" everywhere it
+appears). Confirmed by the user (2026-07-12): **both** are future state,
+not current scope — the actual built Auth.js config only has Google OAuth
++ Credentials, and that's all that's in scope for now. Treat the
+wireframes' Steam/Discord login buttons and Steam "connected" state as
+aspirational, not a spec to build against yet.
+
+## No in-app ban-appeals queue
+
+Confirmed by the user (2026-07-12): a ban is **permanent** — there's no
+timed-suspension tier. Appeals happen out-of-platform, on Discord, not
+through an in-app appeals queue/flow. This resolves what was an open
+"not-yet-designed" item — it isn't undesigned, it's intentionally not an
+in-app feature at all.
+
+## Admin: view a user's full activity (future state)
+
+Raised by the user alongside the blocked-mid-conversation behavior below:
+an admin ability to open a user's profile and see their messages, posts,
+and interactions (a fuller investigative view than the existing per-module
+moderation drawers) would help moderation, but is explicitly future
+state, not needed now. Distinct from the already-listed "Moderator audit
+log" (which logs moderator *actions*, not a user's own content/history).
 
 ## Email verification — design/implementation delegated
 

@@ -138,6 +138,32 @@ resolving that gap from the second business-requirements pass below.
   a decided UX (what's gated pre-verification). See
   `docs/future-work.md`.
 
+**Third gap-analysis pass (2026-07-12), all resolved:**
+- **Steam & Discord social login are both future state.** The Auth &
+  Onboarding/Profile wireframes show a working Steam login and
+  "connected" state, but only Google OAuth + Credentials are actually in
+  scope/built. See `docs/future-work.md`.
+- **ADR 0004** (`docs/adr/0004-roster-slots-are-generic.md`): no
+  structured role-matching on roster slots — the Listing wireframe's
+  example role labels ("Entry / Initiator," "Flex") are flavor content,
+  not a feature. A posting's description and an applicant's free-text
+  message are what convey fit; the host accepts into any open generic
+  seat. Supersedes `guidelines.md` §5's `RosterSlot.role` as a
+  structured field.
+- **Posting auto-flips to `full`** once all slots are accepted (not just
+  applied-for) — confirms/extends ADR 0003's expiration model with the
+  other half of the status lifecycle.
+- **Blocking mid-conversation**: the existing conversation gets hidden
+  and frozen (not deleted), so it stays reviewable by admins later if
+  needed.
+- **Admin ability to view a user's full activity** (messages, posts,
+  interactions) — raised alongside the above, explicitly future state,
+  not current scope. See `docs/future-work.md`.
+- **Ban is permanent**, no timed-suspension tier. Appeals happen via
+  Discord, not an in-app appeals queue — resolves what had been an open
+  "ban-appeals queue" not-yet-designed item; it isn't undesigned, it's
+  intentionally not an in-app feature.
+
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope

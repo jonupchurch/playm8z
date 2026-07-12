@@ -90,6 +90,17 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   design/implementation is delegated to Claude Code, pending an
   email-provider choice; recurring sessions are descriptive-only (no
   scheduling engine).
+- ADR 0004 (`docs/adr/0004-roster-slots-are-generic.md`): no
+  structured role-matching on roster slots — a posting's description
+  and an applicant's message convey fit, not a role picker. Supersedes
+  `guidelines.md` §5's `RosterSlot.role` as a structured field.
+- Confirmed more scope decisions: Steam/Discord social login are both
+  future state (only Google OAuth + Credentials are in scope); a
+  posting auto-flips to `full` once all slots are accepted; blocking
+  someone mid-conversation hides and freezes that conversation
+  (reviewable by admins later) rather than deleting it; an admin
+  user-activity viewer is future state; bans are permanent with
+  appeals handled via Discord, not an in-app appeals queue.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
