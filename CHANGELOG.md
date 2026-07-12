@@ -168,11 +168,17 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 - First production deploy is live at `https://playm8z.vercel.app`.
   Registered its origin/redirect URI with the same Google OAuth client
   and verified the Google sign-in flow end-to-end in production too.
+- Installed Vitest + Playwright, matching the sibling project's setup
+  exactly. Added a real unit test suite for the Credentials-provider
+  Zod schema (`src/lib/validations/auth.test.ts`, 4 passing tests) and
+  a placeholder e2e smoke test (`e2e/smoke.spec.ts`) checking the home
+  page loads. Both verified running. Amends the constitution
+  (v0.3.0-draft → v0.3.1-draft, patch-level) to close out Principle V's
+  "no test framework installed" note.
 
 ### Known gaps
-- No test framework installed yet (noted as an open item in the
-  constitution's Test Discipline principle).
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
-- No CI configured yet.
+- No CI configured yet — Vitest/Playwright are installed and passing
+  locally, but nothing gates merges on them.
 - No custom domain connected — deliberately deferred, live at
   `https://playm8z.vercel.app` only.

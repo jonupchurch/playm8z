@@ -1,23 +1,19 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 0.2.0-draft → 0.3.0-draft
+Version change: 0.3.0-draft → 0.3.1-draft
 Status: DRAFT — not yet ratified. Awaiting explicit user review/approval
   before RATIFICATION_DATE is set and this becomes v1.0.0.
-Modified principles: n/a
-Added principles: n/a (no new Core Principles this amendment)
-Added sections: n/a (expanded existing Development Workflow section only)
-Modified sections: Development Workflow — (from the prior amendment)
-  added a git branching rule (each feature developed on its own
-  Spec-Kit-created branch, merged to `main` on completion, no PR-review
-  step required for solo development) and a feature-granularity default
-  (cut features roughly one-per-wireframed-page/screen where practical).
-  This amendment strengthens the existing "specify→plan→tasks before
-  implementation" rule from a per-feature gate into a **project-wide**
-  gate: every currently-scoped feature's spec.md/plan.md/tasks.md must
-  all be complete before implementation begins on *any* feature, not
-  just before that feature's own implementation.
+Modified principles: V. Test Discipline — the "current gap: no test
+  framework installed" note is resolved (Vitest + Playwright installed
+  and verified, matching the sibling project); CI enforcement remains
+  an open gap, called out explicitly instead.
+Added principles: n/a
+Added sections: n/a
+Modified sections: Technology Constraints — same resolution reflected
+  there (Vitest + Playwright installed; no CI runner wired up yet).
 Removed sections: n/a
+PATCH-level: clarifies existing text to match reality, no new guidance.
 Provenance note: this constitution's PROCESS (the six principles' shape,
   the ADR/changelog/status.md discipline, the spec-kit phase order) was
   structurally adapted from the sibling project InterruptVector
@@ -33,9 +29,9 @@ Still open, deliberately left as TODOs below:
     IV's discipline rule is ratified; its content is largely captured
     informally in `resources/guidelines.md`, `status.md`, and
     `docs/adr/`, pending a formal `/speckit-specify` run per feature.
-  - Whether a test framework (Vitest/Playwright, matching the sibling
-    project) gets adopted — noted as a gap in Technology Constraints,
-    not yet installed.
+  - CI enforcement (typecheck/lint/test gating merges, per Principle V)
+    — not yet wired up, even though the test frameworks themselves are
+    installed.
   - RATIFICATION_DATE, pending explicit user approval of this draft.
 Templates requiring updates:
   ✅ .specify/templates/plan-template.md — Constitution Check gate is
@@ -132,10 +128,10 @@ more than ceremony around write-order; strict test-first isn't
 mandated, but the coverage itself is the expected default, not an
 aspiration.
 
-Current gap: no test framework is installed yet (this initial scaffold
-covers app/db/auth wiring only) — adding one (Vitest + Playwright,
-matching the sibling project's proven pattern, or an alternative) is
-open and should happen before or alongside the first real feature.
+Vitest (unit/integration) and Playwright (e2e) are installed, matching
+the sibling project's pattern — `npm test` / `npm run test:watch` /
+`npm run test:e2e`. CI enforcement (gating merges on green) is not yet
+wired up; see Technology Constraints.
 
 ### VI. Legible History
 
@@ -168,7 +164,8 @@ through adapter-backed database sessions, sessions use the JWT
 strategy. `.env.local` (gitignored) holds real secrets; `.env.example`
 (committed) documents every required variable with no real values.
 
-No test framework is installed yet (see Principle V's noted gap).
+Vitest + Playwright are installed (see Principle V); no CI runner is
+wired up yet to enforce them on every push.
 
 ## Development Workflow
 
@@ -238,6 +235,6 @@ ADRs, specs, and plans are authored (or substantively reconciled)
 through this project's own process, so the "process produced this"
 record stays genuine.
 
-**Version**: 0.3.0-draft (DRAFT — not yet ratified) | **Ratified**:
+**Version**: 0.3.1-draft (DRAFT — not yet ratified) | **Ratified**:
 TODO(RATIFICATION_DATE) — pending explicit user approval | **Last
 Amended**: 2026-07-12

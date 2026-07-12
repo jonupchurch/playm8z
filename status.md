@@ -25,16 +25,18 @@ yet.
 - GitHub Spec Kit installed (Claude Code integration, PowerShell
   scripts) — `.specify/` and `.claude/skills/speckit-*` match the
   sibling project InterruptVector's setup.
-- Constitution drafted (`.specify/memory/constitution.md`, v0.3.0-draft,
+- Constitution drafted (`.specify/memory/constitution.md`, v0.3.1-draft,
   **unratified**) — structural process principles only; playm8z's
-  actual product/MVP scope is not yet defined. Amended twice on
-  2026-07-12: first to add a git branching rule (feature branches via
-  Spec Kit's own hook, merged to `main` on completion, no PR review
-  needed solo) and a feature-granularity default (roughly one feature
-  per wireframed page); then to strengthen "specify→plan→tasks before
-  implementation" from a per-feature gate into a **project-wide** one —
-  every currently-scoped feature's spec/plan/tasks must all be done
-  before implementation begins on *any* of them.
+  actual product/MVP scope is not yet defined. Amended three times on
+  2026-07-12: a git branching rule (feature branches via Spec Kit's own
+  hook, merged to `main` on completion, no PR review needed solo) and a
+  feature-granularity default (roughly one feature per wireframed
+  page); then strengthening "specify→plan→tasks before implementation"
+  from a per-feature gate into a **project-wide** one — every
+  currently-scoped feature's spec/plan/tasks must all be done before
+  implementation begins on *any* of them; then a patch-level update
+  closing out Principle V's "no test framework installed" note (see
+  testing bullet below).
 - `.gitignore` copied from InterruptVector and committed by itself
   (commit `53cb372`). The full scaffold (app/db/auth/Spec Kit/draft
   constitution) is committed as `d3b9039`.
@@ -81,11 +83,20 @@ yet.
   (POST with a valid CSRF token) correctly redirects to Google's real
   consent screen with the right `client_id`/`redirect_uri` for each
   environment.
+- **Vitest + Playwright installed** (2026-07-12), matching the sibling
+  project's exact setup (`vitest.config.ts`/`vitest.setup.ts`,
+  `playwright.config.ts`, `e2e/` dir, `test`/`test:watch`/`test:e2e`
+  npm scripts). A real unit test suite
+  (`src/lib/validations/auth.test.ts`) covers the existing
+  Credentials-provider Zod schema (valid input, bad email, short
+  password, missing fields) — 4 tests, all passing. A placeholder e2e
+  smoke test (`e2e/smoke.spec.ts`) checks the home page loads, standing
+  in for Principle V's full-vertical-slice e2e test until a real
+  feature exists. Both verified running locally. CI enforcement (per
+  Principle V, gating merges on green) is still not wired up.
 
 ## Known gaps / accepted limitations
 
-- No test framework yet (Vitest/Playwright, matching the sibling
-  project, is the likely default — not yet decided or installed).
 - No sign-up flow exists to actually create a Credentials-provider user
   (with a `passwordHash`) — the schema and auth config support it, but
   no route/UI does yet.
