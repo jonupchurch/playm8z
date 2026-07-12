@@ -540,14 +540,20 @@ Decline reuses Inbox's transaction directly. Report flow gives Blocked
 Users' `reports` table its first real `reason` values. Retroactively
 un-defers Listing detail's Report action (that feature's docs amended).
 
+**Notifications + Report modal: tasks done** (2026-07-12) —
+`tasks.md`, 25 tasks: Setup(1) → Foundational(5) → US1/P1 view+filter+
+mark-read(9) → US2/P2 accept+decline reuse(2) → US3/P3 report-flow(5)
+→ Polish(3). `docs/feature-list.md` updated to 🟢. Notifications +
+Report modal is the twelfth feature with a complete spec/plan/tasks
+trio.
+
 ## Next up
 
-- Notifications + Report modal: `/speckit-tasks` next, then merge to
-  `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `012-notifications-and-report-modal` into `main`, then move on
+  to feature #13 (News feed) — same specify→plan→tasks→merge sequence
+  repeats for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

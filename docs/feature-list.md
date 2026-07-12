@@ -32,7 +32,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 9. Forum index — 🟢 spec + plan + tasks all complete (`specs/009-forum-index/`, branch `009-forum-index`, `playm8z - Forum.dc.html`) — 22 tasks across Setup/Foundational/US1(P1) browse+search+filter+sort/US2(P2) create-thread/Polish; not yet implemented
 10. Forum Thread — 🟢 spec + plan + tasks all complete (`specs/010-forum-thread/`, branch `010-forum-thread`, `playm8z - Forum Thread.dc.html`) — 28 tasks across Setup/Foundational/US1(P1) read+sort/US2(P2) reply+quote/US3(P3) like+report/Polish; not yet implemented
 11. Inbox / messaging — 🟢 spec + plan + tasks all complete (`specs/011-inbox-messaging/`, branch `011-inbox-messaging`, `playm8z - Inbox.dc.html`) — 31 tasks across Setup/Foundational/US1(P1) read+send/US2(P2) start-conversation/US3(P3) accept+decline/Polish; not yet implemented
-12. Notifications + Report modal — 📝 spec + plan written (`specs/012-notifications-and-report-modal/`, branch `012-notifications-and-report-modal`, `support/playm8z - Notifications & Report.dc.html`), not yet tasked
+12. Notifications + Report modal — 🟢 spec + plan + tasks all complete (`specs/012-notifications-and-report-modal/`, branch `012-notifications-and-report-modal`, `support/playm8z - Notifications & Report.dc.html`) — 25 tasks across Setup/Foundational/US1(P1) view+filter+mark-read/US2(P2) accept+decline reuse/US3(P3) report-flow/Polish; not yet implemented
 13. News feed (public) — ✅
 14. Content Page (public render + inline admin edit) — ✅
 15. Admin Dashboard — ✅

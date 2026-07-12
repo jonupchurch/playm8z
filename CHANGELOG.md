@@ -459,6 +459,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   are left as optional follow-up polish), `data-model.md` (new
   `notifications` table), `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Notifications + Report modal: `tasks.md` —
+  25 tasks: Setup (1) → Foundational (5: new table + migration,
+  validation schemas, the notification-creation helper, the filtered/
+  grouped read query) → US1/P1 view+filter+mark-read (9) → US2/P2
+  accept+decline reuse (2) → US3/P3 report-flow (5) → Polish (3).
+  Notifications + Report modal is the twelfth feature to clear the
+  project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
