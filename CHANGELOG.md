@@ -45,6 +45,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 - Deferred "Groups" (persistent guilds/clans, distinct from one-off LFG
   listings) to `docs/future-work.md` — no wireframe was made for it, and
   it's explicitly out of scope for the first spec.
+- Added six more wireframes: "Auth & Onboarding" (sign-in/sign-up plus a
+  post-signup onboarding flow — what you play, where/how you play, your
+  vibe), "Forum Thread" (single thread + replies), "News" (public news
+  feed), "Content Page" (public rendering of an admin-editable page),
+  and admin "Admin Content Pages" (CMS editor) and "Admin Dashboard".
+  Also added `resources/wireframes/support/playm8z - Notifications &
+  Report.dc.html` (notifications panel + content reporting flow).
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+  input{font-family:'Sora',sans-serif;}
+  select option{background:#1a130c;color:#fbeeda;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100vh;font-family:'Sora',sans-serif;color:#fbeeda;background-image:radial-gradient(circle at 50% -10%,rgba(255,107,26,0.14),transparent 55%);display:flex;flex-direction:column;align-items:center;padding:40px 20px 60px;">
+
+  <!-- logo -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+    <div style="width:36px;height:33px;position:relative;">
+      <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:20px;height:16px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:11px;height:11px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:22px;height:17px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+    </div>
+    <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+  </div>
+
+  <!-- ============ AUTH ============ -->
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ true }}">
+  <div style="width:100%;max-width:420px;background:#1a130c;border:1px solid #2c2418;border-radius:20px;padding:28px;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#ff9c5a;text-align:center;margin-bottom:6px;">Assemble your party</div>
+    <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;text-align:center;margin:0 0 20px;letter-spacing:-0.01em;">{{ authHeading }}</h1>
+
+    <!-- mode tabs -->
+    <div style="display:flex;gap:4px;background:#0e0a06;border:1px solid #2c2418;border-radius:11px;padding:4px;margin-bottom:20px;">
+      <button onClick="{{ setLogin }}" style="{{ loginTabStyle }}">Log in</button>
+      <button onClick="{{ setSignup }}" style="{{ signupTabStyle }}">Sign up</button>
+    </div>
+
+    <!-- social -->
+    <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:18px;">
+      <button style="display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fff;background:#5865f2;border:none;padding:11px;border-radius:11px;cursor:pointer;"><span style="width:18px;height:18px;border-radius:5px;background:rgba(255,255,255,0.25);"></span>Continue with Discord</button>
+      <div style="display:flex;gap:9px;">
+        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;"><span style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#4285f4,#ea4335);"></span>Google</button>
+        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:11px;border-radius:11px;cursor:pointer;"><span style="width:16px;height:16px;border-radius:4px;background:#1b2838;"></span>Steam</button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;"><span style="flex:1;height:1px;background:#2c2418;"></span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">or</span><span style="flex:1;height:1px;background:#2c2418;"></span></div>
+
+    <!-- fields -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+        <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;margin-bottom:6px;color:#c9b892;">Username</label><input placeholder="pick a handle" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+      </sc-if>
+      <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;margin-bottom:6px;color:#c9b892;">Email</label><input type="email" placeholder="you@example.com" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+      <div><label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:12px;margin-bottom:6px;color:#c9b892;">Password</label><input type="password" placeholder="{{ pwPlaceholder }}" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;" /></div>
+      <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}"><a href="#" style="font-family:'Sora',sans-serif;font-size:12px;color:#ff6b1a;text-align:right;">Forgot password?</a></sc-if>
+    </div>
+
+    <button onClick="{{ submitAuth }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:13px;border-radius:12px;cursor:pointer;margin-top:18px;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">{{ authCta }}</button>
+    <p style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;text-align:center;line-height:1.6;margin:14px 0 0;">{{ authFootnote }}</p>
+  </div>
+  </sc-if>
+
+  <!-- ============ ONBOARDING ============ -->
+  <sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ false }}">
+  <div style="width:100%;max-width:600px;">
+    <!-- progress -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">Step {{ stepNum }} of 4</span>
+      <button onClick="{{ finish }}" style="font-family:'Space Mono',monospace;font-size:11px;color:#8a7c68;background:transparent;border:none;cursor:pointer;">Skip for now</button>
+    </div>
+    <div style="height:6px;background:#241a10;border-radius:999px;overflow:hidden;margin-bottom:24px;"><div style="height:100%;width:{{ progress }};background:linear-gradient(120deg,#ffb000,#ff6b1a);border-radius:999px;transition:width .3s;"></div></div>
+
+    <div style="background:#1a130c;border:1px solid #2c2418;border-radius:20px;padding:28px;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+
+      <!-- STEP 0: profile -->
+      <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px;letter-spacing:-0.01em;">Welcome! Let's set you up</h2>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 22px;">This takes about a minute and makes matchmaking way better.</p>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+          <div style="width:64px;height:64px;border-radius:18px;background:{{ avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:26px;flex:none;">{{ avatarInitial }}</div>
+          <div style="flex:1;">
+            <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:7px;">Display name</label>
+            <input value="{{ name }}" onInput="{{ onName }}" placeholder="What should players call you?" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:15px;color:#fbeeda;outline:none;" />
+          </div>
+        </div>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">Avatar color</label>
+        <div style="display:flex;gap:10px;">
+          <sc-for list="{{ avatarSwatches }}" as="a" hint-placeholder-count="5"><button onClick="{{ a.onClick }}" style="{{ a.style }}"></button></sc-for>
+        </div>
+      </sc-if>
+
+      <!-- STEP 1: games -->
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px;letter-spacing:-0.01em;">What do you play?</h2>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 20px;">Pick a few — we'll surface matching parties first. ({{ gamesCount }} selected)</p>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;">
+          <sc-for list="{{ gameChips }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+        </div>
+      </sc-if>
+
+      <!-- STEP 2: where & how -->
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px;letter-spacing:-0.01em;">Where &amp; how do you play?</h2>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 22px;">Helps us match region, platform and age-appropriate groups.</p>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:8px;">Region</label>
+        <select value="{{ region }}" onChange="{{ onRegion }}" style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:12px 14px;font-size:14px;color:#fbeeda;outline:none;appearance:none;cursor:pointer;margin-bottom:20px;">
+          <option value="">Select your region…</option>
+          <option value="na-east">NA-East</option><option value="na-west">NA-West</option><option value="eu-west">EU-West</option><option value="eu-east">EU-East</option><option value="asia">Asia</option><option value="oceania">Oceania</option>
+        </select>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">Platforms</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;"><sc-for list="{{ platformChips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">Age group</label>
+        <div style="display:flex;gap:8px;"><sc-for list="{{ ageChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+      </sc-if>
+
+      <!-- STEP 3: vibe -->
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px;letter-spacing:-0.01em;">What's your vibe?</h2>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0 0 22px;">So we match you with people who play the way you do.</p>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">Casual or serious?</label>
+        <div style="display:flex;gap:8px;margin-bottom:22px;"><sc-for list="{{ vibeChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.bigStyle }}">{{ c.label }}</button></sc-for></div>
+        <label style="display:block;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;">When do you usually play?</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;"><sc-for list="{{ slotChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+      </sc-if>
+
+      <!-- nav -->
+      <div style="display:flex;align-items:center;gap:12px;margin-top:26px;">
+        <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ back }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#241a10;border:1px solid #3a2c1a;padding:12px 22px;border-radius:11px;cursor:pointer;">Back</button></sc-if>
+        <button onClick="{{ next }}" style="{{ nextStyle }}">{{ nextLabel }}</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ DONE ============ -->
+  <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+  <div style="width:100%;max-width:480px;background:#1a130c;border:1px solid #2c2418;border-radius:20px;padding:34px 28px;text-align:center;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(78,201,106,0.14);border:1px solid rgba(78,201,106,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;"><span style="color:#4ec96a;font-size:32px;font-weight:700;">✓</span></div>
+    <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;margin:0 0 8px;letter-spacing:-0.01em;">{{ doneHeading }}</h2>
+    <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;line-height:1.6;margin:0 0 22px;">Your party is out there. We've lined up games that match your setup — jump in whenever.</p>
+    <sc-if value="{{ hasSummary }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px;">
+        <sc-for list="{{ summaryChips }}" as="c" hint-placeholder-count="3"><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ffd08a;background:rgba(255,176,0,0.12);border:1px solid rgba(255,176,0,0.35);padding:5px 12px;border-radius:999px;">{{ c }}</span></sc-for>
+      </div>
+    </sc-if>
+    <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:13px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Start browsing games →</button>
+    <button onClick="{{ restart }}" style="width:100%;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#b49c6a;background:transparent;border:none;padding:12px;cursor:pointer;margin-top:6px;">↺ Replay the flow</button>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen:'auth', mode:'signup', step:0, name:'', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', games:[], region:'', platforms:[], age:'', vibe:'', slots:[] };
+
+  chip(active){
+    const b="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:9px 15px;border-radius:999px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  bigChip(active){
+    const b="flex:1;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;padding:14px;border-radius:12px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  toggle(key,val){ const a=this.state[key]; this.setState({ [key]: a.includes(val)?a.filter(x=>x!==val):a.concat(val) }); }
+
+  renderVals(){
+    const s = this.state;
+
+    // ----- auth -----
+    const isAuth = s.screen==='auth';
+    const isLogin = s.mode==='login', isSignup = s.mode==='signup';
+    const tab = (active)=>{ const b="flex:1;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;padding:9px;border-radius:8px;cursor:pointer;transition:all .15s;border:none;"; return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);" : b+"color:#b49c6a;background:transparent;"; };
+
+    // ----- onboarding data -----
+    const games = ['Valorant','Helldivers 2',"Baldur's Gate 3",'CS2','Deep Rock Galactic','Lethal Company','Sea of Thieves','League of Legends','Overwatch 2','Minecraft','Elden Ring','D&D 5e','Catan','Magic: The Gathering'];
+    const gameChips = games.map(g=>({ label:g, style:this.chip(s.games.includes(g)), onClick:()=>this.toggle('games',g) }));
+    const avatarOpts = ['linear-gradient(135deg,#ffb000,#ff6b1a)','linear-gradient(135deg,#ff6b1a,#ff3b6b)','linear-gradient(135deg,#ff3b6b,#ffb000)','linear-gradient(135deg,#35d0e0,#ff6b1a)','linear-gradient(135deg,#4ec96a,#ffb000)'];
+    const avatarSwatches = avatarOpts.map(g=>({ onClick:()=>this.setState({avatar:g}), style:"width:38px;height:38px;border-radius:11px;cursor:pointer;background:"+g+";"+(s.avatar===g?"box-shadow:0 0 0 2px #140f0a,0 0 0 4px #ffb000;":"box-shadow:0 0 0 1px #2c2418;") }));
+    const platformChips = [['pc','PC'],['console','Console'],['mobile','Mobile'],['table','Tabletop']].map(([k,label])=>({ label, style:this.chip(s.platforms.includes(k)), onClick:()=>this.toggle('platforms',k) }));
+    const ageChips = [['13','13+'],['18','18+'],['21','21+']].map(([k,label])=>({ label, style:this.chip(s.age===k), onClick:()=>this.setState({age:k}) }));
+    const vibeChips = [['fun','Casual'],['serious','Serious'],['both','A bit of both']].map(([k,label])=>({ label, bigStyle:this.bigChip(s.vibe===k), onClick:()=>this.setState({vibe:k}) }));
+    const slotChips = [['morning','Mornings'],['afternoon','Afternoons'],['evening','Evenings'],['late','Late night'],['weekend','Weekends']].map(([k,label])=>({ label, style:this.chip(s.slots.includes(k)), onClick:()=>this.toggle('slots',k) }));
+
+    // ----- step validation -----
+    const stepValid = [ s.name.trim().length>0, s.games.length>0, s.region!=='' && s.age!=='', s.vibe!=='' ][s.step];
+
+    const next = ()=>{ if(!stepValid) return; if(s.step>=3) this.setState({screen:'done'}); else this.setState({step:s.step+1}); };
+    const back = ()=>{ if(s.step<=0) this.setState({screen:'auth'}); else this.setState({step:s.step-1}); };
+
+    // ----- done summary -----
+    const regionMap = {'na-east':'NA-East','na-west':'NA-West','eu-west':'EU-West','eu-east':'EU-East','asia':'Asia','oceania':'Oceania'};
+    const summary = [];
+    if(s.games.length) summary.push(s.games.length+' game'+(s.games.length>1?'s':''));
+    if(s.region) summary.push(regionMap[s.region]);
+    if(s.vibe) summary.push(s.vibe==='fun'?'Casual':(s.vibe==='serious'?'Serious':'Casual + Serious'));
+
+    return {
+      // auth
+      isAuth, isLogin, isSignup,
+      authHeading: isLogin?'Welcome back':'Create your account',
+      authCta: isLogin?'Log in':'Create account',
+      pwPlaceholder: isLogin?'Your password':'At least 8 characters',
+      authFootnote: isLogin?'New here? Switch to Sign up above.':'By signing up you agree to our Terms & Community Guidelines.',
+      setLogin:()=>this.setState({mode:'login'}), setSignup:()=>this.setState({mode:'signup'}),
+      loginTabStyle:tab(isLogin), signupTabStyle:tab(isSignup),
+      submitAuth:()=>{ if(isSignup) this.setState({screen:'onboard',step:0}); else this.setState({screen:'done'}); },
+
+      // onboarding
+      isOnboard: s.screen==='onboard',
+      stepNum: s.step+1, progress: ((s.step+1)/4*100)+'%',
+      isStep0:s.step===0, isStep1:s.step===1, isStep2:s.step===2, isStep3:s.step===3,
+      name:s.name, onName:(e)=>this.setState({name:e.target.value}),
+      avatar:s.avatar, avatarInitial: (s.name.trim()[0]||'P').toUpperCase(), avatarSwatches,
+      gameChips, gamesCount:s.games.length,
+      region:s.region, onRegion:(e)=>this.setState({region:e.target.value}),
+      platformChips, ageChips, vibeChips, slotChips,
+      canBack: true,
+      next, back,
+      nextLabel: s.step>=3 ? 'Finish setup →' : 'Continue',
+      nextStyle: "flex:1;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;padding:12px;border-radius:11px;cursor:"+(stepValid?'pointer':'not-allowed')+";border:none;"+(stepValid?"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);":"color:#6b5a45;background:#241a10;"),
+      finish:()=>this.setState({screen:'done'}),
+
+      // done
+      isDone: s.screen==='done',
+      doneHeading: s.name.trim()? ('You\u2019re all set, '+s.name.trim()+'!') : 'You\u2019re all set!',
+      summaryChips: summary, hasSummary: summary.length>0,
+      restart:()=>this.setState({ screen:'auth', mode:'signup', step:0, name:'', games:[], region:'', platforms:[], age:'', vibe:'', slots:[] })
+    };
+  }
+}
+</script>
+</body>
+</html>

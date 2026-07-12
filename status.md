@@ -17,7 +17,8 @@ yet.
 - Auth.js v5 wired: Google OAuth + Credentials (native email/password)
   providers, `@auth/drizzle-adapter`, JWT sessions (required alongside
   Credentials), route handler live at `/api/auth/[...nextauth]`. No
-  sign-in/sign-up UI built yet — this is machinery, not a feature.
+  sign-in/sign-up UI built yet — this is machinery, not a feature. (A
+  wireframe now exists for this — "Auth & Onboarding" — see below.)
 - Zod installed and used for the Credentials-provider input schema
   (`src/lib/validations/auth.ts`) — the pattern to extend to future
   trust boundaries per the constitution's Principle II.
@@ -49,12 +50,18 @@ yet.
 The user described what playm8z actually is: gamers browse/post games,
 post one-off LFG listings, browse/search them, a logged-in-only Forum,
 and a handful of admin-editable content pages. `resources/wireframes/`
-currently has Home, Browse, Post a Game, Forum, Listing (single LFG
-listing detail view), Inbox (messages), and Profile — plus five admin
-pages under `resources/wireframes/admin/`: Admin Forum (moderation),
-Admin News (content editing), Admin Postings (moderation), Admin Users
-(management), and Admin Reports. Also a Dark/Light theme + style guide
-in `resources/design/`. The user is actively posting more.
+currently has: Home, Browse, Post a Game, Forum, Forum Thread, Listing
+(single LFG listing detail view), Inbox (messages), Profile, News
+(public news feed), Content Page (public admin-authored page), and Auth
+& Onboarding (sign-in/sign-up + a post-signup onboarding flow: what you
+play, where/how you play, your vibe) — plus
+`resources/wireframes/support/Notifications & Report.dc.html`
+(notifications panel + content reporting). Seven admin pages live under
+`resources/wireframes/admin/`: Admin Dashboard, Admin Forum
+(moderation), Admin News (content editing), Admin Postings
+(moderation), Admin Users (management), Admin Content Pages (CMS
+editor), and Admin Reports. Also a Dark/Light theme + style guide in
+`resources/design/`. The user is actively posting more.
 
 "Groups" (persistent guilds/clans, distinct from one-off LFG listings)
 was initially assumed in scope (inferred from the wireframe nav bar's

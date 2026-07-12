@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  textarea::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">Forum</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;">V</div>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:1140px;margin:0 auto;padding:22px 32px 80px;">
+
+    <!-- breadcrumb -->
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;margin-bottom:18px;">
+      <a href="#" style="color:#b49c6a;">Forum</a> <span style="color:#4a3d2c;">/</span> <a href="#" style="color:#8fbfe0;">Game Talk</a> <span style="color:#4a3d2c;">/</span> <span style="color:#8a7c68;">Agent tier list debate</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start;">
+
+      <!-- ===== MAIN ===== -->
+      <main style="display:flex;flex-direction:column;gap:16px;min-width:0;">
+
+        <!-- thread header -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#35d0e0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:3px 10px;border-radius:999px;">Game Talk</span>
+            <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;color:#140f0a;background:#ff3b6b;padding:2px 7px;border-radius:4px;">HOT</span>
+          </div>
+          <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;line-height:1.2;letter-spacing:-0.01em;margin:0 0 14px;">Valorant meta — agent tier list debate</h1>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:9px;"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">V</div><div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Vex_00</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">started this · 4h ago</div></div></div>
+            <span style="width:1px;height:24px;background:#2c2418;"></span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ replyCount }} replies · 5.4k views</span>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <button onClick="{{ toggleSub }}" style="{{ subStyle }}">{{ subLabel }}</button>
+              <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:#241a10;border:1px solid #2c2418;padding:8px 14px;border-radius:9px;cursor:pointer;">Share</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- original post -->
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.22);border-radius:16px;padding:20px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#ff6b1a,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:16px;">V</div>
+            <div style="flex:1;"><div style="display:flex;align-items:center;gap:7px;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;">Vex_00</span><span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:2px 7px;border-radius:5px;">OP</span></div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">4h ago · EU-West</div></div>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-size:15px;color:#e4d3ba;line-height:1.7;">
+            <p style="margin:0 0 12px;">With the latest patch shaking up ability cooldowns, I think the double-controller comp is quietly back on top. Smokes win rounds, and the extra map control is worth losing a duelist.</p>
+            <p style="margin:0 0 12px;">My current S-tier: <b style="color:#fbeeda;">Omen, Viper, Jett, Cypher, Sova</b>. Duelist-heavy comps feel punishing now that first-bloods matter less than utility.</p>
+            <p style="margin:0;">Am I overrating control agents, or is everyone still stuck in the old duelist meta? Convince me.</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin:16px 0;">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 10px;border-radius:999px;">#valorant</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 10px;border-radius:999px;">#meta</span>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#c9b892;background:#241a10;border:1px solid #2c2418;padding:4px 10px;border-radius:999px;">#tierlist</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding-top:14px;border-top:1px solid #2c2418;">
+            <button onClick="{{ op.onLike }}" style="{{ op.likeStyle }}"><span style="font-size:12px;">▲</span> {{ op.likes }}</button>
+            <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:none;padding:8px;cursor:pointer;">Reply</button>
+            <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#6b5a45;background:transparent;border:none;padding:8px;cursor:pointer;margin-left:auto;">⋯</button>
+          </div>
+        </div>
+
+        <!-- replies toolbar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 2px;">
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">{{ replyCount }} replies</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6b5a45;">Sort</span>
+            <sc-for list="{{ sortChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+          </div>
+        </div>
+
+        <!-- replies -->
+        <sc-for list="{{ replies }}" as="r" hint-placeholder-count="5">
+          <div style="{{ r.cardStyle }}">
+            <sc-if value="{{ r.best }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fe0a3;margin-bottom:10px;">★ TOP REPLY</div></sc-if>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:36px;height:36px;border-radius:10px;background:{{ r.avatar }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:14px;flex:none;">{{ r.initial }}</div>
+              <div style="flex:1;"><div style="display:flex;align-items:center;gap:7px;"><span style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;">{{ r.author }}</span><sc-if value="{{ r.isOP }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:2px 7px;border-radius:5px;">OP</span></sc-if></div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ r.ago }}</div></div>
+            </div>
+            <sc-if value="{{ r.hasQuote }}" hint-placeholder-val="{{ false }}">
+              <div style="border-left:2px solid #3a2c1a;padding:6px 0 6px 12px;margin-bottom:10px;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:#ff9c5a;margin-bottom:3px;">{{ r.quoteAuthor }} wrote</div><p style="font-family:'Sora',sans-serif;font-size:12.5px;color:#8a7c68;line-height:1.5;margin:0;font-style:italic;">{{ r.quoteText }}</p></div>
+            </sc-if>
+            <p style="font-family:'Sora',sans-serif;font-size:14px;color:#e4d3ba;line-height:1.65;margin:0 0 14px;">{{ r.body }}</p>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button onClick="{{ r.onLike }}" style="{{ r.likeStyle }}"><span style="font-size:12px;">▲</span> {{ r.likes }}</button>
+              <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:none;padding:8px;cursor:pointer;">Reply</button>
+              <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:none;padding:8px;cursor:pointer;">Quote</button>
+              <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#6b5a45;background:transparent;border:none;padding:8px;cursor:pointer;margin-left:auto;">Report</button>
+            </div>
+          </div>
+        </sc-for>
+
+        <!-- composer -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;margin-top:6px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">Y</div><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">Add your reply</span></div>
+          <textarea value="{{ draft }}" onInput="{{ onDraft }}" rows="4" placeholder="Share your take… keep it civil." style="width:100%;background:#0e0a06;border:1px solid #3a2c1a;border-radius:11px;padding:13px 15px;font-size:14px;color:#fbeeda;outline:none;resize:vertical;line-height:1.6;font-family:'Sora',sans-serif;"></textarea>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+            <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">Be respectful — read the guidelines.</span>
+            <button onClick="{{ post }}" style="{{ postStyle }}">Post reply</button>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- ===== RIGHT RAIL ===== -->
+      <aside style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px;">
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Thread info</div>
+          <div style="display:flex;flex-direction:column;gap:11px;">
+            <div style="display:flex;justify-content:space-between;"><span style="font-family:'Sora',sans-serif;font-size:13px;color:#8a7c68;">Started by</span><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Vex_00</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-family:'Sora',sans-serif;font-size:13px;color:#8a7c68;">Replies</span><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">{{ replyCount }}</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-family:'Sora',sans-serif;font-size:13px;color:#8a7c68;">Views</span><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">5,412</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-family:'Sora',sans-serif;font-size:13px;color:#8a7c68;">Created</span><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">4h ago</span></div>
+          </div>
+        </div>
+
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff9c5a;margin-bottom:14px;">Related threads</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <a href="#" style="display:block;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;line-height:1.35;margin-bottom:3px;">Best crosshair settings for control agents?</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">Game Talk · 31 replies</div></a>
+            <div style="height:1px;background:#221a10;"></div>
+            <a href="#" style="display:block;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;line-height:1.35;margin-bottom:3px;">Is Sova still worth maining post-nerf?</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">Game Talk · 47 replies</div></a>
+            <div style="height:1px;background:#221a10;"></div>
+            <a href="#" style="display:block;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;line-height:1.35;margin-bottom:3px;">Weeknight ranked 5-stack (EU-West)</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">Looking for Group · 12 replies</div></a>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,107,26,0.06);border:1px solid rgba(255,107,26,0.25);border-radius:16px;padding:18px;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;margin-bottom:8px;">Forum guidelines</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#b49c6a;line-height:1.6;margin:0;">Debate the meta, not the person. No flaming, no boosting ads, no spoilers without tags.</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { sort:'top', draft:'', subscribed:false, liked:{}, replies:null };
+
+  seed(){
+    return [
+      { id:1, author:'Kira', initial:'K', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', mins:210, likes:64, isOP:false, best:true,
+        body:'Hard agree on double-controller. Since utility got buffed, holding sites with smokes + Viper wall is way more consistent than praying your duelist wins the aim duel. Won 3 of my last 4 comps running Omen + Viper.' },
+      { id:2, author:'Jax', initial:'J', avatar:'linear-gradient(135deg,#ffb000,#ff6b1a)', mins:180, likes:22, isOP:false,
+        body:'Depends heavily on the map though. On Breeze or Icebox sure, but on smaller maps a good Jett/Raze still snowballs rounds faster than you can set up control.' },
+      { id:3, author:'Vex_00', initial:'V', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', mins:150, likes:12, isOP:true, hasQuote:true, quoteAuthor:'Jax', quoteText:'a good Jett/Raze still snowballs rounds faster than you can set up control.',
+        body:'Fair point on map dependency — I\u2019d still argue that at coordinated levels the utility advantage compounds over a match. Solo-queue is a different story, I\u2019ll give you that.' },
+      { id:4, author:'Rin', initial:'R', avatar:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', mins:95, likes:31, isOP:false,
+        body:'Cypher being S-tier is the real hot take here and nobody\u2019s talking about it. Free intel every round is broken when your team actually uses the info.' },
+      { id:5, author:'Nova', initial:'N', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', mins:40, likes:8, isOP:false,
+        body:'Counterpoint: tier lists are cope. Play the agents you\u2019re mechanically best on. A one-trick Reyna will out-frag your "optimal" comp every time in ranked.' },
+      { id:6, author:'Bex', initial:'B', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', mins:15, likes:3, isOP:false,
+        body:'New-ish player here — this thread is genuinely helping me understand why my team keeps asking me to swap off duelist. Thanks all.' }
+    ];
+  }
+  get replies(){ return this.state.replies || (this.state.replies = this.seed()); }
+
+  ago(m){ return m<1?'just now':(m<60? m+'m ago' : Math.floor(m/60)+'h ago'); }
+  likeStyle(on){
+    const b="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .12s;";
+    return on ? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#b49c6a;background:#241a10;border:1px solid #2c2418;";
+  }
+  chip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+  like(id){ const l=this.state.liked; this.setState({ liked:{ ...l, [id]: !l[id] } }); }
+
+  renderVals(){
+    const s = this.state;
+    const replies = this.replies;
+
+    let sorted = replies.slice();
+    if(s.sort==='top') sorted.sort((a,b)=> (b.likes+(s.liked[b.id]?1:0)) - (a.likes+(s.liked[a.id]?1:0)));
+    else if(s.sort==='new') sorted.sort((a,b)=> a.mins-b.mins);
+    else sorted.sort((a,b)=> b.mins-a.mins);
+
+    const view = sorted.map(r=>({
+      ...r,
+      ago:this.ago(r.mins),
+      likes: r.likes + (s.liked[r.id]?1:0),
+      likeStyle: this.likeStyle(!!s.liked[r.id]),
+      onLike: ()=>this.like(r.id),
+      hasQuote: !!r.hasQuote,
+      cardStyle: r.best
+        ? "background:#1a130c;border:1px solid rgba(78,201,106,0.35);border-radius:16px;padding:18px 20px;"
+        : "background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:18px 20px;"
+    }));
+
+    const opBase = 132;
+    const post = ()=>{
+      const t = s.draft.trim(); if(!t) return;
+      const id = Math.max(0, ...replies.map(r=>r.id))+1;
+      this.setState({ replies: replies.concat({ id, author:'You', initial:'Y', avatar:'linear-gradient(135deg,#ffb000,#ff3b6b)', mins:0, likes:0, isOP:false, body:t }), draft:'', sort:'new' });
+    };
+
+    return {
+      replyCount: replies.length,
+      sortChips: [['top','Top'],['new','Newest'],['old','Oldest']].map(([k,label])=>({ label, style:this.chip(s.sort===k), onClick:()=>this.setState({sort:k}) })),
+      replies: view,
+      op: { likes: opBase + (s.liked['op']?1:0), likeStyle:this.likeStyle(!!s.liked['op']), onLike:()=>this.like('op') },
+      draft: s.draft, onDraft:(e)=>this.setState({draft:e.target.value}),
+      post,
+      postStyle: "font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 22px;border-radius:10px;cursor:pointer;",
+      subscribed: s.subscribed,
+      toggleSub: ()=>this.setState({subscribed:!s.subscribed}),
+      subLabel: s.subscribed ? '✓ Subscribed' : 'Subscribe',
+      subStyle: s.subscribed
+        ? "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:8px 14px;border-radius:9px;cursor:pointer;"
+        : "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#fbeeda;background:#241a10;border:1px solid #2c2418;padding:8px 14px;border-radius:9px;cursor:pointer;"
+    };
+  }
+}
+</script>
+</body>
+</html>

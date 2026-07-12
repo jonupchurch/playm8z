@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  .sb::-webkit-scrollbar{width:8px;}
+  .sb::-webkit-scrollbar-thumb{background:#2c2418;border-radius:8px;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Dashboard</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ffb000;padding:1px 6px;border-radius:5px;">7</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ffb000;padding:1px 6px;border-radius:5px;">7</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>News</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">moderator</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">Good evening, Admin</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Here's what's happening across playm8z today · Sunday, Jul 12</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <sc-if value="{{ needsAttention }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.12);border:1px solid rgba(255,59,107,0.4);padding:8px 14px;border-radius:10px;"><span style="width:7px;height:7px;border-radius:50%;background:#ff3b6b;"></span>{{ totalQueue }} items need review</span></sc-if>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+        <div style="background:#1a130c;border:1px solid {{ k.edge }};border-radius:14px;padding:16px 18px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#6b5a45;margin-bottom:8px;">{{ k.label }}</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;color:{{ k.valColor }};line-height:1;">{{ k.value }}</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:9px;"><span style="{{ k.deltaStyle }}">{{ k.delta }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ k.deltaNote }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:20px;align-items:start;">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- chart -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+            <div><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">Activity · last 7 days</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;margin-top:2px;">{{ chartTotal }} total this week</div></div>
+            <div style="display:flex;gap:6px;"><sc-for list="{{ metricChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;height:170px;">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="7">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:8px;">
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c68;">{{ b.val }}</span>
+                <div style="width:100%;max-width:44px;height:{{ b.h }};background:{{ b.fill }};border-radius:7px 7px 0 0;transition:height .3s;"></div>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ b.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- recent activity -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">Recent activity</div>
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:#ff6b1a;cursor:pointer;">audit log →</span>
+          </div>
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ activity }}" as="a" hint-placeholder-count="6">
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #221a10;">
+                <span style="width:30px;height:30px;border-radius:9px;background:{{ a.iconBg }};display:flex;align-items:center;justify-content:center;font-size:13px;flex:none;">{{ a.icon }}</span>
+                <div style="flex:1;min-width:0;"><p style="font-family:'Sora',sans-serif;font-size:13px;color:#e4d3ba;line-height:1.5;margin:0;">{{ a.text }}</p></div>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;flex:none;">{{ a.time }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- needs attention -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;margin-bottom:16px;">Needs attention</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ queues }}" as="q" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:13px;padding:14px;background:#20180e;border:1px solid #2c2418;border-radius:12px;border-left:3px solid {{ q.accent }};cursor:pointer;">
+                <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;">{{ q.label }}</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ q.sub }}</div></div>
+                <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:22px;color:{{ q.accent }};">{{ q.count }}</span>
+                <span style="font-family:'Sora',sans-serif;font-size:13px;color:#ff6b1a;">→</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- top games -->
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">Top games today</div>
+            <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">by open parties</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:13px;">
+            <sc-for list="{{ topGames }}" as="g" hint-placeholder-count="5">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">{{ g.name }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ g.count }}</span></div>
+                <div style="height:6px;background:#241a10;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ g.w }};background:linear-gradient(120deg,#ffb000,#ff6b1a);border-radius:999px;"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { metric:'signups' };
+
+  metrics(){
+    return {
+      signups:  { label:'New signups', data:[210,265,240,320,410,480,390], fill:'linear-gradient(180deg,#ffb000,#ff6b1a)' },
+      active:   { label:'Active users', data:[3200,3400,3350,3600,4100,4550,4312], fill:'linear-gradient(180deg,#ff6b1a,#ff3b6b)' },
+      postings: { label:'New postings', data:[88,102,95,120,160,190,150], fill:'linear-gradient(180deg,#ffb000,#ff3b6b)' }
+    };
+  }
+
+  chip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#241a10;border:1px solid #2c2418;";
+  }
+  deltaStyle(up){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;";
+    return up ? b+"color:#8fe0a3;background:rgba(78,201,106,0.12);" : b+"color:#ff7ea0;background:rgba(255,59,107,0.12);";
+  }
+  fmt(n){ return n>=1000 ? (n/1000).toFixed(1)+'k' : ''+n; }
+
+  renderVals(){
+    const s = this.state;
+    const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const m = this.metrics()[s.metric];
+    const max = Math.max(...m.data);
+    const bars = m.data.map((v,i)=>({ val:this.fmt(v), h: Math.round(v/max*150)+'px', fill:m.fill, label:labels[i] }));
+    const chartTotal = this.fmt(m.data.reduce((a,b)=>a+b,0));
+
+    const kpis = [
+      { label:'Total users', value:'48.3k', valColor:'#fbeeda', delta:'+2.1%', up:true, deltaNote:'vs last wk', edge:'#2c2418' },
+      { label:'Active today', value:'4,312', valColor:'#fbeeda', delta:'+8.0%', up:true, deltaNote:'vs yest', edge:'#2c2418' },
+      { label:'New signups', value:'390', valColor:'#fbeeda', delta:'+12%', up:true, deltaNote:'today', edge:'#2c2418' },
+      { label:'Live postings', value:'1,204', valColor:'#fbeeda', delta:'+3.4%', up:true, deltaNote:'vs yest', edge:'#2c2418' },
+      { label:'Open reports', value:'5', valColor:'#ff7ea0', delta:'-2', up:true, deltaNote:'vs yest', edge:'rgba(255,59,107,0.3)' }
+    ].map(k=>({ ...k, deltaStyle:this.deltaStyle(k.up) }));
+
+    const queues = [
+      { label:'User reports', sub:'phishing, harassment, safety', count:5, accent:'#ff3b6b' },
+      { label:'Posting review', sub:'spam & auto-flagged ads', count:7, accent:'#ffb000' },
+      { label:'Forum review', sub:'reported threads & replies', count:7, accent:'#35d0e0' }
+    ];
+
+    const activity = [
+      { icon:'🗑', iconBg:'rgba(255,59,107,0.14)', text:'You removed a posting — “FREE SKINS CLICK HERE” (phishing)', time:'4m' },
+      { icon:'⚑', iconBg:'rgba(230,199,78,0.14)', text:'New report — harassment in a Valorant forum reply', time:'8m' },
+      { icon:'⛔', iconBg:'rgba(255,59,107,0.14)', text:'BoostKing was banned for repeated boosting ads', time:'20m' },
+      { icon:'👥', iconBg:'rgba(78,201,106,0.14)', text:'142 new players signed up in the last hour', time:'1h' },
+      { icon:'📰', iconBg:'rgba(255,176,0,0.14)', text:'News post published — “playm8z is now in open beta!”', time:'2h' },
+      { icon:'🔒', iconBg:'rgba(53,208,224,0.14)', text:'Forum thread locked — “politics mega-thread”', time:'3h' }
+    ];
+
+    const gamesRaw = [ ['Valorant',512], ['Helldivers 2',388], ["Baldur's Gate 3",214], ['Deep Rock Galactic',143], ['D&D 5e',97] ];
+    const gmax = gamesRaw[0][1];
+    const topGames = gamesRaw.map(([name,count])=>({ name, count, w: Math.round(count/gmax*100)+'%' }));
+
+    return {
+      totalQueue: 19, needsAttention:true,
+      kpis,
+      metricChips: [['signups','Signups'],['active','Active'],['postings','Postings']].map(([k,label])=>({ label, style:this.chip(s.metric===k), onClick:()=>this.setState({metric:k}) })),
+      bars, chartTotal,
+      activity, queues, topGames
+    };
+  }
+}
+</script>
+</body>
+</html>

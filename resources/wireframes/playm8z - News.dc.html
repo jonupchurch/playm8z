@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  a{color:#ff6b1a;text-decoration:none;}
+  a:hover{color:#ffb000;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#140f0a;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;">
+
+  <!-- ===== NAV ===== -->
+  <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 32px;border-bottom:1px solid #2c2418;background:rgba(20,15,10,0.82);backdrop-filter:blur(10px);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:32px;height:29px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:17px;height:14px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:19px;height:15px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-left:16px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Browse</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Groups</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:500;font-size:14px;color:#b49c6a;padding:8px 12px;border-radius:8px;">Forum</a>
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:rgba(255,107,26,0.1);padding:8px 12px;border-radius:8px;">News</a>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+      <a href="#" style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#ff6b1a;padding:8px 6px;">Log in</a>
+      <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);">Post a game</button>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <div style="border-bottom:1px solid #2c2418;background:radial-gradient(circle at 25% -40%,rgba(255,107,26,0.1),transparent 60%);">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 32px 28px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#ff9c5a;margin-bottom:10px;">The latest from playm8z</div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;letter-spacing:-0.02em;margin:0;">News &amp; updates</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;min-width:220px;">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search news…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:10px 0;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BODY ===== -->
+  <div style="max-width:1180px;margin:0 auto;padding:26px 32px 80px;">
+
+    <!-- filters -->
+    <div style="display:flex;gap:6px;margin-bottom:26px;flex-wrap:wrap;">
+      <sc-for list="{{ filters }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+    </div>
+
+    <!-- featured -->
+    <sc-if value="{{ showFeatured }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:0;background:#1a130c;border:1px solid rgba(255,107,26,0.28);border-radius:18px;overflow:hidden;margin-bottom:28px;cursor:pointer;">
+        <div style="min-height:280px;background:{{ featured.cover }};position:relative;">
+          <span style="position:absolute;top:16px;left:16px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:rgba(255,255,255,0.9);padding:4px 11px;border-radius:6px;">📌 Featured</span>
+        </div>
+        <div style="padding:32px;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="{{ featured.catStyle }}">{{ featured.category }}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">{{ featured.date }} · {{ featured.read }}</span></div>
+          <h2 style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;line-height:1.15;letter-spacing:-0.01em;margin:0 0 12px;">{{ featured.title }}</h2>
+          <p style="font-family:'Sora',sans-serif;font-size:15px;color:#b49c6a;line-height:1.6;margin:0 0 22px;">{{ featured.excerpt }}</p>
+          <div style="display:flex;align-items:center;gap:9px;"><div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:11px;">P</div><span style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">playm8z team</span><span style="margin-left:auto;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#ff6b1a;">Read →</span></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- grid -->
+    <sc-if value="{{ hasPosts }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+      <sc-for list="{{ posts }}" as="p" hint-placeholder-count="6">
+        <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;" style-hover="border-color:rgba(255,107,26,0.5);">
+          <div style="height:130px;background:{{ p.cover }};position:relative;">
+            <sc-if value="{{ p.upcoming }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:12px;left:12px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#35d0e0;padding:3px 9px;border-radius:6px;">Upcoming</span></sc-if>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;"><span style="{{ p.catStyle }}">{{ p.category }}</span><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ p.date }}</span></div>
+            <h3 style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;line-height:1.3;margin:0 0 8px;">{{ p.title }}</h3>
+            <p style="font-family:'Sora',sans-serif;font-size:13px;color:#a99a80;line-height:1.55;margin:0 0 14px;flex:1;">{{ p.excerpt }}</p>
+            <div style="display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid #221a10;"><span style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">{{ p.read }}</span><span style="margin-left:auto;font-family:'Sora',sans-serif;font-weight:700;font-size:12px;color:#ff6b1a;">Read →</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="text-align:center;margin-top:32px;"><button style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;background:#1a130c;border:1px solid #3a2c1a;padding:12px 28px;border-radius:11px;cursor:pointer;">Load more</button></div>
+    </sc-if>
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:72px 20px;border:1px dashed #3a2c1a;border-radius:16px;">
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px;">No posts here yet.</div>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Try another category.</p>
+      </div>
+    </sc-if>
+
+    <!-- subscribe strip -->
+    <div style="margin-top:40px;background:linear-gradient(120deg,rgba(255,176,0,0.09),rgba(255,59,107,0.06));border:1px solid rgba(255,107,26,0.28);border-radius:18px;padding:26px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:220px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:4px;">Never miss an update</div><p style="font-family:'Sora',sans-serif;font-size:13px;color:#b49c6a;margin:0;">Get playm8z news, events and patch notes in your inbox.</p></div>
+      <div style="display:flex;gap:8px;flex:1;min-width:260px;">
+        <input placeholder="you@example.com" style="flex:1;background:#0e0a06;border:1px solid #3a2c1a;border-radius:10px;padding:11px 14px;font-size:14px;color:#fbeeda;outline:none;font-family:'Sora',sans-serif;" />
+        <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 20px;border-radius:10px;cursor:pointer;white-space:nowrap;">Subscribe</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { filter:'all', query:'' };
+
+  posts(){
+    return [
+      { id:1, title:'playm8z is now in open beta!', category:'Announcement', date:'Jul 10, 2026', read:'3 min read', pinned:true, cover:'linear-gradient(135deg,#ffb000,#ff6b1a)', excerpt:'Anyone can now post games and find their party — no invite code needed. Here\u2019s everything that shipped for launch and what\u2019s next.' },
+      { id:2, title:'New: filter by tabletop & TTRPGs', category:'Update', date:'Jul 8, 2026', read:'2 min read', cover:'linear-gradient(135deg,#ff6b1a,#ff3b6b)', excerpt:'D&D, Pathfinder, board games and more now have first-class genre filters and an in-person tabletop option.' },
+      { id:3, title:'Summer Co-op Fest — win prizes', category:'Event', date:'Jul 20, 2026', read:'2 min read', upcoming:true, cover:'linear-gradient(135deg,#35d0e0,#ff6b1a)', excerpt:'Two weeks of community co-op challenges with in-game rewards and a leaderboard. Mark your calendar.' },
+      { id:4, title:'Discord integration preview', category:'Update', date:'Jul 6, 2026', read:'4 min read', cover:'linear-gradient(135deg,#ff3b6b,#ffb000)', excerpt:'Auto-create voice channels for your party and get LFG pings straight in Discord. Here\u2019s an early look.' },
+      { id:5, title:'v1.2 — faster matchmaking & fixes', category:'Patch Notes', date:'Jul 4, 2026', read:'5 min read', cover:'linear-gradient(135deg,#ffb000,#ff3b6b)', excerpt:'Search is 40% faster, filter chips persist across sessions, and we squashed a batch of profile bugs.' },
+      { id:6, title:'Party of the Month: the Deep Rock crew', category:'Community', date:'Jul 2, 2026', read:'3 min read', cover:'linear-gradient(135deg,#ff6b1a,#ffb000)', excerpt:'How five strangers became a weekly squad — and what makes a party actually stick together.' },
+      { id:7, title:'Mobile app is on the way', category:'Announcement', date:'Jun 30, 2026', read:'2 min read', cover:'linear-gradient(135deg,#ff3b6b,#ff6b1a)', excerpt:'Take your parties on the go. The playm8z mobile app enters closed testing next month.' }
+    ];
+  }
+  catColor(c){ return {Announcement:'#ffb000',Update:'#ff6b1a',Event:'#35d0e0',Community:'#ff3b6b','Patch Notes':'#8fe0a3'}[c]||'#ffb000'; }
+  catStyle(c){ const col=this.catColor(c); return "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:"+col+";background:color-mix(in srgb,"+col+" 14%,transparent);border:1px solid color-mix(in srgb,"+col+" 38%,transparent);padding:3px 10px;border-radius:999px;"; }
+  chip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:8px 14px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+
+  renderVals(){
+    const s = this.state;
+    const all = this.posts().map(p=>({ ...p, catStyle:this.catStyle(p.category) }));
+    const q = s.query.trim().toLowerCase();
+    const bySearch = (p)=> !q || (p.title+' '+p.excerpt+' '+p.category).toLowerCase().includes(q);
+    const byCat = (p)=> s.filter==='all' || p.category===s.filter;
+
+    const filtered = all.filter(p=>byCat(p)&&bySearch(p));
+    const showFeatured = s.filter==='all' && !q;
+    const featured = all.find(p=>p.pinned);
+    const posts = showFeatured ? filtered.filter(p=>!p.pinned) : filtered;
+
+    const cats = ['Announcement','Update','Event','Community','Patch Notes'];
+    return {
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      filters: [['all','All']].concat(cats.map(c=>[c,c])).map(([k,label])=>({ label, style:this.chip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      showFeatured, featured,
+      posts, hasPosts: posts.length>0, isEmpty: posts.length===0 && !showFeatured
+    };
+  }
+}
+</script>
+</body>
+</html>

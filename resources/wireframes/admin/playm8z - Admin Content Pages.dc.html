@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#ff6b1a;color:#140f0a;}
+  input::placeholder{color:#6b5a45;}
+</style>
+</helmet>
+<div style="background:#0f0b07;min-height:100%;font-family:'Sora',sans-serif;color:#fbeeda;display:grid;grid-template-columns:224px 1fr;">
+
+  <!-- ===== ADMIN SIDEBAR ===== -->
+  <aside style="border-right:1px solid #2c2418;background:#140f0a;min-height:100vh;position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;">
+      <div style="width:28px;height:26px;position:relative;">
+        <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-1px;"></span><span style="width:15px;height:12px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+        <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:9px;height:9px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-1px;"></span><span style="width:17px;height:13px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;">playm8z</span>
+      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#ff3b6b;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.4);padding:2px 6px;border-radius:5px;">ADMIN</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Dashboard</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Users</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Postings</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Forum</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>News</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;background:rgba(255,107,26,0.12);color:#fbeeda;font-family:'Sora',sans-serif;font-weight:600;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#ff6b1a;"></span>Content pages</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Reports <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#ff3b6b;padding:1px 6px;border-radius:5px;">5</span></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:#8a7c68;font-family:'Sora',sans-serif;font-weight:500;font-size:14px;cursor:pointer;"><span style="width:7px;height:7px;border-radius:2px;background:#3a2c1a;"></span>Settings</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #2c2418;">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#140f0a;font-size:13px;">A</div>
+      <div><div style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;">Admin</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6b5a45;">editor</div></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main style="padding:28px 32px 60px;min-width:0;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px;">
+      <div>
+        <h1 style="font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.01em;margin:0 0 4px;">Content pages</h1>
+        <p style="font-family:'Sora',sans-serif;font-size:14px;color:#b49c6a;margin:0;">Manage static pages — legal, marketing &amp; help. System pages can be edited but not deleted.</p>
+      </div>
+      <button onClick="{{ newPage }}" style="display:flex;align-items:center;gap:7px;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 18px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.7);"><span style="font-size:16px;line-height:1;">＋</span> New page</button>
+    </div>
+
+    <!-- stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;">
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;">{{ total }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">total pages</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#8fe0a3;">{{ publishedCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">published</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#b49c6a;">{{ draftCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">drafts</div></div>
+      <div style="background:#1a130c;border:1px solid #2c2418;border-radius:14px;padding:16px 18px;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:24px;color:#8fbfe0;">{{ systemCount }}</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6b5a45;">system pages</div></div>
+    </div>
+
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;background:#1a130c;border:1px solid #2c2418;border-radius:10px;padding:0 12px;min-width:260px;flex:1;max-width:340px;">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #6b5a45;flex:none;"></span>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Search pages or URLs…" style="flex:1;background:transparent;border:none;outline:none;font-size:13px;color:#fbeeda;padding:10px 0;" />
+      </div>
+      <div style="display:flex;gap:6px;">
+        <sc-for list="{{ filters }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div style="background:#1a130c;border:1px solid #2c2418;border-radius:16px;overflow:hidden;">
+      <div style="display:grid;grid-template-columns:2.8fr 1.4fr 0.9fr 0.9fr 1.7fr;gap:12px;padding:12px 18px;border-bottom:1px solid #2c2418;background:#20180e;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#6b5a45;">
+        <div>Page</div><div>URL</div><div>Status</div><div>Updated</div><div style="text-align:right;">Actions</div>
+      </div>
+      <sc-for list="{{ rows }}" as="p" hint-placeholder-count="7">
+        <div style="display:grid;grid-template-columns:2.8fr 1.4fr 0.9fr 0.9fr 1.7fr;gap:12px;padding:14px 18px;border-bottom:1px solid #221a10;align-items:center;">
+          <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+            <div style="width:34px;height:34px;border-radius:9px;background:{{ p.iconBg }};display:flex;align-items:center;justify-content:center;font-size:14px;flex:none;">{{ p.icon }}</div>
+            <div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:7px;min-width:0;"><span style="font-family:'Sora',sans-serif;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;">{{ p.title }}</span><sc-if value="{{ p.system }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#8fbfe0;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:1px 6px;border-radius:5px;white-space:nowrap;flex:none;">🔒 System</span></sc-if></div></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#ff9c5a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">playm8z.com{{ p.slug }}</div>
+          <div><span style="{{ p.statusStyle }}">{{ p.statusLabel }}</span></div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#b49c6a;">{{ p.updated }}</div>
+          <div style="display:flex;justify-content:flex-end;">
+            <sc-if value="{{ p.confirming }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="font-family:'Space Mono',monospace;font-size:11px;color:#ff7ea0;">Delete?</span><button onClick="{{ p.onConfirmDelete }}" style="font-family:'Sora',sans-serif;font-weight:700;font-size:12px;color:#fff;background:#ff3b6b;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;">Yes</button><button onClick="{{ p.onCancelDelete }}" style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:#241a10;border:1px solid #3a2c1a;padding:6px 12px;border-radius:8px;cursor:pointer;">No</button></div>
+            </sc-if>
+            <sc-if value="{{ p.notConfirming }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <button onClick="{{ p.onTogglePublish }}" style="{{ p.pubStyle }}">{{ p.pubLabel }}</button>
+                <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:#241a10;border:1px solid #2c2418;padding:7px 11px;border-radius:8px;cursor:pointer;">View</button>
+                <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:12px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:7px 13px;border-radius:8px;cursor:pointer;">Edit</button>
+                <sc-if value="{{ p.canDelete }}" hint-placeholder-val="{{ true }}"><button onClick="{{ p.onDelete }}" title="Delete" style="width:30px;height:30px;font-family:'Sora',sans-serif;font-size:14px;color:#8a7c68;background:transparent;border:1px solid #2c2418;border-radius:8px;cursor:pointer;line-height:1;">🗑</button></sc-if>
+                <sc-if value="{{ p.system }}" hint-placeholder-val="{{ false }}"><span style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#4a3d2c;">🔒</span></sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:48px 20px;font-family:'Sora',sans-serif;color:#8a7c68;">No pages match your search.</div>
+      </sc-if>
+    </div>
+  </main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query:'', filter:'all', pages:null, pendingDelete:null, nextId:100 };
+
+  seed(){
+    return [
+      { id:1, title:'About Us', slug:'/about', status:'published', updated:'Jul 2, 2026', system:true, icon:'ℹ️', iconBg:'rgba(255,176,0,0.14)' },
+      { id:2, title:'Privacy Policy', slug:'/privacy', status:'published', updated:'Jun 28, 2026', system:true, icon:'🛡️', iconBg:'rgba(53,208,224,0.12)' },
+      { id:3, title:'Terms of Use', slug:'/terms', status:'published', updated:'Jun 28, 2026', system:true, icon:'📜', iconBg:'rgba(53,208,224,0.12)' },
+      { id:4, title:'Community Guidelines', slug:'/guidelines', status:'published', updated:'Jul 5, 2026', system:false, icon:'🤝', iconBg:'rgba(78,201,106,0.12)' },
+      { id:5, title:'Safety Center', slug:'/safety', status:'draft', updated:'Jul 9, 2026', system:false, icon:'🚨', iconBg:'rgba(255,59,107,0.12)' },
+      { id:6, title:'Help & FAQ', slug:'/help', status:'published', updated:'Jul 1, 2026', system:false, icon:'💬', iconBg:'rgba(255,107,26,0.14)' },
+      { id:7, title:'Careers', slug:'/careers', status:'draft', updated:'Jul 10, 2026', system:false, icon:'💼', iconBg:'rgba(255,176,0,0.14)' }
+    ];
+  }
+  get pages(){ return this.state.pages || (this.state.pages = this.seed()); }
+
+  statusStyle(st){
+    return st==='published'
+      ? "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#8fe0a3;background:rgba(78,201,106,0.12);border:1px solid rgba(78,201,106,0.4);padding:3px 9px;border-radius:6px;"
+      : "font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:3px 9px;border-radius:6px;";
+  }
+  filterChip(active){
+    const b="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;transition:all .15s;";
+    return active? b+"color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;" : b+"color:#fbeeda;background:#1a130c;border:1px solid #2c2418;";
+  }
+
+  renderVals(){
+    const s = this.state;
+    const pages = this.pages;
+    const q = s.query.trim().toLowerCase();
+    const list = pages.filter(p=>{
+      const mf = s.filter==='all' || (s.filter==='system'&&p.system) || p.status===s.filter;
+      const mq = !q || (p.title+' '+p.slug).toLowerCase().includes(q);
+      return mf && mq;
+    });
+
+    const rows = list.map(p=>({
+      ...p,
+      statusStyle:this.statusStyle(p.status),
+      statusLabel: p.status==='published'?'Published':'Draft',
+      canDelete: !p.system,
+      confirming: s.pendingDelete===p.id,
+      notConfirming: s.pendingDelete!==p.id,
+      pubLabel: p.status==='published'?'Unpublish':'Publish',
+      pubStyle: p.status==='published'
+        ? "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#b49c6a;background:transparent;border:1px solid #3a2c1a;padding:7px 11px;border-radius:8px;cursor:pointer;"
+        : "font-family:'Sora',sans-serif;font-weight:600;font-size:12px;color:#8fe0a3;background:rgba(78,201,106,0.1);border:1px solid rgba(78,201,106,0.4);padding:7px 11px;border-radius:8px;cursor:pointer;",
+      onTogglePublish: ()=>this.setState({ pages: pages.map(x=>x.id===p.id?{ ...x, status:x.status==='published'?'draft':'published', updated:'just now' }:x) }),
+      onDelete: ()=>this.setState({pendingDelete:p.id}),
+      onConfirmDelete: ()=>this.setState({ pages: pages.filter(x=>x.id!==p.id), pendingDelete:null }),
+      onCancelDelete: ()=>this.setState({pendingDelete:null})
+    }));
+
+    return {
+      total: pages.length,
+      publishedCount: pages.filter(p=>p.status==='published').length,
+      draftCount: pages.filter(p=>p.status==='draft').length,
+      systemCount: pages.filter(p=>p.system).length,
+      query:s.query, onSearch:(e)=>this.setState({query:e.target.value}),
+      filters: [['all','All'],['published','Published'],['draft','Drafts'],['system','System']].map(([k,label])=>({ label, style:this.filterChip(s.filter===k), onClick:()=>this.setState({filter:k}) })),
+      rows, isEmpty: rows.length===0,
+      newPage: ()=>{ const id=s.nextId; this.setState({ pages: pages.concat({ id, title:'Untitled page', slug:'/untitled-'+id, status:'draft', updated:'just now', system:false, icon:'📄', iconBg:'rgba(180,156,106,0.14)' }), nextId:id+1, filter:'all', query:'' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
