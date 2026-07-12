@@ -331,6 +331,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   relationship is re-validated server-side, never trusting client-side
   clamping alone), `data-model.md`, `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Post a Game: `tasks.md` — 20 tasks: Setup
+  (1, confirming the Auth & Onboarding gate dependency exists) →
+  Foundational (5: extended postings columns + migration, the
+  validation schema, the game-suggestion query, the page-shell
+  redirect) → US1/P1 happy-path publish (6) → US2/P2 auth+verification
+  gate (3) → US3/P3 validation guardrails (2) → Polish (3). Post a Game
+  is the fifth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

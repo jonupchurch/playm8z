@@ -434,13 +434,19 @@ listing-card component; game-suggestion quick-picks reuse the same
 most-common-games aggregate as Home/Browse. "Save as draft" excluded
 from scope (no draft state exists), logged to `docs/future-work.md`.
 
+**Post a Game: tasks done** (2026-07-12) — `tasks.md`, 20 tasks:
+Setup(1) → Foundational(5) → US1/P1 happy-path publish(6) → US2/P2
+auth+verification gate(3) → US3/P3 validation guardrails(2) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Post a Game is the
+fifth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Post a Game: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `005-post-game` into `main`, then move on to feature #6
+  (Listing detail) — same specify→plan→tasks→merge sequence repeats
+  for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
