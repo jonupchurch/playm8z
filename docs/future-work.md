@@ -210,3 +210,26 @@ infrastructure as a side effect of the messaging feature itself.
 Vercel Functions do support WebSockets (per the platform's current
 capabilities), so this is a viable upgrade path later, not a technical
 blocker — just not built now.
+
+## Wiring other features' write actions to `createNotification()`
+
+Notifications + Report modal (`012-notifications-and-report-modal`)
+provides a `createNotification()` mechanism but doesn't itself retrofit
+every already-existing write action to call it. Real triggers this
+would eventually cover: a new Application (Listing detail, `006`) →
+`join` notification to the host; accept/decline (Inbox, `011`) →
+`accepted` notification to the applicant; a forum reply or mention
+(Forum Thread, `010`) → `reply`/`mention` notification; a new direct
+message (Inbox, `011`) → `message` notification. Each is a small,
+self-contained addition to an already-working feature, not urgent
+enough to justify amending four merged features in one pass.
+
+## Adopting the canonical Report modal on existing simpler report flows
+
+Blocked Users' (`008`) "Also report" checkbox and Forum Thread's
+(`010`) bare "Report" button both already create a minimal `reports`
+row with no `reason` (Notifications + Report modal, `012`, is the first
+to actually populate that column). Upgrading either to open `012`'s
+richer three-step modal instead would be more consistent, but both
+already work as specced — optional polish, not a correction of
+anything broken.

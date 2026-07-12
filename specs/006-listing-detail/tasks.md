@@ -119,6 +119,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 - [ ] T027 [P] Update `docs/feature-list.md`, marking Listing detail's spec/plan/tasks as complete
 - [ ] T028 *(added 2026-07-12, spec.md's amended FR-014/FR-018)* Build `toggle-saved-listing.ts` (`src/lib/actions/toggle-saved-listing.ts`), inserting/deleting a row in Profile's (`007`) `savedListings` table, gated the same way as apply/ask (auth + email-verified) — depends on Profile's `savedListings` table existing (whichever of the two features' migrations lands first, per data-model.md's note)
 - [ ] T029 *(added 2026-07-12)* Wire a Save/Unsave control into the apply panel or listing header, reflecting the viewer's current saved state — depends on T028
+- [ ] T030 *(added 2026-07-12, spec.md's amended FR-019)* Wire a "Report" control into the apply panel (and each Q&A entry) opening Notifications + Report modal's (`012`) existing report-modal component, passing this listing (or the specific question) as the target — depends on `012`'s report-modal component existing
 
 ---
 

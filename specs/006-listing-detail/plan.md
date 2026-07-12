@@ -104,6 +104,11 @@ src/
 │       │                               # members, open dashes)
 │       └── qa-thread.tsx               # new — Client Component: ask
 │                                       # + host-only reply controls
+│   # Report: added 2026-07-12 (spec.md's amended FR-019) — the
+│   # apply-panel's "Report" action opens Notifications + Report
+│   # modal's (012) existing report-modal component/action directly,
+│   # passing this listing (or a specific Q&A entry) as the target;
+│   # no new component or Server Action owned by this feature
 ├── db/
 │   └── schema.ts                       # extended: new `applications`
 │                                       # and `questions` tables
