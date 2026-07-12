@@ -553,10 +553,15 @@ later). Server-side filtering/pagination (Browse/Forum's pattern).
 Newsletter subscribe needs no login at all — the project's first
 account-independent write action.
 
+**News feed: tasks done** (2026-07-12) — `tasks.md`, 19 tasks: Setup(1)
+→ Foundational(4) → US1/P1 browse+filter+search+paginate(6) → US2/P2
+subscribe(5) → Polish(3). `docs/feature-list.md` updated to 🟢. News
+feed is the thirteenth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- News feed: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
+- Merge `013-news-feed` into `main`, then move on to feature #14
+  (Content Page) — same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.

@@ -480,6 +480,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   passed first try, zero `[NEEDS CLARIFICATION]` markers. No
   `contracts/`.
 
+- Ran `/speckit-tasks` for News feed: `tasks.md` — 19 tasks: Setup (1,
+  a local news-post seed script) → Foundational (4: new tables +
+  migration, validation schemas, the featured/filter/pagination query)
+  → US1/P1 browse+filter+search+paginate (6) → US2/P2 subscribe (5) →
+  Polish (3). News feed is the thirteenth feature to clear the
+  project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
