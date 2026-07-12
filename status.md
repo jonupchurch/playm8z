@@ -532,13 +532,22 @@ conversation(6) → US3/P3 accept+decline(7) → Polish(3).
 `docs/feature-list.md` updated to 🟢. Inbox / messaging is the
 eleventh feature with a complete spec/plan/tasks trio.
 
+**Notifications + Report modal: spec + plan done** (2026-07-12, branch
+`012-notifications-and-report-modal`) — bell dropdown + full page +
+reusable 3-step Report modal. `createNotification()` ships with no
+callers wired up yet (each existing feature's own follow-up). Accept/
+Decline reuses Inbox's transaction directly. Report flow gives Blocked
+Users' `reports` table its first real `reason` values. Retroactively
+un-defers Listing detail's Report action (that feature's docs amended).
+
 ## Next up
 
-- Merge `011-inbox-messaging` into `main`, then move on to feature #12
-  (Notifications + Report modal) — same specify→plan→tasks→merge
-  sequence repeats for every other feature in `docs/feature-list.md`
-  — per the project-wide gate (constitution v1.0.0), implementation
-  doesn't begin on *any* feature until all of them have this done.
+- Notifications + Report modal: `/speckit-tasks` next, then merge to
+  `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

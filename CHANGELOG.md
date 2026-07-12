@@ -449,6 +449,16 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   decline (7) → Polish (3). Inbox / messaging is the eleventh feature
   to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Notifications + Report modal: `research.md`
+  (`createNotification()` ships with no callers wired up yet, same
+  pattern as `require-verified-email.ts`/`require-role.ts`; Accept/
+  Decline reuses Inbox's existing transaction directly rather than a
+  parallel implementation; the report flow writes into Blocked Users'
+  existing `reports`/`blocks` tables, giving `reports.reason` its first
+  real values; Blocked Users'/Forum Thread's existing simpler report UI
+  are left as optional follow-up polish), `data-model.md` (new
+  `notifications` table), `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
