@@ -386,14 +386,20 @@ thing for free. Added a minimal `settings` table for the maintenance
 flag, read-only for this feature and owned by the future Admin Settings
 feature; read via `proxy.ts` with a short-TTL cache.
 
+**Error Pages: tasks done** (2026-07-12) — `tasks.md`, 23 tasks: Setup(1)
+→ Foundational(5) → US1/P1 404(3) → US2/P2 500(4) → US3/P3 401/403(4,
+unit-level only — no real gated route exists yet to drive a live e2e
+test) → US4/P4 maintenance(3) → Polish(3). `docs/feature-list.md`
+updated to 🟢. Error Pages is the second feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Error Pages: `/speckit-tasks` next, then merge to `main` — same
-  sequence as Auth & Onboarding.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `002-error-pages` into `main`, then move on to feature #3
+  (Home) — same specify→plan→tasks→merge sequence repeats for every
+  other feature in `docs/feature-list.md` — per the project-wide gate
+  (constitution v1.0.0), implementation doesn't begin on *any* feature
+  until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

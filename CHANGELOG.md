@@ -252,6 +252,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   `middleware.ts`) with a short-TTL cache rather than a DB hit per
   request.
 
+- Ran `/speckit-tasks` for Error Pages: `tasks.md` — 23 tasks: Setup (1,
+  the `authInterrupts` flag) → Foundational (5: settings table + its
+  migration, cached settings reader, the shared 4-variant error-state
+  component, the role-gate helper) → US1/P1 404 (3) → US2/P2 500 (4) →
+  US3/P3 401/403 (4, unit-tested only — no real gated route exists yet
+  to drive a live e2e test, same situation as Auth & Onboarding's
+  write-gate helper) → US4/P4 maintenance (3) → Polish (3). Error Pages
+  is the second feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
