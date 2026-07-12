@@ -467,6 +467,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Notifications + Report modal is the twelfth feature to clear the
   project-wide gate.
 
+- Ran `/speckit-specify` and `/speckit-plan` for News feed:
+  `spec.md`/`plan.md` on branch `013-news-feed`. Entirely read-only for
+  `NewsPost` — a minimal shape, extended later by the future Admin News
+  feature (Home's `postings` pattern). Server-side, URL-driven
+  filtering/pagination (Browse/Forum's pattern). Newsletter subscribe
+  requires no authentication — the project's first write action with
+  no session check at all, just email validation and a database-level
+  unique constraint; no real sending pipeline (Forum Thread's
+  `ThreadSubscription` precedent, blocked on the same domain-ownership
+  issue as Auth & Onboarding's transactional email). Quality checklist
+  passed first try, zero `[NEEDS CLARIFICATION]` markers. No
+  `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

@@ -547,13 +547,19 @@ mark-read(9) → US2/P2 accept+decline reuse(2) → US3/P3 report-flow(5)
 Report modal is the twelfth feature with a complete spec/plan/tasks
 trio.
 
+**News feed: spec + plan done** (2026-07-12, branch `013-news-feed`) —
+entirely read-only for `NewsPost` (minimal shape, Admin News extends
+later). Server-side filtering/pagination (Browse/Forum's pattern).
+Newsletter subscribe needs no login at all — the project's first
+account-independent write action.
+
 ## Next up
 
-- Merge `012-notifications-and-report-modal` into `main`, then move on
-  to feature #13 (News feed) — same specify→plan→tasks→merge sequence
-  repeats for every other feature in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- News feed: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
