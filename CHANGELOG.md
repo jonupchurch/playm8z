@@ -161,13 +161,17 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Neon-integration's auto-installed Claude Code skills
   (`.claude/skills/neon*`, `.agents/`, `skills-lock.json`) since they're
   absolute-path symlinks that don't survive a clone to a different path.
+- Configured Google OAuth (Google Cloud Console client, Testing publish
+  status) and set `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` locally and on
+  Vercel (Production + Preview). Verified end-to-end that the sign-in
+  flow correctly redirects to Google's real consent screen.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
   constitution's Test Discipline principle).
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
-- Google OAuth credentials not yet created/set (both locally and on
-  Vercel).
+- Google OAuth's production redirect URI still needs adding to the
+  Google Cloud Console client once the real deployed domain is known.
 - No CI configured yet.
 - Nothing deployed — Vercel project + Neon DB are provisioned and
   ready, but no `vercel deploy` has been run yet.

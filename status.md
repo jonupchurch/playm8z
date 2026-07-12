@@ -65,14 +65,23 @@ yet.
   https://github.com/neondatabase/agent-skills`) to reinstall locally if
   needed on another machine.
 
+- **Google OAuth configured and verified working** (2026-07-12): client
+  created in Google Cloud Console (Testing publish status — test users
+  must be added there for anyone besides the owner to sign in), with
+  `http://localhost:3000`/`http://localhost:3000/api/auth/callback/google`
+  registered. `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` set in `.env.local`
+  and on Vercel (Production + Preview). Verified end-to-end: hitting
+  `/api/auth/signin/google` (POST with a valid CSRF token) correctly
+  redirects to Google's real consent screen with the right `client_id`
+  and `redirect_uri`. **Still needed**: once the first deploy happens
+  and the real production domain is known, add a second
+  origin/redirect-URI pair to the same Google OAuth client for that
+  domain — the localhost one won't work in production.
+
 ## Known gaps / accepted limitations
 
 - No test framework yet (Vitest/Playwright, matching the sibling
   project, is the likely default — not yet decided or installed).
-- **Google OAuth client ID/secret still unset** — need to be created in
-  the Google Cloud Console (redirect URI will need the real production
-  domain/`*.vercel.app` URL once known) and set both locally
-  (`.env.local`) and on Vercel (Production/Preview).
 - No sign-up flow exists to actually create a Credentials-provider user
   (with a `passwordHash`) — the schema and auth config support it, but
   no route/UI does yet.
