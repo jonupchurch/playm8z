@@ -199,3 +199,14 @@ remains a separate decision, since it'd need its own `targetType`
 ('posting') wiring and this hasn't been revisited yet. Whoever picks
 this up next should check whether reusing Blocked Users' `Report`
 table (rather than waiting for Notifications & Report) makes sense.
+
+## Real-time (websocket) message delivery
+
+Inbox / messaging (`011-inbox-messaging`) sends messages via an
+ordinary Server Action and relies on normal navigation plus a short
+client-side poll to keep an open conversation current — deliberately
+not a websocket-based live-push system, to avoid taking on real-time
+infrastructure as a side effect of the messaging feature itself.
+Vercel Functions do support WebSockets (per the platform's current
+capabilities), so this is a viable upgrade path later, not a technical
+blocker — just not built now.
