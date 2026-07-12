@@ -1,8 +1,19 @@
 # Speckit files (.specify/, .claude/) are intentionally NOT ignored --
-# they're part of the repo's process narrative. The one exception is
-# settings.local.json, Claude Code's own convention for machine-local
-# permissions/paths that were never meant to be shared.
+# they're part of the repo's process narrative. Exceptions:
+# - settings.local.json, Claude Code's own convention for machine-local
+#   permissions/paths that were never meant to be shared.
+# - the Neon agent-skills auto-installed by `vercel integration add neon`
+#   (.claude/skills/neon, .claude/skills/neon-postgres): these are
+#   absolute-path symlinks into .agents/skills/, which breaks if the repo
+#   is cloned to a different path, and Git-on-Windows often mishandles
+#   symlinks on checkout anyway. Re-run `vercel integration add neon` (or
+#   `npx skills add https://github.com/neondatabase/agent-skills`) to
+#   reinstall locally if needed.
 .claude/settings.local.json
+.claude/skills/neon
+.claude/skills/neon-postgres
+.agents/
+skills-lock.json
 
 # dependencies
 /node_modules

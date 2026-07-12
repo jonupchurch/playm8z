@@ -38,19 +38,47 @@ yet.
 - `.gitignore` copied from InterruptVector and committed by itself
   (commit `53cb372`). The full scaffold (app/db/auth/Spec Kit/draft
   constitution) is committed as `d3b9039`.
+- **Vercel project linked** (2026-07-12): `jupchurch-7994s-projects/playm8z`,
+  linked via `vercel link` (creates local `.vercel/`, gitignored).
+  **Neon Postgres provisioned via Vercel Marketplace**
+  (`vercel integration add neon`) — resource `neon-coral-chair`, connected
+  to the project; `DATABASE_URL`/`DATABASE_URL_UNPOOLED` and the Neon/
+  `PG*`/`POSTGRES_*` vars are set on Vercel for Production/Preview/
+  Development. Schema pushed to Neon (`drizzle-kit push` against the
+  unpooled URL) — `user`/`account`/`session`/`verificationToken` tables
+  confirmed live there. `AUTH_SECRET` generated and set on Vercel for
+  Production and Preview (separate value from the local one).
+  **Local dev intentionally stays on local Postgres, not Neon** (user's
+  choice) — the Marketplace install's automatic `vercel env pull`
+  overwrote `.env.local` with the Neon dev vars, wiping the local
+  `DATABASE_URL`/`AUTH_SECRET`; restored `.env.local` to the local
+  Postgres connection string (confirmed working) plus a freshly
+  generated local `AUTH_SECRET`. Domain (playm8z.com) deliberately not
+  connected yet — deploy to the default `*.vercel.app` URL for now, per
+  the user's choice.
+  Also: `vercel integration add neon` auto-installed Neon's Claude Code
+  skills (`.claude/skills/neon`, `.claude/skills/neon-postgres`) as
+  absolute-path symlinks into `.agents/skills/` — gitignored rather than
+  committed, since absolute symlinks break on a different clone path and
+  Git-on-Windows often mishandles symlinks on checkout; re-run the same
+  `vercel integration add neon` (or `npx skills add
+  https://github.com/neondatabase/agent-skills`) to reinstall locally if
+  needed on another machine.
 
 ## Known gaps / accepted limitations
 
 - No test framework yet (Vitest/Playwright, matching the sibling
   project, is the likely default — not yet decided or installed).
-- Google OAuth client ID/secret are unset — need to be created in the
-  Google Cloud Console and dropped into `.env.local`.
+- **Google OAuth client ID/secret still unset** — need to be created in
+  the Google Cloud Console (redirect URI will need the real production
+  domain/`*.vercel.app` URL once known) and set both locally
+  (`.env.local`) and on Vercel (Production/Preview).
 - No sign-up flow exists to actually create a Credentials-provider user
   (with a `passwordHash`) — the schema and auth config support it, but
   no route/UI does yet.
 - No CI configured yet.
-- Nothing deployed; local dev only, against the local Postgres
-  instance.
+- Nothing deployed yet — Vercel project + Neon DB are provisioned and
+  ready, but no `vercel deploy` has been run.
 
 ## Product vision (informal, not yet a spec)
 

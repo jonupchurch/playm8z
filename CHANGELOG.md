@@ -149,10 +149,25 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   `guidelines.md` §4.6 (loading/error patterns), dropped by the
   regeneration since it wasn't sourced from a wireframe, with a note
   flagging it won't survive a future regen automatically.
+- Linked the Vercel project (`jupchurch-7994s-projects/playm8z`) and
+  provisioned Neon Postgres via the Vercel Marketplace
+  (`vercel integration add neon`), connected to the project with
+  `DATABASE_URL` and friends set for Production/Preview/Development.
+  Pushed the Drizzle schema to Neon (`user`/`account`/`session`/
+  `verificationToken` tables confirmed live). Set a fresh `AUTH_SECRET`
+  on Vercel for Production and Preview. Local dev intentionally stays
+  on local Postgres (not Neon); restored `.env.local` after the
+  Marketplace install's automatic env pull overwrote it. Gitignored the
+  Neon-integration's auto-installed Claude Code skills
+  (`.claude/skills/neon*`, `.agents/`, `skills-lock.json`) since they're
+  absolute-path symlinks that don't survive a clone to a different path.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
   constitution's Test Discipline principle).
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
-- Google OAuth credentials not yet created/set.
-- Nothing deployed; local dev only.
+- Google OAuth credentials not yet created/set (both locally and on
+  Vercel).
+- No CI configured yet.
+- Nothing deployed — Vercel project + Neon DB are provisioned and
+  ready, but no `vercel deploy` has been run yet.
