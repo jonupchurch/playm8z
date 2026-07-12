@@ -164,6 +164,11 @@ resolving that gap from the second business-requirements pass below.
   "ban-appeals queue" not-yet-designed item; it isn't undesigned, it's
   intentionally not an in-app feature.
 
+**Resolved (2026-07-12):** the logged-out marketing landing page needs no
+bespoke design — it's just another `ContentPage` using the already-designed
+Content Pages system, not a distinct feature. Groups re-confirmed as
+future state (no change from before).
+
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope

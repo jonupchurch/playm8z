@@ -101,6 +101,9 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (reviewable by admins later) rather than deleting it; an admin
   user-activity viewer is future state; bans are permanent with
   appeals handled via Discord, not an in-app appeals queue.
+- Resolved the logged-out marketing landing page: no bespoke design
+  needed, it's just another `ContentPage` via the existing Content
+  Pages system. Groups re-confirmed as future state.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

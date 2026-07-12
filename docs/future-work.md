@@ -31,8 +31,6 @@ No wireframe exists yet for any of these — a design pass is needed before
 they can be spec'd/built:
 
 - Groups/Clans (browse/detail/create) — see above, the one already known.
-- Logged-out marketing landing page (the "Discovery" direction from the
-  brand exploration) — redirects authed users to Home.
 - Public profile page (`/u/:handle`) — read-only variant of the Profile
   wireframe's Overview tab, honoring privacy flags; noted in both
   guidelines.md §7.7 and sitemap.md as a needed but undesigned variant.
@@ -59,6 +57,12 @@ button state, and submit success/error — no longer an open question.
 Users.dc.html`): view/search blocked users, block flow (pick → confirm,
 with an "also report" option), unblock confirm modal, empty states — no
 longer on this list.
+
+**Resolved 2026-07-12** — logged-out marketing landing page: no bespoke
+design/page needed. Confirmed by the user: the existing Content Pages
+system (public rendering + admin block-based editor, per
+`resources/guidelines.md` §7.11/§8.7) already handles this — a marketing
+landing is just another `ContentPage`, not a distinct feature.
 
 ## Monetized / premium accounts
 
