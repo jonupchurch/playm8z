@@ -24,9 +24,11 @@ built by aggregating/grouping on that free-text field (case-insensitive,
 trimmed), not by joining to a canonical list.
 
 This also means:
-- No dedicated per-game hub page (e.g. `/games/:slug`) is planned — "browse
-  games" is satisfied by Browse's keyword search/filter over postings, not
-  a separate page per game.
+- No dedicated per-game hub page (e.g. `/games/:slug`) for now — "browse
+  games" is satisfied by Browse's keyword search/filter over postings. A
+  hub page is a possible future feature (see `docs/future-work.md`), not a
+  current focus; if built later, it would aggregate on the free-text
+  keyword rather than a canonical catalog.
 - Minor fragmentation (near-duplicate spellings splitting counts/filters) is
   an accepted tradeoff, not a bug to solve with a catalog.
 
