@@ -120,6 +120,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   required for solo development) and a feature-granularity default
   (roughly one feature per wireframed page/screen, a strong default not
   a hard rule) to close feedback loops quickly and contain scope drift.
+- Amended the constitution again (v0.2.0-draft → v0.3.0-draft):
+  strengthened the "specify→plan→tasks before implementation" rule from
+  a per-feature gate into a project-wide one — every currently-scoped
+  feature's spec.md/plan.md/tasks.md must all be complete before
+  implementation begins on any feature, not just before that feature's
+  own implementation.
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the

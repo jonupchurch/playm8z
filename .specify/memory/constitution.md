@@ -1,19 +1,22 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 0.1.0-draft → 0.2.0-draft
+Version change: 0.2.0-draft → 0.3.0-draft
 Status: DRAFT — not yet ratified. Awaiting explicit user review/approval
   before RATIFICATION_DATE is set and this becomes v1.0.0.
 Modified principles: n/a
 Added principles: n/a (no new Core Principles this amendment)
 Added sections: n/a (expanded existing Development Workflow section only)
-Modified sections: Development Workflow — added a git branching rule
-  (each feature developed on its own Spec-Kit-created branch, merged to
-  `main` on completion, no PR-review step required for solo development)
-  and a feature-granularity default (cut features roughly one-per-
-  wireframed-page/screen where practical, to close feedback loops fast
-  and contain scope drift per Principle IV — a strong default, not a
-  hard rule).
+Modified sections: Development Workflow — (from the prior amendment)
+  added a git branching rule (each feature developed on its own
+  Spec-Kit-created branch, merged to `main` on completion, no PR-review
+  step required for solo development) and a feature-granularity default
+  (cut features roughly one-per-wireframed-page/screen where practical).
+  This amendment strengthens the existing "specify→plan→tasks before
+  implementation" rule from a per-feature gate into a **project-wide**
+  gate: every currently-scoped feature's spec.md/plan.md/tasks.md must
+  all be complete before implementation begins on *any* feature, not
+  just before that feature's own implementation.
 Removed sections: n/a
 Provenance note: this constitution's PROCESS (the six principles' shape,
   the ADR/changelog/status.md discipline, the spec-kit phase order) was
@@ -173,11 +176,19 @@ Spec Kit phases are worked in order: constitution → spec → plan → tasks
 → implement. Clarifying questions are asked before each major artifact
 is generated. Decisions with a real tradeoff are presented as 2–3
 options with pros/cons and a recommendation, rather than silently
-decided. Every feature MUST be fully specified, planned, and tasked
-before implementation begins on it — infrastructure-only setup (this
-initial scaffold, or a future de-risking spike) is the stated exception,
-built immediately since it isn't product surface — unless the project
-owner explicitly asks to implement something sooner.
+decided.
+
+Every feature in the current build scope MUST be fully specified,
+planned, and tasked (`spec.md`, `plan.md`, and `tasks.md` all complete)
+before implementation begins on **any** feature — this is a project-wide
+gate, not a per-feature one. Spec'ing and building one feature while
+others remain unspecified is not allowed; the full spec→plan→tasks pass
+across every currently-scoped feature comes first, and only once all of
+them are done does implementation (of any of them) begin.
+Infrastructure-only setup (this initial scaffold, or a future
+de-risking spike) is the stated exception, built immediately since it
+isn't product surface — unless the project owner explicitly asks to
+implement something sooner.
 
 Each feature is developed on its own git branch — created automatically
 by Spec Kit's `/speckit-specify` branch-creation hook — and merged into
@@ -227,6 +238,6 @@ ADRs, specs, and plans are authored (or substantively reconciled)
 through this project's own process, so the "process produced this"
 record stays genuine.
 
-**Version**: 0.2.0-draft (DRAFT — not yet ratified) | **Ratified**:
+**Version**: 0.3.0-draft (DRAFT — not yet ratified) | **Ratified**:
 TODO(RATIFICATION_DATE) — pending explicit user approval | **Last
 Amended**: 2026-07-12
