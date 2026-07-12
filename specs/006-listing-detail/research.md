@@ -86,3 +86,23 @@ something as cheap as one more enum value.
 
 **Alternatives considered**: reusing `declined` for both cases —
 rejected for the legibility reason above.
+
+## 6. Save is in scope after all (amended 2026-07-12)
+
+**Decision**: this feature's Save toggle (`toggle-saved-listing.ts`)
+inserts/deletes a row in `savedListings`, an entity Profile
+(`007-profile-and-account-settings`) defines for its own "Saved" tab.
+Unsaving performs a real delete, not a status flag — see data-model.md's
+note on why this is a scoped exception to ADR 0005's usual "disable,
+don't delete" default.
+
+**Rationale**: originally deferred (this feature's first pass), then
+un-deferred once Profile's own spec revealed it already needed the same
+entity for its "Saved" tab regardless — building it twice, or excluding
+it from the feature that actually surfaces the toggle UI, would be
+worse than the small correction recorded here.
+
+**Alternatives considered**: leaving Save deferred and letting Profile
+build it alone with no toggle on Listing detail itself — rejected,
+since the wireframe clearly shows the heart-toggle living on this page,
+not just on Profile's Saved tab.

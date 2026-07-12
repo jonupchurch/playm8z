@@ -113,7 +113,13 @@ src/
     │   ├── apply-to-posting.ts         # new — Server Action
     │   ├── withdraw-application.ts     # new — Server Action
     │   ├── ask-question.ts             # new — Server Action
-    │   └── reply-to-question.ts        # new — Server Action
+    │   ├── reply-to-question.ts        # new — Server Action
+    │   └── toggle-saved-listing.ts      # new — Server Action, added
+    │                                   # 2026-07-12 (spec.md's amended
+    │                                   # FR-014/FR-018): inserts/
+    │                                   # deletes a row in the
+    │                                   # `savedListings` table Profile
+    │                                   # (007) defines
     ├── validations/
     │   └── listing-detail.ts           # new — Zod schemas (message,
     │                                   # question text, reply text)

@@ -43,10 +43,20 @@ npm run dev
    Member with no role/class label, and the open-slot count and dashes
    reflect one fewer open spot.
 
+## Scenario 4 — Save/unsave *(added 2026-07-12)*
+
+1. As a verified user, select "Save" on a listing.
+2. Confirm a `savedListings` row now exists for this user/posting, and
+   the control reflects "saved" state.
+3. Select it again to unsave — confirm the row is gone and the control
+   reverts.
+4. Confirm the same listing now appears/disappears on Profile's Saved
+   tab (`007-profile-and-account-settings`) accordingly.
+
 ## Automated tests
 
 - `npm test` — unit tests for the Zod schemas and `get-roster.ts`'s
   derivation logic; integration tests for each Server Action, including
   the gate-blocked and non-host-reply-rejected paths.
 - `npm run test:e2e` — `e2e/listing-detail.spec.ts` covering Scenarios
-  1-3, with an axe-core accessibility scan.
+  1-4, with an axe-core accessibility scan.

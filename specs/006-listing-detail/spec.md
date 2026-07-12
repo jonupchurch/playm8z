@@ -66,7 +66,8 @@ Any visitor sees an accurate "recruiting" vs. "full" state, an accurate open-slo
 - What happens to an application after the applicant withdraws it? → Not hard-deleted (ADR 0005) — its status becomes `withdrawn`, distinct from a host-declined application, preserving the record.
 - What happens with accepting, declining, or removing a roster member? → Entirely out of this feature's scope — that happens through the message thread an application creates, which is Inbox/messaging's job (not yet spec'd). This page only ever creates a pending application or lets the applicant withdraw it themselves.
 - What happens to the host mini-profile's rating/sessions/reliability/level stats? → Omitted from this feature — none of them are computed anywhere yet (rating and reliability are both already-deferred future work; no leveling system has ever been decided). Only identity (avatar, name, handle) and a link to the full profile are shown.
-- What happens with Report and Save? → Deferred to future work (`docs/future-work.md`) — Report's real flow depends on the not-yet-spec'd Notifications & Report feature, and Save isn't connected to anything already decided. Share (a trivial copy-link/native-share action) stays in scope.
+- What happens with Report? → Deferred to future work (`docs/future-work.md`) — Report's real flow depends on the not-yet-spec'd Notifications & Report feature. Share (a trivial copy-link/native-share action) stays in scope.
+- What happens with Save? → **Amended 2026-07-12**: no longer deferred — Profile (`007-profile-and-account-settings`) needs a `SavedListing` entity for its own "Saved" tab anyway, so this feature's Save toggle uses that same entity (FR-014/FR-018) rather than being excluded.
 
 ## Requirements *(mandatory)*
 
@@ -85,7 +86,8 @@ Any visitor sees an accurate "recruiting" vs. "full" state, an accurate open-slo
 - **FR-011**: System MUST allow only the listing's host to reply to a question on their own listing; a reply is publicly visible to every subsequent viewer once submitted.
 - **FR-012**: An authenticated user who has not verified their email MUST be blocked from applying or asking a question, with a message directing them to verify their email first (Auth & Onboarding's FR-014/FR-017 gate).
 - **FR-013**: A visitor who is not authenticated at all MUST be routed to log in before applying or asking a question (viewing remains open to them).
-- **FR-014**: System MUST offer a "Share" action (e.g., copying the listing's URL); Report and Save are explicitly out of this feature's scope (see Assumptions).
+- **FR-014**: System MUST offer a "Share" action (e.g., copying the listing's URL) and a "Save" toggle creating/removing a `SavedListing` row for the viewing user; Report remains out of this feature's scope (see Assumptions).
+- **FR-018** *(added 2026-07-12, see Assumptions)*: The Save toggle MUST require the same authentication + email-verification gate as applying or asking a question (FR-012/FR-013) — saving a listing is a write action like any other.
 - **FR-015**: The breadcrumb MUST link back to Browse, and its game segment MUST link to Browse pre-filtered to that game.
 - **FR-016**: The host mini-profile shown alongside the listing MUST show only identity (avatar, display name, handle) and a link to that host's full profile — no rating, session count, reliability percentage, or level, since none of those are computed anywhere in this project yet.
 
@@ -113,7 +115,8 @@ Any visitor sees an accurate "recruiting" vs. "full" state, an accurate open-slo
 - No separate `RosterSlot` entity exists; the roster is fully derived from the host plus `accepted` Applications, since ADR 0004 already removed the only field (role) that would have distinguished one from a plain Application row.
 - Accepting, declining, or removing a roster member happens through the message thread an application creates (Inbox/messaging, not yet spec'd) — entirely out of this feature's scope. Manual testing before that feature exists can accept/decline an Application directly via `db:studio`, the same interim pattern used elsewhere in this project (e.g., toggling maintenance mode before Admin Settings exists).
 - Host mini-profile stats (rating, sessions, reliability%, level) are omitted entirely — none are computed anywhere in this project yet, and fabricating placeholder values isn't an option. Revisit once the underlying systems (post-session rating, reliability tracking, a leveling mechanic) are ever built.
-- Report and Save are deferred to `docs/future-work.md` — Report's real submission flow depends on the not-yet-spec'd Notifications & Report feature; Save/bookmark isn't connected to anything already decided in this project (the same reasoning that deferred Post a Game's "Save as draft").
+- Report is deferred to `docs/future-work.md` — its real submission flow depends on the not-yet-spec'd Notifications & Report feature.
+- **Save is in scope** (amended 2026-07-12): Profile (`007-profile-and-account-settings`) turned out to need a `SavedListing` entity for its own "Saved" tab regardless, so this feature's Save toggle creates/removes rows in that same entity rather than being excluded — the entity's shape is Profile's to define (`userId`, `postingId`, `createdAt`); this feature is simply its second consumer.
 - The apply message is optional, matching the wireframe's apply action not being gated on message content the way Publish is gated on game+title in Post a Game.
 - The wireframe's "Usually responds in ~10 min" copy is decorative, not a real computed metric — no response-time tracking exists anywhere in this project (consistent with reliabilityPct's deferral).
 - This feature depends on the `postings` table already established by Home/Browse/Post a Game, and on the `Application` entity already named in the platform's data model (`resources/guidelines.md`) — this is simply the first feature to actually create and query it.

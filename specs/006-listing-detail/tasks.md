@@ -114,9 +114,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Confirm `next build` succeeds locally and CI stays green with the new dynamic route, four Server Actions, and two new tables
+- [ ] T025 Confirm `next build` succeeds locally and CI stays green with the new dynamic route, five Server Actions, and two new tables
 - [ ] T026 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
 - [ ] T027 [P] Update `docs/feature-list.md`, marking Listing detail's spec/plan/tasks as complete
+- [ ] T028 *(added 2026-07-12, spec.md's amended FR-014/FR-018)* Build `toggle-saved-listing.ts` (`src/lib/actions/toggle-saved-listing.ts`), inserting/deleting a row in Profile's (`007`) `savedListings` table, gated the same way as apply/ask (auth + email-verified) — depends on Profile's `savedListings` table existing (whichever of the two features' migrations lands first, per data-model.md's note)
+- [ ] T029 *(added 2026-07-12)* Wire a Save/Unsave control into the apply panel or listing header, reflecting the viewer's current saved state — depends on T028
 
 ---
 
