@@ -499,6 +499,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   the future Admin Content Pages feature. Quality checklist passed
   first try, zero `[NEEDS CLARIFICATION]` markers. No `contracts/`.
 
+- Ran `/speckit-tasks` for Content Page: `tasks.md` — 21 tasks: Setup
+  (1, incl. a seed page covering every block type) → Foundational (4:
+  new table + migration, the block schema, the page shell) → US1/P1
+  public-read (4) → US2/P2 inline-edit (5) → US3/P3 publish+unpublish
+  (4) → Polish (3). Content Page is the fourteenth feature to clear
+  the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

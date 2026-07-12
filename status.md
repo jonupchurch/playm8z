@@ -565,13 +565,19 @@ Batched local-state editing (matching the wireframe exactly). A draft
 page is indistinguishable from a nonexistent slug for non-admins.
 Scopes page creation out to the future Admin Content Pages feature.
 
+**Content Page: tasks done** (2026-07-12) — `tasks.md`, 21 tasks:
+Setup(1) → Foundational(4) → US1/P1 public-read(4) → US2/P2 inline-
+edit(5) → US3/P3 publish+unpublish(4) → Polish(3).
+`docs/feature-list.md` updated to 🟢. Content Page is the fourteenth
+feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Content Page: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `014-content-page` into `main`, then move on to feature #15
+  (Admin Dashboard) — same specify→plan→tasks→merge sequence repeats
+  for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
