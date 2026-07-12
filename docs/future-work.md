@@ -156,3 +156,23 @@ need a "My Drafts" surface (most naturally on Profile, not yet
 spec'd). Excluded from Post a Game's spec (`005-post-game`) rather than
 building a partial version of it; revisit if a later feature (Profile)
 wants it.
+
+## Saved / bookmarked listings (future state)
+
+The "Listing" wireframe (`playm8z - Listing.dc.html`) shows a "Save"
+action alongside Share and Report in the apply panel. Not connected to
+anything already decided in this project (no `SavedListing` entity,
+no "My Saved" surface anywhere in `resources/guidelines.md`) — same
+reasoning as Post a Game's deferred "Save as draft." Excluded from
+Listing detail's spec (`006-listing-detail`); revisit if a later
+feature (Profile) wants it.
+
+## In-listing report submission (future state)
+
+The "Listing" wireframe's apply panel also shows a "Report" action.
+Its real submission flow depends on the `Report` entity and moderation
+pipeline described alongside the not-yet-spec'd Notifications & Report
+feature (`resources/wireframes/support/playm8z - Notifications &
+Report.dc.html`) — Listing detail (`006-listing-detail`) doesn't build
+report submission itself; that belongs to whichever feature specs
+`Report` properly.
