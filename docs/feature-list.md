@@ -21,7 +21,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 
 ## Wireframed, ready to spec
 
-1. Auth & Onboarding — ✅ (`playm8z - Auth & Onboarding.dc.html`)
+1. Auth & Onboarding — 📝 spec written (`specs/001-auth-onboarding/spec.md`, branch `001-auth-onboarding`), not yet clarified/planned/tasked (`playm8z - Auth & Onboarding.dc.html`)
 2. Error Pages (404/500/403/maintenance) — ✅
 3. Home — ✅
 4. Browse — ✅
