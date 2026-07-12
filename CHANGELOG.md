@@ -372,6 +372,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   booleans/`deactivatedAt`; new `userGames` and `savedListings`
   tables), `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Profile + Account settings: `tasks.md` — 35
+  tasks: Setup (1) → Foundational (4: extended `user` + new tables,
+  validation schemas, shared layout) → US1/P1 edit profile+games+
+  password+email (13) → US2/P2 manage own postings (5) → US3/P3 saved
+  listings (2) → US4/P4 privacy+deactivate (7) → Polish (3). Profile is
+  the seventh feature to clear the project-wide gate — the largest
+  feature specced so far.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

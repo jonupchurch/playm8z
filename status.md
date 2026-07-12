@@ -471,13 +471,20 @@ yet); omits Connected Accounts (Steam/Discord already deferred).
 Second feature to touch `src/auth.ts` (deactivation/reactivation on
 login), after Auth & Onboarding's Google `profile()` callback.
 
+**Profile + Account settings: tasks done** (2026-07-12) — `tasks.md`,
+35 tasks: Setup(1) → Foundational(4) → US1/P1 edit-profile(13) →
+US2/P2 manage-postings(5) → US3/P3 saved(2) → US4/P4 privacy+
+deactivate(7) → Polish(3). `docs/feature-list.md` updated to 🟢.
+Profile is the seventh feature with a complete spec/plan/tasks trio —
+the largest one specced so far.
+
 ## Next up
 
-- Profile: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `007-profile-and-account-settings` into `main`, then move on
+  to feature #8 (Blocked Users) — same specify→plan→tasks→merge
+  sequence repeats for every other feature in `docs/feature-list.md`
+  — per the project-wide gate (constitution v1.0.0), implementation
+  doesn't begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
