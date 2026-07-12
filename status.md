@@ -47,36 +47,49 @@ yet.
 
 ## Product vision (informal, not yet a spec)
 
-The user described what playm8z actually is: gamers browse/post games,
-post one-off LFG listings, browse/search them, a logged-in-only Forum,
-and a handful of admin-editable content pages. `resources/wireframes/`
-currently has: Home, Browse, Post a Game, Forum, Forum Thread, Listing
-(single LFG listing detail view), Inbox (messages), Profile, News
-(public news feed), Content Page (public admin-authored page), and Auth
-& Onboarding (sign-in/sign-up + a post-signup onboarding flow: what you
-play, where/how you play, your vibe) — plus
-`resources/wireframes/support/Notifications & Report.dc.html`
-(notifications panel + content reporting). Seven admin pages live under
-`resources/wireframes/admin/`: Admin Dashboard, Admin Forum
-(moderation), Admin News (content editing), Admin Postings
-(moderation), Admin Users (management), Admin Content Pages (CMS
-editor), and Admin Reports. Also a Dark/Light theme + style guide in
-`resources/design/`. The user is actively posting more.
+`resources/guidelines.md` (added 2026-07-12, Claude-Design-generated) is
+now the authoritative context document tying the whole wireframe set
+together: product overview, design system token reference, suggested
+data models, full information architecture/route map, and a per-screen
+spec (purpose/layout/interactions/data) for every wireframed page,
+public and admin. It explicitly recommends the same approach already
+chosen here — one `/speckit-specify` spec per feature area, mirroring
+its per-screen sections — and lists what still has no design at all
+(§10): Groups/Clans, a logged-out marketing landing page, post-session
+rating/review, Discord connect, admin Settings, mod audit log,
+ban-appeals queue, 404/error pages, mobile-specific layouts. Its
+recommended tech stack section (§3) is superseded by what's already
+built here (Next.js/Drizzle/Postgres/Auth.js) — read the rest, ignore
+that section.
 
-"Groups" (persistent guilds/clans, distinct from one-off LFG listings)
-was initially assumed in scope (inferred from the wireframe nav bar's
-separate "Groups" tab) but the user has explicitly deferred it — see
-`docs/future-work.md`. No wireframe was made for it.
+`resources/wireframes/` currently has: Home, Browse, Post a Game, Forum,
+Forum Thread, Listing (single LFG listing detail view), Inbox
+(messages), Profile, News (public news feed), Content Page (public
+admin-authored page), and Auth & Onboarding (sign-in/sign-up + a
+post-signup onboarding flow) — plus
+`resources/wireframes/support/Notifications & Report.dc.html`. Seven
+admin pages live under `resources/wireframes/admin/`: Admin Dashboard,
+Admin Forum, Admin News, Admin Postings, Admin Users, Admin Content
+Pages, Admin Reports. Also a Dark/Light theme + style guide in
+`resources/design/` (guidelines.md references a separate canonical
+"Design System" file and a "Brand Identity" file that aren't present in
+this repo — worth asking the user whether those are coming or whether
+guidelines.md §4's distillation is sufficient).
+
+"Groups" was deferred to `docs/future-work.md`, along with the rest of
+the §10 not-yet-designed list above.
 
 Scope for the first `/speckit-specify` run is still an open question —
 the user chose to wait for wireframes to stop arriving before deciding
 how to cut the first vertical slice, per the constitution's Scope
-Discipline principle.
+Discipline principle. `guidelines.md` §11's file→feature map is a strong
+candidate starting point for how to slice specs once that happens.
 
 ## Next up
 
 - Resume once wireframes stop arriving: re-open the first-spec scope
-  question (single slice vs. broader) before running `/speckit-specify`.
+  question (single slice vs. broader) before running `/speckit-specify`,
+  informed by `guidelines.md`.
 - Review and ratify (or amend) the draft constitution.
 - Decide on and install a test framework.
 

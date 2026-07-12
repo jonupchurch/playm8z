@@ -52,6 +52,11 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   and admin "Admin Content Pages" (CMS editor) and "Admin Dashboard".
   Also added `resources/wireframes/support/playm8z - Notifications &
   Report.dc.html` (notifications panel + content reporting flow).
+- Added `resources/guidelines.md` — a Claude-Design-generated build
+  guide tying the whole wireframe set together: product overview,
+  design-system tokens, suggested data models, full route map, and a
+  per-screen spec for every page. Expanded `docs/future-work.md` with
+  its full "not-yet-designed" list (§10).
 
 ### Known gaps
 - No test framework installed yet (noted as an open item in the
