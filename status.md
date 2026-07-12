@@ -517,13 +517,22 @@ quote(5) → US3/P3 like+report(7) → Polish(3). `docs/feature-list.md`
 updated to 🟢. Forum Thread is the tenth feature with a complete
 spec/plan/tasks trio.
 
+**Inbox / messaging: spec + plan done** (2026-07-12, branch
+`011-inbox-messaging`) — resolves Listing detail's deferred Application
+accept/decline without amending that already-merged feature (a pending
+Application's own message stands in as the request thread's opener
+until acceptance). No websocket layer — a short `router.refresh()`
+poll instead, real-time delivery logged as future work. Accepting a
+request is one atomic transaction. First real consumer of Blocked
+Users' block-enforcement contract.
+
 ## Next up
 
-- Merge `010-forum-thread` into `main`, then move on to feature #11
-  (Inbox / messaging) — same specify→plan→tasks→merge sequence repeats
-  for every other feature in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- Inbox / messaging: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

@@ -432,6 +432,16 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   → US2/P2 reply+quote (5) → US3/P3 like+report (7) → Polish (3). Forum
   Thread is the tenth feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Inbox / messaging: `research.md` (lazy
+  Conversation creation avoids amending Listing detail's already-merged
+  apply flow — a pending Application's own message stands in as the
+  request thread's opener; no websocket layer, a short
+  `router.refresh()` poll instead, logged as future work; accepting a
+  request is one atomic transaction across Application/Posting/
+  Conversation; first real consumer of Blocked Users' block-enforcement
+  contract), `data-model.md` (new `conversations`/`messages` tables),
+  `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
