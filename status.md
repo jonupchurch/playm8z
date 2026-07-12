@@ -92,15 +92,32 @@ yet.
   password, missing fields) — 4 tests, all passing. A placeholder e2e
   smoke test (`e2e/smoke.spec.ts`) checks the home page loads, standing
   in for Principle V's full-vertical-slice e2e test until a real
-  feature exists. Both verified running locally. CI enforcement (per
-  Principle V, gating merges on green) is still not wired up.
+  feature exists. Both verified running locally.
+- **CI wired up** (2026-07-12): `.github/workflows/ci.yml` — GitHub
+  Actions, triggers on every push and every PR. Steps: checkout →
+  Node 24 (matches Vercel's project setting) → `npm ci` → typecheck →
+  lint → `drizzle-kit push --force` (schema onto an ephemeral Postgres
+  15 service container, not a real database) → `npm test` (Vitest) →
+  install the Playwright chromium browser → `npm run test:e2e`. Uses
+  hardcoded CI-only placeholder values for `AUTH_SECRET`/
+  `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` (not real secrets, no GitHub
+  Secrets configuration needed) — sufficient for the app to boot; no
+  real Google OAuth flow or authenticated session is exercised by the
+  current test suite. On failure, uploads the Playwright HTML report as
+  a workflow artifact. Verified the full flow locally first: pushed the
+  schema to and built the app against a throwaway local database with
+  the same placeholder env vars, confirming the app boots without real
+  Google credentials, before trusting it in Actions. Satisfies
+  Principle V's "CI MUST run typecheck, lint, and test on every push"
+  — note this triggers CI, it doesn't yet enforce a required check on
+  branch protection (GitHub branch protection rules aren't configured
+  — not really actionable solo without collaborators to protect against).
 
 ## Known gaps / accepted limitations
 
 - No sign-up flow exists to actually create a Credentials-provider user
   (with a `passwordHash`) — the schema and auth config support it, but
   no route/UI does yet.
-- No CI configured yet.
 - No custom domain connected — live at `https://playm8z.vercel.app`
   only, per the user's choice (deliberately deferred, not a gap).
 

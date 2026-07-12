@@ -175,10 +175,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   page loads. Both verified running. Amends the constitution
   (v0.3.0-draft → v0.3.1-draft, patch-level) to close out Principle V's
   "no test framework installed" note.
+- Added `.github/workflows/ci.yml`: typecheck, lint, Vitest, and
+  Playwright (against an ephemeral Postgres 15 service container) on
+  every push and PR, using CI-only placeholder auth env vars (no real
+  secrets, no GitHub Secrets setup needed). Verified the flow locally
+  first (schema push + production build against a throwaway database
+  with the same placeholders) before trusting it in Actions.
 
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
-- No CI configured yet — Vitest/Playwright are installed and passing
-  locally, but nothing gates merges on them.
 - No custom domain connected — deliberately deferred, live at
   `https://playm8z.vercel.app` only.
