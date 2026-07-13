@@ -63,3 +63,13 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
 }
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
