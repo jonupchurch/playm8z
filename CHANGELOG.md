@@ -1119,3 +1119,65 @@ may begin on any/all of them per the constitution (v1.0.0).
   lint`, `npm test`, `npm run test:e2e` (full suite, all files), and
   `npm run build` all verified green before merging. All 35 tasks in
   `specs/007-profile-and-account-settings/tasks.md` checked off.
+
+## [Unreleased] (cont. 9)
+
+### Added
+- **Implemented Blocked Users**: `/profile/account/blocked` — a live
+  count, client-side search over the already-fetched blocked list, and
+  both empty states ("no blocks at all" vs. "no search match"). New
+  `blocks` table (a block is "active" when `unblockedAt IS NULL`; never
+  hard-deleted per ADR 0005 — a block has real trust/safety history
+  value, so re-blocking after an unblock creates a new row instead of
+  clearing the old one) and `reports` (this feature's first writer,
+  `targetType='user'` only, via the Block modal's "Also report to
+  moderators" checkbox — the not-yet-built Notifications + Report
+  feature owns every other write path and all moderation UI).
+- **This project's first modal-dialog UI**: both `unblock-modal.tsx`
+  (one-step confirm) and `block-modal.tsx` (reusable two-step pick →
+  confirm, accepting an optional pre-selected target) are built on the
+  native `<dialog>` element (`showModal()`/`.close()`) rather than any
+  library — confirmed nothing modal-related was already installed.
+  Gets focus-trapping, Escape-to-close, and focus restoration to the
+  triggering control for free, plus an implicit `dialog` ARIA role.
+  Establishes the pattern the future Notifications + Report modal
+  (`012`) should reuse.
+- Both `block-user.ts` and `unblock-user.ts` extend Auth & Onboarding's
+  `requireVerifiedEmail()` gate (per spec's own explicit decision);
+  self-block and duplicate-active-block rejection are plain runtime
+  checks in the Server Action (not Zod refines, since the schema has
+  no access to the acting user's own id at definition time). Candidate
+  search only needs `requireAuth()` (searching isn't itself a write)
+  and excludes the searching user, every actively-blocked target, and
+  any handle-less account (ADR 0006).
+- **Fixed a real React 19 lint error**: `block-modal.tsx`'s
+  reset-on-open logic originally called `setState` inside a
+  `useEffect`, triggering `react-hooks/set-state-in-effect` (cascading
+  renders). Fixed by moving the reset into React's documented
+  "adjusting state during render" pattern instead.
+- **Found and fixed a real accessibility bug, not unique to this
+  feature**: the breadcrumb pattern already used on Listing detail (a
+  `text-muted` link inline with `text-dim` surrounding text) fails
+  axe's `link-in-text-block` rule (1.38:1 contrast against a required
+  3:1, no underline to otherwise distinguish it). Fixed this feature's
+  own breadcrumb with `underline underline-offset-2`; Listing detail's
+  identical pattern is left as a documented, bounded gap for whenever
+  that page is next touched.
+- **The same dev-server Postgres connection-exhaustion issue from
+  earlier this session recurred mid-verification** ("sorry, too many
+  clients already," surfacing as unrelated failures in three other
+  features' e2e specs, not this feature's own code) — same root cause
+  and same fix: killed the long-running `next dev` process and
+  restarted it. The full e2e suite then passed twice in a row with no
+  code changes, confirming it was purely operational.
+- 25+ new unit/integration tests (`blocking.ts`'s Zod schemas,
+  `block-user.ts`/`unblock-user.ts` against real Postgres) and a
+  2-scenario `e2e/blocked-users.spec.ts` covering quickstart.md
+  Scenarios 1-2 end to end, including axe-core scans of both modals
+  (Scenario 3's unverified-user gate is covered by the unit tests'
+  own unverified-session cases). 220 unit tests and 40 e2e tests total
+  across the whole suite, all passing, confirmed twice in a row.
+  `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`
+  (full suite, all files), and `npm run build` all verified green
+  before merging. All 20 tasks in `specs/008-blocked-users/tasks.md`
+  checked off.

@@ -2,8 +2,8 @@
 
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
-Browse, Post a Game, Listing detail, and Profile + Account settings are
-done and merged. Blocked Users is next.
+Browse, Post a Game, Listing detail, Profile + Account settings, and
+Blocked Users are done and merged. Forum index is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -954,10 +954,9 @@ merging.
 ## Next up
 
 - Auth & Onboarding, Error Pages, Home, Browse, Post a Game, Listing
-  detail, and Profile + Account settings are implemented and merged.
-  Blocked Users (`008`) is next — introduces `blocks`/`reports` (first
-  writer of the latter, via "Also report") and this project's first
-  real modal-dialog UI — awaiting the user's go-ahead.
+  detail, Profile + Account settings, and Blocked Users are implemented
+  and merged. Forum index (`009`) is next — awaiting the user's
+  go-ahead.
 - Listing detail's Report action (FR-019) is deferred pending
   Notifications + Report modal (`012`, not yet implemented) —
   `specs/006-listing-detail/tasks.md`'s T030. Revisit as a bounded
@@ -1414,6 +1413,90 @@ axe-core scan) — 205 unit tests and 38 e2e tests total across the
 whole suite (every spec file), all passing, confirmed twice in a row.
 `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
 and `npm run build` all verified green before merging.
+
+## Blocked Users implemented (2026-07-13)
+
+**Blocked Users: implemented** — all 20 tasks in
+`specs/008-blocked-users/tasks.md` complete, merged to `main`.
+`/profile/account/blocked` — live count, client-side search over the
+already-fetched list, both empty states ("no blocks at all" vs. "no
+search match") — plus this project's **first modal-dialog UI**.
+
+**Two new tables**: `blocks` (a block is "active" when `unblockedAt IS
+NULL`; never hard-deleted on unblock — ADR 0005's usual exception list
+is `SavedListing`/`UserGame`, but a block has real trust/safety history
+value, so re-blocking after an unblock creates a *new* row rather than
+clearing the old one's `unblockedAt`) and `reports` (this feature's
+first writer, `targetType='user'` only, via the Block modal's "Also
+report to moderators" checkbox — the not-yet-built Notifications +
+Report feature owns every other write path and all moderation/review
+UI).
+
+**Native `<dialog>`, no library**: confirmed nothing modal-related was
+already installed (`grep -iE "dialog|modal|radix|headless"
+package.json` came up empty), so both `unblock-modal.tsx` (one-step
+confirm) and `block-modal.tsx` (reusable two-step pick → confirm,
+accepting an optional pre-selected target for a future direct-invoke
+caller) are built on `showModal()`/`.close()` — real focus-trapping,
+Escape-to-close, and focus restoration to the triggering control for
+free, plus an implicit `dialog` ARIA role needing no extra plumbing.
+This establishes the pattern the future Notifications + Report modal
+(`012`) should reuse rather than reinventing.
+
+**Auth gates**: both `block-user.ts` and `unblock-user.ts` extend Auth
+& Onboarding's `requireVerifiedEmail()` gate (spec's own explicit call)
+— self-block and duplicate-active-block rejection are plain runtime
+`if` checks in the Server Action itself (matching Post a Game's
+re-validation precedent), not Zod refines, since the schema has no
+access to the acting user's own id at definition time. Candidate search
+(`searchCandidateUsers()`, called through a thin
+`search-block-candidates.ts` Server Action so the Client Component
+modal can reach it) only needs `requireAuth()` — searching isn't
+itself a block/unblock write — and excludes the searching user, every
+actively-blocked target, and any handle-less account (ADR 0006: nothing
+to display or block them by).
+
+**Bugs found and fixed while building this feature**:
+
+- A React 19 `react-hooks/set-state-in-effect` lint error in
+  `block-modal.tsx`'s reset-on-open logic (resetting `step`/`selected`/
+  `query`/etc. every time the modal transitions to open) — fixed by
+  moving the reset from a `useEffect` into React's documented
+  "adjusting state during render" escape hatch (comparing `open` to a
+  tracked `wasOpen` and calling `setState` directly in the render body
+  when they differ), which avoids the extra cascading render an
+  Effect-based reset would trigger.
+- A real, previously-unnoticed accessibility bug, and not unique to
+  this feature: the breadcrumb pattern already used on Listing detail
+  (a `text-muted` link inline with `text-dim` surrounding text, e.g.
+  "Account / Blocked users") fails axe's `link-in-text-block` rule —
+  1.38:1 contrast against the required 3:1, with no underline to
+  otherwise distinguish it. Fixed *this* feature's own breadcrumb link
+  with `underline underline-offset-2`; Listing detail's identical
+  pattern was left as-is (out of scope here) but is now a known,
+  documented gap worth a bounded fix whenever that page is next
+  touched.
+- The same dev-server Postgres connection-exhaustion issue hit earlier
+  this session recurred mid-verification ("sorry, too many clients
+  already," surfacing as unrelated failures in `profile.spec.ts`/
+  `signup-onboarding.spec.ts`/`skip-onboarding.spec.ts`, not this
+  feature's own code) — same root cause and same fix: killed the
+  long-running `next dev` process (confirmed via
+  `Get-CimInstance Win32_Process`) and restarted it. The full e2e suite
+  then passed twice in a row with no code changes required, confirming
+  it was purely operational, not a regression.
+
+25+ new unit/integration tests (`blocking.ts`'s Zod schemas,
+`block-user.ts`/`unblock-user.ts` against real Postgres) and a
+2-scenario `e2e/blocked-users.spec.ts` covering quickstart.md Scenarios
+1-2 end to end, including axe-core scans of both modals (Scenario 3 —
+the unverified-user gate — is covered by the unit tests' own
+unverified-session cases, not separately scripted in e2e, consistent
+with how this project has handled auth-provider-dependent scenarios
+elsewhere). 220 unit tests and 40 e2e tests total across the whole
+suite, all passing, confirmed twice in a row after the connection-leak
+fix. `npm run typecheck`, `npm run lint`, `npm test`, `npm run
+test:e2e`, and `npm run build` all verified green before merging.
 
 ## Blockers
 

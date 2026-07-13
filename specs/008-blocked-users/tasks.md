@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — both Server Actions in this feature depend on it directly
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — both Server Actions in this feature depend on it directly
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `blocks` and `reports` tables to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/blocking.ts` — Zod schemas for search, target, and `alsoReport` (data-model.md)
-- [ ] T005 [P] Create `src/lib/users/search-users.ts` — candidate search excluding self and already-actively-blocked users
-- [ ] T006 Add a link to `/profile/account/blocked` from Profile's existing `src/app/profile/account/page.tsx` (research.md #1) — a small, purely-additive edit to an already-merged file
+- [x] T002 Add the `blocks` and `reports` tables to `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/blocking.ts` — Zod schemas for search, target, and `alsoReport` (data-model.md)
+- [x] T005 [P] Create `src/lib/users/search-users.ts` — candidate search excluding self and already-actively-blocked users
+- [x] T006 Add a link to `/profile/account/blocked` from Profile's existing `src/app/profile/account/page.tsx` (research.md #1) — a small, purely-additive edit to an already-merged file
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,15 +54,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `blocking.ts`'s schemas in `src/lib/validations/blocking.test.ts`
-- [ ] T008 [P] [US1] Integration test for `unblock-user.ts` (only the original blocker can unblock; sets `unblockedAt`) in `src/lib/actions/unblock-user.test.ts`
-- [ ] T009 [US1] Playwright e2e spec covering view/search/unblock and both empty states, including an axe-core scan of the Unblock dialog — creates `e2e/blocked-users.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `blocking.ts`'s schemas in `src/lib/validations/blocking.test.ts`
+- [x] T008 [P] [US1] Integration test for `unblock-user.ts` (only the original blocker can unblock; sets `unblockedAt`) in `src/lib/actions/unblock-user.test.ts`
+- [x] T009 [US1] Playwright e2e spec covering view/search/unblock and both empty states, including an axe-core scan of the Unblock dialog — creates `e2e/blocked-users.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Build `unblock-user.ts` in `src/lib/actions/unblock-user.ts` — depends on T004
-- [ ] T011 [US1] Build `src/components/blocking/unblock-modal.tsx` — a focus-trapped confirm dialog (research.md #2) — depends on T010
-- [ ] T012 [US1] Build `src/app/profile/account/blocked/page.tsx`: list, live count, search, both empty states, wires `unblock-modal.tsx` — depends on T005, T011
+- [x] T010 [US1] Build `unblock-user.ts` in `src/lib/actions/unblock-user.ts` — depends on T004
+- [x] T011 [US1] Build `src/components/blocking/unblock-modal.tsx` — a focus-trapped confirm dialog (research.md #2) — depends on T010
+- [x] T012 [US1] Build `src/app/profile/account/blocked/page.tsx`: list, live count, search, both empty states, wires `unblock-modal.tsx` — depends on T005, T011
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -76,14 +76,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Integration test for `block-user.ts` (creates a block; rejects self-block; rejects a duplicate active block; the optional `reports` row) in `src/lib/actions/block-user.test.ts`
-- [ ] T014 [US2] Add the Block modal scenario (pick, confirm, with/without report) to `e2e/blocked-users.spec.ts`, including an axe-core scan of the Block dialog — depends on T009 (same file)
+- [x] T013 [P] [US2] Integration test for `block-user.ts` (creates a block; rejects self-block; rejects a duplicate active block; the optional `reports` row) in `src/lib/actions/block-user.test.ts`
+- [x] T014 [US2] Add the Block modal scenario (pick, confirm, with/without report) to `e2e/blocked-users.spec.ts`, including an axe-core scan of the Block dialog — depends on T009 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Build `block-user.ts` in `src/lib/actions/block-user.ts` — depends on T004
-- [ ] T016 [US2] Build `src/components/blocking/block-modal.tsx` — reusable, accepting an optional pre-selected target, focus-trapped (research.md #2) — depends on T015, T005
-- [ ] T017 [US2] Wire the "Block a user" entry point into `src/app/profile/account/blocked/page.tsx` — depends on T012, T016
+- [x] T015 [US2] Build `block-user.ts` in `src/lib/actions/block-user.ts` — depends on T004
+- [x] T016 [US2] Build `src/components/blocking/block-modal.tsx` — reusable, accepting an optional pre-selected target, focus-trapped (research.md #2) — depends on T015, T005
+- [x] T017 [US2] Wire the "Block a user" entry point into `src/app/profile/account/blocked/page.tsx` — depends on T012, T016
 
 **Checkpoint**: Both user stories independently functional.
 
@@ -91,9 +91,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T018 Confirm `next build` succeeds locally and CI stays green with the new nested route, two Server Actions, and two new tables
-- [ ] T019 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T020 [P] Update `docs/feature-list.md`, marking Blocked Users' spec/plan/tasks as complete
+- [x] T018 Confirm `next build` succeeds locally and CI stays green with the new nested route, two Server Actions, and two new tables
+- [x] T019 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [x] T020 [P] Update `docs/feature-list.md`, marking Blocked Users' spec/plan/tasks as complete
 
 ---
 
