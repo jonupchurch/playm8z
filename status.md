@@ -638,10 +638,29 @@ amendments to 009/010(4) → retroactive amendments to 017(4) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Admin Forum is the
 eighteenth feature with a complete spec/plan/tasks trio.
 
+**Admin Reports: spec + plan done** (2026-07-12, branch
+`019-admin-reports`) — the unified triage queue across postings,
+forum, profiles, and messages. Groups by reported target (not one row
+per report); a generic Dismiss action; Remove/Warn DELEGATE to `017`'s/
+`018`'s existing resolution actions for postings/forum (reused, not
+reimplemented) while being the first real mover for profiles and
+messages (new `messages.removedAt`, further-generalized `warnings`).
+"Total reports" is a computed cross-source aggregate. Retroactively
+adds `reports.resolvedAt` to `017`/`018` and corrects the shared
+`reason-severity.ts`'s `impersonation` mapping (medium → high) — a
+one-place fix that flows to all three moderation features at once.
+
+**Admin Reports: tasks done** (2026-07-12) — `tasks.md`, 37 tasks:
+Setup(1) → Foundational(6) → US1/P1 view+filter grouped queue(6) →
+US2/P2 dismiss+remove(9) → US3/P3 warn+ban(6) → cross-feature
+amendment to 011(2) → retroactive amendments to 017/018(4) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Admin Reports is the
+nineteenth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `018-admin-forum` into `main`, then move on to feature #19
-  (Admin Reports) — same specify→plan→tasks→merge sequence repeats
+- Merge `019-admin-reports` into `main`, then move on to feature #20
+  (Admin News) — same specify→plan→tasks→merge sequence repeats
   for every other feature in `docs/feature-list.md` — per the
   project-wide gate (constitution v1.0.0), implementation doesn't
   begin on *any* feature until all of them have this done.

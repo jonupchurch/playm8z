@@ -579,6 +579,29 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   to `017` (4) → Polish (3). Admin Forum is the eighteenth feature to
   clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Reports: `research.md` (grouping the
+  queue by reported target rather than one row per report; a generic
+  Dismiss action versus Remove/Warn delegating to `017`'s/`018`'s
+  existing resolution actions for postings/forum, reused rather than
+  reimplemented; profiles/messages as the first real mover for two
+  target types with no prior dedicated queue; "total reports" as a
+  computed cross-source aggregate, not a stored counter; retroactively
+  adding `reports.resolvedAt` to `017`/`018`; correcting the shared
+  `reason-severity.ts`'s `impersonation` mapping from medium to high,
+  a one-place fix flowing to all three moderation features at once;
+  extracting `classify-forum-target.ts` out of `018`), `data-model.md`,
+  `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin Reports: `tasks.md` — 37 tasks: Setup
+  (1) → Foundational (6: schema extensions, the extracted
+  classification helper, the severity correction, validation schemas,
+  the gated page shell) → US1/P1 view+filter grouped queue (6) →
+  US2/P2 dismiss+remove (9) → US3/P3 warn+ban (6) → cross-feature
+  amendment to `011` (2: new `messages.removedAt` and its query
+  exclusion) → retroactive amendments to `017`/`018` (4) → Polish (3).
+  Admin Reports is the nineteenth feature to clear the project-wide
+  gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

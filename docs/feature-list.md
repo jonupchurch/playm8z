@@ -39,7 +39,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 16. Admin Users — 🟢 spec + plan + tasks all complete (`specs/016-admin-users/`, branch `016-admin-users`, `admin/playm8z - Admin Users.dc.html`) — 27 tasks across Setup/Foundational/US1(P1) view+search+filter/US2(P2) ban+unban/US3(P3) drawer+content-removal/Polish; not yet implemented
 17. Admin Postings — 🟢 spec + plan + tasks all complete (`specs/017-admin-postings/`, branch `017-admin-postings`, `admin/playm8z - Admin Postings.dc.html`) — 31 tasks across Setup/Foundational/US1(P1) view+filter queue/US2(P2) drawer+approve+remove/US3(P3) warn+ban/cross-feature amendments/Polish; not yet implemented
 18. Admin Forum — 🟢 spec + plan + tasks all complete (`specs/018-admin-forum/`, branch `018-admin-forum`, `admin/playm8z - Admin Forum.dc.html`) — 41 tasks across Setup/Foundational/US1(P1) view+filter queue/US2(P2) drawer+approve+remove/US3(P3) lock+warn+ban/cross-feature amendments to 009+010/retroactive amendments to 017/Polish; not yet implemented
-19. Admin Reports — ✅
+19. Admin Reports — 🟢 spec + plan + tasks all complete (`specs/019-admin-reports/`, branch `019-admin-reports`, `admin/playm8z - Admin Reports.dc.html`) — 37 tasks across Setup/Foundational/US1(P1) view+filter grouped queue/US2(P2) dismiss+remove/US3(P3) warn+ban/cross-feature amendment to 011/retroactive amendments to 017+018/Polish; not yet implemented
 20. Admin News — ✅
 21. Admin Content Pages — ✅
 22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
