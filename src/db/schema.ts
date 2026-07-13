@@ -31,6 +31,17 @@ export const users = pgTable("user", {
   vibe: text("vibe"),
   playTimeSlots: text("playTimeSlots").array(),
   gamesPlayed: text("gamesPlayed").array(),
+  // Added by Profile + Account settings (007).
+  bio: text("bio"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  privacyShowAge: boolean("privacyShowAge").notNull().default(true),
+  privacyShowRegion: boolean("privacyShowRegion").notNull().default(true),
+  privacyShowOnline: boolean("privacyShowOnline").notNull().default(true),
+  privacyDiscoverable: boolean("privacyDiscoverable").notNull().default(true),
+  // Non-null hides the profile/postings from other visitors (FR-013);
+  // cleared automatically on the owner's next successful sign-in
+  // (research.md #3, src/auth.ts's signIn callback).
+  deactivatedAt: timestamp("deactivatedAt", { mode: "date" }),
 });
 
 export const accounts = pgTable(
@@ -161,6 +172,8 @@ export const questions = pgTable("questions", {
 // primary key (no surrogate id) mirrors `accounts`' shape above.
 // Unsaving performs a real delete (a scoped exception to ADR 0005 --
 // a bookmark carries no moderation/audit history worth preserving).
+// Profile (007) reuses this table and Listing detail's own
+// toggle-saved-listing.ts as-is -- no schema change needed here.
 export const savedListings = pgTable(
   "savedListings",
   {
@@ -174,6 +187,21 @@ export const savedListings = pgTable(
   },
   (savedListing) => [primaryKey({ columns: [savedListing.userId, savedListing.postingId] })],
 );
+
+// Profile + Account settings (007) -- richer, user-editable version of
+// onboarding's flat gamesPlayed list (game + optional self-reported
+// rank/hours). No soft-delete concern (ADR 0005): removing a game a
+// user no longer plays is a real delete, same reasoning as SavedListing.
+export const userGames = pgTable("userGames", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  game: text("game").notNull(),
+  rank: text("rank"),
+  hoursPlayed: integer("hoursPlayed"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
 
 export const verificationTokens = pgTable(
   "verificationToken",

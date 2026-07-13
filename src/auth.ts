@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { credentialsSchema } from "@/lib/validations/auth";
+import { reactivateOnSignIn } from "@/lib/auth/reactivate-on-sign-in";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -14,6 +15,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   // database-session storage, so JWT sessions are required whenever
   // Credentials is one of the providers.
   session: { strategy: "jwt" },
+  callbacks: {
+    // Profile + Account settings (007), research.md #3: a deactivated
+    // account (user.deactivatedAt set) reactivates automatically on
+    // its next successful sign-in -- no separate "undo" step. Runs for
+    // both providers; a no-op UPDATE when already null.
+    async signIn({ user }) {
+      if (user.id) {
+        await reactivateOnSignIn(user.id);
+      }
+      return true;
+    },
+  },
   providers: [
     Google({
       // Google has already verified the address; carry its own
