@@ -522,6 +522,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   activity (7) → Polish (3). Admin Dashboard is the fifteenth feature
   to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Users: `research.md` (Ban-only, no
+  Delete — direct reuse of Profile's already-made Deactivate/Delete
+  resolution; "Flagged" computed from existing `reports` rows, never
+  stored; content removal adds `removedAt` to `postings`/`forumThreads`
+  with small, bounded amendments to Home's/Browse's/Forum index's
+  existing read queries, since a moderation-remove action with no
+  visible effect would ship a no-op), `data-model.md`, `quickstart.md`.
+  No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

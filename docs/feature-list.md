@@ -36,7 +36,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 13. News feed (public) — 🟢 spec + plan + tasks all complete (`specs/013-news-feed/`, branch `013-news-feed`, `playm8z - News.dc.html`) — 19 tasks across Setup/Foundational/US1(P1) browse+filter+search+paginate/US2(P2) subscribe/Polish; not yet implemented
 14. Content Page (public render + inline admin edit) — 🟢 spec + plan + tasks all complete (`specs/014-content-page/`, branch `014-content-page`, `playm8z - Content Page.dc.html`) — 21 tasks across Setup/Foundational/US1(P1) public-read/US2(P2) inline-edit/US3(P3) publish+unpublish/Polish; not yet implemented
 15. Admin Dashboard — 🟢 spec + plan + tasks all complete (`specs/015-admin-dashboard/`, branch `015-admin-dashboard`, `admin/playm8z - Admin Dashboard.dc.html`) — 24 tasks across Setup/Foundational/US1(P1) KPIs+chart+top-games/US2(P2) needs-attention+activity/Polish; not yet implemented
-16. Admin Users — ✅
+16. Admin Users — 📝 spec + plan written (`specs/016-admin-users/`, branch `016-admin-users`, `admin/playm8z - Admin Users.dc.html`), not yet tasked
 17. Admin Postings — ✅
 18. Admin Forum — ✅
 19. Admin Reports — ✅

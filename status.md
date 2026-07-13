@@ -585,10 +585,17 @@ needs-attention+activity(7) → Polish(3). `docs/feature-list.md`
 updated to 🟢. Admin Dashboard is the fifteenth feature with a
 complete spec/plan/tasks trio.
 
+**Admin Users: spec + plan done** (2026-07-12, branch `016-admin-users`)
+— user list/stats/ban-unban/content-removal drawer. Drops "Delete"
+(collapsed into Ban, reusing Profile's own resolution). "Flagged" is
+computed from existing reports, never stored. Adds `removedAt` to
+`postings`/`forumThreads` with bounded amendments to Home/Browse/Forum
+index's read queries so removal has a real effect.
+
 ## Next up
 
-- Merge `015-admin-dashboard` into `main`, then move on to feature #16
-  (Admin Users) — same specify→plan→tasks→merge sequence repeats for
+- Admin Users: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.
