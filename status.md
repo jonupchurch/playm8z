@@ -756,13 +756,30 @@ moderation+auto-flag(11) → US3/P3 roles+features+safety(15) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Admin Settings is the
 twenty-fourth feature with a complete spec/plan/tasks trio.
 
+**Moderator audit log: spec + plan done** (2026-07-12, branch
+`025-moderator-audit-log`) — a read-only, day-grouped, searchable/
+filterable viewer over Admin Dashboard's (`015`) existing
+`auditEntries` table, gated at moderator (not admin — a transparency
+tool, not a mutation surface). Simplifies the wireframe's 11-way
+category-badge scheme down to the real, stored 4-value category
+rather than fabricating a finer classifier. Found and fixed a third
+real gap this session: Admin News and Admin Content Pages never
+wired `logAuditEntry()` despite `015`'s own spec anticipating them —
+both now do.
+
+**Moderator audit log: tasks done** (2026-07-12) — `tasks.md`, 21
+tasks: Setup(1) → Foundational(2) → US1/P1 browse+search+filter(6) →
+US2/P2 expand+export(4) → US3/P3 close the 020/021 gap(5) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Moderator audit log
+is the twenty-fifth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `024-admin-settings` into `main`, then move on to feature #25
-  (Moderator audit log) — same specify→plan→tasks→merge sequence
-  repeats for the last 2 features in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- Merge `025-moderator-audit-log` into `main`, then move on to the
+  final feature, #26 (Logged-out marketing landing page) — same
+  specify→plan→tasks→merge sequence, closing out the project-wide
+  gate (constitution v1.0.0) so implementation can finally begin on
+  all 26 features.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

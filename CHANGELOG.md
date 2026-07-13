@@ -700,6 +700,23 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (3). Admin Settings is the twenty-fourth feature to clear the
   project-wide gate.
 
+- Ran `/speckit-plan` for Moderator audit log: `research.md` (the
+  category badge showing the real 4-value `category` rather than a
+  fabricated 11-way classifier derived from free-text action strings;
+  dropping the wireframe's hashed-IP meta example rather than adding
+  new IP-capture infrastructure; a third real gap found and fixed —
+  Admin News/Admin Content Pages never wired `logAuditEntry()`;
+  Today/Yesterday/Earlier day-grouping; CSV export mirroring the
+  active filter exactly), `data-model.md`, `quickstart.md`. No
+  `contracts/`.
+
+- Ran `/speckit-tasks` for Moderator audit log: `tasks.md` — 21 tasks:
+  Setup (1) → Foundational (2: validation schemas, the moderator-
+  gated page shell) → US1/P1 browse+search+filter (6) → US2/P2
+  expand+export (4) → US3/P3 close the `020`/`021` logging gap (5) →
+  Polish (3). Moderator audit log is the twenty-fifth feature to
+  clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
