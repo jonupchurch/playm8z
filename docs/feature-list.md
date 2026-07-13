@@ -7,7 +7,8 @@ living tracking doc, not itself a spec — update it as wireframes land and
 as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 
 **Status key**: 🎨 wireframe pending · ✅ wireframed, not yet spec'd ·
-📝 spec/plan/tasks in progress · 🟢 ready (spec+plan+tasks all complete)
+📝 spec/plan/tasks in progress · 🟢 ready (spec+plan+tasks all complete) ·
+🚀 implemented (merged to `main`, all tasks done)
 
 ## Exempt from the gate (infrastructure, not product surface)
 
@@ -21,7 +22,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 
 ## Wireframed, ready to spec
 
-1. Auth & Onboarding — 🟢 spec + plan + tasks all complete (`specs/001-auth-onboarding/`, branch `001-auth-onboarding`, `playm8z - Auth & Onboarding.dc.html`) — 40 tasks across Setup/Foundational/US1(P1)/US2(P2)/US3(P3)/Polish; not yet implemented (implementation is gated on every other feature below also reaching this point)
+1. Auth & Onboarding — 🚀 **implemented** (`specs/001-auth-onboarding/`, branch `001-auth-onboarding` merged to `main`, `playm8z - Auth & Onboarding.dc.html`) — all 40 tasks across Setup/Foundational/US1(P1)/US2(P2)/US3(P3)/Polish complete: sign-up/login UI, the 4-step onboarding wizard, email verification (console-log fallback pre-domain), and the unverified-email write-action gate helper. First feature actually built — the project-wide spec/plan/tasks gate only blocked implementation from *starting*, not from proceeding feature-by-feature once cleared.
 2. Error Pages (404/500/403/maintenance) — 🟢 spec + plan + tasks all complete (`specs/002-error-pages/`, branch `002-error-pages`, `support/playm8z - Error Pages.dc.html`) — 23 tasks across Setup/Foundational/US1(P1) 404/US2(P2) 500/US3(P3) 401&403/US4(P4) maintenance/Polish; not yet implemented
 3. Home — 🟢 spec + plan + tasks all complete (`specs/003-home/`, branch `003-home`, `playm8z - Home.dc.html`) — 24 tasks across Setup/Foundational/US1(P1) search+filter+sort/US2(P2) trending/US3(P3) empty-state/Polish; not yet implemented
 4. Browse — 🟢 spec + plan + tasks all complete (`specs/004-browse/`, branch `004-browse`, `playm8z - Browse.dc.html`) — 22 tasks across Setup/Foundational/US1(P1) search+filter+sort/US2(P2) pills/US3(P3) empty-state/Polish; not yet implemented

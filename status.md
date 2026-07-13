@@ -818,12 +818,82 @@ itself — but it would only be a combined presentation of the same
 tokens already confirmed live in the Dark Theme/Light Theme sheets, so
 its absence is no longer a blocker for implementation.
 
+## Implementation begins: Auth & Onboarding (2026-07-13)
+
+**Auth & Onboarding: implemented** — all 40 tasks in
+`specs/001-auth-onboarding/tasks.md` complete, on branch
+`001-auth-onboarding` (rebuilt on top of `main` post-gate-closure),
+merged back to `main`.
+
+**Design system wired in first**: this is the first feature to render
+any real UI, so `src/app/globals.css`/`layout.tsx` now carry the actual
+Warm Pop tokens and Sora/Space Mono fonts (`guidelines.md` §4) instead
+of the create-next-app defaults — infrastructure, not this feature's
+own scope, but a prerequisite every screen from here on reuses. Two
+small reusable brand components (`PawMark`, `Wordmark`) back it.
+
+**Schema**: `users` gains `handle` (unique, nullable at the DB level —
+a deliberate, reasoned deviation from data-model.md's literal "not
+null": a fresh Google sign-up's row is created by Auth.js's adapter
+before onboarding ever runs, so there's a real window with no handle
+yet), `avatarColor`, `region`, `platforms`, `ageGroup`, `vibe`,
+`playTimeSlots`, `gamesPlayed`.
+
+**The post-auth routing question** (T030) took real design work beyond
+what tasks.md specified at the code level: with no separate onboarding
+status field (data-model.md, deliberate), the routing signal is simply
+"does this account have a handle yet." Credentials accounts always do
+(set at registration, before onboarding runs), so returning Credentials
+users always land on Home regardless of how much of onboarding they
+finished or skipped — satisfying the spec's "never auto-resume/
+re-prompt." Google accounts don't get one until onboarding Step 1 sets
+it (research.md #2), so that's the one real ambiguous case this check
+resolves. Concretely: signup always routes straight to `/onboarding`
+(hardcoded — a fresh account's handle would otherwise wrongly satisfy
+the shared check and skip onboarding entirely); login and Google both
+route through a shared `/(auth)/continue` checkpoint that applies the
+handle-presence check. One caught-during-implementation edge case
+worth flagging: a Google user who clicks "Skip for now" at Step 1
+*without* ever entering a handle will see onboarding again on their
+next login (since they still have none) — a reasoned, accepted
+tradeoff given handle is a hard FR-003 requirement with no other
+collection point in this feature's scope, not a bug.
+
+**Security note caught during implementation**: `POST /api/onboarding`
+echoes the updated profile per contracts/api.md, but must never include
+`passwordHash` in that response — the route explicitly selects/returns
+a safe column allowlist rather than `.returning()`'s default full row.
+
+**Real Postgres integration tests** (Principle V) for
+`/api/auth/register` and `/api/onboarding`, running against local dev
+Postgres (matching CI's ephemeral container) — 45 unit/integration
+tests total, all passing. Three Playwright e2e specs cover quickstart.md
+Scenarios 1-3 exactly (signup+onboarding, skip-onboarding, login),
+including two axe-core accessibility scans (caught and fixed two real
+WCAG violations: auth pages needed a `<main>`/`<header>` landmark
+structure, and the onboarding wizard's step headings needed to be
+`<h1>` — there's exactly one visible at a time, so promoting all of
+them was correct, not a hierarchy violation). `e2e/smoke.spec.ts`
+retired, fully superseded. Quickstart Scenario 4 (Google sign-up gets a
+handle) is verified by code review, not a live run — scripting a real
+Google OAuth consent flow isn't practical here. Scenario 5 (unverified
+user blocked from a write action) is verified via
+`require-verified-email.test.ts` only, since no write-action feature
+(Post a Game, etc.) exists yet to gate for real — tasks.md itself
+anticipated this, shipping the gate helper ready-to-call with no
+consumer yet.
+
+`npm run typecheck`, `npm run lint`, `npm test` (45 passing),
+`npm run test:e2e` (4 passing), and `npm run build` all verified green
+before merging.
+
 ## Next up
 
-- Decide implementation order/strategy for the ~26 features now that
-  the gate is clear — likely foundational-first (Auth & Onboarding,
-  Error Pages, Home) before the rest, but this is now an open
-  question for the user rather than a predetermined sequence.
+- Decide implementation order for the remaining ~25 features — likely
+  foundational-first (Error Pages, Home) before the rest, but this is
+  an open question for the user rather than a predetermined sequence.
+- Real Resend wiring remains blocked on domain ownership (unchanged);
+  verification emails still log to the server console.
 
 ## Blockers
 

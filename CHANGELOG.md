@@ -742,9 +742,10 @@ All 26 features tracked in `docs/feature-list.md` now have a complete
 may begin on any/all of them per the constitution (v1.0.0).
 
 ### Known gaps
-- No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
   `https://playm8z.vercel.app` only.
+- Real Resend transactional email still blocked on domain ownership —
+  verification emails log to the server console instead.
 
 ## [Unreleased] (cont.)
 
@@ -760,3 +761,24 @@ may begin on any/all of them per the constitution (v1.0.0).
   `playm8z - Design System.dc.html` is still not delivered, but it
   would only restate the same tokens already confirmed live in the
   Dark Theme/Light Theme sheets, so it's no longer a blocker.
+- Added `plan.md` — a plain-English TL;DR of all 26 features, numbered
+  to match `docs/feature-list.md`/`specs/NNN-.../`.
+
+## [Unreleased] (cont. 2)
+
+### Added
+- **Implemented Auth & Onboarding** (first feature built post-gate):
+  sign-up/login UI on the existing Auth.js v5 machinery (Google OAuth +
+  Credentials), the 4-step onboarding wizard (profile, games,
+  where/how, vibe) with a completion screen, live handle-availability
+  checking, email verification with a console-log fallback ahead of
+  real Resend provisioning, and a reusable `requireVerifiedEmail()`
+  write-action gate (FR-014) ready for future features to call. Wired
+  in the actual Warm Pop design tokens/fonts (`globals.css`,
+  `layout.tsx`) as the first feature needing real UI. Extends `users`
+  with `handle`/`avatarColor`/`region`/`platforms`/`ageGroup`/`vibe`/
+  `playTimeSlots`/`gamesPlayed`. 45 unit/integration tests (including
+  two real-Postgres route tests) and 4 Playwright e2e specs (two with
+  axe-core scans, which caught and fixed two real accessibility
+  findings) all passing; `e2e/smoke.spec.ts` retired as superseded.
+  All 40 tasks in `specs/001-auth-onboarding/tasks.md` checked off.
