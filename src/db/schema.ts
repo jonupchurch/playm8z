@@ -203,6 +203,44 @@ export const userGames = pgTable("userGames", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+// Blocked Users (008) -- a block is "active" when unblockedAt IS NULL.
+// Not hard-deleted on unblock (ADR 0005 -- unlike SavedListing/
+// UserGame's scoped exception, a block has real trust/safety history
+// value); re-blocking after an unblock creates a NEW row rather than
+// clearing unblockedAt on the old one, keeping each cycle legible.
+// Every other feature's enforcement logic (Home, Browse, Listing
+// detail, future Inbox/Forum) should query active blocks in both
+// directions -- this feature only defines the table and the block/
+// unblock actions, not that enforcement (spec.md FR-011).
+export const blocks = pgTable("blocks", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  blockerId: uuid("blockerId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  blockedId: uuid("blockedId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  unblockedAt: timestamp("unblockedAt", { mode: "date" }),
+});
+
+// Blocked Users (008) -- this feature's first writer, via the Block
+// modal's "Also report to moderators" checkbox (targetType='user'
+// only). guidelines.md's documented shape covers other target types
+// too; the not-yet-spec'd Notifications & Report feature owns every
+// other write path and all review/moderation UI.
+export const reports = pgTable("reports", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reporterId: uuid("reporterId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  targetType: text("targetType").notNull(),
+  targetId: uuid("targetId").notNull(),
+  reason: text("reason"),
+  status: text("status").notNull().default("open"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
