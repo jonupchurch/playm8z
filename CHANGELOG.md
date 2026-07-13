@@ -656,6 +656,26 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Public Profile is the twenty-second feature to clear the
   project-wide gate.
 
+- Ran `/speckit-plan` for News Article detail: `research.md` (a
+  small markdown-to-HTML renderer, since `020` already committed to
+  plain-markdown `body`; adding the `newsPosts.slug` neither `013` nor
+  `020` ever needed, generated once at creation and immutable
+  afterward, mirroring handle immutability; computed read time
+  instead of the never-populated `readTimeMinutes`; Like as `010`'s
+  third polymorphic-`likes` consumer; Save as a deliberately separate
+  new table rather than a premature `SavedListing` generalization,
+  since only two total consumers exist against this project's
+  "generalize at three" bar; "Keep reading"/subscribe reusing `013`
+  directly), `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for News Article detail: `tasks.md` — 28 tasks:
+  Setup (1) → Foundational (5: schema additions, the markdown-
+  rendering dependency, validation schemas, the public page shell) →
+  US1/P1 read article (5) → US2/P2 like+save (7) → US3/P3 keep-
+  reading+share (4) → cross-feature amendments to `013`/`020` (3) →
+  Polish (3). News Article detail is the twenty-third feature to
+  clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

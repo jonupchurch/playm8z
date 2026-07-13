@@ -713,14 +713,32 @@ follow+message+invite(10) → US3/P3 in-common+report+block(5) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Public Profile is
 the twenty-second feature with a complete spec/plan/tasks trio.
 
+**News Article detail: spec + plan done** (2026-07-12, branch
+`023-news-article-detail`) — the public `/news/:slug` article page.
+Adds `newsPosts.slug` (neither `013` nor `020` ever needed one) with
+bounded amendments to `020`'s save action (slug generation) and
+`013`'s card linking. Read time is computed from the body's word
+count, not `013`'s never-populated `readTimeMinutes` column. Like
+reuses `010`'s polymorphic `likes` table as its third consumer; Save
+gets its own new `savedNewsPosts` table rather than prematurely
+generalizing `SavedListing` (only the second consumer — this
+project's "generalize at three" bar, from `warnings`, isn't met yet),
+with a bounded amendment surfacing it in Profile's (`007`) Saved tab.
+
+**News Article detail: tasks done** (2026-07-12) — `tasks.md`, 28
+tasks: Setup(1) → Foundational(5) → US1/P1 read article(5) → US2/P2
+like+save(7) → US3/P3 keep-reading+share(4) → cross-feature
+amendments to 013/020(3) → Polish(3). `docs/feature-list.md` updated
+to 🟢. News Article detail is the twenty-third feature with a
+complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `022-public-profile` into `main`, then move on to feature #23
-  (News article detail, `/news/:slug`) — same specify→plan→tasks→
-  merge sequence repeats for every other feature in
-  `docs/feature-list.md` — per the project-wide gate (constitution
-  v1.0.0), implementation doesn't begin on *any* feature until all of
-  them have this done.
+- Merge `023-news-article-detail` into `main`, then move on to feature
+  #24 (Admin Settings) — same specify→plan→tasks→merge sequence
+  repeats for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
