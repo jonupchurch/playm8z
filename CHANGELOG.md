@@ -717,6 +717,30 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Polish (3). Moderator audit log is the twenty-fifth feature to
   clear the project-wide gate.
 
+- Ran `/speckit-plan` for Landing page (the 26th and final feature):
+  `research.md` (a real "open parties right now" stat replacing the
+  fake "online now" one; a real floating hero listing card with an
+  honest empty-state fallback; three real trust-bar stats instead of
+  four, dropping the unbacked average-rating number; a new
+  `applications.acceptedAt` field powering "parties formed this
+  week"; reworded feature-grid copy no longer overstating deferred
+  reliability/ratings capabilities; testimonials kept as the one
+  deliberate, explained exception to this project's no-fake-data
+  discipline; closing the exact root-route loop Home's, `003`, own
+  spec left open), `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Landing page: `tasks.md` — 19 tasks: Setup
+  (1) → Foundational (3: schema addition, the shared stats query) →
+  US1/P1 real marketing page (7) → US2/P2 CTA navigation (2) → US3/P3
+  real hero-card data (3) → Polish (3). Landing page is the
+  twenty-sixth and FINAL feature to clear the project-wide gate.
+
+## 🎉 Project-wide constitutional gate closed (2026-07-12)
+
+All 26 features tracked in `docs/feature-list.md` now have a complete
+`spec.md`/`plan.md`/`tasks.md` trio, merged to `main`. Implementation
+may begin on any/all of them per the constitution (v1.0.0).
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

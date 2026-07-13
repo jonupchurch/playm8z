@@ -773,13 +773,40 @@ US2/P2 expand+export(4) → US3/P3 close the 020/021 gap(5) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Moderator audit log
 is the twenty-fifth feature with a complete spec/plan/tasks trio.
 
+**Landing page: spec + plan done** (2026-07-12, branch
+`026-landing-page`) — the final feature of the project-wide gate.
+Closes the loop Home's (`003`) own spec explicitly left open: its
+root route stops redirecting an unauthenticated visitor to `/login`
+and renders this feature's marketing content instead, with Home's
+authenticated experience completely unchanged. Every "live-feeling"
+number is reconciled to real, computed data — a real "open parties
+right now" stat replaces the fake "online now" one, a real floating
+example listing card replaces the wireframe's fabricated one (with an
+honest fallback when none exist), and the average-rating stat is
+dropped outright (no real rating data exists). Testimonials are kept
+as fixed marketing copy — the one deliberate, explained exception to
+this project's no-fake-data discipline. Adds one small field,
+`applications.acceptedAt`, to power "parties formed this week."
+
+**Landing page: tasks done** (2026-07-12) — `tasks.md`, 19 tasks:
+Setup(1) → Foundational(3) → US1/P1 real marketing page(7) → US2/P2
+CTA navigation(2) → US3/P3 real hero-card data(3) → Polish(3).
+`docs/feature-list.md` updated to 🟢. Landing page is the
+twenty-sixth and FINAL feature with a complete spec/plan/tasks trio.
+
+## 🎉 Project-wide constitutional gate closed
+
+All 26 features tracked in `docs/feature-list.md` now have a complete
+`spec.md`/`plan.md`/`tasks.md` trio, each merged to `main`. Per the
+constitution (v1.0.0), implementation may now begin on any/all of
+them — the marathon that started with Auth & Onboarding is complete.
+
 ## Next up
 
-- Merge `025-moderator-audit-log` into `main`, then move on to the
-  final feature, #26 (Logged-out marketing landing page) — same
-  specify→plan→tasks→merge sequence, closing out the project-wide
-  gate (constitution v1.0.0) so implementation can finally begin on
-  all 26 features.
+- Decide implementation order/strategy for the ~26 features now that
+  the gate is clear — likely foundational-first (Auth & Onboarding,
+  Error Pages, Home) before the rest, but this is now an open
+  question for the user rather than a predetermined sequence.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
