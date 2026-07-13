@@ -516,6 +516,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   `data-model.md` (new `auditEntries` table plus a full read-only
   aggregate-query inventory), `quickstart.md`. No `contracts/`.
 
+- Ran `/speckit-tasks` for Admin Dashboard: `tasks.md` — 24 tasks:
+  Setup (1) → Foundational (3: new table + migration, the gated page
+  shell) → US1/P1 KPIs+chart+top-games (10) → US2/P2 needs-attention+
+  activity (7) → Polish (3). Admin Dashboard is the fifteenth feature
+  to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

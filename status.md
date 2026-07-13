@@ -579,10 +579,16 @@ timestamp-derived activity, not presence tracking. Sidebar shell
 scoped out entirely (Design System infra). Second consumer of Error
 Pages' `require-role.ts`.
 
+**Admin Dashboard: tasks done** (2026-07-12) — `tasks.md`, 24 tasks:
+Setup(1) → Foundational(3) → US1/P1 KPIs+chart+top-games(10) → US2/P2
+needs-attention+activity(7) → Polish(3). `docs/feature-list.md`
+updated to 🟢. Admin Dashboard is the fifteenth feature with a
+complete spec/plan/tasks trio.
+
 ## Next up
 
-- Admin Dashboard: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
+- Merge `015-admin-dashboard` into `main`, then move on to feature #16
+  (Admin Users) — same specify→plan→tasks→merge sequence repeats for
   every other feature in `docs/feature-list.md` — per the project-wide
   gate (constitution v1.0.0), implementation doesn't begin on *any*
   feature until all of them have this done.
