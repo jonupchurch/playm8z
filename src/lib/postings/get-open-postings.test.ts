@@ -15,12 +15,21 @@ beforeAll(async () => {
     .returning({ id: users.id });
   hostId = host.id;
 
+  const common = {
+    hostId,
+    blurb: "blurb",
+    genre: "FPS",
+    ageGroup: "18",
+    timeSlots: ["evening"],
+    platform: "pc",
+    micRequired: false,
+  };
+
   await db.insert(postings).values([
     {
-      hostId,
+      ...common,
       game: `OpenGame-${runId}`,
       title: "Open one",
-      blurb: "blurb",
       vibe: "fun",
       region: "na-west",
       seatsTotal: 4,
@@ -28,10 +37,9 @@ beforeAll(async () => {
       status: "open",
     },
     {
-      hostId,
+      ...common,
       game: `FullGame-${runId}`,
       title: "Full one",
-      blurb: "blurb",
       vibe: "serious",
       region: "eu-west",
       seatsTotal: 4,
@@ -39,10 +47,9 @@ beforeAll(async () => {
       status: "full",
     },
     {
-      hostId,
+      ...common,
       game: `ClosedGame-${runId}`,
       title: "Closed one",
-      blurb: "blurb",
       vibe: "fun",
       region: "na-east",
       seatsTotal: 4,

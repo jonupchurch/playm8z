@@ -20,7 +20,19 @@ beforeAll(async () => {
   const [host] = await db.insert(users).values({ email, name: "Host" }).returning({ id: users.id });
   hostId = host.id;
 
-  const common = { hostId, title: "t", blurb: "b", vibe: "fun", region: "na-west", seatsTotal: 4 };
+  const common = {
+    hostId,
+    title: "t",
+    blurb: "b",
+    vibe: "fun",
+    region: "na-west",
+    seatsTotal: 4,
+    genre: "FPS",
+    ageGroup: "18",
+    timeSlots: ["evening"],
+    platform: "pc",
+    micRequired: false,
+  };
   await db.insert(postings).values([
     { ...common, game: popularGame, seatsOpen: 1, status: "open" },
     { ...common, game: popularGame, seatsOpen: 2, status: "open" },

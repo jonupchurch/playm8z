@@ -23,9 +23,18 @@ test.beforeAll(async () => {
     .values({ email, passwordHash, handle: `e2ehome${runId}`, name: "Home Test Host" })
     .returning({ id: users.id });
 
+  const common = {
+    hostId: host.id,
+    genre: "FPS",
+    ageGroup: "18",
+    timeSlots: ["evening"],
+    platform: "pc",
+    micRequired: false,
+  };
+
   await db.insert(postings).values([
     {
-      hostId: host.id,
+      ...common,
       game: valorant,
       title: "Ranked grind",
       blurb: "Need 2 for a serious climb.",
@@ -36,7 +45,7 @@ test.beforeAll(async () => {
       status: "open",
     },
     {
-      hostId: host.id,
+      ...common,
       game: helldivers,
       title: "Casual dives",
       blurb: "Just here to laugh.",
@@ -47,7 +56,7 @@ test.beforeAll(async () => {
       status: "open",
     },
     {
-      hostId: host.id,
+      ...common,
       game: valorant,
       title: "Unrated fun",
       blurb: "No pressure at all.",
@@ -58,7 +67,7 @@ test.beforeAll(async () => {
       status: "open",
     },
     {
-      hostId: host.id,
+      ...common,
       game: "Full Game",
       title: "This is full",
       blurb: "Shouldn't appear.",
