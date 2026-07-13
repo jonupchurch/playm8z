@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — every write action in this feature depends on it directly
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — every write action in this feature depends on it directly
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `applications` and `questions` tables to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/listing-detail.ts` — Zod schemas for the apply message, question text, and reply text (data-model.md)
-- [ ] T005 [P] Create `src/lib/postings/get-roster.ts` — derives the host + accepted-applicants + open-count roster (research.md #1) — depends on T002
-- [ ] T006 Build `src/app/listing/[id]/page.tsx` shell: fetch the posting by id (calling Next's `notFound()` — Error Pages' 404 state — when it doesn't exist), derive the viewer's state (host / not-applied / pending / accepted / full), and render the breadcrumb, header, About section, and Details grid — depends on T005
+- [x] T002 Add the `applications` and `questions` tables to `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/listing-detail.ts` — Zod schemas for the apply message, question text, and reply text (data-model.md)
+- [x] T005 [P] Create `src/lib/postings/get-roster.ts` — derives the host + accepted-applicants + open-count roster (research.md #1) — depends on T002
+- [x] T006 Build `src/app/listing/[id]/page.tsx` shell: fetch the posting by id (calling Next's `notFound()` — Error Pages' 404 state — when it doesn't exist), derive the viewer's state (host / not-applied / pending / accepted / full), and render the breadcrumb, header, About section, and Details grid — depends on T005
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,17 +54,17 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `listing-detail.ts`'s message schema (length cap) in `src/lib/validations/listing-detail.test.ts`
-- [ ] T008 [P] [US1] Integration test for `apply-to-posting.ts` (creates a pending Application; rejects a second active application from the same user; rejects for the host or a full listing) in `src/lib/actions/apply-to-posting.test.ts`
-- [ ] T009 [P] [US1] Integration test for `withdraw-application.ts` (sets status to `withdrawn`, only by the applicant) in `src/lib/actions/withdraw-application.test.ts`
-- [ ] T010 [US1] Playwright e2e spec covering apply → confirmation → reload-persists → withdraw, including an axe-core scan — creates `e2e/listing-detail.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `listing-detail.ts`'s message schema (length cap) in `src/lib/validations/listing-detail.test.ts`
+- [x] T008 [P] [US1] Integration test for `apply-to-posting.ts` (creates a pending Application; rejects a second active application from the same user; rejects for the host or a full listing) in `src/lib/actions/apply-to-posting.test.ts`
+- [x] T009 [P] [US1] Integration test for `withdraw-application.ts` (sets status to `withdrawn`, only by the applicant) in `src/lib/actions/withdraw-application.test.ts`
+- [x] T010 [US1] Playwright e2e spec covering apply → confirmation → reload-persists → withdraw, including an axe-core scan — creates `e2e/listing-detail.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build the `apply-to-posting.ts` Server Action in `src/lib/actions/apply-to-posting.ts` — depends on T004
-- [ ] T012 [US1] Build the `withdraw-application.ts` Server Action in `src/lib/actions/withdraw-application.ts` — depends on T004
-- [ ] T013 [US1] Build `src/components/listing/apply-panel.tsx`: apply-form, confirmation, and withdraw states — depends on T011, T012
-- [ ] T014 [US1] Wire `apply-panel.tsx` into `src/app/listing/[id]/page.tsx` — depends on T006, T013
+- [x] T011 [US1] Build the `apply-to-posting.ts` Server Action in `src/lib/actions/apply-to-posting.ts` — depends on T004
+- [x] T012 [US1] Build the `withdraw-application.ts` Server Action in `src/lib/actions/withdraw-application.ts` — depends on T004
+- [x] T013 [US1] Build `src/components/listing/apply-panel.tsx`: apply-form, confirmation, and withdraw states — depends on T011, T012
+- [x] T014 [US1] Wire `apply-panel.tsx` into `src/app/listing/[id]/page.tsx` — depends on T006, T013
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -78,16 +78,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T015 [P] [US2] Integration test for `ask-question.ts` (creates a question; blocked for an unverified session) in `src/lib/actions/ask-question.test.ts`
-- [ ] T016 [P] [US2] Integration test for `reply-to-question.ts` (the host can reply; a non-host session is rejected) in `src/lib/actions/reply-to-question.test.ts`
-- [ ] T017 [US2] Add the Q&A scenario (ask as non-host, reply as host, visible to all subsequent viewers) to `e2e/listing-detail.spec.ts` — depends on T010 (same file)
+- [x] T015 [P] [US2] Integration test for `ask-question.ts` (creates a question; blocked for an unverified session) in `src/lib/actions/ask-question.test.ts`
+- [x] T016 [P] [US2] Integration test for `reply-to-question.ts` (the host can reply; a non-host session is rejected) in `src/lib/actions/reply-to-question.test.ts`
+- [x] T017 [US2] Add the Q&A scenario (ask as non-host, reply as host, visible to all subsequent viewers) to `e2e/listing-detail.spec.ts` — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Build the `ask-question.ts` Server Action in `src/lib/actions/ask-question.ts` — depends on T004
-- [ ] T019 [US2] Build the `reply-to-question.ts` Server Action in `src/lib/actions/reply-to-question.ts`, including the host-only ownership check (research.md #3) — depends on T004
-- [ ] T020 [US2] Build `src/components/listing/qa-thread.tsx`: question list, ask input, host-only reply control per unanswered question — depends on T018, T019
-- [ ] T021 [US2] Wire `qa-thread.tsx` into `src/app/listing/[id]/page.tsx` — depends on T006, T020
+- [x] T018 [US2] Build the `ask-question.ts` Server Action in `src/lib/actions/ask-question.ts` — depends on T004
+- [x] T019 [US2] Build the `reply-to-question.ts` Server Action in `src/lib/actions/reply-to-question.ts`, including the host-only ownership check (research.md #3) — depends on T004
+- [x] T020 [US2] Build `src/components/listing/qa-thread.tsx`: question list, ask input, host-only reply control per unanswered question — depends on T018, T019
+- [x] T021 [US2] Wire `qa-thread.tsx` into `src/app/listing/[id]/page.tsx` — depends on T006, T020
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -101,12 +101,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T022 [US3] Add the full-state, host-viewing-own-listing, and accepted-roster-display scenarios to `e2e/listing-detail.spec.ts` — depends on T017 (same file)
+- [x] T022 [US3] Add the full-state, host-viewing-own-listing, and accepted-roster-display scenarios to `e2e/listing-detail.spec.ts` — depends on T017 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Build `src/components/listing/roster.tsx`: host row, accepted-member rows, dashed open rows — no role/class label on any row (FR-004) — depends on T005
-- [ ] T024 [US3] Wire the recruiting/full header state and the host/full/pending/accepted viewer-state branching into `src/app/listing/[id]/page.tsx` and `apply-panel.tsx` — depends on T006, T013, T023
+- [x] T023 [US3] Build `src/components/listing/roster.tsx`: host row, accepted-member rows, dashed open rows — no role/class label on any row (FR-004) — depends on T005
+- [x] T024 [US3] Wire the recruiting/full header state and the host/full/pending/accepted viewer-state branching into `src/app/listing/[id]/page.tsx` and `apply-panel.tsx` — depends on T006, T013, T023
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -114,12 +114,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Confirm `next build` succeeds locally and CI stays green with the new dynamic route, five Server Actions, and two new tables
-- [ ] T026 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T027 [P] Update `docs/feature-list.md`, marking Listing detail's spec/plan/tasks as complete
-- [ ] T028 *(added 2026-07-12, spec.md's amended FR-014/FR-018)* Build `toggle-saved-listing.ts` (`src/lib/actions/toggle-saved-listing.ts`), inserting/deleting a row in Profile's (`007`) `savedListings` table, gated the same way as apply/ask (auth + email-verified) — depends on Profile's `savedListings` table existing (whichever of the two features' migrations lands first, per data-model.md's note)
-- [ ] T029 *(added 2026-07-12)* Wire a Save/Unsave control into the apply panel or listing header, reflecting the viewer's current saved state — depends on T028
-- [ ] T030 *(added 2026-07-12, spec.md's amended FR-019)* Wire a "Report" control into the apply panel (and each Q&A entry) opening Notifications + Report modal's (`012`) existing report-modal component, passing this listing (or the specific question) as the target — depends on `012`'s report-modal component existing
+- [x] T025 Confirm `next build` succeeds locally and CI stays green with the new dynamic route, five Server Actions, and two new tables
+- [x] T026 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [x] T027 [P] Update `docs/feature-list.md`, marking Listing detail's spec/plan/tasks as complete
+- [x] T028 *(added 2026-07-12, spec.md's amended FR-014/FR-018)* Build `toggle-saved-listing.ts` (`src/lib/actions/toggle-saved-listing.ts`), inserting/deleting a row in Profile's (`007`) `savedListings` table, gated the same way as apply/ask (auth + email-verified) — depends on Profile's `savedListings` table existing (whichever of the two features' migrations lands first, per data-model.md's note)
+- [x] T029 *(added 2026-07-12)* Wire a Save/Unsave control into the apply panel or listing header, reflecting the viewer's current saved state — depends on T028
+- [ ] T030 *(added 2026-07-12, spec.md's amended FR-019)* Wire a "Report" control into the apply panel (and each Q&A entry) opening Notifications + Report modal's (`012`) existing report-modal component, passing this listing (or the specific question) as the target — depends on `012`'s report-modal component existing. **Deferred (2026-07-13)**: features are being implemented in numeric order and `012-notifications-and-report-modal` has not been built yet — there is no report-modal component to wire into. Revisit this task as a bounded amendment to this feature once `012` is implemented, per this project's established cross-feature-amendment pattern (e.g., Admin Reports retroactively amending Admin Postings/Admin Forum). Share and Save (T028/T029) shipped since neither depends on an unimplemented feature.
 
 ---
 

@@ -2,7 +2,8 @@
 
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
-Browse, and Post a Game are done and merged. Listing detail is next.
+Browse, Post a Game, and Listing detail are done and merged. Profile +
+Account settings is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -952,12 +953,16 @@ merging.
 
 ## Next up
 
-- Auth & Onboarding, Error Pages, Home, Browse, and Post a Game are
-  implemented and merged. Listing detail (`006`) is next — introduces
-  `applications`/`questions` (this project's first real writes to
-  either), and derives the roster from host + accepted applications
-  rather than a separate `RosterSlot` table (ADR 0004) — awaiting the
-  user's go-ahead.
+- Auth & Onboarding, Error Pages, Home, Browse, Post a Game, and
+  Listing detail are implemented and merged. Profile + Account
+  settings (`007`) is next — will need to actually define
+  `savedListings`' final shape/migration ownership (Listing detail
+  already created the table; Profile just extends/reads it) — awaiting
+  the user's go-ahead.
+- Listing detail's Report action (FR-019) is deferred pending
+  Notifications + Report modal (`012`, not yet implemented) —
+  `specs/006-listing-detail/tasks.md`'s T030. Revisit as a bounded
+  amendment to Listing detail once `012` is built.
 - Real Resend wiring remains blocked on domain ownership (unchanged);
   verification emails still log to the server console.
 - `users.role` and real admin gating remain blocked on Admin Settings
@@ -1187,6 +1192,97 @@ axe-core scan) — 127 unit tests and 21 e2e tests total across the
 whole suite (every spec file), all passing, confirmed twice in a row.
 `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
 and `npm run build` all verified green before merging.
+
+## Listing detail implemented (2026-07-13)
+
+**Listing detail: implemented** — 26 of 27 tasks in
+`specs/006-listing-detail/tasks.md` complete, on branch
+`006-listing-detail` (rebuilt on top of `main`), merged back.
+
+The public `/listing/[id]` page: header (recruiting/full state, per
+`postings.seatsOpen`), About (the real `blurb` text — the wireframe's
+"What I'm looking for" checklist is omitted entirely, not fabricated,
+since no field backs discrete checklist items and Post a Game's own
+form never collected one), a Details grid, a derived Party roster
+(host + accepted applicants + dashed open rows, no role/class label
+anywhere per ADR 0004 — `get-roster.ts` computes `openCount =
+seatsTotal - 1 - acceptedCount`), a public Q&A thread (any verified
+visitor asks; only the host replies, enforced by a per-resource
+ownership check — a new authorization shape beyond the session-wide
+auth/verification checks every prior write action used), and a sticky
+apply panel (message + Apply, or confirmation/withdraw once applied)
+plus Share and Save. A logged-out visitor sees "Log in to apply"/"Log
+in to ask a question" proactively rather than a dead-end form.
+
+**Schema**: introduces `applications` (this feature's first real
+writer — a fourth `withdrawn` status distinct from `declined` so the
+record stays legible about who ended it, per ADR 0005) and `questions`
+(one reply per question, host-only, enforced server-side). Also
+introduces `savedListings` — Profile (`007`) owns this entity's shape
+for its own "Saved" tab, but since features are being implemented in
+numeric order, Listing detail gets there first and creates the table
+(same shared-table precedent as `postings`). Unsaving is a real
+delete, a deliberate, documented, scoped exception to ADR 0005 — a
+bookmark carries no moderation/audit history worth preserving.
+
+**Report (FR-019) is the one deferred task, not stubbed.** It opens
+Notifications + Report modal's (`012`) canonical report flow, and that
+feature hasn't been implemented yet — there's no modal component to
+wire into. Share and Save shipped since neither depends on an
+unimplemented feature. `tasks.md`'s T030 documents the deferral
+explicitly; revisit as a bounded amendment once `012` lands, matching
+this project's established cross-feature-amendment pattern.
+
+**A real, reproducible bug, caught by inspecting the actual
+accessibility snapshot rather than assuming a timing fluke**: after a
+successful Apply, `apply-panel.tsx`'s local `submitting` flag was never
+reset to `false` before `router.refresh()` re-rendered the panel into
+its new "pending" branch — so the Withdraw button rendered
+already-disabled, showing "Withdrawing…" before anyone had clicked it.
+A debug spec that dumped the page's accessibility tree at the moment
+of failure showed `btn.count()` was `0` for the expected "Withdraw
+application" text, since the button had already relabeled itself. The
+identical latent bug existed in the Q&A reply handler too, just masked
+there since the reply form unmounts entirely on success. Fixed by
+resetting `submitting` immediately once the action resolves, on both
+the success and failure paths, in both `apply-panel.tsx` and
+`qa-thread.tsx`.
+
+**A confirmed dev-mode-only Playwright false alarm, not a product
+bug — root-caused with the same discipline as Post a Game's cold-start
+false alarm, not waved away as "probably flaky."** The Q&A e2e test's
+final check (a reply visible to a logged-out visitor) failed
+consistently, but only when simulated via
+`page.context().clearCookies()` on the *same* browser context. Traced
+via `curl` to `next dev` sending `Cache-Control: no-cache,
+must-revalidate` for this route — missing the `no-store` directive a
+real production build sends (`private, no-cache, no-store, max-age=0,
+must-revalidate`), confirmed by actually running `next build && next
+start` side-by-side and diffing the headers. Combined with no `Vary:
+Cookie`, Chromium's own HTTP cache could reuse a pre-mutation response
+across a cookie change within one browser context — a dev-server-only
+artifact. A genuinely fresh `browser.newContext()` (real isolation,
+not just cleared cookies) showed correct data on the first request,
+every time, confirmed repeatedly. Fixed the *test* (use a fresh
+context for the "different visitor" check), not the product — this
+cannot happen for a real visitor in production, where `no-store`
+prevents the browser from caching the response at all.
+
+**Also fixed a real, pre-existing test-isolation gap**, exposed
+(not caused) by re-running the dev-seed script during this session:
+`search-postings.test.ts`'s keyword-search test searched for the
+literal string "Casual dives," which collided with
+`seed-postings.ts`'s sample title "Casual Dives — all welcome" via a
+case-insensitive substring match. Scoped that title with the same
+`tag()` helper the file already uses for all its other rows.
+
+31 new unit/integration tests (`listing-detail.ts`'s Zod schemas,
+`get-roster.ts`'s derivation logic, and all five Server Actions
+against real Postgres) and a 9-scenario `e2e/listing-detail.spec.ts`
+(one with an axe-core scan) — 158 unit tests and 30 e2e tests total
+across the whole suite (every spec file), all passing, confirmed
+twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
+run test:e2e`, and `npm run build` all verified green before merging.
 
 ## Blockers
 
