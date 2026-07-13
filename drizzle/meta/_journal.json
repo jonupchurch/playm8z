@@ -71,6 +71,20 @@
       "when": 1783983492132,
       "tag": "0009_chunky_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1783985129370,
+      "tag": "0010_tan_firebrand",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1783985409755,
+      "tag": "0011_mushy_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

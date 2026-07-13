@@ -6,6 +6,8 @@ import {
   integer,
   uuid,
   boolean,
+  unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -264,6 +266,69 @@ export const forumThreads = pgTable("forumThreads", {
   likes: integer("likes").notNull().default(0),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
+
+// Forum Thread (010) -- this feature's only writer. `likes` is
+// denormalized (kept in sync with the `likes` table below on every
+// like/unlike) for fast reads; that table remains the source of truth
+// for "did this user like this." No `isBestAnswer` column (research.md
+// #4 -- nothing anywhere sets it).
+export const forumReplies = pgTable("forumReplies", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  threadId: uuid("threadId")
+    .notNull()
+    .references(() => forumThreads.id, { onDelete: "cascade" }),
+  authorId: uuid("authorId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  body: text("body").notNull(),
+  quotedReplyId: uuid("quotedReplyId").references((): AnyPgColumn => forumReplies.id),
+  likes: integer("likes").notNull().default(0),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Forum Thread (010) -- a real per-user relationship, not a bare
+// counter, so double-liking and unliking both work correctly
+// (research.md #2). The unique constraint on (userId, targetType,
+// targetId) is the actual enforcement point, not just an
+// application-level check, since two near-simultaneous requests could
+// otherwise both pass an application check before either insert lands.
+// Unliking deletes the row outright -- a like carries no audit/trust
+// value worth preserving (same reasoning as SavedListing/UserGame,
+// ADR 0005's scoped exception).
+export const likes = pgTable(
+  "likes",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    targetType: text("targetType").notNull(),
+    targetId: uuid("targetId").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.userId, table.targetType, table.targetId)],
+);
+
+// Forum Thread (010) -- stores a per-user thread-subscription
+// preference only (research.md #5); nothing currently reads this to
+// send a notification, since no notification-delivery mechanism
+// exists yet. Unsubscribing deletes the row (same reasoning as Likes).
+// The unique constraint prevents a duplicate row under the same
+// toggle-race concern that motivated `likes`' own constraint.
+export const threadSubscriptions = pgTable(
+  "threadSubscriptions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    threadId: uuid("threadId")
+      .notNull()
+      .references(() => forumThreads.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.userId, table.threadId)],
+);
 
 export const verificationTokens = pgTable(
   "verificationToken",

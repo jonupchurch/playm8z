@@ -1,0 +1,1 @@
+ALTER TABLE "threadSubscriptions" ADD CONSTRAINT "threadSubscriptions_userId_threadId_unique" UNIQUE("userId","threadId");
