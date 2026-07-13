@@ -2,8 +2,8 @@
 
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
-Browse, Post a Game, and Listing detail are done and merged. Profile +
-Account settings is next.
+Browse, Post a Game, Listing detail, and Profile + Account settings are
+done and merged. Blocked Users is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -953,12 +953,11 @@ merging.
 
 ## Next up
 
-- Auth & Onboarding, Error Pages, Home, Browse, Post a Game, and
-  Listing detail are implemented and merged. Profile + Account
-  settings (`007`) is next — will need to actually define
-  `savedListings`' final shape/migration ownership (Listing detail
-  already created the table; Profile just extends/reads it) — awaiting
-  the user's go-ahead.
+- Auth & Onboarding, Error Pages, Home, Browse, Post a Game, Listing
+  detail, and Profile + Account settings are implemented and merged.
+  Blocked Users (`008`) is next — introduces `blocks`/`reports` (first
+  writer of the latter, via "Also report") and this project's first
+  real modal-dialog UI — awaiting the user's go-ahead.
 - Listing detail's Report action (FR-019) is deferred pending
   Notifications + Report modal (`012`, not yet implemented) —
   `specs/006-listing-detail/tasks.md`'s T030. Revisit as a bounded
@@ -1283,6 +1282,138 @@ against real Postgres) and a 9-scenario `e2e/listing-detail.spec.ts`
 across the whole suite (every spec file), all passing, confirmed
 twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
 run test:e2e`, and `npm run build` all verified green before merging.
+
+## Profile + Account settings implemented (2026-07-13)
+
+**Profile + Account settings: implemented** — all 35 tasks in
+`specs/007-profile-and-account-settings/tasks.md` complete, on branch
+`007-profile-and-account-settings` (rebuilt on top of `main`), merged
+back. The largest feature specced so far, and the largest implemented
+so far.
+
+Four real routes under `/profile` sharing one `layout.tsx` (header:
+avatar, name, handle, joined year, a trivially-true Online badge, plus
+the four tab links): **Overview** (an editable "Games I play" list —
+game + optional self-reported rank/hours, a new `userGames` table
+richer than onboarding's flat game-name list — an active-postings
+preview, and a public-info sidebar); **My postings** (every posting
+the user hosts, with status and applicant count, Edit only while no
+application has been accepted, Close/Reopen); **Saved** (bookmarked
+listings, reusing Listing detail's `toggleSavedListing`/`savedListings`
+directly rather than a parallel implementation); **Account** (personal
+info, password change gated on having one set, email change with
+re-verification reusing Auth & Onboarding's existing helper, privacy
+toggles, and a single Deactivate action in a Danger Zone — "Delete
+permanently" doesn't exist at all, since ADR 0005 already makes true
+deletion impossible platform-wide).
+
+**Schema**: extends `user` with `bio`, `createdAt` (needed for "joined"
+display — no earlier feature happened to need it), four privacy
+booleans (`privacyShowAge`/`privacyShowRegion`/`privacyShowOnline`/
+`privacyDiscoverable` — stored here, consumed by the not-yet-built
+Public Profile feature), and `deactivatedAt`. Posting edits reuse Post
+a Game's own validation schema directly rather than redefining
+title/description/etc. bounds a second time, so the two features'
+rules can't silently drift apart.
+
+**`src/auth.ts`'s second amendment**, after Auth & Onboarding's own
+Google `profile()` callback: a new `signIn` callback clears
+`deactivatedAt` on every successful sign-in (a no-op when already
+null), giving FR-013's "reactivates automatically, no separate undo
+step" requirement a real implementation. Extracted into a small,
+independently testable `reactivate-on-sign-in.ts` helper rather than
+inlined directly in the NextAuth config object, so the logic doesn't
+require exercising NextAuth's own machinery to unit test — matches
+`requireVerifiedEmail()`/`requireAuth()`'s existing pattern of small,
+focused, testable auth helpers.
+
+**A bounded amendment to two already-merged features**: `get-open-
+postings.ts` (Home) and `search-postings.ts` (Browse, which also
+backs `get-facet-counts.ts`) now exclude a deactivated host's postings
+from their results — FR-013/SC-005 require it, and Home/Browse are
+literally what "shows up to other visitors" means concretely on this
+platform today. Same "later feature amends an earlier one's query"
+pattern already used repeatedly (e.g. Admin Users' `removedAt`
+exclusion of moderated content).
+
+**A real, previously-latent Vitest bug, caught (not caused) by this
+feature's own full-suite verification pass**: several integration test
+files mutate shared, global Postgres state for real —
+`get-trending.test.ts`/`get-facet-counts.test.ts` both do an unscoped
+`db.delete(postings)` in their own `beforeAll`, since they aggregate
+over the *whole* table — and Vitest's default file-level parallelism
+let that race against `search-postings.test.ts`'s own rows (inserted
+but never explicitly cleared), intermittently wiping them mid-run. This
+exact risk has existed since Browse first wrote that pattern; it
+simply never lost the race before now. Root-caused by noticing the
+failure count varied across identical reruns (2, 10, 12 failures) —
+the signature of a genuine race, not a deterministic bug — then
+confirmed by running `search-postings.test.ts` alone (always green)
+versus alongside its siblings (flaky). Fixed with the exact reasoning
+`playwright.config.ts` already applied to the identical class of
+problem: `vitest.config.ts` now sets `fileParallelism: false`, paired
+with `pool: "forks"` and `maxWorkers: 1` (the first attempt at
+`fileParallelism: false` alone broke Vitest's own runner context
+outright on this version's default "threads" pool — a real, if
+unrelated, wrinkle in the fix itself). Confirmed stable across 4
+consecutive full-suite reruns afterward.
+
+**A real dev-server connection leak, unrelated to this feature's own
+code**: mid-session, every Postgres connection attempt started failing
+with "sorry, too many clients already" — including a brand-new,
+single-connection diagnostic script, ruling out anything-in-app-code
+as the immediate cause. Traced to the long-running `next dev` process
+(PID alive for this entire multi-hour, many-file-edits session)
+holding far more connections than a healthy baseline; killing and
+restarting it dropped the count from exhausted to 11 immediately, days
+before any other action could have. Not investigated further as a
+product bug (would need dedicated reproduction across a fresh session
+to confirm whether it's Next.js dev-mode Fast Refresh re-instantiating
+`src/db/index.ts`'s module-level client without closing the old one,
+or something else) — noted here as an operational fact: if local
+Postgres connections mysteriously exhaust during a long dev session,
+restarting the dev server is the first thing to try, not a Postgres
+service restart (which this environment doesn't have permission to
+do) or a database investigation.
+
+**The same `submitting`-flag-never-reset-on-success bug class Listing
+detail already found**, this time in `account-forms.tsx`'s password/
+email forms and `posting-management-card.tsx`'s edit form — fixed
+proactively (all reset `submitting` unconditionally once their action
+resolves) rather than waiting to be bitten by it again, since the
+pattern was already a known risk going in.
+
+**A confirmed dev-mode-only staleness window, root-caused rather than
+worked around with a blind sleep** (the second finding of this exact
+class, after Listing detail's Q&A caching discovery): `updateProfile()`/
+`updatePrivacy()` had already committed to Postgres by the time their
+success state rendered client-side (a Server Action only returns after
+its own `await db.update()` resolves) — but an immediate fresh
+navigation or `page.reload()` could still render pre-write data for a
+few hundred milliseconds under `next dev`, confirmed by reading the
+same row through a separate connection immediately versus after a
+short delay. Fixed the *tests* with Playwright's `expect(...).toPass()`
+retry helper (re-running the whole navigate-and-check step until it
+settles), not the product, and not a fixed sleep — the same dev-only
+artifact category as Listing detail's confirmed HTTP-cache finding.
+
+**A real e2e locator bug worth remembering**: `div.filter({ has: <a
+target> }).last()` doesn't reliably select "the card containing that
+target" when the card's own header row is *itself* a div containing
+the same target as a nested child — the header row, being deeper in
+the tree, wins `.last()` instead of the actual card, silently scoping
+every later assertion to the wrong (button-less) element and timing
+out. Fixed by adding a second `.filter({ has: <a management button> })`
+condition, which the header row lacks, leaving the real card as the
+correct deepest survivor among matches satisfying *both* filters.
+
+40+ new unit/integration tests (`profile.ts`'s Zod schemas,
+`requireAuth()`'s own gate, and all eight Server Actions against real
+Postgres) and an 8-scenario `e2e/profile.spec.ts` (one with an
+axe-core scan) — 205 unit tests and 38 e2e tests total across the
+whole suite (every spec file), all passing, confirmed twice in a row.
+`npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
+and `npm run build` all verified green before merging.
 
 ## Blockers
 

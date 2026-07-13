@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm Auth & Onboarding's `src/lib/email/send-verification-email.ts` and Post a Game's `src/lib/validations/posting.ts` exist in the codebase before starting — both are direct dependencies of this feature's email-change and posting-edit paths
+- [x] T001 Confirm Auth & Onboarding's `src/lib/email/send-verification-email.ts` and Post a Game's `src/lib/validations/posting.ts` exist in the codebase before starting — both are direct dependencies of this feature's email-change and posting-edit paths
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend `user` (`bio`, `createdAt`, four privacy booleans, `deactivatedAt`) and add the `userGames` and `savedListings` tables in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/profile.ts` — every Zod schema this feature needs (data-model.md)
-- [ ] T005 Build `src/app/profile/layout.tsx`: header (avatar, name, handle, joined date, a trivially-true Online badge, research.md's own-profile reasoning) plus the four tab links — depends on T002
+- [x] T002 Extend `user` (`bio`, `createdAt`, four privacy booleans, `deactivatedAt`) and add the `userGames` and `savedListings` tables in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/profile.ts` — every Zod schema this feature needs (data-model.md)
+- [x] T005 Build `src/app/profile/layout.tsx`: header (avatar, name, handle, joined date, a trivially-true Online badge, research.md's own-profile reasoning) plus the four tab links — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,22 +53,22 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit tests for `profile.ts`'s schemas (name/region/bio, game/rank/hours, password rules) in `src/lib/validations/profile.test.ts`
-- [ ] T007 [P] [US1] Integration test for `update-profile.ts` (persists name/region/bio) in `src/lib/actions/update-profile.test.ts`
-- [ ] T008 [P] [US1] Integration test for `manage-games.ts` (add/remove `UserGame` rows) in `src/lib/actions/manage-games.test.ts`
-- [ ] T009 [P] [US1] Integration test for `change-password.ts` (correct current password succeeds; incorrect is rejected) in `src/lib/actions/change-password.test.ts`
-- [ ] T010 [P] [US1] Integration test for `update-email.ts` (resets `emailVerified`, sends a new verification email) in `src/lib/actions/update-email.test.ts`
-- [ ] T011 [US1] Playwright e2e spec covering profile/games/password/email edits, including the Google-only-account password-section-hidden check, with an axe-core scan — creates `e2e/profile.spec.ts`
+- [x] T006 [P] [US1] Unit tests for `profile.ts`'s schemas (name/region/bio, game/rank/hours, password rules) in `src/lib/validations/profile.test.ts`
+- [x] T007 [P] [US1] Integration test for `update-profile.ts` (persists name/region/bio) in `src/lib/actions/update-profile.test.ts`
+- [x] T008 [P] [US1] Integration test for `manage-games.ts` (add/remove `UserGame` rows) in `src/lib/actions/manage-games.test.ts`
+- [x] T009 [P] [US1] Integration test for `change-password.ts` (correct current password succeeds; incorrect is rejected) in `src/lib/actions/change-password.test.ts`
+- [x] T010 [P] [US1] Integration test for `update-email.ts` (resets `emailVerified`, sends a new verification email) in `src/lib/actions/update-email.test.ts`
+- [x] T011 [US1] Playwright e2e spec covering profile/games/password/email edits, including the Google-only-account password-section-hidden check, with an axe-core scan — creates `e2e/profile.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Build `update-profile.ts` in `src/lib/actions/update-profile.ts` — depends on T004
-- [ ] T013 [US1] Build `manage-games.ts` in `src/lib/actions/manage-games.ts` — depends on T004
-- [ ] T014 [US1] Build `change-password.ts` in `src/lib/actions/change-password.ts` (research.md #2) — depends on T004
-- [ ] T015 [US1] Build `update-email.ts` in `src/lib/actions/update-email.ts`, reusing Auth & Onboarding's verification-email helper (research.md #4) — depends on T004
-- [ ] T016 [US1] Build `src/components/profile/games-list.tsx` — depends on T013
-- [ ] T017 [US1] Build `src/app/profile/page.tsx` (Overview): games list, active-postings preview, public-info sidebar — depends on T005, T016
-- [ ] T018 [US1] Build `src/app/profile/account/page.tsx`: personal-info form, password section (conditional on a set password), email section — depends on T005, T012, T014, T015
+- [x] T012 [US1] Build `update-profile.ts` in `src/lib/actions/update-profile.ts` — depends on T004
+- [x] T013 [US1] Build `manage-games.ts` in `src/lib/actions/manage-games.ts` — depends on T004
+- [x] T014 [US1] Build `change-password.ts` in `src/lib/actions/change-password.ts` (research.md #2) — depends on T004
+- [x] T015 [US1] Build `update-email.ts` in `src/lib/actions/update-email.ts`, reusing Auth & Onboarding's verification-email helper (research.md #4) — depends on T004
+- [x] T016 [US1] Build `src/components/profile/games-list.tsx` — depends on T013
+- [x] T017 [US1] Build `src/app/profile/page.tsx` (Overview): games list, active-postings preview, public-info sidebar — depends on T005, T016
+- [x] T018 [US1] Build `src/app/profile/account/page.tsx`: personal-info form, password section (conditional on a set password), email section — depends on T005, T012, T014, T015
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -82,14 +82,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T019 [P] [US2] Integration test for `manage-posting.ts` (edit succeeds pre-acceptance; blocked once an application is accepted; close/reopen toggles status) in `src/lib/actions/manage-posting.test.ts`
-- [ ] T020 [US2] Add the My postings scenario to `e2e/profile.spec.ts` — depends on T011 (same file)
+- [x] T019 [P] [US2] Integration test for `manage-posting.ts` (edit succeeds pre-acceptance; blocked once an application is accepted; close/reopen toggles status) in `src/lib/actions/manage-posting.test.ts`
+- [x] T020 [US2] Add the My postings scenario to `e2e/profile.spec.ts` — depends on T011 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Build `manage-posting.ts` in `src/lib/actions/manage-posting.ts`, reusing Post a Game's validation schemas (research.md #5) — depends on T004
-- [ ] T022 [US2] Build `src/components/profile/posting-management-card.tsx`: status, applicant count, conditional Edit, Close/Reopen — depends on T021
-- [ ] T023 [US2] Build `src/app/profile/postings/page.tsx` — depends on T005, T022
+- [x] T021 [US2] Build `manage-posting.ts` in `src/lib/actions/manage-posting.ts`, reusing Post a Game's validation schemas (research.md #5) — depends on T004
+- [x] T022 [US2] Build `src/components/profile/posting-management-card.tsx`: status, applicant count, conditional Edit, Close/Reopen — depends on T021
+- [x] T023 [US2] Build `src/app/profile/postings/page.tsx` — depends on T005, T022
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -103,11 +103,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T024 [US3] Add the Saved-tab scenario (appears, unsave from either surface, empty state) to `e2e/profile.spec.ts` — depends on T020 (same file)
+- [x] T024 [US3] Add the Saved-tab scenario (appears, unsave from either surface, empty state) to `e2e/profile.spec.ts` — depends on T020 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Build `src/app/profile/saved/page.tsx`: lists `savedListings` joined with `postings`, reuses Listing detail's `toggle-saved-listing.ts` (`006-listing-detail`) for unsave, empty state with a path to Browse — depends on T005
+- [x] T025 [US3] Build `src/app/profile/saved/page.tsx`: lists `savedListings` joined with `postings`, reuses Listing detail's `toggle-saved-listing.ts` (`006-listing-detail`) for unsave, empty state with a path to Browse — depends on T005
 
 **Checkpoint**: User Stories 1, 2, and 3 all work independently.
 
@@ -121,16 +121,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 4
 
-- [ ] T026 [P] [US4] Integration test for `update-privacy.ts` (each toggle persists independently) in `src/lib/actions/update-privacy.test.ts`
-- [ ] T027 [P] [US4] Integration test for `deactivate-account.ts` and the `src/auth.ts` reactivation-on-login addition (research.md #3) in `src/lib/actions/deactivate-account.test.ts`
-- [ ] T028 [US4] Add the privacy-toggle and deactivate/reactivate scenarios to `e2e/profile.spec.ts` — depends on T024 (same file)
+- [x] T026 [P] [US4] Integration test for `update-privacy.ts` (each toggle persists independently) in `src/lib/actions/update-privacy.test.ts`
+- [x] T027 [P] [US4] Integration test for `deactivate-account.ts` and the `src/auth.ts` reactivation-on-login addition (research.md #3) in `src/lib/actions/deactivate-account.test.ts`
+- [x] T028 [US4] Add the privacy-toggle and deactivate/reactivate scenarios to `e2e/profile.spec.ts` — depends on T024 (same file)
 
 ### Implementation for User Story 4
 
-- [ ] T029 [US4] Build `update-privacy.ts` in `src/lib/actions/update-privacy.ts` — depends on T004
-- [ ] T030 [US4] Build `deactivate-account.ts` in `src/lib/actions/deactivate-account.ts` and add the reactivation-on-sign-in check to `src/auth.ts` (research.md #3) — depends on T004
-- [ ] T031 [US4] Build `src/components/profile/privacy-toggles.tsx` and `src/components/profile/danger-zone.tsx` (Deactivate with a confirmation step, per Principle III) — depends on T029, T030
-- [ ] T032 [US4] Wire `privacy-toggles.tsx` and `danger-zone.tsx` into `src/app/profile/account/page.tsx` — depends on T018, T031
+- [x] T029 [US4] Build `update-privacy.ts` in `src/lib/actions/update-privacy.ts` — depends on T004
+- [x] T030 [US4] Build `deactivate-account.ts` in `src/lib/actions/deactivate-account.ts` and add the reactivation-on-sign-in check to `src/auth.ts` (research.md #3) — depends on T004
+- [x] T031 [US4] Build `src/components/profile/privacy-toggles.tsx` and `src/components/profile/danger-zone.tsx` (Deactivate with a confirmation step, per Principle III) — depends on T029, T030
+- [x] T032 [US4] Wire `privacy-toggles.tsx` and `danger-zone.tsx` into `src/app/profile/account/page.tsx` — depends on T018, T031
 
 **Checkpoint**: All four user stories independently functional.
 
@@ -138,9 +138,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T033 Confirm `next build` succeeds locally and CI stays green with the four new routes, ~7 Server Actions, the `src/auth.ts` change, and the extended schema
-- [ ] T034 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
-- [ ] T035 [P] Update `docs/feature-list.md`, marking Profile's spec/plan/tasks as complete
+- [x] T033 Confirm `next build` succeeds locally and CI stays green with the four new routes, ~7 Server Actions, the `src/auth.ts` change, and the extended schema
+- [x] T034 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
+- [x] T035 [P] Update `docs/feature-list.md`, marking Profile's spec/plan/tasks as complete
 
 ---
 

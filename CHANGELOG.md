@@ -1032,3 +1032,90 @@ may begin on any/all of them per the constitution (v1.0.0).
   `npm run build` all verified green before merging. 26 of 27 tasks in
   `specs/006-listing-detail/tasks.md` checked off (T030/Report
   deferred, see above).
+
+## [Unreleased] (cont. 8)
+
+### Added
+- **Implemented Profile + Account settings**: four real routes under
+  `/profile` sharing one layout — Overview (editable games-I-play
+  list, an active-postings preview, a public-info sidebar), My
+  postings (status/applicant count, Edit only before any application
+  is accepted, Close/Reopen), Saved (bookmarked listings, reusing
+  Listing detail's `toggleSavedListing`/`savedListings` directly), and
+  Account (personal info, password change gated on having one set,
+  email change with re-verification, privacy toggles, and a single
+  Deactivate action — "Delete permanently" is dropped entirely, since
+  ADR 0005 already makes true deletion impossible platform-wide).
+  Extends `user` with `bio`, `createdAt`, four privacy booleans, and
+  `deactivatedAt`; adds `userGames` (game + optional self-reported
+  rank/hours, richer than onboarding's flat game-name list). Posting
+  edits reuse Post a Game's own validation schema rather than
+  redefining title/description/etc. bounds a second time.
+- **`src/auth.ts`'s second amendment** (after Auth & Onboarding's
+  Google `profile()` callback): a new `signIn` callback clears
+  `deactivatedAt` on every successful sign-in, extracted into a small
+  testable `reactivate-on-sign-in.ts` helper rather than inlined, so
+  the reactivation logic doesn't require exercising NextAuth's own
+  machinery to unit test.
+- **A bounded amendment to Home and Browse**: `get-open-postings.ts`
+  and `search-postings.ts` now exclude a deactivated host's postings
+  from their results (FR-013/SC-005) — the same "later feature amends
+  an earlier one's query" pattern this project has used repeatedly
+  (e.g. Admin Users' `removedAt` exclusion).
+- **Caught and fixed a real, previously-latent Vitest bug**: several
+  integration test files mutate shared, global Postgres state for real
+  (`get-trending.test.ts`/`get-facet-counts.test.ts` both do an
+  unscoped `db.delete(postings)` in their own `beforeAll`, since they
+  aggregate over the whole table) — Vitest's default file-level
+  parallelism let that race with `search-postings.test.ts`'s own,
+  never-cleared rows, intermittently wiping them mid-run. This bug has
+  existed since Browse, silently depending on lucky scheduling timing
+  every prior full-suite run. Fixed with the exact same reasoning
+  `playwright.config.ts` already used for the identical class of
+  problem: `vitest.config.ts` now sets `fileParallelism: false` (paired
+  with `pool: "forks"`/`maxWorkers: 1`, since `fileParallelism: false`
+  alone broke Vitest's own runner context on the default "threads"
+  pool in this version) — correctness over parallel speed at this
+  suite's current size.
+- **A real, reproducible bug caught by inspecting an actual
+  accessibility snapshot rather than assuming a timing fluke** (second
+  time this technique has paid off, after Listing detail's identical
+  `submitting`-flag bug): after a successful Apply on Listing detail
+  and a successful ask/reply on its Q&A thread, the same missing-reset
+  pattern existed one layer up too — none of it was product-visible
+  until this feature's own e2e coverage exercised the exact
+  render-into-a-new-branch-while-still-mounted shape. Not a new
+  instance here — see Listing detail's own entry — but confirms the
+  pattern is worth checking for on every future stateful action
+  handler that calls `router.refresh()` instead of navigating away.
+- **A confirmed dev-mode-only staleness window, root-caused rather
+  than papered over with a blind sleep**: `updateProfile()`/
+  `updatePrivacy()` had already committed by the time their success
+  state rendered client-side (Server Actions only return after their
+  own `await db.update()` resolves) — but an immediate fresh
+  navigation or `page.reload()` could still render pre-write data for
+  a few hundred milliseconds in `next dev`. Confirmed via a debug spec
+  reading the same row through a separate connection immediately
+  versus after a short delay. Fixed the *tests* with Playwright's
+  `expect(...).toPass()` retry helper (re-running the whole
+  navigate-and-check step until it settles) rather than a fixed sleep,
+  and rather than changing any product code — the same category of
+  dev-only artifact as Listing detail's confirmed HTTP-cache finding,
+  not a real data-loss bug.
+- **A real card-locator bug in the new e2e spec itself**, worth
+  remembering for future tests: `div.filter({ has: <text> }).last()`
+  doesn't reliably select "the specific card" when the card's own
+  header row *also* contains that text as a nested div — the header
+  row, being deeper in the tree, wins `.last()` instead of the actual
+  card, silently scoping later assertions to the wrong (button-less)
+  element. Fixed by adding a second `.filter({ has: <a button> })`,
+  which the header row lacks, leaving the real card as the correct
+  deepest survivor.
+- 40+ new unit/integration tests (`profile.ts`'s Zod schemas,
+  `requireAuth()`, and all eight Server Actions against real Postgres)
+  and an 8-scenario `e2e/profile.spec.ts` (one with an axe-core scan)
+  — 205 unit tests and 38 e2e tests total across the whole suite, all
+  passing, confirmed twice in a row. `npm run typecheck`, `npm run
+  lint`, `npm test`, `npm run test:e2e` (full suite, all files), and
+  `npm run build` all verified green before merging. All 35 tasks in
+  `specs/007-profile-and-account-settings/tasks.md` checked off.
