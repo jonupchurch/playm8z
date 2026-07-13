@@ -1,11 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ListingCard, relativeAge } from "./listing-card";
-import type { OpenPosting } from "@/lib/postings/get-open-postings";
+import { ListingCard, relativeAge, type ListingCardPosting } from "./listing-card";
 
-const basePosting: OpenPosting = {
+const basePosting: ListingCardPosting = {
   id: "11111111-1111-1111-1111-111111111111",
-  hostId: "22222222-2222-2222-2222-222222222222",
   hostHandle: "mara",
   hostAvatarColor: "amber-orange",
   game: "Helldivers 2",
@@ -47,6 +45,26 @@ describe("ListingCard", () => {
   it("falls back to a 'P' initial when the host has no handle", () => {
     render(<ListingCard posting={{ ...basePosting, hostHandle: "" }} />);
     expect(screen.getByText("P")).toBeInTheDocument();
+  });
+
+  it("shows a game-only eyebrow when no genre is provided (Home's minimal shape)", () => {
+    render(<ListingCard posting={basePosting} />);
+    expect(screen.getByText("Helldivers 2")).toBeInTheDocument();
+  });
+
+  it("shows a game · genre eyebrow when genre is provided (Browse's fuller shape)", () => {
+    render(<ListingCard posting={{ ...basePosting, genre: "Co-op PvE" }} />);
+    expect(screen.getByText("Helldivers 2 · Co-op PvE")).toBeInTheDocument();
+  });
+
+  it("shows the first time slot as a tag when timeSlots is provided", () => {
+    render(<ListingCard posting={{ ...basePosting, timeSlots: ["evening", "weekend"] }} />);
+    expect(screen.getByText("Evenings")).toBeInTheDocument();
+  });
+
+  it("omits the time-slot tag when timeSlots is absent", () => {
+    render(<ListingCard posting={basePosting} />);
+    expect(screen.queryByText("Evenings")).not.toBeInTheDocument();
   });
 });
 

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { OpenPosting } from "@/lib/postings/get-open-postings";
-import { ListingCard } from "./listing-card";
+import { ListingCard } from "@/components/listings/listing-card";
 import { TrendingRow, type TrendingGame } from "./trending-row";
 import { EmptyState } from "./empty-state";
 
