@@ -49,7 +49,7 @@ beforeAll(async () => {
       ...base,
       game: tag("Helldivers 2"),
       genre: "Co-op PvE",
-      title: "Casual dives",
+      title: tag("Casual dives"),
       vibe: "fun",
       region: "na-west",
       timeSlots: ["morning", "afternoon"],
@@ -105,7 +105,7 @@ describe("searchPostings", () => {
 
   it("matches keyword against game, title, blurb, genre, or host handle", async () => {
     expect(titles(await searchPostings({ q: tag("Valorant") }))).toEqual(["Ranked grind"]);
-    expect(titles(await searchPostings({ q: "Casual dives" }))).toEqual(["Casual dives"]);
+    expect(titles(await searchPostings({ q: tag("Casual dives") }))).toEqual([tag("Casual dives")]);
     expect(titles(await searchPostings({ q: `browsehost${runId}` }))).toHaveLength(3);
   });
 
@@ -125,7 +125,7 @@ describe("searchPostings", () => {
 
   it("matches timeSlots with array-overlap OR semantics", async () => {
     const result = await searchPostings({ q: runId, timeSlots: ["morning", "weekend"] });
-    expect(titles(result).sort()).toEqual(["Board game night", "Casual dives"]);
+    expect(titles(result).sort()).toEqual(["Board game night", tag("Casual dives")].sort());
   });
 
   it("filters by ageGroup", async () => {
@@ -150,11 +150,11 @@ describe("searchPostings", () => {
 
   it("sorts by open seats descending", async () => {
     const result = await searchPostings({ q: runId, sort: "seats" });
-    expect(titles(result)).toEqual(["Ranked grind", "Board game night", "Casual dives"]);
+    expect(titles(result)).toEqual(["Ranked grind", "Board game night", tag("Casual dives")]);
   });
 
   it("sorts Soonest ascending by scheduledDate, nulls last", async () => {
     const result = await searchPostings({ q: runId, sort: "soon" });
-    expect(titles(result)).toEqual(["Ranked grind", "Board game night", "Casual dives"]);
+    expect(titles(result)).toEqual(["Ranked grind", "Board game night", tag("Casual dives")]);
   });
 });
