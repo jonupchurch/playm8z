@@ -11,6 +11,12 @@ const rareGame = `Rare-${runId}`;
 let hostId: string;
 
 beforeAll(async () => {
+  // getTrending() aggregates over the whole table, capped to the top 5
+  // -- clear it first so this test's own counts/ranking aren't at the
+  // mercy of whatever else exists in the shared dev database (e.g.
+  // npm run db:seed-postings' sample data), same fix as e2e/home.spec.ts.
+  await db.delete(postings);
+
   const [host] = await db.insert(users).values({ email, name: "Host" }).returning({ id: users.id });
   hostId = host.id;
 
