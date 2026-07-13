@@ -118,6 +118,63 @@ export const postings = pgTable("postings", {
   voiceLink: text("voiceLink"),
 });
 
+// Listing detail (006) -- its first real writer. A unique active
+// application per (postingId, applicantId) is enforced at the Server
+// Action level (data-model.md), not a DB constraint, since Drizzle's
+// partial-unique-index support varies and the check is cheap in code.
+export const applications = pgTable("applications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  postingId: uuid("postingId")
+    .notNull()
+    .references(() => postings.id, { onDelete: "cascade" }),
+  applicantId: uuid("applicantId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  message: text("message"),
+  // pending | accepted | declined | withdrawn -- `withdrawn` is
+  // distinct from `declined` so the record stays legible about who
+  // ended it and why (ADR 0005, research.md #5).
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Listing detail (006) -- a listing's public Q&A thread. One reply per
+// question, settable only by the listing's host (reply-to-question.ts).
+export const questions = pgTable("questions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  postingId: uuid("postingId")
+    .notNull()
+    .references(() => postings.id, { onDelete: "cascade" }),
+  askerId: uuid("askerId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  reply: text("reply"),
+  repliedAt: timestamp("repliedAt", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Owned by Profile (007-profile-and-account-settings) for its own
+// "Saved" tab -- Listing detail (006) is implemented first and is
+// this table's first real consumer/creator, per the shared-table
+// precedent already used for `postings` (data-model.md). Composite
+// primary key (no surrogate id) mirrors `accounts`' shape above.
+// Unsaving performs a real delete (a scoped exception to ADR 0005 --
+// a bookmark carries no moderation/audit history worth preserving).
+export const savedListings = pgTable(
+  "savedListings",
+  {
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    postingId: uuid("postingId")
+      .notNull()
+      .references(() => postings.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (savedListing) => [primaryKey({ columns: [savedListing.userId, savedListing.postingId] })],
+);
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
