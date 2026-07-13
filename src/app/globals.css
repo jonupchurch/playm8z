@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
+/*
+ * Warm Pop design system tokens (resources/guidelines.md §4, locked
+ * identity per resources/design/Brand Identity - playm8z.dc.html Turn 4).
+ * Dark theme is default; light theme overrides via [data-theme="light"]
+ * or prefers-color-scheme, matching resources/design/*Theme.dc.html.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #140f0a;
+  --color-surface: #1f1710;
+  --color-surface-2: #1a130c;
+  --color-border: #2c2418;
+  --color-text: #fbeeda;
+  --color-text-muted: #b49c6a;
+  --color-text-dim: #9a8253;
+  --color-accent: #ffb000;
+  --color-accent-2: #ff6b1a;
+  --color-pop: #ff3b6b;
+  --color-info: #35d0e0;
+  --color-success: #4ec96a;
+  --color-accent-text: #ff6b1a;
+  --color-on-accent: #140f0a;
+  --grad: linear-gradient(120deg, #ffb000, #ff6b1a);
+  --grad-hot: linear-gradient(120deg, #ffb000, #ff3b6b);
+}
+
+:root[data-theme="light"] {
+  --color-bg: #f6ede0;
+  --color-surface: #ffffff;
+  --color-surface-2: #fdf7ee;
+  --color-border: #ecdcc7;
+  --color-text: #241a10;
+  --color-text-muted: #6b5a45;
+  --color-text-dim: #8a7355;
+  --color-pop: #e11d57;
+  --color-success: #2e9e4f;
+  --color-accent-text: #c2410c;
+  --color-on-accent: #241a10;
+  --grad-hot: linear-gradient(120deg, #ffb000, #e11d57);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-dim: var(--color-text-dim);
+  --color-accent: var(--color-accent);
+  --color-accent-2: var(--color-accent-2);
+  --color-pop: var(--color-pop);
+  --color-info: var(--color-info);
+  --color-success: var(--color-success);
+  --color-accent-text: var(--color-accent-text);
+  --color-on-accent: var(--color-on-accent);
+  --font-sans: var(--font-sora);
+  --font-mono: var(--font-space-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
