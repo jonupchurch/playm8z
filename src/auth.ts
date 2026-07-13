@@ -15,7 +15,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   // Credentials is one of the providers.
   session: { strategy: "jwt" },
   providers: [
-    Google,
+    Google({
+      // Google has already verified the address; carry its own
+      // `email_verified` claim through rather than assuming true, so a
+      // Google account's emailVerified accurately reflects Google's claim.
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          emailVerified: profile.email_verified ? new Date() : null,
+        };
+      },
+    }),
     Credentials({
       credentials: {
         email: {},
