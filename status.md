@@ -732,11 +732,35 @@ amendments to 013/020(3) → Polish(3). `docs/feature-list.md` updated
 to 🟢. News Article detail is the twenty-third feature with a
 complete spec/plan/tasks trio.
 
+**Admin Settings: spec + plan done** (2026-07-12, branch
+`024-admin-settings`) — the most reconciliation-heavy feature yet.
+Extends `002`'s singleton `settings` table exactly as that feature's
+own spec anticipated (finally shipping a real maintenance-mode
+toggle). Makes `017`'s/`018`'s hardcoded auto-flag ruleset real,
+admin-editable config. Adds a computed (never stored) auto-hide-
+after-N-reports rule and a display-only "needs ban review" severity
+badge — never an automated ban. Expands roles to a 4-tier model
+(`support`/`viewer` ship as assignable but functionally identical to
+a plain user today — no differentiated permissions built yet).
+Dropped three wireframe controls outright (a 13+/16+ signup-age
+option directly contradicting ADR 0002; an "optional" email-
+verification toggle that's already hardcoded; a per-device blocklist-
+sync toggle with no per-device concept anywhere in this project).
+Found and fixed a real gap while researching this feature: Public
+Profile (`022`) never actually honored the privacy toggles Profile
+(`007`) already stored.
+
+**Admin Settings: tasks done** (2026-07-12) — `tasks.md`, 43 tasks:
+Setup(1) → Foundational(6) → US1/P1 general+maintenance(7) → US2/P2
+moderation+auto-flag(11) → US3/P3 roles+features+safety(15) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Admin Settings is the
+twenty-fourth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `023-news-article-detail` into `main`, then move on to feature
-  #24 (Admin Settings) — same specify→plan→tasks→merge sequence
-  repeats for every other feature in `docs/feature-list.md` — per the
+- Merge `024-admin-settings` into `main`, then move on to feature #25
+  (Moderator audit log) — same specify→plan→tasks→merge sequence
+  repeats for the last 2 features in `docs/feature-list.md` — per the
   project-wide gate (constitution v1.0.0), implementation doesn't
   begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity

@@ -676,6 +676,30 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Polish (3). News Article detail is the twenty-third feature to
   clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Settings: `research.md` (extending
+  `002`'s singleton settings table rather than a new one, exactly as
+  that feature's own spec reserved; computed auto-hide-after-N-
+  reports rather than a stored flag needing manual un-hide logic;
+  `auto-flag-rules.ts` reading settings instead of hardcoded
+  constants, closing the loop `017` explicitly anticipated;
+  auto-escalate severity as a display badge, never an automated ban;
+  a bounded 4-tier role extension with `support`/`viewer` shipping
+  with no differentiated permissions yet; "Invite a team member" as
+  direct assignment against an existing account, no parallel invite-
+  token system; a real gap found and fixed — Public Profile, `022`,
+  never honored Profile's, `007`, existing privacy toggles; one real
+  feature flag, "Open signups," the other five stored-but-inert),
+  `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin Settings: `tasks.md` — 43 tasks:
+  Setup (1) → Foundational (6: schema extensions, validation schemas,
+  the admin-only gated page shell) → US1/P1 general+maintenance (7)
+  → US2/P2 moderation+auto-flag (11, incl. three families of bounded
+  amendments to `017`/`018`/`019`/`003`/`004`/`009`) → US3/P3 roles+
+  features+safety (15, incl. the `001`/`022` amendments) → Polish
+  (3). Admin Settings is the twenty-fourth feature to clear the
+  project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
