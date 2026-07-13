@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, users } from "@/db/schema";
 
@@ -20,7 +20,9 @@ export type OpenPosting = {
 // FR-004: only ever reads status = 'open' -- a full or closed posting
 // never appears on Home. Joins users for the host's real handle/avatar
 // (FR-005) -- the host's display name is never shown to other users
-// (ADR 0006); only the handle is.
+// (ADR 0006); only the handle is. Excludes a deactivated host's
+// postings (Profile + Account settings 007's FR-013/SC-005 -- a
+// bounded amendment, same pattern as Admin Users' removedAt exclusion).
 export async function getOpenPostings(): Promise<OpenPosting[]> {
   const rows = await db
     .select({
@@ -39,7 +41,7 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
     })
     .from(postings)
     .innerJoin(users, eq(postings.hostId, users.id))
-    .where(eq(postings.status, "open"))
+    .where(and(eq(postings.status, "open"), isNull(users.deactivatedAt)))
     .orderBy(desc(postings.createdAt));
 
   return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));
