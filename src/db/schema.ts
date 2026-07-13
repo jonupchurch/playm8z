@@ -241,6 +241,30 @@ export const reports = pgTable("reports", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+// Forum index (009) -- this feature's first writer. `categoryId` is
+// one of the six hardcoded keys in src/lib/forum/categories.ts, not a
+// foreign key (categories aren't a table). `pinned`/`locked` are
+// moderator-controlled -- this feature only ever inserts `false` and
+// never changes either afterward (the future Admin Forum feature owns
+// setting them). `replyCount`/`viewCount`/`likes` all start at 0 and
+// are maintained by the future Forum Thread feature, not this one.
+export const forumThreads = pgTable("forumThreads", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  categoryId: text("categoryId").notNull(),
+  authorId: uuid("authorId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  body: text("body").notNull(),
+  tags: text("tags").array().notNull().default([]),
+  pinned: boolean("pinned").notNull().default(false),
+  locked: boolean("locked").notNull().default(false),
+  replyCount: integer("replyCount").notNull().default(0),
+  viewCount: integer("viewCount").notNull().default(0),
+  likes: integer("likes").notNull().default(0),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
