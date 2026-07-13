@@ -12,7 +12,13 @@ try {
 
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
+  // Single worker: some specs (e.g. maintenance.spec.ts) mutate shared,
+  // global app state (the one-row settings table) for real -- running
+  // spec files concurrently would let that bleed into unrelated tests
+  // hitting the same routes mid-run. Correctness over parallel speed at
+  // this suite's current size.
+  fullyParallel: false,
+  workers: 1,
   reporter: "html",
   use: {
     baseURL: "http://localhost:3000",
