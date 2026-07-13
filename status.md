@@ -592,13 +592,19 @@ computed from existing reports, never stored. Adds `removedAt` to
 `postings`/`forumThreads` with bounded amendments to Home/Browse/Forum
 index's read queries so removal has a real effect.
 
+**Admin Users: tasks done** (2026-07-12) — `tasks.md`, 27 tasks:
+Setup(1) → Foundational(4) → US1/P1 view+search+filter(6) → US2/P2
+ban+unban(4) → US3/P3 drawer+content-removal(9) → Polish(3).
+`docs/feature-list.md` updated to 🟢. Admin Users is the sixteenth
+feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Admin Users: `/speckit-tasks` next, then merge to `main`.
-- After that, the same specify→plan→tasks→merge sequence repeats for
-  every other feature in `docs/feature-list.md` — per the project-wide
-  gate (constitution v1.0.0), implementation doesn't begin on *any*
-  feature until all of them have this done.
+- Merge `016-admin-users` into `main`, then move on to feature #17
+  (Admin Postings) — same specify→plan→tasks→merge sequence repeats
+  for every other feature in `docs/feature-list.md` — per the
+  project-wide gate (constitution v1.0.0), implementation doesn't
+  begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

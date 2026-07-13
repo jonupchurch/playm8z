@@ -531,6 +531,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   visible effect would ship a no-op), `data-model.md`, `quickstart.md`.
   No `contracts/`.
 
+- Ran `/speckit-tasks` for Admin Users: `tasks.md` — 27 tasks: Setup
+  (1) → Foundational (4: schema extensions + migration, validation
+  schemas, the gated page shell) → US1/P1 view+search+filter (6) →
+  US2/P2 ban+unban (4) → US3/P3 drawer+content-removal (9, incl. the
+  bounded Home/Browse/Forum-index amendments) → Polish (3). Admin Users
+  is the sixteenth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
