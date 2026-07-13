@@ -93,6 +93,17 @@ export const postings = pgTable("postings", {
   seatsOpen: integer("seatsOpen").notNull(),
   status: text("status").notNull().default("open"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Added by Browse (004) -- an extensible, bounded set distinct from
+  // the free-text `game` field (data-model.md).
+  genre: text("genre").notNull(),
+  // 18|21 only (ADR 0002) -- never 13.
+  ageGroup: text("ageGroup").notNull(),
+  timeSlots: text("timeSlots").array().notNull(),
+  platform: text("platform").notNull(),
+  micRequired: boolean("micRequired").notNull().default(false),
+  // Optional -- drives "Soonest" sort; null sorts after any posting
+  // that has a value (data-model.md).
+  scheduledDate: timestamp("scheduledDate", { mode: "date" }),
 });
 
 export const verificationTokens = pgTable(
