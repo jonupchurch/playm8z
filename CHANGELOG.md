@@ -891,3 +891,60 @@ may begin on any/all of them per the constitution (v1.0.0).
   lint`, `npm test`, `npm run test:e2e` (full suite, all files), and
   `npm run build` all verified green before merging. All 22 tasks in
   `specs/004-browse/tasks.md` checked off.
+
+## [Unreleased] (cont. 6)
+
+### Added
+- **Implemented Post a Game**: the listing-creation form at `/post`
+  (redirects a logged-out visitor to `/login`), with a live preview
+  that reuses the same shared `listing-card.tsx` Home and Browse
+  already render — the preview's `Link` is neutralized with a
+  capture-phase `preventDefault()` since it's an unsaved draft, not a
+  navigable card yet. Publishing is a Server Action
+  (`create-posting.ts`), the first real consumer of Auth &
+  Onboarding's unverified-email write gate
+  (`requireVerifiedEmail()`) — an unverified session sees the form and
+  can fill it out, but Publish itself is blocked with a message
+  directing them to verify. Every field, including the Group size/
+  Spots-open stepper relationship, is re-validated server-side via a
+  new `posting.ts` Zod schema, never trusting the client's own
+  clamping as sufficient. Game-name quick-pick suggestions reuse the
+  same most-common-open-game aggregate Home's Trending and Browse's
+  Game facet already compute (`get-game-suggestions.ts`), consistent
+  with ADR 0001's rejection of a curated game list.
+- **Extends `postings`** with `tags`, `recurring`, `voiceLink` — the
+  last fields this entity collects across Home/Browse/this feature.
+- **A real schema correction, caught during this feature's own data
+  modeling**: Browse's original `genre` column was `NOT NULL`, but
+  Post a Game's data-model.md (and the source wireframe) never
+  required a genre chip selection to publish — Publish only ever
+  gated on game+title. Loosened `genre` to nullable rather than
+  inventing a fake default value; `listing-card.tsx` already rendered
+  game-only when genre was absent (a structural optional field from
+  Home's minimal query), and Browse's genre filter already excludes
+  non-matching rows gracefully, so no other query needed to change.
+- **The same heading-order a11y issue class Browse just fixed,
+  caught before it ever reached a passing/failing test**: `/post`'s
+  page had an `<h1>` with no `<h2>` before the live preview's reused
+  `<h3>` listing title. Promoted the form's four section labels ("01 ·
+  What are you playing?" etc.) and the "Live preview" label to real
+  `<h2>`s — semantically correct on its own merits, and avoids the
+  exact violation shape Browse hit.
+- **A cold-start false alarm, not a product bug**: the first-ever
+  Playwright run against this brand-new route timed out waiting for
+  the post-publish redirect to `/browse` (30s, no navigation at all).
+  Two isolated debug reproductions against the now-warm route/Server
+  Action completed the same click-to-redirect flow in under 3 seconds
+  each, and two full reruns of the real suite passed cleanly — Next.js
+  dev mode compiles a route (and a Server Action) on its first-ever
+  request, and this was that one-time cost, not a flaky test or a real
+  defect.
+- 15 new unit tests (`posting.ts`'s schema, including the stepper
+  cross-field refinement) plus 7 new integration tests
+  (`create-posting.ts`'s insert/gate/validation behavior against real
+  Postgres) and a 4-scenario `e2e/post-game.spec.ts` (one with an
+  axe-core scan) — 127 unit tests and 21 e2e tests total across the
+  whole suite, all passing, twice in a row. `npm run typecheck`, `npm
+  run lint`, `npm test`, `npm run test:e2e` (full suite, all files),
+  and `npm run build` all verified green before merging. All 20 tasks
+  in `specs/005-post-game/tasks.md` checked off.

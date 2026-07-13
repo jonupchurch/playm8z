@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding, `001-auth-onboarding`) exists in the codebase before starting — this feature's Server Action depends on it directly (research.md #4)
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding, `001-auth-onboarding`) exists in the codebase before starting — this feature's Server Action depends on it directly (research.md #4)
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend the `postings` table in `src/db/schema.ts` with `tags`, `recurring`, `voiceLink` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/posting.ts` — the full Zod schema, including the Group size/Spots open cross-field refinement (data-model.md)
-- [ ] T005 [P] Create `src/lib/postings/get-game-suggestions.ts` — reuses the most-common-games aggregate Home/Browse already compute (research.md #2) — depends on T002
-- [ ] T006 Modify `src/app/post/page.tsx`: redirect an unauthenticated visitor to `/login` (FR-016), otherwise render the form shell
+- [x] T002 Extend the `postings` table in `src/db/schema.ts` with `tags`, `recurring`, `voiceLink` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/posting.ts` — the full Zod schema, including the Group size/Spots open cross-field refinement (data-model.md)
+- [x] T005 [P] Create `src/lib/postings/get-game-suggestions.ts` — reuses the most-common-games aggregate Home/Browse already compute (research.md #2) — depends on T002
+- [x] T006 Modify `src/app/post/page.tsx`: redirect an unauthenticated visitor to `/login` (FR-016), otherwise render the form shell
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,15 +54,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `posting.ts`'s Zod schema (valid payload, title/description length caps, tag cap, the stepper cross-field refinement) in `src/lib/validations/posting.test.ts`
-- [ ] T008 [P] [US1] Integration test for `create-posting.ts` inserting a row with status `open` for a verified session in `src/lib/actions/create-posting.test.ts`
-- [ ] T009 [US1] Playwright e2e spec covering the happy path (minimal fields, live preview updates, publish, visible on Home/Browse), including an axe-core scan — creates `e2e/post-game.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `posting.ts`'s Zod schema (valid payload, title/description length caps, tag cap, the stepper cross-field refinement) in `src/lib/validations/posting.test.ts`
+- [x] T008 [P] [US1] Integration test for `create-posting.ts` inserting a row with status `open` for a verified session in `src/lib/actions/create-posting.test.ts`
+- [x] T009 [US1] Playwright e2e spec covering the happy path (minimal fields, live preview updates, publish, visible on Home/Browse), including an axe-core scan — creates `e2e/post-game.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Build the `create-posting.ts` Server Action in `src/lib/actions/create-posting.ts`: validate via T004, insert with status `open` — depends on T004
-- [ ] T011 [US1] Build `src/components/post-game/post-game-form.tsx`: all four form sections, Group size/Spots-open stepper clamping (client-side UX), live-bound to the shared `listing-card.tsx` for the preview, calls T010 on submit — depends on T004, T005, T010
-- [ ] T012 [US1] Wire `post-game-form.tsx` into `src/app/post/page.tsx` — depends on T006, T011
+- [x] T010 [US1] Build the `create-posting.ts` Server Action in `src/lib/actions/create-posting.ts`: validate via T004, insert with status `open` — depends on T004
+- [x] T011 [US1] Build `src/components/post-game/post-game-form.tsx`: all four form sections, Group size/Spots-open stepper clamping (client-side UX), live-bound to the shared `listing-card.tsx` for the preview, calls T010 on submit — depends on T004, T005, T010
+- [x] T012 [US1] Wire `post-game-form.tsx` into `src/app/post/page.tsx` — depends on T006, T011
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -76,12 +76,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Integration test for `create-posting.ts` blocking an unverified session (no posting created, FR-017 message returned) in `src/lib/actions/create-posting.test.ts` — same file as T008
-- [ ] T014 [US2] Add the logged-out-redirect and unverified-blocked scenarios to `e2e/post-game.spec.ts` — depends on T009 (same file)
+- [x] T013 [P] [US2] Integration test for `create-posting.ts` blocking an unverified session (no posting created, FR-017 message returned) in `src/lib/actions/create-posting.test.ts` — same file as T008
+- [x] T014 [US2] Add the logged-out-redirect and unverified-blocked scenarios to `e2e/post-game.spec.ts` — depends on T009 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Wire Auth & Onboarding's `require-verified-email.ts` gate into `create-posting.ts`, ahead of the insert (research.md #4) — depends on T010
+- [x] T015 [US2] Wire Auth & Onboarding's `require-verified-email.ts` gate into `create-posting.ts`, ahead of the insert (research.md #4) — depends on T010
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -95,11 +95,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T016 [US3] Add the direct-request validation scenarios (missing game/title, stepper bounds violated bypassing the UI) to `src/lib/actions/create-posting.test.ts` — depends on T008 (same file)
+- [x] T016 [US3] Add the direct-request validation scenarios (missing game/title, stepper bounds violated bypassing the UI) to `src/lib/actions/create-posting.test.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Confirm `post-game-form.tsx`'s Publish control stays disabled until game+title are non-empty (client-side UX guard) and that `create-posting.ts` independently rejects the same missing/invalid cases regardless of UI state — depends on T011, T015
+- [x] T017 [US3] Confirm `post-game-form.tsx`'s Publish control stays disabled until game+title are non-empty (client-side UX guard) and that `create-posting.ts` independently rejects the same missing/invalid cases regardless of UI state — depends on T011, T015
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -107,9 +107,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T018 Confirm `next build` succeeds locally and CI stays green with the new `/post` route, Server Action, and extended `postings` schema
-- [ ] T019 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
-- [ ] T020 [P] Update `docs/feature-list.md`, marking Post a Game's spec/plan/tasks as complete
+- [x] T018 Confirm `next build` succeeds locally and CI stays green with the new `/post` route, Server Action, and extended `postings` schema
+- [x] T019 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
+- [x] T020 [P] Update `docs/feature-list.md`, marking Post a Game's spec/plan/tasks as complete
 
 ---
 

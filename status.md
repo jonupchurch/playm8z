@@ -1,9 +1,8 @@
 # Status
 
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
-features one at a time, in order: Auth & Onboarding, Error Pages, and
-Home are done and merged; Browse just merged as the fourth. Post a Game
-is next.
+features one at a time, in order: Auth & Onboarding, Error Pages, Home,
+Browse, and Post a Game are done and merged. Listing detail is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -953,11 +952,12 @@ merging.
 
 ## Next up
 
-- Auth & Onboarding, Error Pages, Home, and Browse are implemented and
-  merged. Post a Game (`005`) is next — first real consumer of Auth &
-  Onboarding's unverified-email write-action gate, and extends
-  `postings` with its last remaining columns (tags, recurring,
-  voiceLink) — awaiting the user's go-ahead.
+- Auth & Onboarding, Error Pages, Home, Browse, and Post a Game are
+  implemented and merged. Listing detail (`006`) is next — introduces
+  `applications`/`questions` (this project's first real writes to
+  either), and derives the roster from host + accepted applications
+  rather than a separate `RosterSlot` table (ADR 0004) — awaiting the
+  user's go-ahead.
 - Real Resend wiring remains blocked on domain ownership (unchanged);
   verification emails still log to the server console.
 - `users.role` and real admin gating remain blocked on Admin Settings
@@ -1112,6 +1112,81 @@ visibility.
 across the whole suite (every spec file, not just Browse's), all
 passing. `npm run typecheck`, `npm run lint`, `npm test`, `npm run
 test:e2e`, and `npm run build` all verified green before merging.
+
+## Post a Game implemented (2026-07-13)
+
+**Post a Game: implemented** — all 20 tasks in
+`specs/005-post-game/tasks.md` complete, on branch `005-post-game`
+(rebuilt on top of `main`), merged back.
+
+The listing-creation form at `/post`: an unauthenticated visitor
+redirects to `/login` (FR-016); an authenticated visitor sees the full
+form regardless of email-verification status, since only *publishing*
+is gated, not viewing/filling it out. Publishing is a Server Action
+(`create-posting.ts`) — the first real consumer of Auth & Onboarding's
+`requireVerifiedEmail()` write gate, built ready-to-call in that
+feature and unconsumed until now (FR-017). Every field is re-validated
+server-side via a new `posting.ts` Zod schema, including a cross-field
+`refine` re-deriving that Spots open stays within `1..(Group size − 1)`
+independent of whatever the client's own stepper clamping already
+enforced (research.md #5) — a hand-crafted request bypassing the UI is
+still rejected. The live preview reuses the exact same
+`listing-card.tsx` component Home and Browse already render (research.md
+#3), fed the form's current in-progress values plus the user's real
+handle/avatar color; since that component is a real `Link` to
+`/listing/:id` everywhere else it's used, the preview neutralizes
+clicks with a capture-phase `preventDefault()` so an unsaved draft
+doesn't attempt to navigate anywhere. Game-name quick-pick suggestions
+(`get-game-suggestions.ts`) reuse the same most-common-open-game
+aggregate Home's Trending row and Browse's Game facet already compute,
+per ADR 0001's rejection of a curated game list.
+
+**Schema**: extends `postings` (Home's table, already extended by
+Browse) with `tags`, `recurring`, `voiceLink` — the last fields this
+entity collects.
+
+**A real schema correction, caught while writing this feature's own
+data model**: Browse's original `genre` column was `NOT NULL`, but
+neither the source wireframe nor this feature's own data-model.md ever
+required a genre chip selection to publish — FR-014 gates Publish on
+game+title only, matching the wireframe's own initial empty-genre
+state. Loosened `genre` to nullable via a small migration rather than
+inventing an artificial default value: `listing-card.tsx` already
+rendered game-only when genre was absent (already a structural
+optional field, from Home's minimal query never selecting it), and
+Browse's genre filter already excludes non-matching rows gracefully
+(a genre-less posting just never matches an active genre chip) — no
+other query needed to change to accommodate this.
+
+**The same heading-order a11y issue class Browse had just fixed,
+caught proactively this time**: `/post`'s page has an `<h1>` with
+nothing but the reused `listing-card.tsx`'s `<h3>` below it — the
+exact `<h1>`→`<h3>` jump that bit Browse. Fixed before it ever showed
+up as a test failure by promoting the form's four section labels ("01
+· What are you playing?" through "04 · Party & comms") and the "Live
+preview" label to real `<h2>`s — the semantically correct structure on
+its own merits, not just an axe workaround.
+
+**A cold-start false alarm, not a real defect**: the very first
+Playwright run against this brand-new route/Server Action timed out
+(30s) waiting for the post-publish redirect to `/browse`, with no
+navigation event observed at all. Rather than assume a product bug or
+patch around the symptom, it was root-caused: two isolated debug
+reproductions against the now-warm route completed the identical
+click-to-redirect flow in under 3 seconds each, and two full reruns of
+the real suite passed cleanly and quickly. Next.js dev mode compiles a
+route (and, separately, a Server Action) on its first-ever request —
+this was that one-time cost landing inside a single test's timeout
+window, not flakiness in the test or the feature.
+
+15 new unit tests (`posting.ts`'s Zod schema, including the stepper
+cross-field refinement) plus 7 new integration tests
+(`create-posting.ts`'s insert/gate/validation behavior, against real
+Postgres) and a 4-scenario `e2e/post-game.spec.ts` (one with an
+axe-core scan) — 127 unit tests and 21 e2e tests total across the
+whole suite (every spec file), all passing, confirmed twice in a row.
+`npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
+and `npm run build` all verified green before merging.
 
 ## Blockers
 
