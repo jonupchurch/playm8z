@@ -619,6 +619,23 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   amendment to `013` (2) → Polish (3). Admin News is the twentieth
   feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Content Pages: `research.md` (reusing
+  `014`'s `toggle-page-status.ts` directly for Publish/Unpublish
+  rather than a second implementation; `system` as a real stored
+  column, not derived, since page classification isn't recoverable
+  from other data; seeding the three system pages now since no
+  feature had ever written a `ContentPage` row before; human-legible
+  unique-slug generation for "+ New page"; the small-bounded-list
+  search/filter pattern, matching Admin News rather than Browse),
+  `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin Content Pages: `tasks.md` — 25 tasks:
+  Setup (1) → Foundational (5: schema extension, the system-page seed,
+  validation schemas, the gated page shell) → US1/P1 view+search+
+  filter (6) → US2/P2 publish+unpublish+create (6) → US3/P3 delete
+  (4) → Polish (3). Admin Content Pages is the twenty-first feature to
+  clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

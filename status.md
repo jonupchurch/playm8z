@@ -674,13 +674,32 @@ cross-feature amendment to 013(2) → Polish(3). `docs/feature-list.md`
 updated to 🟢. Admin News is the twentieth feature with a complete
 spec/plan/tasks trio.
 
+**Admin Content Pages: spec + plan done** (2026-07-12, branch
+`021-admin-content-pages`) — a thin management list wrapping Content
+Page's (`014`) already-existing table and `toggle-page-status.ts`
+(reused directly for Publish/Unpublish, not reimplemented). Adds a new
+`system` boolean column and seeds the three system pages (About Us/
+Privacy Policy/Terms of Use) as real rows, since no feature had ever
+written one before. "Delete" collapses into the same status='draft'
+resolution already used for Admin News, restricted to non-system
+pages only. "Edit" navigates to `014`'s own inline-edit surface rather
+than building a second editor.
+
+**Admin Content Pages: tasks done** (2026-07-12) — `tasks.md`, 25
+tasks: Setup(1) → Foundational(5, incl. the system-page seed) →
+US1/P1 view+search+filter(6) → US2/P2 publish+unpublish+create(6) →
+US3/P3 delete(4) → Polish(3). `docs/feature-list.md` updated to 🟢.
+Admin Content Pages is the twenty-first feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `020-admin-news` into `main`, then move on to feature #21
-  (Admin Content Pages) — same specify→plan→tasks→merge sequence
-  repeats for every other feature in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- Merge `021-admin-content-pages` into `main`, then move on to feature
+  #22 (Public profile page, `/u/:handle`) — same specify→plan→tasks→
+  merge sequence repeats for every other feature in
+  `docs/feature-list.md` — per the project-wide gate (constitution
+  v1.0.0), implementation doesn't begin on *any* feature until all of
+  them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 

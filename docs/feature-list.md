@@ -41,7 +41,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 18. Admin Forum — 🟢 spec + plan + tasks all complete (`specs/018-admin-forum/`, branch `018-admin-forum`, `admin/playm8z - Admin Forum.dc.html`) — 41 tasks across Setup/Foundational/US1(P1) view+filter queue/US2(P2) drawer+approve+remove/US3(P3) lock+warn+ban/cross-feature amendments to 009+010/retroactive amendments to 017/Polish; not yet implemented
 19. Admin Reports — 🟢 spec + plan + tasks all complete (`specs/019-admin-reports/`, branch `019-admin-reports`, `admin/playm8z - Admin Reports.dc.html`) — 37 tasks across Setup/Foundational/US1(P1) view+filter grouped queue/US2(P2) dismiss+remove/US3(P3) warn+ban/cross-feature amendment to 011/retroactive amendments to 017+018/Polish; not yet implemented
 20. Admin News — 🟢 spec + plan + tasks all complete (`specs/020-admin-news/`, branch `020-admin-news`, `admin/playm8z - Admin News.dc.html`) — 26 tasks across Setup/Foundational/US1(P1) view+filter list/US2(P2) editor+publish+schedule+draft/US3(P3) pin+delete/cross-feature amendment to 013/Polish; not yet implemented
-21. Admin Content Pages — ✅
+21. Admin Content Pages — 🟢 spec + plan + tasks all complete (`specs/021-admin-content-pages/`, branch `021-admin-content-pages`, `admin/playm8z - Admin Content Pages.dc.html`) — 25 tasks across Setup/Foundational (incl. system-page seed)/US1(P1) view+search+filter/US2(P2) publish+unpublish+create/US3(P3) delete/Polish; not yet implemented
 22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
     — this wireframe's extra scope beyond a read-only profile view is
     **confirmed in scope** (2026-07-12): a **Follow** toggle (a
