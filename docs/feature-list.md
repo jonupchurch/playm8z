@@ -42,16 +42,7 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 19. Admin Reports — 🟢 spec + plan + tasks all complete (`specs/019-admin-reports/`, branch `019-admin-reports`, `admin/playm8z - Admin Reports.dc.html`) — 37 tasks across Setup/Foundational/US1(P1) view+filter grouped queue/US2(P2) dismiss+remove/US3(P3) warn+ban/cross-feature amendment to 011/retroactive amendments to 017+018/Polish; not yet implemented
 20. Admin News — 🟢 spec + plan + tasks all complete (`specs/020-admin-news/`, branch `020-admin-news`, `admin/playm8z - Admin News.dc.html`) — 26 tasks across Setup/Foundational/US1(P1) view+filter list/US2(P2) editor+publish+schedule+draft/US3(P3) pin+delete/cross-feature amendment to 013/Polish; not yet implemented
 21. Admin Content Pages — 🟢 spec + plan + tasks all complete (`specs/021-admin-content-pages/`, branch `021-admin-content-pages`, `admin/playm8z - Admin Content Pages.dc.html`) — 25 tasks across Setup/Foundational (incl. system-page seed)/US1(P1) view+search+filter/US2(P2) publish+unpublish+create/US3(P3) delete/Polish; not yet implemented
-22. Public profile page (`/u/:handle`) — ✅ (`playm8z - Public Profile.dc.html`)
-    — this wireframe's extra scope beyond a read-only profile view is
-    **confirmed in scope** (2026-07-12): a **Follow** toggle (a
-    social-graph relationship distinct from blocking — `User` needs a
-    following/follower relation whenever this is planned), a
-    host-initiated **"Invite to a party"** action (distinct from the
-    existing applicant-initiated "Apply for a slot"), and a "You have in
-    common" mutual-connections sidebar. Also shows "Player reviews"
-    (post-session ratings) as *display only*; the rating *submission*
-    flow itself is still deferred (`docs/future-work.md`).
+22. Public profile page (`/u/:handle`) — 🟢 spec + plan + tasks all complete (`specs/022-public-profile/`, branch `022-public-profile`, `playm8z - Public Profile.dc.html`) — 28 tasks across Setup/Foundational/US1(P1) view profile/US2(P2) follow+message+invite/US3(P3) in-common+report+block/Polish; not yet implemented. Ships Follow (new `follows` table), a host-initiated Invite (reuses `006`'s `applications` via a new `initiatedBy` field, with bounded amendments to `011`), and a "You have in common" sidebar; drops six wireframe elements (online presence, reliability %, groups, per-game rank/hours, level, pronouns/languages/timezone) against already-established decisions; "Player reviews" ships display-only (new `reviews` table, no writer yet — rating submission stays deferred, `docs/future-work.md`).
 23. News article detail (`/news/:slug`) — ✅ (`playm8z - News Article.dc.html`)
 24. Admin Settings — ✅ (General/maintenance mode, moderation & auto-flag
     rules, roles & access, feature flags, safety)

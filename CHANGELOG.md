@@ -636,6 +636,26 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (4) → Polish (3). Admin Content Pages is the twenty-first feature to
   clear the project-wide gate.
 
+- Ran `/speckit-plan` for Public Profile: `research.md` (six wireframe
+  elements reconciled against already-established decisions rather
+  than built; a real, computed "sessions" proxy stat from existing
+  applications/postings data; "Invite to a party" reusing `006`'s
+  `applications` via a new `initiatedBy` discriminator rather than a
+  parallel invite system, with bounded amendments to `011` reversing
+  who's authorized to accept/decline; `follows` as a new, simple,
+  hard-deletable relation; mutual-connections/shared-games computed
+  at read time, never stored; `reviews` shipping display-only with no
+  writer, matching the Notification/AuditEntry precedent),
+  `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Public Profile: `tasks.md` — 28 tasks: Setup
+  (1) → Foundational (4: new tables, `applications.initiatedBy`,
+  validation schemas, the public page shell) → US1/P1 view profile
+  (5) → US2/P2 follow+message+invite (10, incl. the bounded `011`
+  amendments) → US3/P3 in-common+report+block (5) → Polish (3).
+  Public Profile is the twenty-second feature to clear the
+  project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

@@ -692,10 +692,31 @@ US3/P3 delete(4) → Polish(3). `docs/feature-list.md` updated to 🟢.
 Admin Content Pages is the twenty-first feature with a complete
 spec/plan/tasks trio.
 
+**Public Profile: spec + plan done** (2026-07-12, branch
+`022-public-profile`) — the public `/u/:handle` page. Drops six
+wireframe elements against already-established decisions (online
+presence, reliability %, groups, per-game rank/hours, level,
+pronouns/languages/timezone — the last three explicitly NOT part of
+this feature's 2026-07-12 scope confirmation, which only covered
+Follow/Invite/mutual-connections). New `follows` table (hard-delete
+on unfollow, same exception as SavedListing/Likes). Host-initiated
+"Invite to a party" reuses `006`'s `applications` via a new
+`initiatedBy` field rather than a parallel system, with bounded
+amendments to `011` so the invited user (not the host) makes the
+accept/decline call, reusing the exact same transactional logic
+either way. "Player reviews" ships as a new, display-only `reviews`
+table with no writer yet — same pattern as Notification/AuditEntry.
+
+**Public Profile: tasks done** (2026-07-12) — `tasks.md`, 28 tasks:
+Setup(1) → Foundational(4) → US1/P1 view profile(5) → US2/P2
+follow+message+invite(10) → US3/P3 in-common+report+block(5) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Public Profile is
+the twenty-second feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `021-admin-content-pages` into `main`, then move on to feature
-  #22 (Public profile page, `/u/:handle`) — same specify→plan→tasks→
+- Merge `022-public-profile` into `main`, then move on to feature #23
+  (News article detail, `/news/:slug`) — same specify→plan→tasks→
   merge sequence repeats for every other feature in
   `docs/feature-list.md` — per the project-wide gate (constitution
   v1.0.0), implementation doesn't begin on *any* feature until all of
