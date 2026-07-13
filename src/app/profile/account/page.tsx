@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -42,6 +43,18 @@ export default async function AccountPage() {
           privacyDiscoverable: user.privacyDiscoverable,
         }}
       />
+      <section className="rounded-2xl border border-border bg-surface-2 p-6">
+        <h2 className="mb-1 text-lg font-bold text-text">Blocked users</h2>
+        <p className="mb-4 text-[13px] text-text-dim">
+          Manage who can&apos;t message you, apply to your parties, or see your content.
+        </p>
+        <Link
+          href="/profile/account/blocked"
+          className="inline-block rounded-lg border border-border bg-surface px-4.5 py-2.5 text-sm font-bold text-text"
+        >
+          Manage blocked users
+        </Link>
+      </section>
       <DangerZone />
     </div>
   );
