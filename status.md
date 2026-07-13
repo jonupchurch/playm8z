@@ -4,7 +4,7 @@
 Auth & Onboarding is the first feature to clear the full spec/plan/tasks
 gate; implementation still waits on every other feature reaching the
 same point.
-**Last updated**: 2026-07-12
+**Last updated**: 2026-07-13
 
 ## Where things stand
 
@@ -801,14 +801,29 @@ All 26 features tracked in `docs/feature-list.md` now have a complete
 constitution (v1.0.0), implementation may now begin on any/all of
 them — the marathon that started with Auth & Onboarding is complete.
 
+**Brand Identity delivered** (2026-07-13): `resources/design/Brand
+Identity - playm8z.dc.html` dropped in alongside the already-present
+Dark/Light Theme sheets. It's an exploration trail (Turns 1-4: three
+initial directions, a WCAG contrast pass, a three-way merge, then
+"Turn 4 — LOCKED") culminating in **Warm Pop** as the locked identity,
+rendered as full dark (4a) and light (4b) mockups. Reconciled against
+`guidelines.md` §4's existing distillation: **zero discrepancies** —
+every token, gradient, type-scale value, component pattern, and
+accessibility rule in §4 matches the locked file exactly (wordmark
+gradient, two-pawn mark, "Assemble your party" tagline, Sora + Space
+Mono, the full color-token table, button/card/tag/listing-card specs).
+No `guidelines.md` edit needed. The one file still not delivered is
+the interactive theme-switching **`playm8z - Design System.dc.html`**
+itself — but it would only be a combined presentation of the same
+tokens already confirmed live in the Dark Theme/Light Theme sheets, so
+its absence is no longer a blocker for implementation.
+
 ## Next up
 
 - Decide implementation order/strategy for the ~26 features now that
   the gate is clear — likely foundational-first (Auth & Onboarding,
   Error Pages, Home) before the rest, but this is now an open
   question for the user rather than a predetermined sequence.
-- Awaiting the user to drop the Design System / Brand Identity
-  `.dc.html` files into `resources/design/`.
 
 ## Blockers
 

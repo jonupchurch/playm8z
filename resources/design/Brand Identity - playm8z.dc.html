@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  ::selection { background: #e07a1f; color: #140f0a; }
+</style>
+</helmet>
+<div style="min-height:100%;background:#0d0b09;background-image:radial-gradient(circle at 20% 0%, #1a1510 0%, #0d0b09 55%);padding:64px 56px 96px;font-family:'Space Grotesk',sans-serif;">
+
+  <!-- Page header -->
+  <div style="max-width:1720px;margin:0 auto 56px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid rgba(224,122,31,0.18);padding-bottom:28px;">
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.32em;text-transform:uppercase;color:#e07a1f;margin-bottom:14px;">Brand Identity · Turn 1 · Three directions</div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:40px;line-height:1.05;color:#f3e7cf;margin:0;letter-spacing:-0.01em;">playm8z <span style="color:#6b6259;font-weight:500;">— find your party</span></h1>
+      <p style="color:#9a8f80;font-size:15px;line-height:1.6;max-width:640px;margin:14px 0 0;">Fantasy meets cyberpunk, warm palettes, kept un-fussy. Each board is a full direction: logo, colors, type, and core UI. Reference any by its badge in chat — <span style="font-family:'Space Mono',monospace;color:#e0a63d;">1a</span>, <span style="font-family:'Space Mono',monospace;color:#e0a63d;">1b</span>, <span style="font-family:'Space Mono',monospace;color:#e0a63d;">1c</span>.</p>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.18em;color:#5c554c;text-transform:uppercase;text-align:right;line-height:1.9;">
+      Audience · all gamers<br>Theme · dark-first, theme-able<br>Palette · warm gold / ember / bronze
+    </div>
+  </div>
+
+  <!-- ============ TURN 4 — LOCKED (3c) dark + light mode ============ -->
+  <div style="max-width:1720px;margin:0 auto 44px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap;">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#4ec96a;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">Turn 4 · LOCKED</span>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">Warm Pop — dark &amp; light</span>
+    </div>
+    <p style="font-family:'Space Mono',monospace;font-size:11px;color:#9a8253;margin:0;letter-spacing:0.04em;">Identity locked to 3c. Same DNA in both themes — amber→magenta gradients, two-pawn mark, Sora + Space Mono. Warm paper replaces void; amber/orange become fills-only with darkened text tones for AA.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;max-width:1720px;margin:0 auto 48px;align-items:flex-start;">
+
+    <!-- ===== 4a — DARK (locked) ===== -->
+    <section id="4a" style="flex:1 1 520px;min-width:480px;background:#160f0a;border:1px solid rgba(255,107,26,0.26);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,107,26,0.2);background:rgba(255,107,26,0.05);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ff6b1a;padding:4px 9px;border-radius:6px;">4a</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">Dark</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#ff9c5a;">default theme</span>
+      </div>
+
+      <div style="padding:46px 24px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(circle at 50% 25%, rgba(255,59,107,0.14), transparent 62%);border-bottom:1px solid rgba(255,107,26,0.14);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:46px;position:relative;">
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-2px;"></span><span style="width:28px;height:22px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+            <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:16px;height:16px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-2px;box-shadow:0 0 14px -3px rgba(255,176,0,0.6);"></span><span style="width:32px;height:25px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;color:#fbeeda;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#ff9c5a;">Assemble your party</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Palette · dark</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px;">
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#ffb000;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Amber</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#FFB000</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#ff6b1a;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Orange</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#FF6B1A</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#ff3b6b;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Magenta</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#FF3B6B</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#140f0a;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Void</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#140F0A</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#1f1710;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Panel</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#1F1710</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:44px;background:#fbeeda;"></div><div style="padding:6px 8px;background:#1f1710;"><div style="font-size:10px;color:#fbeeda;font-weight:600;">Cream</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#9a8253;">#FBEEDA</div></div></div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 20px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.8);">Post a game</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:rgba(255,107,26,0.1);border:1px solid rgba(255,107,26,0.4);padding:11px 18px;border-radius:12px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff6b1a;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:4px 11px;border-radius:999px;">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.42);padding:4px 11px;border-radius:999px;">Fun</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 11px;border-radius:999px;">NA-West</span>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.2);border-radius:16px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#140f0a;font-size:15px;">M</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fbeeda;">Mara</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">hosting · Fri 19:00</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ec96a;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#fbeeda;">Helldivers 2 — Casual Dives</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#a99a80;line-height:1.55;margin:6px 0 12px;">Just here to blow stuff up and laugh. All skill levels welcome.</p>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px;border-radius:12px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4b — LIGHT ===== -->
+    <section id="4b" style="flex:1 1 520px;min-width:480px;background:#f6ede0;border:1px solid #e4d6c2;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(80,50,20,0.4);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #e4d6c2;background:#fdf7ee;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#fdf7ee;background:#c2410c;padding:4px 9px;border-radius:6px;">4b</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#241a10;">Light</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#c2410c;">warm paper theme</span>
+      </div>
+
+      <div style="padding:46px 24px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(circle at 50% 25%, rgba(255,159,0,0.14), transparent 62%);border-bottom:1px solid #ece0cf;">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:46px;position:relative;">
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-2px;"></span><span style="width:28px;height:22px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+            <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:16px;height:16px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-2px;box-shadow:0 6px 14px -6px rgba(255,107,26,0.7);"></span><span style="width:32px;height:25px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;color:#241a10;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#e08a00,#e11d57);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#c2410c;">Assemble your party</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8a7355;margin-bottom:14px;">Palette · light</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px;">
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#ffb000;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Amber</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#FFB000</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#c2410c;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Rust (text)</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#C2410C</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#e11d57;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Magenta (text)</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#E11D57</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#f6ede0;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Paper</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#F6EDE0</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#ffffff;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Card</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#FFFFFF</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #e4d6c2;"><div style="height:44px;background:#241a10;"></div><div style="padding:6px 8px;background:#fff;"><div style="font-size:10px;color:#241a10;font-weight:600;">Ink (text)</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:#8a7355;">#241A10</div></div></div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#241a10;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 20px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.6);">Post a game</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#241a10;background:#fff;border:1px solid #e0c8ad;padding:11px 18px;border-radius:12px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#c2410c;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#241a10;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:4px 11px;border-radius:999px;">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#e11d57;background:rgba(225,29,87,0.1);border:1px solid rgba(225,29,87,0.35);padding:4px 11px;border-radius:999px;">Fun</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#8a5a2c;background:rgba(138,90,44,0.1);border:1px solid rgba(138,90,44,0.3);padding:4px 11px;border-radius:999px;">NA-West</span>
+        </div>
+        <div style="background:#ffffff;border:1px solid #ecdcc7;border-radius:16px;padding:16px;box-shadow:0 8px 22px -16px rgba(80,50,20,0.5);">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#fff;font-size:15px;">M</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#241a10;">Mara</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7355;">hosting · Fri 19:00</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#2e9e4f;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#241a10;">Helldivers 2 — Casual Dives</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#6b5a45;line-height:1.55;margin:6px 0 12px;">Just here to blow stuff up and laugh. All skill levels welcome.</p>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#241a10;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px;border-radius:12px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ TURN 3 — merged system: 1c type · 1b color · 2e mark · 1a tagline ============ -->
+  <div style="max-width:1720px;margin:0 auto 44px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">Turn 3</span>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">The merge — 3 riffs</span>
+    </div>
+    <p style="font-family:'Space Mono',monospace;font-size:11px;color:#9a8253;margin:0;letter-spacing:0.04em;">Sora + Space Mono (1c) · amber/orange palette (1b) · two-pawn mark (2e) · "Assemble your party" (1a). Same DNA, three treatments.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;max-width:1720px;margin:0 auto 48px;align-items:flex-start;">
+
+    <!-- ===== 3a — CLEAN ===== -->
+    <section id="3a" style="flex:1 1 520px;min-width:480px;background:#140f0a;border:1px solid rgba(255,176,0,0.22);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,176,0,0.16);background:rgba(255,176,0,0.04);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 9px;border-radius:6px;">3a</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">Clean</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#c78a1f;">flat · restrained · calm</span>
+      </div>
+
+      <div style="padding:46px 24px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(circle at 50% 25%, rgba(255,176,0,0.1), transparent 60%);border-bottom:1px solid rgba(255,176,0,0.12);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:50px;height:46px;position:relative;">
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0.5;"><span style="width:13px;height:13px;border-radius:50%;background:#ff6b1a;margin-bottom:-2px;"></span><span style="width:26px;height:21px;background:#ff6b1a;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+            <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:16px;height:16px;border-radius:50%;background:#ffb000;margin-bottom:-2px;"></span><span style="width:31px;height:24px;background:#ffb000;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;color:#fbeeda;letter-spacing:-0.01em;">playm<span style="color:#ff6b1a;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#c78a1f;">Assemble your party</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Type · Sora + Space Mono</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;color:#fbeeda;line-height:1.1;letter-spacing:-0.01em;">Find your people</div>
+        <p style="font-family:'Sora',sans-serif;font-weight:400;font-size:13px;color:#a99a80;line-height:1.65;margin:10px 0 0;">Understated and modern: solid fills, soft radii, glow dialed almost all the way down. Lets the content lead.</p>
+      </div>
+
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:#ffb000;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;">Post a game</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:#1f1710;border:1px solid #3a2e20;padding:11px 18px;border-radius:10px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ffb000;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 11px;border-radius:7px;">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:4px 11px;border-radius:7px;">Serious</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 11px;border-radius:7px;">EU-West</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 11px;border-radius:7px;">4/5</span>
+        </div>
+        <div style="background:#1f1710;border:1px solid #2c2418;border-radius:14px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#ffb000;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#140f0a;font-size:15px;">V</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fbeeda;">Vex_00</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">hosting · Fri 19:00</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ec96a;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#fbeeda;">Helldivers 2 — Casual Dives</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#a99a80;line-height:1.55;margin:6px 0 12px;">Here to blow stuff up and laugh. All skill levels welcome.</p>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:#ffb000;border:none;padding:10px;border-radius:10px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3b — HUD ===== -->
+    <section id="3b" style="flex:1 1 520px;min-width:480px;background:#120d08;border:1px solid rgba(255,176,0,0.28);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9),0 0 40px -20px rgba(255,176,0,0.3);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,176,0,0.2);background:rgba(255,176,0,0.05);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 9px;border-radius:6px;">3b</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">HUD</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#ffb000;">neon · glow · arcade</span>
+      </div>
+
+      <div style="padding:46px 24px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(circle at 50% 25%, rgba(255,107,26,0.2), transparent 62%);border-bottom:1px solid rgba(255,176,0,0.14);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:46px;position:relative;filter:drop-shadow(0 0 8px rgba(255,176,0,0.55));">
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0.6;"><span style="width:13px;height:13px;border-radius:50%;background:#ff6b1a;margin-bottom:-2px;"></span><span style="width:26px;height:21px;background:#ff6b1a;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+            <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:16px;height:16px;border-radius:50%;background:#ffb000;margin-bottom:-2px;"></span><span style="width:31px;height:24px;background:#ffb000;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;color:#fbeeda;letter-spacing:-0.01em;text-shadow:0 0 16px rgba(255,176,0,0.35);">playm<span style="color:#ff6b1a;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#ffb000;">// Assemble your party</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Type · Sora + Space Mono</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;color:#fbeeda;line-height:1.1;letter-spacing:-0.01em;text-shadow:0 0 14px rgba(255,176,0,0.25);">Queue up. Jack in.</div>
+        <p style="font-family:'Sora',sans-serif;font-weight:400;font-size:13px;color:#a99a80;line-height:1.65;margin:10px 0 0;">Full arcade treatment: glow, scanline accents, mono uppercase labels and cyan sparks. Highest energy of the three.</p>
+      </div>
+
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Space Mono',monospace;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:#140f0a;background:#ffb000;border:none;padding:11px 18px;border-radius:7px;cursor:pointer;box-shadow:0 0 20px -3px rgba(255,176,0,0.75);">Post a game</button>
+          <button style="font-family:'Space Mono',monospace;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:#ffb000;background:transparent;border:1px solid #ffb000;padding:11px 16px;border-radius:7px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Space Mono',monospace;font-weight:700;font-size:12px;text-transform:uppercase;color:#35d0e0;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 11px;border-radius:5px;box-shadow:0 0 12px -3px rgba(255,176,0,0.6);">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.45);padding:4px 11px;border-radius:5px;">Ranked</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#6fdfec;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.4);padding:4px 11px;border-radius:5px;">EU-West</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.45);padding:4px 11px;border-radius:5px;">2 slots</span>
+        </div>
+        <div style="background:#1a130c;border:1px solid rgba(255,176,0,0.22);border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ffb000,#ff6b1a,#ff3b6b);"></div>
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#140f0a;font-size:15px;box-shadow:0 0 14px -3px rgba(255,176,0,0.6);">V</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fbeeda;">Vex_00</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">LFG · now</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#ffb000;box-shadow:0 0 8px #ffb000;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#fbeeda;">Valorant — Ranked Grind</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#a99a80;line-height:1.55;margin:6px 0 12px;">Need 2 for Diamond push. Mic required, comms &gt; ego.</p>
+          <button style="width:100%;font-family:'Space Mono',monospace;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:#140f0a;background:#ffb000;border:none;padding:11px;border-radius:8px;cursor:pointer;box-shadow:0 0 18px -4px rgba(255,176,0,0.6);">Queue up</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3c — WARM POP ===== -->
+    <section id="3c" style="flex:1 1 520px;min-width:480px;background:#160f0a;border:1px solid rgba(255,107,26,0.26);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,107,26,0.2);background:rgba(255,107,26,0.05);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ff6b1a;padding:4px 9px;border-radius:6px;">3c</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;">Warm Pop</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#ff9c5a;">gradient · friendly · playful</span>
+      </div>
+
+      <div style="padding:46px 24px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(circle at 50% 25%, rgba(255,59,107,0.14), transparent 62%);border-bottom:1px solid rgba(255,107,26,0.14);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:46px;position:relative;">
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);margin-bottom:-2px;"></span><span style="width:28px;height:22px;background:linear-gradient(150deg,#ff6b1a,#ff3b6b);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+            <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="width:16px;height:16px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-2px;box-shadow:0 0 14px -3px rgba(255,176,0,0.6);"></span><span style="width:32px;height:25px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:38px;color:#fbeeda;letter-spacing:-0.01em;">playm<span style="background:linear-gradient(120deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#ff9c5a;">Assemble your party</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Type · Sora + Space Mono</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-0.01em;background:linear-gradient(110deg,#ffb000,#ff3b6b);-webkit-background-clip:text;background-clip:text;color:transparent;">Better together</div>
+        <p style="font-family:'Sora',sans-serif;font-weight:400;font-size:13px;color:#a99a80;line-height:1.65;margin:10px 0 0;">Warmest and friendliest: amber-to-magenta gradients, rounder shapes, playful pop. Broadest, most casual-inviting.</p>
+      </div>
+
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:11px 20px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(255,107,26,0.8);">Post a game</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#fbeeda;background:rgba(255,107,26,0.1);border:1px solid rgba(255,107,26,0.4);padding:11px 18px;border-radius:12px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#ff6b1a;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);padding:4px 11px;border-radius:999px;">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#ff7ea0;background:rgba(255,59,107,0.14);border:1px solid rgba(255,59,107,0.42);padding:4px 11px;border-radius:999px;">Fun</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 11px;border-radius:999px;">NA-West</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#b49c6a;background:rgba(180,156,106,0.12);border:1px solid rgba(180,156,106,0.32);padding:4px 11px;border-radius:999px;">2/4</span>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,107,26,0.2);border-radius:16px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#ffb000,#ff3b6b);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#140f0a;font-size:15px;">M</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#fbeeda;">Mara</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#b49c6a;">hosting · Fri 19:00</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ec96a;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#fbeeda;">Helldivers 2 — Casual Dives</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#a99a80;line-height:1.55;margin:6px 0 12px;">Just here to blow stuff up and laugh. All skill levels welcome.</p>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#140f0a;background:linear-gradient(120deg,#ffb000,#ff6b1a);border:none;padding:10px;border-radius:12px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ TURN 2 — 1b WCAG + logo marks ============ -->
+  <section id="2a" style="max-width:1720px;margin:0 auto 40px;background:#140f0a;border:1px solid rgba(255,176,0,0.22);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:18px 26px;border-bottom:1px solid rgba(255,176,0,0.16);background:rgba(255,176,0,0.04);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">2a</span>
+        <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17px;color:#fbeeda;letter-spacing:0.03em;">NEONFORGE — contrast &amp; new marks</span>
+      </div>
+      <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#c78a1f;">follow-up on 1b</span>
+    </div>
+
+    <!-- WCAG report -->
+    <div style="padding:28px 26px 8px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:6px;">WCAG AA · contrast on dark backgrounds</div>
+      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#a99a80;line-height:1.6;margin:0 0 18px;max-width:760px;">Good news — the warm palette holds up well on the dark field. Every core color clears AA for normal text (≥4.5:1); most clear AAA (≥7:1). The rules to keep it clean are noted below.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+        <!-- row template -->
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#ffb000;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Amber on Void</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#ffb000;">10.4:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#4ec96a;padding:2px 7px;border-radius:4px;">AAA</span></div>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#35d0e0;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Cyan on Void</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#35d0e0;">10.2:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#4ec96a;padding:2px 7px;border-radius:4px;">AAA</span></div>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#fbeeda;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Cream text on Panel</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#fbeeda;">15.0:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#4ec96a;padding:2px 7px;border-radius:4px;">AAA</span></div>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#ff6b1a;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Hot Orange on Void</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#ff6b1a;">6.7:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#8fd44e;padding:2px 7px;border-radius:4px;">AA</span></div>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#ff3b6b;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Magenta on Void</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#ff3b6b;">5.5:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#8fd44e;padding:2px 7px;border-radius:4px;">AA</span></div>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:13px 14px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><span style="width:20px;height:20px;border-radius:5px;background:#9a8253;"></span><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fbeeda;">Muted meta on Panel</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;"><span style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#9a8253;">4.8:1</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#140f0a;background:#e6c74e;padding:2px 7px;border-radius:4px;">AA·min</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+        <div style="flex:1 1 340px;background:rgba(78,201,106,0.07);border:1px solid rgba(78,201,106,0.25);border-radius:10px;padding:12px 14px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#bfe6c9;line-height:1.55;"><b style="color:#4ec96a;">Safe as-is:</b> amber, orange, cyan and cream all pass AA for body text on the dark surfaces. Use amber or cream for anything small.</div>
+        <div style="flex:1 1 340px;background:rgba(230,199,78,0.07);border:1px solid rgba(230,199,78,0.28);border-radius:10px;padding:12px 14px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#ecdba0;line-height:1.55;"><b style="color:#e6c74e;">Watch:</b> reserve magenta for ≥16px / bold labels, and nudge muted-meta a shade lighter (<span style="font-family:'Space Mono',monospace;">#B49C6A</span> → 6.4:1) for tiny timestamps. Never put amber/orange text on a <i>light</i> surface — flip to Void text there.</div>
+      </div>
+    </div>
+
+    <!-- Logo marks -->
+    <div style="padding:26px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:6px;">Logo marks · no play button</div>
+      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#a99a80;line-height:1.6;margin:0 0 20px;max-width:760px;">Six directions built from tabletop &amp; party motifs — dice, pawns, hex tiles, a monogram. Each keeps the NEONFORGE amber/orange treatment. Tell me which mark (by badge) to develop.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;">
+
+        <!-- 2b d6 die -->
+        <div id="2b" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:46px;height:46px;border-radius:11px;background:linear-gradient(150deg,#ffb000,#ff6b1a);position:relative;box-shadow:0 0 20px -4px rgba(255,176,0,0.6);">
+              <span style="position:absolute;top:9px;left:9px;width:6px;height:6px;border-radius:50%;background:#140f0a;"></span>
+              <span style="position:absolute;top:20px;left:20px;width:6px;height:6px;border-radius:50%;background:#140f0a;"></span>
+              <span style="position:absolute;bottom:9px;right:9px;width:6px;height:6px;border-radius:50%;background:#140f0a;"></span>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2b · The D6</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">Universal "let's play" — reads instantly at any size.</div></div>
+        </div>
+
+        <!-- 2c d20 gem -->
+        <div id="2c" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:48px;height:52px;background:linear-gradient(160deg,#ffb000,#ff6b1a);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px -2px rgba(255,176,0,0.6);">
+              <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;color:#140f0a;">20</span>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2c · The D20</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">Nat-20 energy — leans RPG/serious crowd.</div></div>
+        </div>
+
+        <!-- 2d single pawn/meeple -->
+        <div id="2d" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:46px;height:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+              <span style="width:17px;height:17px;border-radius:50%;background:linear-gradient(150deg,#ffb000,#ff6b1a);margin-bottom:-3px;box-shadow:0 0 14px -3px rgba(255,176,0,0.7);"></span>
+              <span style="width:34px;height:26px;background:linear-gradient(150deg,#ffb000,#ff6b1a);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2d · The Meeple</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">"A player" — warm, broad, board-game friendly.</div></div>
+        </div>
+
+        <!-- 2e two pawns (matchmaking) -->
+        <div id="2e" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:52px;height:48px;position:relative;">
+              <!-- back pawn -->
+              <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0.55;">
+                <span style="width:14px;height:14px;border-radius:50%;background:#ff6b1a;margin-bottom:-2px;"></span>
+                <span style="width:28px;height:22px;background:#ff6b1a;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span>
+              </div>
+              <!-- front pawn -->
+              <div style="position:absolute;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+                <span style="width:16px;height:16px;border-radius:50%;background:#ffb000;margin-bottom:-2px;box-shadow:0 0 12px -3px rgba(255,176,0,0.7);"></span>
+                <span style="width:32px;height:25px;background:#ffb000;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);"></span>
+              </div>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2e · The Party</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">Two pawns = matchmaking. On-message for "find others".</div></div>
+        </div>
+
+        <!-- 2f hex tile -->
+        <div id="2f" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:46px;height:52px;background:#140f0a;border:0;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 0 1.5px #ffb000 inset;">
+              <div style="width:34px;height:39px;background:linear-gradient(160deg,rgba(255,176,0,0.9),rgba(255,107,26,0.9));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);"></div>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2f · The Hex</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">Board-tile / grid — most "cyber" &amp; abstract of the set.</div></div>
+        </div>
+
+        <!-- 2g monogram -->
+        <div id="2g" style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:46px;height:46px;border-radius:11px;background:#140f0a;border:1.5px solid #ffb000;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px -4px rgba(255,176,0,0.6);">
+              <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;color:#ffb000;">m8</span>
+            </div>
+            <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:#fbeeda;">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+          </div>
+          <div style="text-align:center;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#ffb000;letter-spacing:0.03em;">2g · The Monogram</div><div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#9a8253;margin-top:3px;">Type-forward "m8" badge — flexes as a favicon/app icon.</div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Boards row -->
+  <div style="display:flex;flex-wrap:wrap;gap:32px;max-width:1720px;margin:0 auto;align-items:flex-start;">
+
+    <!-- ============ 1a — EMBERHOLD (fantasy-lean) ============ -->
+    <section id="1a" style="flex:1 1 520px;min-width:480px;background:#1c1508;border:1px solid rgba(212,160,23,0.22);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <!-- board header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(212,160,23,0.16);background:rgba(212,160,23,0.04);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#1c1508;background:#d4a017;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">1a</span>
+          <span style="font-family:'Cinzel',serif;font-weight:600;font-size:17px;color:#f3e7cf;letter-spacing:0.04em;">Emberhold</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#a07b2e;">Fantasy-lean · guild &amp; forge</span>
+      </div>
+
+      <!-- logo hero -->
+      <div style="padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:26px;background:radial-gradient(circle at 50% 30%, rgba(224,122,31,0.14), transparent 60%);border-bottom:1px solid rgba(212,160,23,0.12);">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:52px;height:58px;background:linear-gradient(160deg,#e07a1f,#8b5a2b);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 26px rgba(224,122,31,0.4);">
+            <span style="width:0;height:0;border-left:14px solid #1c1508;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px;"></span>
+          </div>
+          <span style="font-family:'Cinzel',serif;font-weight:700;font-size:38px;color:#f3e7cf;letter-spacing:0.02em;">playm<span style="color:#d4a017;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.34em;text-transform:uppercase;color:#a07b2e;">Assemble your party</div>
+      </div>
+
+      <!-- palette -->
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8a7c62;margin-bottom:14px;">Palette</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#d4a017;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Guildgold</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#D4A017</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#e07a1f;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Ember</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#E07A1F</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#8b5a2b;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Bronze</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#8B5A2B</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#1c1508;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Forge Black</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#1C1508</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#2a2012;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Ash Surface</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#2A2012</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#f3e7cf;"></div><div style="padding:7px 9px;background:#241a0c;"><div style="font-size:11px;color:#f3e7cf;font-weight:600;">Parchment</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">#F3E7CF</div></div></div>
+        </div>
+      </div>
+
+      <!-- type -->
+      <div style="padding:0 24px 24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8a7c62;margin-bottom:14px;">Type · Cinzel + Barlow</div>
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:30px;color:#f3e7cf;line-height:1.1;">Rally the guild</div>
+        <div style="font-family:'Barlow',sans-serif;font-weight:600;font-size:15px;color:#d4a017;margin-top:6px;letter-spacing:0.02em;">Barlow Semibold · interface &amp; labels</div>
+        <p style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#b3a790;line-height:1.65;margin:10px 0 0;">Display set in Cinzel for a heraldic, quest-board feel; Barlow keeps the working UI crisp and legible at small sizes.</p>
+      </div>
+
+      <!-- UI components -->
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8a7c62;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Barlow',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.03em;color:#1c1508;background:linear-gradient(160deg,#e8a72e,#d4a017);border:none;padding:11px 20px;border-radius:9px;cursor:pointer;box-shadow:0 6px 18px -8px rgba(224,122,31,0.8);">Post a game</button>
+          <button style="font-family:'Barlow',sans-serif;font-weight:600;font-size:13px;color:#f3e7cf;background:transparent;border:1px solid #8b5a2b;padding:11px 18px;border-radius:9px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Barlow',sans-serif;font-weight:600;font-size:13px;color:#d4a017;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:#e8c96a;background:rgba(212,160,23,0.14);border:1px solid rgba(212,160,23,0.3);padding:4px 11px;border-radius:999px;">Co-op</span>
+          <span style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:#f0a878;background:rgba(224,122,31,0.14);border:1px solid rgba(224,122,31,0.32);padding:4px 11px;border-radius:999px;">Serious</span>
+          <span style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:#c9a789;background:rgba(139,90,43,0.2);border:1px solid rgba(139,90,43,0.4);padding:4px 11px;border-radius:999px;">NA-East</span>
+          <span style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:#c9a789;background:rgba(139,90,43,0.2);border:1px solid rgba(139,90,43,0.4);padding:4px 11px;border-radius:999px;">4 / 5 seats</span>
+        </div>
+        <!-- sample listing card -->
+        <div style="background:#2a2012;border:1px solid rgba(212,160,23,0.18);border-radius:13px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#e07a1f,#8b5a2b);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;color:#1c1508;font-size:15px;">K</div>
+            <div style="flex:1;"><div style="font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;color:#f3e7cf;">Kellen the DM</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8a7c62;">hosting · 20:00 GMT</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>
+          </div>
+          <div style="font-family:'Cinzel',serif;font-weight:600;font-size:16px;color:#f3e7cf;">Baldur's Gate 3 — Honour Run</div>
+          <p style="font-family:'Barlow',sans-serif;font-size:12px;color:#b3a790;line-height:1.55;margin:6px 0 12px;">Long campaign, voice on Discord. Chill but committed — no rage quits.</p>
+          <button style="width:100%;font-family:'Barlow',sans-serif;font-weight:700;font-size:13px;color:#1c1508;background:#d4a017;border:none;padding:10px;border-radius:9px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 1b — NEONFORGE (cyberpunk-lean) ============ -->
+    <section id="1b" style="flex:1 1 520px;min-width:480px;background:#140f0a;border:1px solid rgba(255,176,0,0.22);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,176,0,0.16);background:rgba(255,176,0,0.04);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#140f0a;background:#ffb000;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">1b</span>
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17px;color:#fbe6cf;letter-spacing:0.04em;">NEONFORGE</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#c78a1f;">Cyberpunk-lean · arcade neon</span>
+      </div>
+
+      <div style="padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:26px;background:radial-gradient(circle at 50% 30%, rgba(255,107,26,0.16), transparent 60%);border-bottom:1px solid rgba(255,176,0,0.12);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:52px;border-radius:13px;background:#1f1710;border:1.5px solid #ffb000;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(255,176,0,0.45),inset 0 0 12px rgba(255,107,26,0.3);">
+            <span style="width:0;height:0;border-left:15px solid #ffb000;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px;filter:drop-shadow(0 0 4px #ff6b1a);"></span>
+          </div>
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:40px;color:#fbeeda;letter-spacing:0.02em;text-shadow:0 0 18px rgba(255,176,0,0.35);">PLAYM<span style="color:#ff6b1a;">8</span>Z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.34em;text-transform:uppercase;color:#c78a1f;">// queue up. jack in.</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Palette</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#ffb000;box-shadow:inset 0 0 20px rgba(255,107,26,0.4);"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Amber Neon</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#FFB000</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#ff6b1a;"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Hot Orange</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#FF6B1A</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#ff3b6b;"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Magenta Pop</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#FF3B6B</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#35d0e0;"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Cyan Signal*</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#35D0E0</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#140f0a;"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Void</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#140F0A</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#1f1710;"></div><div style="padding:7px 9px;background:#1c150d;"><div style="font-size:11px;color:#fbeeda;font-weight:600;">Panel</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">#1F1710</div></div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6e5f42;margin-top:9px;">* cyan used sparingly — single cold spark against the warm field.</div>
+      </div>
+
+      <div style="padding:0 24px 24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Type · Chakra Petch + IBM Plex Sans</div>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:30px;color:#fbeeda;line-height:1.1;text-transform:uppercase;letter-spacing:0.01em;">Find your run</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:15px;color:#ffb000;margin-top:6px;">IBM Plex Sans · interface &amp; body</div>
+        <p style="font-family:'IBM Plex Sans',sans-serif;font-weight:400;font-size:13px;color:#a99a80;line-height:1.65;margin:10px 0 0;">Chakra Petch gives the squared, HUD-like arcade headline; IBM Plex Sans keeps dense listings and forums highly readable.</p>
+      </div>
+
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#9a8253;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:#140f0a;background:#ffb000;border:none;padding:11px 20px;border-radius:8px;cursor:pointer;box-shadow:0 0 20px -4px rgba(255,176,0,0.7);">Post a game</button>
+          <button style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.03em;text-transform:uppercase;color:#ffb000;background:transparent;border:1px solid #ff6b1a;padding:11px 18px;border-radius:8px;cursor:pointer;">Browse</button>
+          <button style="font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;color:#35d0e0;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:#140f0a;background:#ffb000;padding:4px 11px;border-radius:5px;">Co-op</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:#ff9c5a;background:rgba(255,107,26,0.14);border:1px solid rgba(255,107,26,0.4);padding:4px 11px;border-radius:5px;">Serious</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:#ff7ea0;background:rgba(255,59,107,0.13);border:1px solid rgba(255,59,107,0.4);padding:4px 11px;border-radius:5px;">Ranked</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:#6fdfec;background:rgba(53,208,224,0.1);border:1px solid rgba(53,208,224,0.35);padding:4px 11px;border-radius:5px;">EU-West</span>
+        </div>
+        <div style="background:#1f1710;border:1px solid rgba(255,176,0,0.2);border-radius:12px;padding:16px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ffb000,#ff6b1a,#ff3b6b);"></div>
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#ffb000,#ff6b1a);display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;color:#140f0a;font-size:15px;">V</div>
+            <div style="flex:1;"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:14px;color:#fbeeda;">Vex_00</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a8253;">LFG · now</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#ffb000;box-shadow:0 0 8px #ffb000;"></span>
+          </div>
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;color:#fbeeda;text-transform:uppercase;">Valorant — Ranked Grind</div>
+          <p style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#a99a80;line-height:1.55;margin:6px 0 12px;">Need 2 for Diamond push. Mic required, comms &gt; ego.</p>
+          <button style="width:100%;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;color:#140f0a;background:#ffb000;border:none;padding:10px;border-radius:8px;cursor:pointer;">Queue up</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 1c — WAYFARE (balanced blend) ============ -->
+    <section id="1c" style="flex:1 1 520px;min-width:480px;background:#171310;border:1px solid rgba(201,111,40,0.24);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.9);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(201,111,40,0.16);background:rgba(201,111,40,0.05);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#171310;background:#e6a53d;padding:4px 9px;border-radius:6px;letter-spacing:0.04em;">1c</span>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#efe3d3;letter-spacing:0.01em;">Wayfare</span>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#b07d3c;">Balanced · modern &amp; broad</span>
+      </div>
+
+      <div style="padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:26px;background:radial-gradient(circle at 50% 30%, rgba(201,111,40,0.14), transparent 62%);border-bottom:1px solid rgba(201,111,40,0.12);">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(150deg,#e6a53d,#c96f28);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px -8px rgba(201,111,40,0.7);position:relative;">
+            <span style="width:0;height:0;border-left:15px solid #171310;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px;"></span>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:40px;color:#efe3d3;letter-spacing:-0.01em;">playm<span style="color:#c96f28;">8</span>z</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;color:#b07d3c;">Play more. Play together.</div>
+      </div>
+
+      <div style="padding:24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8f7a5f;margin-bottom:14px;">Palette</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#e6a53d;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Gold</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#E6A53D</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#c96f28;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Copper</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#C96F28</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#d13c2e;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Ember Red</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#D13C2E</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#6b7d8c;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Steel*</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#6B7D8C</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#171310;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Ink</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#171310</div></div></div>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"><div style="height:52px;background:#efe3d3;"></div><div style="padding:7px 9px;background:#211a14;"><div style="font-size:11px;color:#efe3d3;font-weight:600;">Bone</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">#EFE3D3</div></div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#6e5f47;margin-top:9px;">* cool steel balances the warmth — used for secondary UI &amp; borders.</div>
+      </div>
+
+      <div style="padding:0 24px 24px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8f7a5f;margin-bottom:14px;">Type · Sora + Space Mono</div>
+        <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:30px;color:#efe3d3;line-height:1.1;letter-spacing:-0.01em;">Your next session</div>
+        <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:#e6a53d;margin-top:8px;">Space Mono · tags, meta &amp; stats</div>
+        <p style="font-family:'Sora',sans-serif;font-weight:400;font-size:13px;color:#ab9c85;line-height:1.65;margin:10px 0 0;">Sora is a friendly geometric sans that reads as modern-gaming without leaning hard fantasy or cyber; Space Mono adds the techy accent for data.</p>
+      </div>
+
+      <div style="padding:0 24px 28px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#8f7a5f;margin-bottom:14px;">Components</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;">
+          <button style="font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#171310;background:linear-gradient(150deg,#e6a53d,#c96f28);border:none;padding:11px 20px;border-radius:10px;cursor:pointer;box-shadow:0 6px 18px -8px rgba(201,111,40,0.8);">Post a game</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#efe3d3;background:transparent;border:1px solid #6b7d8c;padding:11px 18px;border-radius:10px;cursor:pointer;">Browse</button>
+          <button style="font-family:'Sora',sans-serif;font-weight:600;font-size:13px;color:#e6a53d;background:transparent;border:none;padding:11px 6px;cursor:pointer;">Log in →</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#efd9a8;background:rgba(230,165,61,0.15);border:1px solid rgba(230,165,61,0.35);padding:4px 11px;border-radius:7px;">Co-op</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#efb08a;background:rgba(201,111,40,0.16);border:1px solid rgba(201,111,40,0.4);padding:4px 11px;border-radius:7px;">Fun</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#a9b6c0;background:rgba(107,125,140,0.16);border:1px solid rgba(107,125,140,0.4);padding:4px 11px;border-radius:7px;">NA-West</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#a9b6c0;background:rgba(107,125,140,0.16);border:1px solid rgba(107,125,140,0.4);padding:4px 11px;border-radius:7px;">2/4</span>
+        </div>
+        <div style="background:#211a14;border:1px solid rgba(201,111,40,0.2);border-radius:14px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#e6a53d,#c96f28);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;color:#171310;font-size:15px;">M</div>
+            <div style="flex:1;"><div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:#efe3d3;">Mara</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#8f7a5f;">hosting · Fri 19:00</div></div>
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ec96a;box-shadow:0 0 8px #4ec96a;"></span>
+          </div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:#efe3d3;">Helldivers 2 — Casual Dives</div>
+          <p style="font-family:'Sora',sans-serif;font-size:12px;color:#ab9c85;line-height:1.55;margin:6px 0 12px;">Just here to blow stuff up and laugh. All skill levels welcome.</p>
+          <button style="width:100%;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#171310;background:#e6a53d;border:none;padding:10px;border-radius:10px;cursor:pointer;">Request to join</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

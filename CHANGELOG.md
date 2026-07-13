@@ -745,3 +745,18 @@ may begin on any/all of them per the constitution (v1.0.0).
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
   `https://playm8z.vercel.app` only.
+
+## [Unreleased] (cont.)
+
+### Added
+- Added `resources/design/Brand Identity - playm8z.dc.html` — the
+  brand-exploration trail (three initial directions, a WCAG contrast
+  pass, a three-way merge, then "Turn 4 — LOCKED") landing on **Warm
+  Pop** as the locked identity, with full dark and light mockups.
+  Reconciled against `guidelines.md` §4: zero discrepancies found —
+  every token, gradient, type-scale value, component pattern, and
+  accessibility rule already there matches the locked file exactly. No
+  `guidelines.md` changes needed. The interactive theme-switching
+  `playm8z - Design System.dc.html` is still not delivered, but it
+  would only restate the same tokens already confirmed live in the
+  Dark Theme/Light Theme sheets, so it's no longer a blocker.
