@@ -834,3 +834,60 @@ may begin on any/all of them per the constitution (v1.0.0).
   name; amended `get-open-postings.ts`/`listing-card.tsx` to show
   `@handle` instead. Every other feature reconciles against this ADR
   when it's actually implemented.
+
+## [Unreleased] (cont. 5)
+
+### Added
+- **Implemented Browse**: the full faceted discovery surface at
+  `/browse`, public (no auth required, unlike Home). Unlike Home's
+  client-side filter over one fetched list, every facet (keyword,
+  Vibe, Game, Genre, Region, Time slots, Age group, Open slots,
+  Platform, Mic required) lives in the URL's `searchParams` and drives
+  a real server-side Drizzle query per request — AND across facets, OR
+  within a multi-select facet, via one shared `buildFilterConditions()`
+  helper. Live Game/Region facet counts reflect every *other* active
+  facet and never disappear even at count `0`. Removable filter pills
+  plus "Clear all," three sorts (Recent/Open seats/Soonest, the last
+  ordering `scheduledDate` nulls last), and an empty state linking to
+  Post a Game with the search term carried over. Extends `postings`
+  with `genre`/`ageGroup`/`timeSlots`/`platform`/`micRequired`/
+  `scheduledDate`; relocates and extends Home's `listing-card.tsx` into
+  a shared `src/components/listings/` location rather than duplicating
+  it.
+- **Caught and fixed a real Postgres bug**: `get-facet-counts.ts`'s two
+  queries (`getGameFacetCounts`/`getRegionFacetCounts`) reused the
+  shared `buildFilterConditions()` helper — which can reference
+  `users.handle` for keyword search — without ever joining `users` in
+  their own queries. This meant any real visitor typing a search term
+  on `/browse` hit a live Postgres error ("missing FROM-clause entry
+  for table \"user\""), undetected by the original test suite since it
+  never exercised a keyword-search-plus-facet-count combination.
+  Found via a Playwright test timing out with zero results, traced to
+  the raw error in the page's RSC payload via `curl`. Fixed by adding
+  the join to both queries, plus two regression unit tests.
+- **Caught and fixed a flaky axe-core heading-order finding**: the
+  first e2e test's a11y scan intermittently flagged an `<h1>`→`<h3>`
+  jump (missing the sidebar's `<h2>` "Filters"), passing most runs but
+  failing roughly 1 in 3-4. Root cause: `browse/page.tsx` wrapped every
+  client component in a fallback-less `<Suspense>`, a pattern that's
+  only actually necessary to avoid a build-time CSR bailout on a
+  *static* page calling `useSearchParams()` — this page is already
+  fully dynamic (it awaits the `searchParams` prop server-side), so the
+  boundaries served no purpose and left a transient window during
+  hydration where wrapped content could render blank. Removed all five
+  `<Suspense>` wrappers; reran the isolated a11y test 4/4 clean and the
+  full suite twice in a row, confirmed `next build` still emits
+  `/browse` as dynamic (ƒ).
+- **A reusable Playwright lesson**: Tailwind v4's `.sr-only` utility
+  uses `clip-path`, which makes a visually-hidden native
+  checkbox/radio fail Playwright's actionability check even though a
+  real user can still toggle it via the wrapping `<label>`'s native
+  click-forwarding. `e2e/browse.spec.ts` adds a `selectFacet()` helper
+  that clicks the visible label instead of calling `.check()` on the
+  hidden input's role directly.
+- 11 new/extended unit test files and a 7-scenario `e2e/browse.spec.ts`
+  (one with an axe-core scan) — 106 unit tests and 17 e2e tests total
+  across the whole suite, all passing. `npm run typecheck`, `npm run
+  lint`, `npm test`, `npm run test:e2e` (full suite, all files), and
+  `npm run build` all verified green before merging. All 22 tasks in
+  `specs/004-browse/tasks.md` checked off.

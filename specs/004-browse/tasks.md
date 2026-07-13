@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Extend `003-home`'s `scripts/seed-postings.ts` with this feature's new columns (`genre`, `ageGroup`, `timeSlots`, `platform`, `micRequired`, `scheduledDate`) so seeded data exercises every facet
+- [x] T001 Extend `003-home`'s `scripts/seed-postings.ts` with this feature's new columns (`genre`, `ageGroup`, `timeSlots`, `platform`, `micRequired`, `scheduledDate`) so seeded data exercises every facet
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend the `postings` table in `src/db/schema.ts` with `genre`, `ageGroup`, `timeSlots`, `platform`, `micRequired`, `scheduledDate` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/browse-filters.ts` — the Zod schema validating every `searchParams` facet value before use (data-model.md)
-- [ ] T005 [P] Relocate `src/components/home/listing-card.tsx` to `src/components/listings/listing-card.tsx`, extending it with the genre eyebrow and time-slot tag Browse's data includes (research.md #3) — update Home's existing usage to the new path
-- [ ] T006 Create `src/lib/postings/search-postings.ts` — validates `searchParams` via T004, then builds and runs the faceted Drizzle query (AND across facets, OR within a multi-select facet) — depends on T002, T004
+- [x] T002 Extend the `postings` table in `src/db/schema.ts` with `genre`, `ageGroup`, `timeSlots`, `platform`, `micRequired`, `scheduledDate` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/browse-filters.ts` — the Zod schema validating every `searchParams` facet value before use (data-model.md)
+- [x] T005 [P] Relocate `src/components/home/listing-card.tsx` to `src/components/listings/listing-card.tsx`, extending it with the genre eyebrow and time-slot tag Browse's data includes (research.md #3) — update Home's existing usage to the new path
+- [x] T006 Create `src/lib/postings/search-postings.ts` — validates `searchParams` via T004, then builds and runs the faceted Drizzle query (AND across facets, OR within a multi-select facet) — depends on T002, T004
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,16 +54,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `browse-filters.ts` (enum membership, array bounds, defaults) in `src/lib/validations/browse-filters.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `search-postings.ts`'s facet-combination logic (AND across facets, OR within a multi-select facet) in `src/lib/postings/search-postings.test.ts`
-- [ ] T009 [P] [US1] Integration test for `search-postings.ts` against real seeded rows in Postgres, including the "Soonest" sort's null-scheduledDate ordering, in `src/lib/postings/search-postings.test.ts`
-- [ ] T010 [US1] Playwright e2e spec covering keyword+facet combination, sort, live facet counts, and card click-through, including an axe-core scan — creates `e2e/browse.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `browse-filters.ts` (enum membership, array bounds, defaults) in `src/lib/validations/browse-filters.test.ts`
+- [x] T008 [P] [US1] Unit tests for `search-postings.ts`'s facet-combination logic (AND across facets, OR within a multi-select facet) in `src/lib/postings/search-postings.test.ts`
+- [x] T009 [P] [US1] Integration test for `search-postings.ts` against real seeded rows in Postgres, including the "Soonest" sort's null-scheduledDate ordering, in `src/lib/postings/search-postings.test.ts`
+- [x] T010 [US1] Playwright e2e spec covering keyword+facet combination, sort, live facet counts, and card click-through, including an axe-core scan — creates `e2e/browse.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build `src/lib/postings/get-facet-counts.ts` — live Game/Region option counts over currently-open postings (research.md #5) — depends on T002
-- [ ] T012 [US1] Build `src/components/browse/filter-sidebar.tsx`: real radio-group semantics for Vibe/Age group/Open slots/Platform, real checkbox semantics for Game/Region (with T011's live counts), multi-select chips for Genre/Time slots, the Mic-required toggle, and a debounced keyword field — every control updates the URL's `searchParams` — depends on T004, T011
-- [ ] T013 [US1] Build `src/app/browse/page.tsx`: await and validate `searchParams`, run `search-postings.ts` (T006), render `filter-sidebar.tsx`, the results grid using the relocated `listing-card.tsx` (T005), the sort control, and an `aria-live` result count — depends on T005, T006, T012
+- [x] T011 [US1] Build `src/lib/postings/get-facet-counts.ts` — live Game/Region option counts over currently-open postings (research.md #5) — depends on T002
+- [x] T012 [US1] Build `src/components/browse/filter-sidebar.tsx`: real radio-group semantics for Vibe/Age group/Open slots/Platform, real checkbox semantics for Game/Region (with T011's live counts), multi-select chips for Genre/Time slots, the Mic-required toggle, and a debounced keyword field — every control updates the URL's `searchParams` — depends on T004, T011
+- [x] T013 [US1] Build `src/app/browse/page.tsx`: await and validate `searchParams`, run `search-postings.ts` (T006), render `filter-sidebar.tsx`, the results grid using the relocated `listing-card.tsx` (T005), the sort control, and an `aria-live` result count — depends on T005, T006, T012
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -77,12 +77,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T014 [US2] Add the pills scenario (each active facet gets a removable pill; removing one leaves the others active; "Clear all" resets everything) to `e2e/browse.spec.ts` — depends on T010 (same file)
+- [x] T014 [US2] Add the pills scenario (each active facet gets a removable pill; removing one leaves the others active; "Clear all" resets everything) to `e2e/browse.spec.ts` — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Build `src/components/browse/active-pills.tsx`: derives a pill per active facet value from the current `searchParams`, each independently removable, plus a "Clear all" action — depends on T004
-- [ ] T016 [US2] Wire `active-pills.tsx` into `src/app/browse/page.tsx` — depends on T013, T015
+- [x] T015 [US2] Build `src/components/browse/active-pills.tsx`: derives a pill per active facet value from the current `searchParams`, each independently removable, plus a "Clear all" action — depends on T004
+- [x] T016 [US2] Wire `active-pills.tsx` into `src/app/browse/page.tsx` — depends on T013, T015
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -96,12 +96,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T017 [US3] Add the empty-state scenario (no matches → guidance, "Clear filters," "Post a game") to `e2e/browse.spec.ts` — depends on T014 (same file)
+- [x] T017 [US3] Add the empty-state scenario (no matches → guidance, "Clear filters," "Post a game") to `e2e/browse.spec.ts` — depends on T014 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T018 [US3] Build `src/components/browse/browse-empty-state.tsx`: guidance copy, a "Clear filters" action reusing T015's clear-all behavior, and a "Post a game" action toward the future Post a Game route — depends on T015
-- [ ] T019 [US3] Wire `browse-empty-state.tsx` into `src/app/browse/page.tsx` for the zero-results case — depends on T013, T018
+- [x] T018 [US3] Build `src/components/browse/browse-empty-state.tsx`: guidance copy, a "Clear filters" action reusing T015's clear-all behavior, and a "Post a game" action toward the future Post a Game route — depends on T015
+- [x] T019 [US3] Wire `browse-empty-state.tsx` into `src/app/browse/page.tsx` for the zero-results case — depends on T013, T018
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -109,9 +109,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T020 Confirm `next build` succeeds locally and CI stays green with the new `/browse` route and the extended `postings` schema
-- [ ] T021 Manually run quickstart.md Scenarios 1-7 end to end against local dev and confirm each passes
-- [ ] T022 [P] Update `docs/feature-list.md`, marking Browse's spec/plan/tasks as complete
+- [x] T020 Confirm `next build` succeeds locally and CI stays green with the new `/browse` route and the extended `postings` schema
+- [x] T021 Manually run quickstart.md Scenarios 1-7 end to end against local dev and confirm each passes
+- [x] T022 [P] Update `docs/feature-list.md`, marking Browse's spec/plan/tasks as complete
 
 ---
 

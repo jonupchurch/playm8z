@@ -1,9 +1,9 @@
 # Status
 
-**Phase**: Infrastructure scaffold complete, constitution ratified.
-Auth & Onboarding is the first feature to clear the full spec/plan/tasks
-gate; implementation still waits on every other feature reaching the
-same point.
+**Phase**: Project-wide spec/plan/tasks gate closed. Implementing
+features one at a time, in order: Auth & Onboarding, Error Pages, and
+Home are done and merged; Browse just merged as the fourth. Post a Game
+is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -953,10 +953,11 @@ merging.
 
 ## Next up
 
-- Decide implementation order for the remaining ~24 features — likely
-  Home next (foundational, and Landing/Post a Game/Browse all build on
-  its `postings` table), but this is an open question for the user
-  rather than a predetermined sequence.
+- Auth & Onboarding, Error Pages, Home, and Browse are implemented and
+  merged. Post a Game (`005`) is next — first real consumer of Auth &
+  Onboarding's unverified-email write-action gate, and extends
+  `postings` with its last remaining columns (tags, recurring,
+  voiceLink) — awaiting the user's go-ahead.
 - Real Resend wiring remains blocked on domain ownership (unchanged);
   verification emails still log to the server console.
 - `users.role` and real admin gating remain blocked on Admin Settings
@@ -1033,6 +1034,84 @@ Profile, Forum, Listing detail, Inbox, admin views of user content)
 reconciles against this ADR when it's actually implemented, per this
 project's established pattern, rather than rewriting all 23 remaining
 specs preemptively.
+
+## Browse implemented (2026-07-13)
+
+**Browse: implemented** — all 22 tasks in `specs/004-browse/tasks.md`
+complete, on branch `004-browse` (rebuilt on top of `main`), merged
+back.
+
+Unlike Home's client-side filter over one fetched list, `/browse` is
+the full/comprehensive discovery surface: every facet (keyword, Vibe,
+Game, Genre, Region, Time slots, Age group, Open slots, Platform, Mic
+required) lives in the URL's `searchParams` and drives a real
+server-side Drizzle query per request, built by one shared
+`buildFilterConditions()` helper in `search-postings.ts` — AND across
+facets, OR within a multi-select facet. Live Game/Region facet counts
+(`get-facet-counts.ts`) reflect every *other* active facet and never
+disappear even at count `0` (a separate unfiltered-option-list query
+merged with a filtered-excluding-self count). Removable filter pills
+plus "Clear all," three sorts (Recent/Open seats/Soonest — the last
+ordering by `scheduledDate` with nulls sorted last via a raw SQL
+`is null` predicate), and an empty state linking to Post a Game's
+future `/post` route with the search term carried over.
+
+**Schema**: extends `postings` (Home's table) with `genre`,
+`ageGroup`, `timeSlots` (array), `platform`, `micRequired`,
+`scheduledDate` — same shared-table-extension pattern as Auth &
+Onboarding/`user` and Error Pages/`settings`. Relocated Home's
+`listing-card.tsx` to a shared `src/components/listings/` location
+(extended with a genre eyebrow and time-slot tag) rather than
+duplicating it for Browse's fuller data shape.
+
+**A real Postgres bug, not just a test artifact**: `get-facet-counts.ts`'s
+two queries (`getGameFacetCounts`/`getRegionFacetCounts`) reused the
+shared `buildFilterConditions()` helper — which can emit a condition
+referencing `users.handle` for keyword search — without ever joining
+`users` in their own queries. This meant any real visitor typing a
+search term on `/browse` would hit a live Postgres error ("missing
+FROM-clause entry for table \"user\""), completely undetected by the
+original test suite since it never exercised a keyword-search-plus-
+facet-count combination together. Found by digging into a Playwright
+test that timed out with zero matches rather than assuming the code
+was correct — traced via `curl` to the raw escaped error in the page's
+RSC payload. Fixed by adding `.innerJoin(users, ...)` to both queries,
+then back-filled two regression unit tests specifically covering
+"doesn't throw when a keyword search is active."
+
+**A flaky axe-core finding, root-caused rather than silenced**: the
+first e2e test's a11y scan intermittently flagged an `<h1>`→`<h3>` jump
+(the sidebar's `<h2>` "Filters" missing), passing most runs but failing
+roughly 1 in 3-4 — including one run where it had already passed once
+before, ruling out a simple "forgot to apply the fix" explanation.
+Root cause: `browse/page.tsx` wrapped every client component
+(`SearchHeader`/`FilterSidebar`/`SortControl`/`ActivePills`/
+`BrowseEmptyState`) in a fallback-less `<Suspense>`. Per Next.js's own
+docs, that pattern exists specifically to avoid a build-time CSR
+bailout for a *static* page calling `useSearchParams()` — this page is
+already fully dynamic (it awaits the `searchParams` prop server-side),
+so the boundaries served no purpose and left a transient window during
+hydration where wrapped content could render without its heading.
+Removed all five `<Suspense>` wrappers; reran the isolated a11y test
+4/4 clean and the full 7-test suite twice in a row with zero failures,
+and confirmed `next build` still emits `/browse` as dynamic (ƒ), so no
+CSR-bailout build error was traded in.
+
+**A reusable Playwright lesson**: Tailwind v4's `.sr-only` utility uses
+`clip-path: inset(50%)`, which makes a visually-hidden native
+checkbox/radio fail Playwright's actionability check on `.check()`/
+`.click()` even though a real user can still toggle it via the
+wrapping `<label>`'s native click-forwarding. `e2e/browse.spec.ts`
+adds a `selectFacet()` helper that clicks the visible label instead —
+state *assertions* (`.toBeChecked()`) still work fine directly on the
+input's role, since those only read DOM state rather than requiring
+visibility.
+
+11 new/extended unit test files and a 7-scenario `e2e/browse.spec.ts`
+(one with an axe-core scan) — 106 unit tests and 17 e2e tests total
+across the whole suite (every spec file, not just Browse's), all
+passing. `npm run typecheck`, `npm run lint`, `npm test`, `npm run
+test:e2e`, and `npm run build` all verified green before merging.
 
 ## Blockers
 
