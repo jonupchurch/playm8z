@@ -558,6 +558,27 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   dashboard KPI queries) → Polish (3). Admin Postings is the
   seventeenth feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Forum: `research.md` (classifying a
+  `reports.targetType='forum'` row against `forumThreads` then
+  `forumReplies`, since `010` never added a discriminator column;
+  extracting shared `reason-severity.ts`/`auto-flag-rules.ts` helpers
+  out of Admin Postings' `017` inline copies, correcting a wireframe-
+  vs-ratified-taxonomy severity mismatch along the way; generalizing
+  `017`'s `warnings.postingId` to a polymorphic `targetType`/`targetId`
+  pair, the exact trigger `017`'s own research anticipated; "actioned
+  today" as the first live read of `015`'s `auditEntries` rather than
+  a new counter; locking a thread enforced server-side in `010`'s
+  `post-reply.ts`), `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin Forum: `tasks.md` — 41 tasks: Setup
+  (1) → Foundational (6: schema extensions incl. `017`'s `warnings`
+  generalization, two shared moderation helpers, validation schemas,
+  the gated page shell) → US1/P1 view+filter queue (8) → US2/P2
+  drawer+approve+remove (7) → US3/P3 lock+warn+ban (8) →
+  cross-feature amendments to `009`/`010` (4) → retroactive amendments
+  to `017` (4) → Polish (3). Admin Forum is the eighteenth feature to
+  clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

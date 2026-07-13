@@ -619,10 +619,29 @@ amendments(4) → Polish(3). `docs/feature-list.md` updated to 🟢.
 Admin Postings is the seventeenth feature with a complete
 spec/plan/tasks trio.
 
+**Admin Forum: spec + plan done** (2026-07-12, branch
+`018-admin-forum`) — second moderation-queue feature, spanning
+threads and replies. Extracts two shared moderation helpers
+(`reason-severity.ts`, `auto-flag-rules.ts`) out of Admin Postings'
+(`017`) inline copies, correcting a wireframe-vs-ratified-taxonomy
+mismatch in the severity mapping along the way. Generalizes `017`'s
+`warnings` table to a polymorphic `targetType`/`targetId` shape (the
+exact generalization `017`'s own research anticipated). Adds a new
+`forumReplies.removedAt`/lock-enforcement on threads. "Actioned
+today" is the first live product-facing read of `015`'s
+`auditEntries` table.
+
+**Admin Forum: tasks done** (2026-07-12) — `tasks.md`, 41 tasks:
+Setup(1) → Foundational(6) → US1/P1 view+filter queue(8) → US2/P2
+drawer+approve+remove(7) → US3/P3 lock+warn+ban(8) → cross-feature
+amendments to 009/010(4) → retroactive amendments to 017(4) →
+Polish(3). `docs/feature-list.md` updated to 🟢. Admin Forum is the
+eighteenth feature with a complete spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `017-admin-postings` into `main`, then move on to feature #18
-  (Admin Forum) — same specify→plan→tasks→merge sequence repeats
+- Merge `018-admin-forum` into `main`, then move on to feature #19
+  (Admin Reports) — same specify→plan→tasks→merge sequence repeats
   for every other feature in `docs/feature-list.md` — per the
   project-wide gate (constitution v1.0.0), implementation doesn't
   begin on *any* feature until all of them have this done.
