@@ -17,6 +17,19 @@ export const users = pgTable("user", {
   // Only set for accounts created via the Credentials (native) provider;
   // null for accounts that only ever signed in through Google.
   passwordHash: text("passwordHash"),
+  // Unique, immutable once set (FR-003). Nullable at the DB level even
+  // though it's conceptually required: a Google sign-up's account row is
+  // created by the Auth.js adapter before onboarding ever runs, so there's
+  // a real (if brief) window with no handle yet -- collected at onboarding
+  // Step 1 instead (research.md #2, deliberately not auto-generated).
+  handle: text("handle").unique(),
+  avatarColor: text("avatarColor"),
+  region: text("region"),
+  platforms: text("platforms").array(),
+  ageGroup: text("ageGroup"),
+  vibe: text("vibe"),
+  playTimeSlots: text("playTimeSlots").array(),
+  gamesPlayed: text("gamesPlayed").array(),
 });
 
 export const accounts = pgTable(
