@@ -827,3 +827,10 @@ may begin on any/all of them per the constitution (v1.0.0).
   real ESM ordering bug in the seed script (static imports run before
   any top-level code, so env-loading had to move behind a dynamic
   `import()`). All 24 tasks in `specs/003-home/tasks.md` checked off.
+- ADR 0006 (`docs/adr/0006-handle-only-public-identity.md`): a user's
+  handle is the only identity ever shown to *other* users, anywhere —
+  display name is retained but narrowed to self-facing UI only.
+  Prompted by Home's listing card showing a host's real/Google-derived
+  name; amended `get-open-postings.ts`/`listing-card.tsx` to show
+  `@handle` instead. Every other feature reconciles against this ADR
+  when it's actually implemented.

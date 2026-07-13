@@ -11,7 +11,7 @@ let hostId: string;
 beforeAll(async () => {
   const [host] = await db
     .insert(users)
-    .values({ email, name: "Test Host", avatarColor: "amber-orange" })
+    .values({ email, handle: `testhost${runId}`, avatarColor: "amber-orange" })
     .returning({ id: users.id });
   hostId = host.id;
 
@@ -57,7 +57,7 @@ afterAll(async () => {
 });
 
 describe("getOpenPostings", () => {
-  it("returns only rows with status = 'open', with the real host's name/avatar", async () => {
+  it("returns only rows with status = 'open', with the real host's handle/avatar", async () => {
     const result = await getOpenPostings();
     const games = result.map((row) => row.game);
 
@@ -66,7 +66,7 @@ describe("getOpenPostings", () => {
     expect(games).not.toContain(`ClosedGame-${runId}`);
 
     const openRow = result.find((row) => row.game === `OpenGame-${runId}`);
-    expect(openRow?.hostName).toBe("Test Host");
+    expect(openRow?.hostHandle).toBe(`testhost${runId}`);
     expect(openRow?.hostAvatarColor).toBe("amber-orange");
     expect(openRow?.seatsOpen).toBe(2);
     expect(openRow?.seatsTotal).toBe(4);

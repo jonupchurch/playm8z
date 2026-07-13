@@ -5,7 +5,7 @@ import { postings, users } from "@/db/schema";
 export type OpenPosting = {
   id: string;
   hostId: string;
-  hostName: string;
+  hostHandle: string;
   hostAvatarColor: string | null;
   game: string;
   title: string;
@@ -18,14 +18,15 @@ export type OpenPosting = {
 };
 
 // FR-004: only ever reads status = 'open' -- a full or closed posting
-// never appears on Home. Joins users for the host's real name/avatar
-// (FR-005) rather than inventing per-listing display data.
+// never appears on Home. Joins users for the host's real handle/avatar
+// (FR-005) -- the host's display name is never shown to other users
+// (ADR 0006); only the handle is.
 export async function getOpenPostings(): Promise<OpenPosting[]> {
   const rows = await db
     .select({
       id: postings.id,
       hostId: postings.hostId,
-      hostName: users.name,
+      hostHandle: users.handle,
       hostAvatarColor: users.avatarColor,
       game: postings.game,
       title: postings.title,
@@ -41,5 +42,5 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
     .where(eq(postings.status, "open"))
     .orderBy(desc(postings.createdAt));
 
-  return rows.map((row) => ({ ...row, hostName: row.hostName ?? "Player" }));
+  return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));
 }

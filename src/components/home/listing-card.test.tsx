@@ -6,7 +6,7 @@ import type { OpenPosting } from "@/lib/postings/get-open-postings";
 const basePosting: OpenPosting = {
   id: "11111111-1111-1111-1111-111111111111",
   hostId: "22222222-2222-2222-2222-222222222222",
-  hostName: "Mara",
+  hostHandle: "mara",
   hostAvatarColor: "amber-orange",
   game: "Helldivers 2",
   title: "Casual Dives — all welcome",
@@ -19,10 +19,10 @@ const basePosting: OpenPosting = {
 };
 
 describe("ListingCard", () => {
-  it("renders host, region, game, title, blurb, vibe tag, and seat count", () => {
+  it("renders host handle, region, game, title, blurb, vibe tag, and seat count", () => {
     render(<ListingCard posting={basePosting} />);
 
-    expect(screen.getByText("Mara")).toBeInTheDocument();
+    expect(screen.getByText("@mara")).toBeInTheDocument();
     expect(screen.getByText("NA-West", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("Helldivers 2")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Casual Dives — all welcome" })).toBeInTheDocument();
@@ -44,8 +44,8 @@ describe("ListingCard", () => {
     expect(screen.getByText("Serious")).toBeInTheDocument();
   });
 
-  it("falls back to a 'P' initial when the host has no name", () => {
-    render(<ListingCard posting={{ ...basePosting, hostName: "" }} />);
+  it("falls back to a 'P' initial when the host has no handle", () => {
+    render(<ListingCard posting={{ ...basePosting, hostHandle: "" }} />);
     expect(screen.getByText("P")).toBeInTheDocument();
   });
 });

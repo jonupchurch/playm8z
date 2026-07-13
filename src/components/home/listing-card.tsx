@@ -22,12 +22,13 @@ export function relativeAge(createdAt: Date, now: number = Date.now()): string {
 
 // FR-005's fields, plus the decorative "actively recruiting" dot (spec's
 // Assumptions: tied to the posting being open, not a real presence
-// system -- every card shown here is already status='open').
+// system -- every card shown here is already status='open'). The host's
+// handle is shown, never their display name (ADR 0006).
 export function ListingCard({ posting }: { posting: OpenPosting }) {
   const avatarGradient =
     AVATAR_COLORS.find((swatch) => swatch.id === posting.hostAvatarColor)?.gradient ??
     AVATAR_COLORS[0].gradient;
-  const initial = (posting.hostName.trim()[0] || "P").toUpperCase();
+  const initial = (posting.hostHandle.trim()[0] || "P").toUpperCase();
   const isSerious = posting.vibe === "serious";
 
   return (
@@ -43,7 +44,7 @@ export function ListingCard({ posting }: { posting: OpenPosting }) {
           {initial}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-[15px] font-bold text-text">{posting.hostName}</div>
+          <div className="text-[15px] font-bold text-text">@{posting.hostHandle}</div>
           <div className="font-mono text-[10px] text-text-muted">
             {relativeAge(posting.createdAt)} · {REGION_LABELS[posting.region] ?? posting.region}
           </div>

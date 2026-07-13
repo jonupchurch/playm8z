@@ -54,7 +54,7 @@ export function LiveFeed({
     const q = query.trim().toLowerCase();
     const filtered = postings.filter((posting) => {
       const matchesQuery =
-        !q || `${posting.game} ${posting.title} ${posting.hostName}`.toLowerCase().includes(q);
+        !q || `${posting.game} ${posting.title} ${posting.hostHandle}`.toLowerCase().includes(q);
       const matchesVibe = vibe === "any" || posting.vibe === vibe;
       const matchesRegion = region === "any" || posting.region === region;
       return matchesQuery && matchesVibe && matchesRegion;
@@ -69,8 +69,8 @@ export function LiveFeed({
 
   return (
     <>
-      <div className="mx-auto max-w-[920px] px-8 pb-11">
-        <div className="mx-auto flex max-w-[600px] items-center gap-3 rounded-2xl border border-border bg-surface-2 px-4.5 py-2">
+      <div className="mx-auto max-w-230 px-8 pb-11">
+        <div className="mx-auto flex max-w-150 items-center gap-3 rounded-2xl border border-border bg-surface-2 px-4.5 py-2">
           <span
             aria-hidden="true"
             className="h-4 w-4 shrink-0 rounded-full border-2 border-text-dim"
@@ -122,7 +122,7 @@ export function LiveFeed({
 
       <TrendingRow trending={trending} onSelect={(game) => setQuery(game)} />
 
-      <div className="mx-auto max-w-[1180px] px-8 pt-8 pb-18">
+      <div className="mx-auto max-w-295 px-8 pt-8 pb-18">
         <div className="mb-4.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-baseline gap-3">
             <h2 className="font-mono text-[11px] tracking-wider text-accent-2 uppercase">

@@ -7,7 +7,7 @@ function posting(overrides: Partial<OpenPosting>): OpenPosting {
   return {
     id: crypto.randomUUID(),
     hostId: crypto.randomUUID(),
-    hostName: "Host",
+    hostHandle: "host",
     hostAvatarColor: "amber-orange",
     game: "Generic Game",
     title: "A listing",
@@ -25,7 +25,7 @@ const sample: OpenPosting[] = [
   posting({
     game: "Valorant",
     title: "Ranked grind",
-    hostName: "Vex",
+    hostHandle: "vex",
     vibe: "serious",
     region: "eu-west",
     seatsOpen: 3,
@@ -34,7 +34,7 @@ const sample: OpenPosting[] = [
   posting({
     game: "Helldivers 2",
     title: "Casual dives",
-    hostName: "Mara",
+    hostHandle: "mara",
     vibe: "fun",
     region: "na-west",
     seatsOpen: 1,

@@ -1016,6 +1016,24 @@ of which caught the contrast bug above) all passing.
 `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
 and `npm run build` all verified green before merging.
 
+**ADR 0006** (`docs/adr/0006-handle-only-public-identity.md`, 2026-07-13):
+the user flagged, while reviewing Home, that listing cards showed a
+host's real/display name (auto-populated from Google for OAuth
+accounts) rather than their handle — a privacy concern that applies
+platform-wide, not just to this one card. Decision: **`user.handle` is
+the only identity ever shown to *other* users, anywhere** — display
+name is retained but narrowed to self-facing UI only (e.g. onboarding's
+"You're all set, Mara!"), confirmed with the user rather than assumed.
+Home (`003`, already merged) amended: `get-open-postings.ts`'s
+`hostName` field and `listing-card.tsx`'s host display now show
+`@handle`. Auth & Onboarding (`001`) needed no code change — it already
+only shows `name` on its own self-facing completion screen. Every
+not-yet-implemented feature that shows another user's identity (Public
+Profile, Forum, Listing detail, Inbox, admin views of user content)
+reconciles against this ADR when it's actually implemented, per this
+project's established pattern, rather than rewriting all 23 remaining
+specs preemptively.
+
 ## Blockers
 
 - None.
