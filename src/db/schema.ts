@@ -94,8 +94,15 @@ export const postings = pgTable("postings", {
   status: text("status").notNull().default("open"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   // Added by Browse (004) -- an extensible, bounded set distinct from
-  // the free-text `game` field (data-model.md).
-  genre: text("genre").notNull(),
+  // the free-text `game` field (data-model.md). Loosened to nullable by
+  // Post a Game (005): its own data-model.md always treated genre as
+  // optional (no chip selection required to publish, matching FR-014's
+  // game+title-only requirement), which Browse's original NOT NULL
+  // never accounted for -- listing-card.tsx already renders game-only
+  // when genre is absent, and Browse's genre filter already degrades
+  // correctly (a genre-less posting just never matches an active genre
+  // chip), so no other query needed to change.
+  genre: text("genre"),
   // 18|21 only (ADR 0002) -- never 13.
   ageGroup: text("ageGroup").notNull(),
   timeSlots: text("timeSlots").array().notNull(),
@@ -104,6 +111,11 @@ export const postings = pgTable("postings", {
   // Optional -- drives "Soonest" sort; null sorts after any posting
   // that has a value (data-model.md).
   scheduledDate: timestamp("scheduledDate", { mode: "date" }),
+  // Added by Post a Game (005) -- the last remaining fields this form
+  // collects (data-model.md).
+  tags: text("tags").array().notNull().default([]),
+  recurring: boolean("recurring").notNull().default(false),
+  voiceLink: text("voiceLink"),
 });
 
 export const verificationTokens = pgTable(

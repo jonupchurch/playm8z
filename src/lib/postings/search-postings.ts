@@ -9,7 +9,7 @@ export type BrowseResult = {
   hostHandle: string;
   hostAvatarColor: string | null;
   game: string;
-  genre: string;
+  genre: string | null;
   title: string;
   blurb: string;
   vibe: string;
