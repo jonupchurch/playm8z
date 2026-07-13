@@ -5,6 +5,7 @@ import {
   primaryKey,
   integer,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -60,6 +61,16 @@ export const sessions = pgTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+// Singleton config row. This feature (Error Pages) only reads it; the
+// future Admin Settings feature owns writing to it and will extend this
+// same table with its other toggles rather than this feature inventing
+// a shape that gets replaced later (research.md #2).
+export const settings = pgTable("settings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  maintenanceMode: boolean("maintenanceMode").notNull().default(false),
+  maintenanceMessage: text("maintenanceMessage"),
 });
 
 export const verificationTokens = pgTable(
