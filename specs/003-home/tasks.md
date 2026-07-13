@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Add a small local seed script (e.g. `scripts/seed-postings.ts`) that inserts a handful of sample open `postings` rows — needed because Post a Game doesn't exist yet to create them through the UI (quickstart.md)
+- [x] T001 Add a small local seed script (e.g. `scripts/seed-postings.ts`) that inserts a handful of sample open `postings` rows — needed because Post a Game doesn't exist yet to create them through the UI (quickstart.md)
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `postings` table to `src/db/schema.ts` (data-model.md's minimal shape: `hostId`, `game`, `title`, `blurb`, `vibe`, `region`, `seatsTotal`, `seatsOpen`, `status`, `createdAt`)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/postings/get-open-postings.ts` — reads rows where `status = open` — depends on T002
-- [ ] T005 Modify `src/app/page.tsx`: redirect an unauthenticated visitor to `/login` (research.md #3), otherwise fetch open postings via T004 and render the Home page shell — depends on T004
+- [x] T002 Add the `postings` table to `src/db/schema.ts` (data-model.md's minimal shape: `hostId`, `game`, `title`, `blurb`, `vibe`, `region`, `seatsTotal`, `seatsOpen`, `status`, `createdAt`)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/postings/get-open-postings.ts` — reads rows where `status = open` — depends on T002
+- [x] T005 Modify `src/app/page.tsx`: redirect an unauthenticated visitor to `/login` (research.md #3), otherwise fetch open postings via T004 and render the Home page shell — depends on T004
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,16 +53,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit test for `listing-card.tsx`'s rendering (host, avatar, post age, region, game, title, blurb, vibe tag, seat count, open indicator) in `src/components/home/listing-card.test.tsx`
-- [ ] T007 [P] [US1] Unit test for `live-feed.tsx`'s client-side filter/sort logic (search match, Vibe+Region AND-combination, sort order) in `src/components/home/live-feed.test.tsx`
-- [ ] T008 [P] [US1] Integration test for `get-open-postings.ts` against real seeded rows in Postgres (only `open` status returned) in `src/lib/postings/get-open-postings.test.ts`
-- [ ] T009 [US1] Playwright e2e spec covering search, Vibe/Region filter combination, sort, and card click-through, including an axe-core scan — creates `e2e/home.spec.ts`
+- [x] T006 [P] [US1] Unit test for `listing-card.tsx`'s rendering (host, avatar, post age, region, game, title, blurb, vibe tag, seat count, open indicator) in `src/components/home/listing-card.test.tsx`
+- [x] T007 [P] [US1] Unit test for `live-feed.tsx`'s client-side filter/sort logic (search match, Vibe+Region AND-combination, sort order) in `src/components/home/live-feed.test.tsx`
+- [x] T008 [P] [US1] Integration test for `get-open-postings.ts` against real seeded rows in Postgres (only `open` status returned) in `src/lib/postings/get-open-postings.test.ts`
+- [x] T009 [US1] Playwright e2e spec covering search, Vibe/Region filter combination, sort, and card click-through, including an axe-core scan — creates `e2e/home.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Build `src/components/home/listing-card.tsx` — depends on T002
-- [ ] T011 [US1] Build `src/components/home/live-feed.tsx`: search bar, Vibe chip, Region chip, sort control, AND-combined filtering, an `aria-live` result-count region, renders `listing-card.tsx` for matches — depends on T010
-- [ ] T012 [US1] Wire `live-feed.tsx` into `src/app/page.tsx`, passing the fetched open postings — depends on T005, T011
+- [x] T010 [US1] Build `src/components/home/listing-card.tsx` — depends on T002
+- [x] T011 [US1] Build `src/components/home/live-feed.tsx`: search bar, Vibe chip, Region chip, sort control, AND-combined filtering, an `aria-live` result-count region, renders `listing-card.tsx` for matches — depends on T010
+- [x] T012 [US1] Wire `live-feed.tsx` into `src/app/page.tsx`, passing the fetched open postings — depends on T005, T011
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -76,14 +76,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Unit test for `get-trending.ts`'s aggregate logic (grouping, count, descending order, top-5 cap, fewer-than-5 case) in `src/lib/postings/get-trending.test.ts`
-- [ ] T014 [US2] Add the Trending scenario (row renders counts; selecting a game narrows the feed in place) to `e2e/home.spec.ts` — depends on T009 (same file)
+- [x] T013 [P] [US2] Unit test for `get-trending.ts`'s aggregate logic (grouping, count, descending order, top-5 cap, fewer-than-5 case) in `src/lib/postings/get-trending.test.ts`
+- [x] T014 [US2] Add the Trending scenario (row renders counts; selecting a game narrows the feed in place) to `e2e/home.spec.ts` — depends on T009 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Create `src/lib/postings/get-trending.ts` — depends on T002
-- [ ] T016 [US2] Build `src/components/home/trending-row.tsx` — depends on T015
-- [ ] T017 [US2] Wire `trending-row.tsx`'s selection into `live-feed.tsx`'s search state (research.md #1) and into `src/app/page.tsx`'s fetch — depends on T011, T016
+- [x] T015 [US2] Create `src/lib/postings/get-trending.ts` — depends on T002
+- [x] T016 [US2] Build `src/components/home/trending-row.tsx` — depends on T015
+- [x] T017 [US2] Wire `trending-row.tsx`'s selection into `live-feed.tsx`'s search state (research.md #1) and into `src/app/page.tsx`'s fetch — depends on T011, T016
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -97,13 +97,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T018 [P] [US3] Unit test for `empty-state.tsx`'s rendering (guidance copy, "Post this game" action carrying the current search term) in `src/components/home/empty-state.test.tsx`
-- [ ] T019 [US3] Add the empty-state scenario (no matches → guidance + working CTA) to `e2e/home.spec.ts` — depends on T014 (same file)
+- [x] T018 [P] [US3] Unit test for `empty-state.tsx`'s rendering (guidance copy, "Post this game" action carrying the current search term) in `src/components/home/empty-state.test.tsx`
+- [x] T019 [US3] Add the empty-state scenario (no matches → guidance + working CTA) to `e2e/home.spec.ts` — depends on T014 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Build `src/components/home/empty-state.tsx`, linking "Post this game" toward the future Post a Game route with the current search term carried over where practical
-- [ ] T021 [US3] Wire `empty-state.tsx` into `live-feed.tsx` for the zero-results case — depends on T011, T020
+- [x] T020 [US3] Build `src/components/home/empty-state.tsx`, linking "Post this game" toward the future Post a Game route with the current search term carried over where practical
+- [x] T021 [US3] Wire `empty-state.tsx` into `live-feed.tsx` for the zero-results case — depends on T011, T020
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -111,9 +111,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T022 Confirm `next build` succeeds locally and CI stays green after replacing the default scaffold page with Home's real content
-- [ ] T023 Manually run quickstart.md Scenarios 1-7 end to end against local dev and confirm each passes
-- [ ] T024 [P] Update `docs/feature-list.md`, marking Home's spec/plan/tasks as complete
+- [x] T022 Confirm `next build` succeeds locally and CI stays green after replacing the default scaffold page with Home's real content
+- [x] T023 Manually run quickstart.md Scenarios 1-7 end to end against local dev and confirm each passes
+- [x] T024 [P] Update `docs/feature-list.md`, marking Home's spec/plan/tasks as complete
 
 ---
 

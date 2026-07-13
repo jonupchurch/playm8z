@@ -806,3 +806,24 @@ may begin on any/all of them per the constitution (v1.0.0).
   state raced with other parallel specs) by setting Playwright to a
   single worker. All 23 tasks in `specs/002-error-pages/tasks.md`
   checked off.
+
+## [Unreleased] (cont. 4)
+
+### Added
+- **Implemented Home**: `/` redirects unauthenticated visitors to
+  `/login` and otherwise renders the real search-first discovery page
+  — hero, a client-side-filtered search bar + Vibe/Region chips + sort
+  over one server-fetched list of open postings (no new API route), a
+  recalculated-per-load Trending row, and an empty state linking to
+  Post a Game's future `/post` route with the search term carried
+  over. New minimal `postings` table (`getOpenPostings()` joins `users`
+  for the host's real name/avatar); a new `npm run db:seed-postings`
+  dev script stands in until Post a Game exists. 78 unit/integration
+  tests and 10 e2e tests (4 with axe-core scans) passing. Caught and
+  fixed a real WCAG AA contrast bug (bold 11px magenta text on a
+  magenta-tinted pill background measured 4.32:1, short of the 4.5:1
+  required — bold alone doesn't reach WCAG's relaxed "large text"
+  threshold below ~18.66px) via a new `--color-pop-text` token, and a
+  real ESM ordering bug in the seed script (static imports run before
+  any top-level code, so env-loading had to move behind a dynamic
+  `import()`). All 24 tasks in `specs/003-home/tasks.md` checked off.

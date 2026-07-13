@@ -963,6 +963,59 @@ merging.
   (feature #24) being implemented — `require-role.ts` is ready and
   waiting.
 
+## Home implemented (2026-07-13)
+
+**Home: implemented** — all 24 tasks in `specs/003-home/tasks.md`
+complete, on branch `003-home` (rebuilt on top of `main`), merged back.
+
+`/` (`src/app/page.tsx`) now redirects an unauthenticated visitor to
+`/login` (research.md #3 — becomes Landing once that feature ships)
+and otherwise renders the real page: hero heading/tagline, then a
+client-side search bar + Vibe/Region quick-filter chips + sort control
++ live feed, all filtering one already-fetched list of open postings
+(no new API route — mirrors the wireframe's own reference
+implementation). A recalculated-per-load Trending row (`GROUP BY game`
+over open postings, top 5) narrows the feed to a game on selection,
+in place. A zero-match state shows guidance and a "Post this game"
+link carrying the search term to `/post?game=...` (Post a Game's
+future route).
+
+**New minimal `postings` table** (`hostId`, `game`, `title`, `blurb`,
+`vibe`, `region`, `seatsTotal`, `seatsOpen`, `status`, `createdAt`) —
+Home defines the shape its own FRs need; Post a Game will extend it
+with its remaining columns later, same pattern as Auth & Onboarding
+extending `user` and Error Pages adding `settings`. `getOpenPostings()`
+joins `users` for the host's *real* name/avatar rather than inventing
+per-listing display data. A new `npm run db:seed-postings` script
+seeds sample rows against the first real registered user, since Post a
+Game doesn't exist yet to create them through the UI — dev-only,
+idempotent (clears existing postings first).
+
+**Real WCAG AA bug caught by axe-core**: the "Serious" vibe tag (bold,
+11px, magenta text on a magenta-tinted pill background) measured
+4.32:1 against the required 4.5:1 — bold text only gets WCAG's relaxed
+3:1 "large text" threshold at ≥14pt (≈18.66px) bold, which 11px doesn't
+meet despite being bold. `guidelines.md` §4.4's own shorthand
+("Magenta only at ≥16px or bold") turns out to be imprecise at small
+sizes on a *tinted* (not solid) background — every other `text-pop`
+usage elsewhere in the app is on a solid background and already passes
+at 5.5:1 (confirmed by its own earlier axe scans), so this was
+genuinely new territory, not a regression. Fixed with a new
+`--color-pop-text` token (`#ff7ea0` on dark, same as `--color-pop` on
+light) for small/bold text on a pop-tinted background specifically.
+
+**A real ESM/env-loading bug in `scripts/seed-postings.ts`**: static
+imports are hoisted ahead of any top-level code regardless of source
+order, so importing `src/db` before calling `process.loadEnvFile()`
+meant `DATABASE_URL` was never actually loaded before the DB client
+tried to read it. Fixed with a dynamic `await import()` inside `main()`,
+after the env load.
+
+78 unit/integration tests and 10 e2e tests (4 with axe-core scans, one
+of which caught the contrast bug above) all passing.
+`npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`,
+and `npm run build` all verified green before merging.
+
 ## Blockers
 
 - None.
