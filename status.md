@@ -887,13 +887,81 @@ consumer yet.
 `npm run test:e2e` (4 passing), and `npm run build` all verified green
 before merging.
 
+## Error Pages implemented (2026-07-13)
+
+**Error Pages: implemented** — all 23 tasks in
+`specs/002-error-pages/tasks.md` complete, on branch `002-error-pages`
+(rebuilt on top of `main`), merged back.
+
+Built on Next.js 16's native mechanisms rather than a hand-rolled
+scheme: `app/not-found.tsx` (404), `app/error.tsx` +
+`app/global-error.tsx` (500, using the auto-generated `error.digest` as
+the reference code and the new `unstable_retry()` prop for "Try
+again"), and `app/forbidden.tsx` + `app/unauthorized.tsx` (403/401,
+behind `experimental.authInterrupts`). All four share one
+`error-state.tsx` component (logo, disconnected-pawns motif, code,
+title, message, two actions, footnote).
+
+**New `settings` table** (read-only for this feature; Admin Settings
+owns writing to it later) backs the maintenance flag —
+`maintenanceMode`/`maintenanceMessage`, seeded to `false`/`null` by the
+migration. `get-settings.ts` reads it through a 5-second in-memory
+cache. Toggle it manually for now via `npm run db:studio` or direct
+SQL.
+
+**`require-role.ts`** is built and unit-tested but honestly can't do
+much yet: there's no `role` column on `users` (that's Admin Settings,
+feature #24, still unimplemented — the user explicitly chose to wait
+for it rather than have this feature or a one-off request add it
+early). Every authenticated user is treated as rank `user`, so calling
+`requireRole()` with anything above `user` forbids everyone right now
+— accurate, not a bug, since nothing elevated exists yet. Verified live
+(not just unit-tested) via a temporary synthetic route calling it,
+confirming real 401 (logged out) and 403 (logged in, insufficient
+rank) responses — removed before merging, per this feature's own
+tasks.md note that no permanent gated page exists yet to justify
+keeping one.
+
+**`proxy.ts`** short-circuits every non-`/admin/*` route to
+`/maintenance` (503) when the flag is on; `/admin/*` is never
+intercepted regardless of session, so each admin page's own future
+`require-role.ts` gate remains the real authority there.
+
+**Two real bugs caught by actually running `next build`** (not just
+trusting dev mode, per this feature's own tasks.md T021 note that a new
+experimental flag + a proxy touching every route deserves a direct
+check): `/maintenance` was getting statically prerendered, freezing
+whatever `maintenanceMessage` existed at build time forever regardless
+of later DB changes; a test-only route that deliberately throws (for
+exercising `error.tsx` in e2e) failed the production build outright,
+since static prerendering executes the page at build time. Both fixed
+with `export const dynamic = "force-dynamic"`.
+
+**A real e2e test-isolation bug**: `maintenance.spec.ts` mutates the
+shared, global `settings` row for real (not a mock), which — combined
+with Playwright's default `fullyParallel: true` — let that global
+state bleed into unrelated concurrently-running tests hitting `/`,
+`/login`, `/onboarding` mid-run, breaking them. Fixed by setting
+`workers: 1` in `playwright.config.ts` (correctness over parallel speed
+at this suite's current size, not a per-test workaround, since any
+future global-state test would hit the same bug).
+
+58 unit/integration tests and 7 e2e tests (including 3 axe-core scans)
+all passing. `npm run typecheck`, `npm run lint`, `npm test`,
+`npm run test:e2e`, and `npm run build` all verified green before
+merging.
+
 ## Next up
 
-- Decide implementation order for the remaining ~25 features — likely
-  foundational-first (Error Pages, Home) before the rest, but this is
-  an open question for the user rather than a predetermined sequence.
+- Decide implementation order for the remaining ~24 features — likely
+  Home next (foundational, and Landing/Post a Game/Browse all build on
+  its `postings` table), but this is an open question for the user
+  rather than a predetermined sequence.
 - Real Resend wiring remains blocked on domain ownership (unchanged);
   verification emails still log to the server console.
+- `users.role` and real admin gating remain blocked on Admin Settings
+  (feature #24) being implemented — `require-role.ts` is ready and
+  waiting.
 
 ## Blockers
 

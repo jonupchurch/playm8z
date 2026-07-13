@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Enable `experimental.authInterrupts` in `next.config.ts` (required for `forbidden()`/`unauthorized()`, research.md #1)
+- [x] T001 Enable `experimental.authInterrupts` in `next.config.ts` (required for `forbidden()`/`unauthorized()`, research.md #1)
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `settings` table to `src/db/schema.ts` (`maintenanceMode` boolean not null default false, `maintenanceMessage` nullable text), per data-model.md
-- [ ] T003 Generate and run the Drizzle migration for T002, seeding the single default settings row (`maintenanceMode=false`, `maintenanceMessage=null`) so the table is never actually empty — depends on T002
-- [ ] T004 [P] Create `src/lib/settings/get-settings.ts` — a short-TTL-cached read of the settings row, Zod-validated before use (data-model.md) — depends on T002
-- [ ] T005 [P] Create the shared `src/components/errors/error-state.tsx` component with all four variants (not-found, server-error, access-denied, maintenance — the last accepting an optional message with a generic "back shortly" fallback), matching the wireframe's shared layout (logo, motif, code, title, message, two actions, footnote)
-- [ ] T006 [P] Create `src/lib/auth/require-role.ts` — calls `unauthorized()` when no session exists and `forbidden()` when the session's role is below a given minimum, ready for future gated pages (e.g. the not-yet-built `/admin/*`) to call
+- [x] T002 Add the `settings` table to `src/db/schema.ts` (`maintenanceMode` boolean not null default false, `maintenanceMessage` nullable text), per data-model.md
+- [x] T003 Generate and run the Drizzle migration for T002, seeding the single default settings row (`maintenanceMode=false`, `maintenanceMessage=null`) so the table is never actually empty — depends on T002
+- [x] T004 [P] Create `src/lib/settings/get-settings.ts` — a short-TTL-cached read of the settings row, Zod-validated before use (data-model.md) — depends on T002
+- [x] T005 [P] Create the shared `src/components/errors/error-state.tsx` component with all four variants (not-found, server-error, access-denied, maintenance — the last accepting an optional message with a generic "back shortly" fallback), matching the wireframe's shared layout (logo, motif, code, title, message, two actions, footnote)
+- [x] T006 [P] Create `src/lib/auth/require-role.ts` — calls `unauthorized()` when no session exists and `forbidden()` when the session's role is below a given minimum, ready for future gated pages (e.g. the not-yet-built `/admin/*`) to call
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,12 +54,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit test for `error-state.tsx`'s not-found variant in `src/components/errors/error-state.test.tsx`
-- [ ] T008 [US1] Playwright e2e spec for the 404 scenario (real 404 status on the wire, working Home/Browse links, axe-core accessibility scan) — creates `e2e/error-pages.spec.ts`
+- [x] T007 [P] [US1] Unit test for `error-state.tsx`'s not-found variant in `src/components/errors/error-state.test.tsx`
+- [x] T008 [US1] Playwright e2e spec for the 404 scenario (real 404 status on the wire, working Home/Browse links, axe-core accessibility scan) — creates `e2e/error-pages.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Build `app/not-found.tsx` using `error-state.tsx`'s not-found variant — depends on T005
+- [x] T009 [US1] Build `app/not-found.tsx` using `error-state.tsx`'s not-found variant — depends on T005
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -73,13 +73,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Unit test for `error-state.tsx`'s server-error variant (reference-code slot renders correctly) in `src/components/errors/error-state.test.tsx` — same file as T007
-- [ ] T011 [US2] Add the 500 scenario (real 500 status, visible reference code, no leaked internals, "Try again" re-renders the segment, axe-core scan) to `e2e/error-pages.spec.ts` — depends on T008 (same file)
+- [x] T010 [P] [US2] Unit test for `error-state.tsx`'s server-error variant (reference-code slot renders correctly) in `src/components/errors/error-state.test.tsx` — same file as T007
+- [x] T011 [US2] Add the 500 scenario (real 500 status, visible reference code, no leaked internals, "Try again" re-renders the segment, axe-core scan) to `e2e/error-pages.spec.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Build `app/error.tsx` (route-segment error boundary) using `error-state.tsx`'s server-error variant, displaying `error.digest` as the reference code and wiring "Try again" to `unstable_retry()` — depends on T005
-- [ ] T013 [US2] Build `app/global-error.tsx` (root-layout error boundary), mirroring T012 for failures `error.tsx` can't catch — depends on T005
+- [x] T012 [US2] Build `app/error.tsx` (route-segment error boundary) using `error-state.tsx`'s server-error variant, displaying `error.digest` as the reference code and wiring "Try again" to `unstable_retry()` — depends on T005
+- [x] T013 [US2] Build `app/global-error.tsx` (root-layout error boundary), mirroring T012 for failures `error.tsx` can't catch — depends on T005
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -93,13 +93,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T014 [P] [US3] Unit tests for `require-role.ts` (no session → calls `unauthorized()`; insufficient role → calls `forbidden()`; sufficient role → returns normally), mocking `next/navigation`, in `src/lib/auth/require-role.test.ts`
-- [ ] T015 [P] [US3] Unit test for `error-state.tsx`'s access-denied variant, confirming the 401 and 403 cases render identical content, in `src/components/errors/error-state.test.tsx` — same file as T007/T010
+- [x] T014 [P] [US3] Unit tests for `require-role.ts` (no session → calls `unauthorized()`; insufficient role → calls `forbidden()`; sufficient role → returns normally), mocking `next/navigation`, in `src/lib/auth/require-role.test.ts`
+- [x] T015 [P] [US3] Unit test for `error-state.tsx`'s access-denied variant, confirming the 401 and 403 cases render identical content, in `src/components/errors/error-state.test.tsx` — same file as T007/T010
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Build `app/forbidden.tsx` using `error-state.tsx`'s access-denied variant — depends on T005
-- [ ] T017 [US3] Build `app/unauthorized.tsx` using the same variant — depends on T005
+- [x] T016 [US3] Build `app/forbidden.tsx` using `error-state.tsx`'s access-denied variant — depends on T005
+- [x] T017 [US3] Build `app/unauthorized.tsx` using the same variant — depends on T005
 
 **Checkpoint**: 404, 500, and 403/401 all independently functional.
 
@@ -115,12 +115,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 4
 
-- [ ] T018 [P] [US4] Unit tests for `get-settings.ts` (valid row passes; a malformed row is rejected by Zod; the generic message fallback applies when `maintenanceMessage` is null) in `src/lib/settings/get-settings.test.ts`
-- [ ] T019 [US4] Playwright e2e spec `e2e/maintenance.spec.ts`: with the flag set via a direct DB write in test setup, confirm a non-admin route renders the maintenance page with a 503 status, confirm an `/admin/*` path is not intercepted, confirm a configured message renders (and the generic fallback when absent), including an axe-core scan — depends on T004, T005
+- [x] T018 [P] [US4] Unit tests for `get-settings.ts` (valid row passes; a malformed row is rejected by Zod; the generic message fallback applies when `maintenanceMessage` is null) in `src/lib/settings/get-settings.test.ts`
+- [x] T019 [US4] Playwright e2e spec `e2e/maintenance.spec.ts`: with the flag set via a direct DB write in test setup, confirm a non-admin route renders the maintenance page with a 503 status, confirm an `/admin/*` path is not intercepted, confirm a configured message renders (and the generic fallback when absent), including an axe-core scan — depends on T004, T005
 
 ### Implementation for User Story 4
 
-- [ ] T020 [US4] Build `proxy.ts`: on every request, read the cached settings (T004); when `maintenanceMode` is true and the path doesn't start with `/admin`, render `error-state.tsx`'s maintenance variant with a 503 status — depends on T004, T005
+- [x] T020 [US4] Build `proxy.ts`: on every request, read the cached settings (T004); when `maintenanceMode` is true and the path doesn't start with `/admin`, render `error-state.tsx`'s maintenance variant with a 503 status — depends on T004, T005
 
 **Checkpoint**: All four user stories independently functional.
 
@@ -128,9 +128,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T021 Confirm `next build` succeeds locally and CI stays green with `experimental.authInterrupts` enabled and the new `proxy.ts` in place — a new experimental flag and a proxy touching every route is a real risk surface worth a direct check, not just trusting the dev server
-- [ ] T022 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
-- [ ] T023 [P] Update `docs/feature-list.md`, marking Error Pages' spec/plan/tasks as complete
+- [x] T021 Confirm `next build` succeeds locally and CI stays green with `experimental.authInterrupts` enabled and the new `proxy.ts` in place — a new experimental flag and a proxy touching every route is a real risk surface worth a direct check, not just trusting the dev server
+- [x] T022 Manually run quickstart.md Scenarios 1-4 end to end against local dev and confirm each passes
+- [x] T023 [P] Update `docs/feature-list.md`, marking Error Pages' spec/plan/tasks as complete
 
 ---
 

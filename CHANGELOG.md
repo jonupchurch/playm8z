@@ -782,3 +782,27 @@ may begin on any/all of them per the constitution (v1.0.0).
   axe-core scans, which caught and fixed two real accessibility
   findings) all passing; `e2e/smoke.spec.ts` retired as superseded.
   All 40 tasks in `specs/001-auth-onboarding/tasks.md` checked off.
+
+## [Unreleased] (cont. 3)
+
+### Added
+- **Implemented Error Pages**: branded 404/500/403/401/maintenance
+  states on Next.js 16's native mechanisms (`not-found.tsx`,
+  `error.tsx`+`global-error.tsx` using `error.digest`/`unstable_retry()`,
+  `forbidden.tsx`+`unauthorized.tsx` behind `experimental.authInterrupts`),
+  all sharing one `error-state.tsx` component. New read-only `settings`
+  table backs the maintenance flag (manual toggle via `db:studio`/SQL
+  until Admin Settings ships a real one), read through a 5-second cache
+  and short-circuited in a new `proxy.ts` that exempts `/admin/*`.
+  `require-role.ts` is built and unit-tested, though honestly forbids
+  everyone above "user" rank for now since `users.role` doesn't exist
+  until Admin Settings adds it. 58 unit/integration tests and 7 e2e
+  tests (3 with axe-core scans) passing. Caught and fixed two real bugs
+  via a full `next build` (not just dev mode): `/maintenance` was
+  statically prerendering and freezing its message, and a
+  deliberately-throwing e2e test route failed the build outright for
+  the same reason — both fixed with `force-dynamic`. Also fixed a real
+  e2e test-isolation bug (`maintenance.spec.ts` mutating shared global
+  state raced with other parallel specs) by setting Playwright to a
+  single worker. All 23 tasks in `specs/002-error-pages/tasks.md`
+  checked off.
