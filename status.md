@@ -657,11 +657,28 @@ amendment to 011(2) → retroactive amendments to 017/018(4) →
 Polish(3). `docs/feature-list.md` updated to 🟢. Admin Reports is the
 nineteenth feature with a complete spec/plan/tasks trio.
 
+**Admin News: spec + plan done** (2026-07-12, branch `020-admin-news`)
+— the News CMS editor, News feed's (`013`) first real `NewsPost`
+writer. Adds `body`/`status`; reuses `013`'s existing `featured` for
+"pin" rather than a redundant column. "Delete" collapses into
+"Unpublish" (status→draft), same ADR-0005 resolution already used for
+Profile/Admin Users. Scheduled-post publication is computed at read
+time (a bounded amendment to `013`'s `search-news.ts`), no cron job.
+The wireframe's "editor" role label normalized to the existing
+moderator-minimum gate — not a real distinct role.
+
+**Admin News: tasks done** (2026-07-12) — `tasks.md`, 26 tasks:
+Setup(1) → Foundational(4) → US1/P1 view+filter list(6) → US2/P2
+editor+publish+schedule+draft(5) → US3/P3 pin+delete(5) →
+cross-feature amendment to 013(2) → Polish(3). `docs/feature-list.md`
+updated to 🟢. Admin News is the twentieth feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `019-admin-reports` into `main`, then move on to feature #20
-  (Admin News) — same specify→plan→tasks→merge sequence repeats
-  for every other feature in `docs/feature-list.md` — per the
+- Merge `020-admin-news` into `main`, then move on to feature #21
+  (Admin Content Pages) — same specify→plan→tasks→merge sequence
+  repeats for every other feature in `docs/feature-list.md` — per the
   project-wide gate (constitution v1.0.0), implementation doesn't
   begin on *any* feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity

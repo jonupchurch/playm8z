@@ -602,6 +602,23 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Admin Reports is the nineteenth feature to clear the project-wide
   gate.
 
+- Ran `/speckit-plan` for Admin News: `research.md` (one `save-news-
+  post.ts` action branching by requested action rather than five
+  near-identical Server Actions; reusing `013`'s existing `featured`
+  column for "pin," enforced exclusive via one transaction; scheduled-
+  post publication computed at read time in `013`'s amended
+  `search-news.ts`, no cron job, same reasoning as posting
+  auto-expiry/ADR 0003; `body` as plain markdown with a snippet-
+  inserting toolbar, not a rich-text editor; "Update" never resets
+  `publishedAt`), `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin News: `tasks.md` — 26 tasks: Setup
+  (1) → Foundational (4: schema extensions, validation schemas, the
+  gated page shell) → US1/P1 view+filter list (6) → US2/P2 editor+
+  publish+schedule+draft (5) → US3/P3 pin+delete (5) → cross-feature
+  amendment to `013` (2) → Polish (3). Admin News is the twentieth
+  feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
