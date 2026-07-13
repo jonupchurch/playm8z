@@ -73,6 +73,28 @@ export const settings = pgTable("settings", {
   maintenanceMessage: text("maintenanceMessage"),
 });
 
+// Minimal shape -- Home is the first feature to need this table, so it
+// defines only the columns its own FRs require. The future Post a Game
+// feature extends this same table with its remaining columns (ageGroup,
+// timeSlots, platform, micRequired, scheduledDate, recurring, voiceLink,
+// tags) via its own migration, per data-model.md.
+export const postings = pgTable("postings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  hostId: uuid("hostId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  // Free-text keyword, per ADR 0001 -- not a foreign key to a catalog table.
+  game: text("game").notNull(),
+  title: text("title").notNull(),
+  blurb: text("blurb").notNull(),
+  vibe: text("vibe").notNull(),
+  region: text("region").notNull(),
+  seatsTotal: integer("seatsTotal").notNull(),
+  seatsOpen: integer("seatsOpen").notNull(),
+  status: text("status").notNull().default("open"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
