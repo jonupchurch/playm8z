@@ -1181,3 +1181,49 @@ may begin on any/all of them per the constitution (v1.0.0).
   (full suite, all files), and `npm run build` all verified green
   before merging. All 20 tasks in `specs/008-blocked-users/tasks.md`
   checked off.
+
+## [Unreleased] (cont. 10)
+
+### Added
+- **Implemented Forum index**: `/forum`, public to read (FR-001) —
+  category chips (six hardcoded keys plus "All," each with an
+  accurate, always-unfiltered count), a debounced search, and a
+  Latest/Top/Unanswered sort, all server-side and URL-driven
+  (Browse's precedent) since threads accumulate indefinitely. New
+  `forumThreads` table, this feature's first writer. Pinned threads
+  always sort first regardless of sort; "HOT" is computed at read time
+  (`isHotThread()`, never stored, never shown alongside PINNED, which
+  stays a real moderator-controlled column this feature only ever
+  writes `false` to). Reply/view/like counts start at 0, maintained by
+  the future Forum Thread feature.
+- **The New Thread modal reuses Blocked Users' native-`<dialog>`
+  pattern** as its own component (different fields, nothing to share
+  by direct import). `create-thread.ts` extends Auth & Onboarding's
+  `requireVerifiedEmail()` gate; an unauthenticated visitor clicking
+  "+ New thread" is routed to `/login` via a real `<Link>` (Listing
+  detail's `apply-panel.tsx` precedent, not a client-side redirect).
+- **Fixed a genuine e2e test-authoring race**: clicking the "All"
+  category chip and immediately typing in the search box (two
+  different URL-updating controls back to back) could have the
+  debounced search read a stale `searchParams` snapshot and silently
+  re-add the just-cleared category filter. Fixed by asserting the URL
+  reflects each change before triggering the next.
+- **`SearchInput` is keyed by the URL's own `q` value**, not just
+  seeded from it once, so an externally-driven query change (a
+  trending-tag click from a different component) correctly resets the
+  search box's local debounce state instead of going stale.
+- **A real React 19 `set-state-in-effect` lint catch**, same class
+  Blocked Users' `block-modal.tsx` already hit — `new-thread-modal.tsx`
+  followed the same fix (adjusting state during render, not inside a
+  `useEffect`) proactively.
+- 25+ new unit/integration tests (`forum.ts`'s Zod schemas, the HOT
+  heuristic, `search-threads.ts`/`get-forum-stats.ts` against real
+  Postgres, `create-thread.ts`'s verified/unverified/invalid-category
+  cases) and a 2-scenario `e2e/forum-index.spec.ts` covering
+  quickstart.md Scenarios 1-2 end to end, including an axe-core scan
+  of the New Thread modal. 248 unit tests and 42 e2e tests total
+  across the whole suite, all passing, confirmed twice in a row.
+  `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:e2e`
+  (full suite, all files), and `npm run build` all verified green
+  before merging. All 22 tasks in `specs/009-forum-index/tasks.md`
+  checked off.

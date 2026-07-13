@@ -2,8 +2,8 @@
 
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
-Browse, Post a Game, Listing detail, Profile + Account settings, and
-Blocked Users are done and merged. Forum index is next.
+Browse, Post a Game, Listing detail, Profile + Account settings,
+Blocked Users, and Forum index are done and merged. Forum Thread is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -954,9 +954,9 @@ merging.
 ## Next up
 
 - Auth & Onboarding, Error Pages, Home, Browse, Post a Game, Listing
-  detail, Profile + Account settings, and Blocked Users are implemented
-  and merged. Forum index (`009`) is next — awaiting the user's
-  go-ahead.
+  detail, Profile + Account settings, Blocked Users, and Forum index
+  are implemented and merged. Forum Thread (`010`) is next — awaiting
+  the user's go-ahead.
 - Listing detail's Report action (FR-019) is deferred pending
   Notifications + Report modal (`012`, not yet implemented) —
   `specs/006-listing-detail/tasks.md`'s T030. Revisit as a bounded
@@ -1497,6 +1497,81 @@ elsewhere). 220 unit tests and 40 e2e tests total across the whole
 suite, all passing, confirmed twice in a row after the connection-leak
 fix. `npm run typecheck`, `npm run lint`, `npm test`, `npm run
 test:e2e`, and `npm run build` all verified green before merging.
+
+## Forum index implemented (2026-07-13)
+
+**Forum index: implemented** — all 22 tasks in
+`specs/009-forum-index/tasks.md` complete, merged to `main`. `/forum`
+is public to read (FR-001) — category chips (six hardcoded keys plus
+"All," each with an accurate, always-unfiltered count), a debounced
+search, and a Latest/Top/Unanswered sort, all server-side and
+URL-driven (`searchParams`, Browse's precedent) rather than client-side
+state, since threads accumulate indefinitely unlike Home's small
+recent slice.
+
+**New `forumThreads` table**, this feature's first writer. Categories
+stay a hardcoded `const` (`src/lib/forum/categories.ts`), not a table —
+the same treatment already given vibe/platform/region. Pinned threads
+always sort first regardless of the selected sort; "HOT" is computed
+at read time (`isHotThread()`: `replyCount`/age-in-hours past a fixed
+threshold, age floored at 1 hour to avoid a divide-by-near-zero spike
+for a brand-new thread) and never shown alongside PINNED, which stays
+a real, moderator-controlled stored column this feature only ever
+writes `false` to (the future Admin Forum feature owns setting it).
+`reply`/`view`/`like` counts all start at 0, maintained by the future
+Forum Thread feature, not this one.
+
+**The New Thread modal reuses Blocked Users' native-`<dialog>` pattern**
+(`showModal()`/`.close()`, focus-trapping, Escape-to-close) as its own
+component, not a shared one — different fields (category select,
+title, body, comma-separated tags reusing Post a Game's own
+`toStringArray` preprocessing pattern), so there was nothing to share
+by direct import, only the interaction approach. `create-thread.ts`
+extends Auth & Onboarding's `requireVerifiedEmail()` gate; an
+unauthenticated visitor clicking "+ New thread" is routed straight to
+`/login` via a real `<Link>` (Listing detail's `apply-panel.tsx`
+precedent — the button itself is swapped server-side based on session
+state, not a client-side redirect after the fact).
+
+**Bugs found and fixed while building this feature**:
+
+- A genuine e2e test-authoring race, not a product bug: clicking the
+  "All" category chip and then immediately typing in the search box
+  (two different URL-updating controls, back to back) could have the
+  debounced search update read a *stale* `searchParams` snapshot
+  (captured before the category chip's own `router.replace()` had
+  actually flowed back into the hook), silently re-adding the just-
+  cleared category filter. Fixed in the test itself by asserting the
+  URL actually reflects each change before triggering the next one —
+  any future e2e test driving two independent URL-search-param
+  controls in quick succession should do the same, not assume a click
+  settles before the next action starts.
+- The `SearchInput` needed to be keyed by the URL's own `q` value
+  (not just seeded from it once) so an *externally*-driven query change
+  — selecting a trending tag from the right rail, a different
+  component entirely — correctly resets the search box's local
+  debounce state instead of going stale. A plain `useState(initial)`
+  with no re-sync would have left the visible input text wrong after a
+  trending-tag click even though the URL and results were already
+  correct.
+- A real React 19 `set-state-in-effect` lint catch, same class Blocked
+  Users' `block-modal.tsx` already hit: `new-thread-modal.tsx`'s own
+  reset-on-open logic followed the same fix (adjusting state during
+  render via a tracked `wasOpen`, not inside a `useEffect`) proactively,
+  since the pattern was already a known risk going in.
+
+25+ new unit/integration tests (`forum.ts`'s Zod schemas, the HOT
+heuristic, `search-threads.ts`/`get-forum-stats.ts` against real
+Postgres, `create-thread.ts`'s verified/unverified/invalid-category
+cases) and a 2-scenario `e2e/forum-index.spec.ts` covering
+quickstart.md Scenarios 1-2 end to end, including an axe-core scan of
+the New Thread modal (Scenario 2's unverified-user gate is covered by
+the unit tests' own case, not separately scripted in e2e, consistent
+with how this project has handled auth-gate scenarios elsewhere). 248
+unit tests and 42 e2e tests total across the whole suite, all passing,
+confirmed twice in a row. `npm run typecheck`, `npm run lint`, `npm
+test`, `npm run test:e2e`, and `npm run build` all verified green
+before merging.
 
 ## Blockers
 

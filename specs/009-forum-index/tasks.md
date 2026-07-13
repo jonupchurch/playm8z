@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — this feature's thread-creation Server Action depends on it directly
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) exists in the codebase before starting — this feature's thread-creation Server Action depends on it directly
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `forumThreads` table to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/forum/categories.ts` — the six hardcoded category keys/labels/dot colors (research.md #1)
-- [ ] T005 [P] Create `src/lib/validations/forum.ts` — Zod schemas for `searchParams` and thread creation (data-model.md)
-- [ ] T006 Create `src/lib/forum/search-threads.ts` — validates `searchParams` via T005, builds the query (category + search + sort, pinned-always-first, the HOT heuristic) — depends on T002, T004, T005
+- [x] T002 Add the `forumThreads` table to `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/forum/categories.ts` — the six hardcoded category keys/labels/dot colors (research.md #1)
+- [x] T005 [P] Create `src/lib/validations/forum.ts` — Zod schemas for `searchParams` and thread creation (data-model.md)
+- [x] T006 Create `src/lib/forum/search-threads.ts` — validates `searchParams` via T005, builds the query (category + search + sort, pinned-always-first, the HOT heuristic) — depends on T002, T004, T005
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,17 +54,17 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `forum.ts`'s schemas in `src/lib/validations/forum.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `search-threads.ts`'s category/search/sort combination logic, pinned-first ordering, and the HOT heuristic in `src/lib/forum/search-threads.test.ts`
-- [ ] T009 [P] [US1] Integration test for `search-threads.ts` against real seeded rows in Postgres — same file as T008
-- [ ] T010 [US1] Playwright e2e spec covering browse/search/filter/sort and the empty state, including an axe-core scan — creates `e2e/forum-index.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `forum.ts`'s schemas in `src/lib/validations/forum.test.ts`
+- [x] T008 [P] [US1] Unit tests for `search-threads.ts`'s category/search/sort combination logic, pinned-first ordering, and the HOT heuristic in `src/lib/forum/search-threads.test.ts`
+- [x] T009 [P] [US1] Integration test for `search-threads.ts` against real seeded rows in Postgres — same file as T008
+- [x] T010 [US1] Playwright e2e spec covering browse/search/filter/sort and the empty state, including an axe-core scan — creates `e2e/forum-index.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build `src/lib/forum/get-forum-stats.ts` — member/thread counts and trending tags — depends on T002
-- [ ] T012 [US1] Build `src/components/forum/thread-row.tsx` — depends on T004
-- [ ] T013 [US1] Build `src/components/forum/right-rail.tsx` — depends on T011
-- [ ] T014 [US1] Build `src/app/forum/page.tsx`: await/validate `searchParams`, run `search-threads.ts`, render category chips, the thread list (`thread-row.tsx`), `right-rail.tsx`, and the empty state — depends on T006, T012, T013
+- [x] T011 [US1] Build `src/lib/forum/get-forum-stats.ts` — member/thread counts and trending tags — depends on T002
+- [x] T012 [US1] Build `src/components/forum/thread-row.tsx` — depends on T004
+- [x] T013 [US1] Build `src/components/forum/right-rail.tsx` — depends on T011
+- [x] T014 [US1] Build `src/app/forum/page.tsx`: await/validate `searchParams`, run `search-threads.ts`, render category chips, the thread list (`thread-row.tsx`), `right-rail.tsx`, and the empty state — depends on T006, T012, T013
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -78,14 +78,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T015 [P] [US2] Integration test for `create-thread.ts` (creates a thread with default `pinned`/`locked`/counts; blocked for an unverified session) in `src/lib/actions/create-thread.test.ts`
-- [ ] T016 [US2] Add the New Thread scenario (create, appears immediately, logged-out redirect, unverified block) to `e2e/forum-index.spec.ts`, including an axe-core scan of the modal — depends on T010 (same file)
+- [x] T015 [P] [US2] Integration test for `create-thread.ts` (creates a thread with default `pinned`/`locked`/counts; blocked for an unverified session) in `src/lib/actions/create-thread.test.ts`
+- [x] T016 [US2] Add the New Thread scenario (create, appears immediately, logged-out redirect, unverified block) to `e2e/forum-index.spec.ts`, including an axe-core scan of the modal — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T017 [US2] Build `create-thread.ts` in `src/lib/actions/create-thread.ts` — depends on T005
-- [ ] T018 [US2] Build `src/components/forum/new-thread-modal.tsx` — following Blocked Users' dialog pattern (research.md #4) — depends on T017
-- [ ] T019 [US2] Wire the "New thread" entry point into `src/app/forum/page.tsx` — depends on T014, T018
+- [x] T017 [US2] Build `create-thread.ts` in `src/lib/actions/create-thread.ts` — depends on T005
+- [x] T018 [US2] Build `src/components/forum/new-thread-modal.tsx` — following Blocked Users' dialog pattern (research.md #4) — depends on T017
+- [x] T019 [US2] Wire the "New thread" entry point into `src/app/forum/page.tsx` — depends on T014, T018
 
 **Checkpoint**: Both user stories independently functional.
 
@@ -93,9 +93,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T020 Confirm `next build` succeeds locally and CI stays green with the new route, Server Action, and new table
-- [ ] T021 Manually run quickstart.md Scenarios 1-2 end to end against local dev and confirm each passes
-- [ ] T022 [P] Update `docs/feature-list.md`, marking Forum index's spec/plan/tasks as complete
+- [x] T020 Confirm `next build` succeeds locally and CI stays green with the new route, Server Action, and new table
+- [x] T021 Manually run quickstart.md Scenarios 1-2 end to end against local dev and confirm each passes
+- [x] T022 [P] Update `docs/feature-list.md`, marking Forum index's spec/plan/tasks as complete
 
 ---
 
