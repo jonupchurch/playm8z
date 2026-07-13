@@ -17,6 +17,12 @@
   --color-accent: #ffb000;
   --color-accent-2: #ff6b1a;
   --color-pop: #ff3b6b;
+  /* Lighter than --color-pop specifically for small/bold text on a
+     pop-tinted background -- raw --color-pop fails WCAG AA at sizes
+     under the true "large text" threshold (>=14pt/18.66px bold), which
+     11px pill tags don't meet despite being bold (caught by an
+     axe-core scan, Home feature). */
+  --color-pop-text: #ff7ea0;
   --color-info: #35d0e0;
   --color-success: #4ec96a;
   --color-accent-text: #ff6b1a;
@@ -34,6 +40,7 @@
   --color-text-muted: #6b5a45;
   --color-text-dim: #8a7355;
   --color-pop: #e11d57;
+  --color-pop-text: #e11d57;
   --color-success: #2e9e4f;
   --color-accent-text: #c2410c;
   --color-on-accent: #241a10;
@@ -51,6 +58,7 @@
   --color-accent: var(--color-accent);
   --color-accent-2: var(--color-accent-2);
   --color-pop: var(--color-pop);
+  --color-pop-text: var(--color-pop-text);
   --color-info: var(--color-info);
   --color-success: var(--color-success);
   --color-accent-text: var(--color-accent-text);
