@@ -598,10 +598,31 @@ ban+unban(4) → US3/P3 drawer+content-removal(9) → Polish(3).
 `docs/feature-list.md` updated to 🟢. Admin Users is the sixteenth
 feature with a complete spec/plan/tasks trio.
 
+**Admin Postings: spec + plan done** (2026-07-12, branch
+`017-admin-postings`) — moderation queue with computed severity
+(never stored — worse of report-reason severity and a new
+auto-flag-reason's own fixed severity), a real fixed deterministic
+auto-flag ruleset (bounded amendment to Post a Game's
+`create-posting.ts`), a new minimal `warnings` table (first feature
+to need one), and this feature's own reports.status open→resolved
+transition (its first ever). Also the first real `logAuditEntry()`
+caller, with two retroactive bounded fixes: Admin Users' ban/
+remove-content actions gain the audit-log call `015` always
+anticipated for them, and Admin Dashboard's live-postings/top-games
+KPIs gain the `removedAt` exclusion they were missing since before
+`016` existed.
+
+**Admin Postings: tasks done** (2026-07-12) — `tasks.md`, 31 tasks:
+Setup(1) → Foundational(4) → US1/P1 view+filter queue(6) → US2/P2
+drawer+approve+remove(7) → US3/P3 warn+ban(6) → cross-feature
+amendments(4) → Polish(3). `docs/feature-list.md` updated to 🟢.
+Admin Postings is the seventeenth feature with a complete
+spec/plan/tasks trio.
+
 ## Next up
 
-- Merge `016-admin-users` into `main`, then move on to feature #17
-  (Admin Postings) — same specify→plan→tasks→merge sequence repeats
+- Merge `017-admin-postings` into `main`, then move on to feature #18
+  (Admin Forum) — same specify→plan→tasks→merge sequence repeats
   for every other feature in `docs/feature-list.md` — per the
   project-wide gate (constitution v1.0.0), implementation doesn't
   begin on *any* feature until all of them have this done.

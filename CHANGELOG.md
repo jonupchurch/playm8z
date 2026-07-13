@@ -538,6 +538,26 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   bounded Home/Browse/Forum-index amendments) → Polish (3). Admin Users
   is the sixteenth feature to clear the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Postings: `research.md` (severity
+  computed, never stored, from the worse of report-reason severity and
+  a new fixed auto-flag-reason taxonomy; a small deterministic
+  auto-flag ruleset added to Post a Game's `create-posting.ts` rather
+  than seeding decorative-only auto-flags; a new minimal `warnings`
+  table, first-feature-defines-the-shape; `reports.status`'s first
+  real `open`→`resolved` transition, no speculative `dismissed` value;
+  this feature's own actions as `logAuditEntry()`'s first real
+  callers, plus two retroactive bounded fixes closing gaps `015`/`016`
+  left behind), `data-model.md`, `quickstart.md`. No `contracts/`.
+
+- Ran `/speckit-tasks` for Admin Postings: `tasks.md` — 31 tasks: Setup
+  (1) → Foundational (4: schema extensions + migration, validation
+  schemas, the gated page shell) → US1/P1 view+filter queue (6) →
+  US2/P2 drawer+approve+remove (7) → US3/P3 warn+ban (6) →
+  cross-feature amendments (4: bounded fixes to `005`'s
+  `create-posting.ts`, `016`'s ban/remove-content actions, and `015`'s
+  dashboard KPI queries) → Polish (3). Admin Postings is the
+  seventeenth feature to clear the project-wide gate.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at
