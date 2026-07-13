@@ -506,6 +506,16 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   (4) → Polish (3). Content Page is the fourteenth feature to clear
   the project-wide gate.
 
+- Ran `/speckit-plan` for Admin Dashboard: `research.md` ("Active
+  today" redefined as timestamp-derived cross-table activity, not
+  presence tracking; Needs-attention/Open-reports reuse the existing
+  `reports` table grouped by `targetType`, no new auto-flag system;
+  `AuditEntry`/`logAuditEntry()` ship with no real callers since the
+  admin features that would generate entries aren't spec'd yet; Top
+  games reuses Home's/Browse's established aggregate pattern),
+  `data-model.md` (new `auditEntries` table plus a full read-only
+  aggregate-query inventory), `quickstart.md`. No `contracts/`.
+
 ### Known gaps
 - No sign-in/sign-up UI — only the Auth.js machinery is wired up.
 - No custom domain connected — deliberately deferred, live at

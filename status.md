@@ -571,13 +571,21 @@ edit(5) → US3/P3 publish+unpublish(4) → Polish(3).
 `docs/feature-list.md` updated to 🟢. Content Page is the fourteenth
 feature with a complete spec/plan/tasks trio.
 
+**Admin Dashboard: spec + plan done** (2026-07-12, branch
+`015-admin-dashboard`) — real KPIs/chart/needs-attention/top-games, all
+read-only aggregates over existing tables, plus a new `auditEntries`
+table for the recent-activity feed. "Active today" redefined as
+timestamp-derived activity, not presence tracking. Sidebar shell
+scoped out entirely (Design System infra). Second consumer of Error
+Pages' `require-role.ts`.
+
 ## Next up
 
-- Merge `014-content-page` into `main`, then move on to feature #15
-  (Admin Dashboard) — same specify→plan→tasks→merge sequence repeats
-  for every other feature in `docs/feature-list.md` — per the
-  project-wide gate (constitution v1.0.0), implementation doesn't
-  begin on *any* feature until all of them have this done.
+- Admin Dashboard: `/speckit-tasks` next, then merge to `main`.
+- After that, the same specify→plan→tasks→merge sequence repeats for
+  every other feature in `docs/feature-list.md` — per the project-wide
+  gate (constitution v1.0.0), implementation doesn't begin on *any*
+  feature until all of them have this done.
 - Awaiting the user to drop the Design System / Brand Identity
   `.dc.html` files into `resources/design/`.
 
