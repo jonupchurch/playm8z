@@ -3,7 +3,8 @@
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
-Blocked Users, and Forum index are done and merged. Forum Thread is next.
+Blocked Users, Forum index, and Forum Thread are done and merged.
+Inbox/messaging is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -954,9 +955,9 @@ merging.
 ## Next up
 
 - Auth & Onboarding, Error Pages, Home, Browse, Post a Game, Listing
-  detail, Profile + Account settings, Blocked Users, and Forum index
-  are implemented and merged. Forum Thread (`010`) is next — awaiting
-  the user's go-ahead.
+  detail, Profile + Account settings, Blocked Users, Forum index, and
+  Forum Thread are implemented and merged. Inbox/messaging (`011`) is
+  next — awaiting the user's go-ahead.
 - Listing detail's Report action (FR-019) is deferred pending
   Notifications + Report modal (`012`, not yet implemented) —
   `specs/006-listing-detail/tasks.md`'s T030. Revisit as a bounded
@@ -1572,6 +1573,81 @@ unit tests and 42 e2e tests total across the whole suite, all passing,
 confirmed twice in a row. `npm run typecheck`, `npm run lint`, `npm
 test`, `npm run test:e2e`, and `npm run build` all verified green
 before merging.
+
+## Forum Thread implemented (2026-07-13)
+
+**Forum Thread: implemented** — all 28 tasks in
+`specs/010-forum-thread/tasks.md` complete, merged to `main` — the
+largest feature built so far (3 user stories, 3 new tables, 4 Server
+Actions, a second writer of `reports`). `/forum/thread/[id]`, public
+to read (FR-001) — the original post renders distinctly via an OP
+badge and reflects the thread's own `pinned`/computed-HOT state
+exactly as Forum index already defines it (this feature never sets
+either). View count increments once per page load, no per-visitor
+dedup, incremented before the read so the number shown reflects the
+current visit.
+
+**Reply sort is client-side, deliberately different from Forum
+index's server-side/URL-driven category-sort choice**: a single
+thread's own reply count is bounded (unlike Forum index's ever-growing
+cross-category thread list, the actual reason THAT page chose
+server-side filtering), so fetching every reply once and sorting
+Top/Newest/Oldest in the browser is simpler and avoids re-fetching
+complexity, while still keeping the ephemeral "currently quoting X"
+state trivially colocated in the same client component.
+
+**Likes are a real per-user relationship, not a bare counter**: a new
+`likes` table with a database-level unique constraint on `(userId,
+targetType, targetId)` is the actual enforcement point for "can't
+double-like," not just an application-level check — verified with a
+deterministic test that directly attempts a duplicate insert and
+confirms the constraint rejects it (a Promise.all-based "two
+concurrent toggle clicks" test was tried first and rejected — see
+below). `forumThreads.likes`/`forumReplies.likes` stay denormalized for
+fast reads, kept in sync transactionally on every like/unlike.
+
+**Reusing Blocked Users' `reports` table as this feature's second
+writer** (`targetType='forum'`, `targetId` = either the thread's or a
+reply's id, with nothing in the row itself distinguishing which — a
+future Admin Forum reader would need to check both tables) — no new
+report shape, still no review/queue UI. `threadSubscriptions` stores a
+per-user preference only; nothing reads it to send a notification
+yet, consistent with the platform's already-narrowed notification
+scope.
+
+**Dropped the wireframe's "TOP REPLY"/best-answer badge entirely** —
+no control anywhere sets it (research.md #4), the same "no real input
+path" reasoning Blocked Users' fake per-block "reason" chips and this
+project's HOT-heuristic decision already established. The separate,
+real "Top" sort (by like count) is unaffected and kept.
+
+**A genuine test-design lesson worth remembering**: firing two
+concurrent `toggleLike()` calls at the SAME target isn't a reliable
+way to test "duplicate-like prevention" — toggle semantics mean a
+second request that happens to see the first's already-committed
+insert takes the *unlike* branch instead of attempting a duplicate
+insert, a real and order-dependent outcome of rapid toggling, not a
+bug. The actual constraint is best verified directly (two raw inserts
+of the identical row, confirming the second throws) rather than through
+a race that may or may not manifest the specific code path being
+tested.
+
+**Every write action (reply/like/report/subscribe) is routed to
+`/login` via a real `<Link>` for an unauthenticated visitor** — the
+same `apply-panel.tsx` precedent from Listing detail, threaded through
+four separate small reusable components (`LikeButton`, `ReportButton`,
+`SubscribeButton`, `ReplyComposer`) rather than one shared gate, since
+each has its own distinct interactive shape.
+
+35+ new unit/integration tests (`forum-thread.ts`'s Zod schemas,
+`get-thread.ts`'s sort/related-thread/quoted-reply logic against real
+Postgres, all four Server Actions including the direct unique-
+constraint tests) and a 3-scenario `e2e/forum-thread.spec.ts` covering
+quickstart.md Scenarios 1-3 end to end, including an axe-core scan.
+284 unit tests and 45 e2e tests total across the whole suite, all
+passing, confirmed twice in a row. `npm run typecheck`, `npm run
+lint`, `npm test`, `npm run test:e2e`, and `npm run build` all
+verified green before merging.
 
 ## Blockers
 

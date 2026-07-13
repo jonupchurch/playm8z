@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) and the `reports` table (Blocked Users, `008`) exist in the codebase before starting — both are direct dependencies of this feature's write actions
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) and the `reports` table (Blocked Users, `008`) exist in the codebase before starting — both are direct dependencies of this feature's write actions
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `forumReplies`, `likes`, and `threadSubscriptions` tables to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/forum-thread.ts` — Zod schemas for reply/quote/like/report input (data-model.md)
-- [ ] T005 Create `src/lib/forum/get-thread.ts` — fetches the thread, OP, sorted replies (Top/Newest/Oldest), and related threads — depends on T002
-- [ ] T006 Create `src/lib/forum/increment-view-count.ts` — depends on T002
+- [x] T002 Add the `forumReplies`, `likes`, and `threadSubscriptions` tables to `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/forum-thread.ts` — Zod schemas for reply/quote/like/report input (data-model.md)
+- [x] T005 Create `src/lib/forum/get-thread.ts` — fetches the thread, OP, sorted replies (Top/Newest/Oldest), and related threads — depends on T002
+- [x] T006 Create `src/lib/forum/increment-view-count.ts` — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,16 +54,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `forum-thread.ts`'s schemas in `src/lib/validations/forum-thread.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `get-thread.ts`'s sort logic (Top/Newest/Oldest) and related-thread matching in `src/lib/forum/get-thread.test.ts`
-- [ ] T009 [US1] Playwright e2e spec covering read, sort, right-rail accuracy, and view-count increment, including an axe-core scan — creates `e2e/forum-thread.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `forum-thread.ts`'s schemas in `src/lib/validations/forum-thread.test.ts`
+- [x] T008 [P] [US1] Unit tests for `get-thread.ts`'s sort logic (Top/Newest/Oldest) and related-thread matching in `src/lib/forum/get-thread.test.ts`
+- [x] T009 [US1] Playwright e2e spec covering read, sort, right-rail accuracy, and view-count increment, including an axe-core scan — creates `e2e/forum-thread.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Build `src/components/forum/original-post.tsx` — depends on T004
-- [ ] T011 [US1] Build `src/components/forum/reply-card.tsx` (read-only display for now — like/Report/Quote controls wired in later stories) — depends on T004
-- [ ] T012 [US1] Build `src/components/forum/thread-right-rail.tsx` — depends on T005
-- [ ] T013 [US1] Build `src/app/forum/thread/[id]/page.tsx`: fetch via `get-thread.ts`, increment the view count, render OP + replies + sort + right rail — depends on T005, T006, T010, T011, T012
+- [x] T010 [US1] Build `src/components/forum/original-post.tsx` — depends on T004
+- [x] T011 [US1] Build `src/components/forum/reply-card.tsx` (read-only display for now — like/Report/Quote controls wired in later stories) — depends on T004
+- [x] T012 [US1] Build `src/components/forum/thread-right-rail.tsx` — depends on T005
+- [x] T013 [US1] Build `src/app/forum/thread/[id]/page.tsx`: fetch via `get-thread.ts`, increment the view count, render OP + replies + sort + right rail — depends on T005, T006, T010, T011, T012
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -77,14 +77,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Integration test for `post-reply.ts` (creates a reply and updates `replyCount`; `quotedReplyId` set correctly; blocked for an unverified session) in `src/lib/actions/post-reply.test.ts`
-- [ ] T015 [US2] Add the reply/quote scenario to `e2e/forum-thread.spec.ts` — depends on T009 (same file)
+- [x] T014 [P] [US2] Integration test for `post-reply.ts` (creates a reply and updates `replyCount`; `quotedReplyId` set correctly; blocked for an unverified session) in `src/lib/actions/post-reply.test.ts`
+- [x] T015 [US2] Add the reply/quote scenario to `e2e/forum-thread.spec.ts` — depends on T009 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Build `post-reply.ts` in `src/lib/actions/post-reply.ts` — depends on T004
-- [ ] T017 [US2] Build `src/components/forum/reply-composer.tsx`, including a quoted-reply preview when quoting — depends on T016
-- [ ] T018 [US2] Wire `reply-composer.tsx` and the "Quote" action (on `reply-card.tsx`) into `src/app/forum/thread/[id]/page.tsx` — depends on T011, T013, T017
+- [x] T016 [US2] Build `post-reply.ts` in `src/lib/actions/post-reply.ts` — depends on T004
+- [x] T017 [US2] Build `src/components/forum/reply-composer.tsx`, including a quoted-reply preview when quoting — depends on T016
+- [x] T018 [US2] Wire `reply-composer.tsx` and the "Quote" action (on `reply-card.tsx`) into `src/app/forum/thread/[id]/page.tsx` — depends on T011, T013, T017
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -98,16 +98,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T019 [P] [US3] Integration test for `toggle-like.ts` (like/unlike, denormalized count stays in sync, a duplicate-like race is rejected by the database's unique constraint) in `src/lib/actions/toggle-like.test.ts`
-- [ ] T020 [P] [US3] Integration test for `report-forum-content.ts` (writes into `008`'s `reports` table with `targetType = 'forum'`) in `src/lib/actions/report-forum-content.test.ts`
-- [ ] T021 [US3] Add the like/unlike and report scenarios to `e2e/forum-thread.spec.ts` — depends on T015 (same file)
+- [x] T019 [P] [US3] Integration test for `toggle-like.ts` (like/unlike, denormalized count stays in sync, a duplicate-like race is rejected by the database's unique constraint) in `src/lib/actions/toggle-like.test.ts`
+- [x] T020 [P] [US3] Integration test for `report-forum-content.ts` (writes into `008`'s `reports` table with `targetType = 'forum'`) in `src/lib/actions/report-forum-content.test.ts`
+- [x] T021 [US3] Add the like/unlike and report scenarios to `e2e/forum-thread.spec.ts` — depends on T015 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T022 [US3] Build `toggle-like.ts` in `src/lib/actions/toggle-like.ts` — depends on T004
-- [ ] T023 [US3] Build `report-forum-content.ts` in `src/lib/actions/report-forum-content.ts` (reuses `008`'s `reports` table) — depends on T004
-- [ ] T024 [US3] Build `toggle-subscription.ts` in `src/lib/actions/toggle-subscription.ts` — depends on T004
-- [ ] T025 [US3] Wire like, Report, and Subscribe controls into `reply-card.tsx` and the thread header — depends on T018, T022, T023, T024
+- [x] T022 [US3] Build `toggle-like.ts` in `src/lib/actions/toggle-like.ts` — depends on T004
+- [x] T023 [US3] Build `report-forum-content.ts` in `src/lib/actions/report-forum-content.ts` (reuses `008`'s `reports` table) — depends on T004
+- [x] T024 [US3] Build `toggle-subscription.ts` in `src/lib/actions/toggle-subscription.ts` — depends on T004
+- [x] T025 [US3] Wire like, Report, and Subscribe controls into `reply-card.tsx` and the thread header — depends on T018, T022, T023, T024
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -115,9 +115,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T026 Confirm `next build` succeeds locally and CI stays green with the new route, four Server Actions, three new tables, and the reused `reports` write path
-- [ ] T027 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T028 [P] Update `docs/feature-list.md`, marking Forum Thread's spec/plan/tasks as complete
+- [x] T026 Confirm `next build` succeeds locally and CI stays green with the new route, four Server Actions, three new tables, and the reused `reports` write path
+- [x] T027 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [x] T028 [P] Update `docs/feature-list.md`, marking Forum Thread's spec/plan/tasks as complete
 
 ---
 

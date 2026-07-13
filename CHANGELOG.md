@@ -1227,3 +1227,56 @@ may begin on any/all of them per the constitution (v1.0.0).
   (full suite, all files), and `npm run build` all verified green
   before merging. All 22 tasks in `specs/009-forum-index/tasks.md`
   checked off.
+
+## [Unreleased] (cont. 11)
+
+### Added
+- **Implemented Forum Thread**: `/forum/thread/[id]`, public to read
+  (FR-001) — the largest feature built so far (3 user stories, 3 new
+  tables, 4 Server Actions, a second writer of `reports`). The original
+  post renders distinctly via an OP badge, reflecting the thread's own
+  pinned/HOT state exactly as Forum index defines it. View count
+  increments once per page load, no per-visitor dedup.
+- **Reply sort is client-side**, deliberately different from Forum
+  index's server-side/URL-driven choice — a single thread's own reply
+  count is bounded, unlike Forum index's ever-growing cross-category
+  list, so fetching every reply once and sorting in the browser is
+  simpler and keeps the ephemeral "currently quoting X" state trivially
+  colocated.
+- **New `likes` table**: a real per-user relationship with a
+  database-level unique constraint on `(userId, targetType, targetId)`
+  — the actual enforcement point for "can't double-like," not just an
+  application-level check. `forumThreads.likes`/`forumReplies.likes`
+  stay denormalized for fast reads, kept in sync transactionally.
+- **New `forumReplies`** (this feature's only writer) and
+  **`threadSubscriptions`** (a per-user preference only, no
+  notification delivery wired up). Reusing Blocked Users' `reports`
+  table as this feature's second writer (`targetType='forum'`), no new
+  report shape, still no review/queue UI.
+- **Dropped the wireframe's "TOP REPLY"/best-answer badge entirely** —
+  no control anywhere sets it; the separate, real "Top" sort (by like
+  count) is unaffected and kept.
+- **A genuine test-design lesson**: firing two concurrent
+  `toggleLike()` calls at the same target isn't a reliable way to test
+  duplicate-like prevention — toggle semantics mean a second request
+  that sees the first's already-committed insert takes the *unlike*
+  branch instead, a real order-dependent outcome, not a bug. Fixed by
+  testing the unique constraint directly (two raw inserts of the
+  identical row, confirming the second throws) instead of racing
+  through the public action.
+- **Every write action (reply/like/report/subscribe) routes an
+  unauthenticated visitor to `/login`** via a real `<Link>` (Listing
+  detail's `apply-panel.tsx` precedent), threaded through four separate
+  small reusable components (`LikeButton`, `ReportButton`,
+  `SubscribeButton`, `ReplyComposer`) rather than one shared gate.
+- 35+ new unit/integration tests (`forum-thread.ts`'s Zod schemas,
+  `get-thread.ts`'s sort/related-thread/quoted-reply logic against
+  real Postgres, all four Server Actions including the direct unique-
+  constraint tests) and a 3-scenario `e2e/forum-thread.spec.ts`
+  covering quickstart.md Scenarios 1-3 end to end, including an
+  axe-core scan. 284 unit tests and 45 e2e tests total across the
+  whole suite, all passing, confirmed twice in a row. `npm run
+  typecheck`, `npm run lint`, `npm test`, `npm run test:e2e` (full
+  suite, all files), and `npm run build` all verified green before
+  merging. All 28 tasks in `specs/010-forum-thread/tasks.md` checked
+  off.
