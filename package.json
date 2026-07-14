@@ -16,7 +16,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed-postings": "tsx scripts/seed-postings.ts",
-    "db:seed-news-posts": "tsx scripts/seed-news-posts.ts"
+    "db:seed-news-posts": "tsx scripts/seed-news-posts.ts",
+    "db:seed-content-page": "tsx scripts/seed-content-page.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
