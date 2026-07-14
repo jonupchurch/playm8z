@@ -1280,3 +1280,60 @@ may begin on any/all of them per the constitution (v1.0.0).
   suite, all files), and `npm run build` all verified green before
   merging. All 28 tasks in `specs/010-forum-thread/tasks.md` checked
   off.
+
+## [Unreleased] (cont. 12)
+
+### Added
+- **Implemented Inbox / messaging**: a two-pane `/inbox` (conversation
+  list + `/inbox/[id]` chat pane), authenticated only, merging real
+  `conversations` the user belongs to with pending Applications on
+  postings they host into one searchable, unified list (FR-002).
+  Search is client-side, following Forum Thread's own reply-sort
+  precedent: a user's own inbox is a bounded, single-parent list, unlike
+  Forum index's ever-growing cross-category thread list.
+- **New `conversations`/`messages` tables**. `conversations.lastReadAt`
+  is a per-member JSON read-cursor, added beyond data-model.md's
+  original sketch for the same reason Forum Thread's
+  `threadSubscriptions` gained a retroactive unique constraint: accurate
+  unread counts need a per-viewer read cursor to exist somewhere. A
+  pending Application's own `message` field doubles as a synthesized
+  "request" list item's opening line — no `Conversation`/`Message` row
+  exists until the host accepts, avoiding any amendment to Listing
+  detail's already-merged apply flow.
+- **`accept-request.ts` is this project's first `db.transaction()`** —
+  Application status, the posting's `seatsOpen`/`status`, and a new
+  `Conversation` (with a system message) change together, guarded by a
+  `.returning()`-checked update so a concurrent double-accept can't
+  double-decrement seats or create two conversations. Verified with a
+  genuine concurrent-call test — unlike Forum Thread's toggle-race
+  lesson, accepting is a one-way transition, not a toggle, so
+  `Promise.all`-ing two concurrent calls is a valid way to test it here.
+- **`search-contacts.ts` excludes a block in *either* direction** —
+  Blocked Users' own candidate search only excludes users the searching
+  user has blocked; this is the first feature to also exclude someone
+  who has blocked the searching user, since messaging is exactly what
+  that feature's own UI promises blocking prevents.
+  `start-conversation.ts` re-checks the same relationship server-side
+  per recipient.
+- **Three real bugs found and fixed**: (1) a native `<dialog>` styled
+  with a bare Tailwind `flex` utility never hides when closed, since
+  Tailwind v4's `@layer`-emitted utilities beat the UA stylesheet's
+  `dialog:not([open])` rule regardless of specificity — fixed via
+  `hidden open:flex` (likely a latent, unfixed bug in Blocked Users'/
+  Forum index's own dialogs too, out of this feature's scope); (2) this
+  Next.js version's client `router.refresh()` called immediately after
+  `router.push()` can lose a race and revert navigation to the old URL —
+  fixed by moving cache invalidation server-side via `revalidatePath(path,
+  "layout")` inside the Server Actions themselves (this Next.js
+  version's documented pattern; `next/cache` is now mocked globally in
+  `vitest.setup.ts`); (3) a Playwright `getByText()` false-positive
+  matched a composer textarea's still-pending value before its async
+  send resolved.
+- 40+ new unit/integration tests and a 6-scenario `e2e/inbox.spec.ts`
+  covering quickstart.md Scenarios 1-3 plus unauthenticated-redirect and
+  group-sender-grouping, including two axe-core scans. 327 unit tests
+  and 51 e2e tests total across the whole suite, all passing, confirmed
+  twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
+  run test:e2e` (full suite, all files), and `npm run build` all
+  verified green before merging. All 31 tasks in
+  `specs/011-inbox-messaging/tasks.md` checked off.

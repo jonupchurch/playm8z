@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) and the `blocks` table (Blocked Users, `008`) exist in the codebase before starting — both are direct dependencies of this feature's write actions
+- [X] T001 Confirm `src/lib/auth/require-verified-email.ts` (Auth & Onboarding) and the `blocks` table (Blocked Users, `008`) exist in the codebase before starting — both are direct dependencies of this feature's write actions
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `conversations` and `messages` tables to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/inbox.ts` — Zod schemas for message body, recipients, group name (data-model.md)
-- [ ] T005 Create `src/lib/inbox/get-inbox-list.ts` — merges real conversations with pending-hosted-request Applications, sorted by recent activity — depends on T002
-- [ ] T006 Build `src/app/inbox/layout.tsx`: redirect an unauthenticated visitor to `/login` (FR-001), render the conversation-list shell — depends on T005
+- [X] T002 Add the `conversations` and `messages` tables to `src/db/schema.ts` (data-model.md)
+- [X] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [X] T004 [P] Create `src/lib/validations/inbox.ts` — Zod schemas for message body, recipients, group name (data-model.md)
+- [X] T005 Create `src/lib/inbox/get-inbox-list.ts` — merges real conversations with pending-hosted-request Applications, sorted by recent activity — depends on T002
+- [X] T006 Build `src/app/inbox/layout.tsx`: redirect an unauthenticated visitor to `/login` (FR-001), render the conversation-list shell — depends on T005
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,18 +54,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `inbox.ts`'s schemas in `src/lib/validations/inbox.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `get-inbox-list.ts`'s merge/sort logic in `src/lib/inbox/get-inbox-list.test.ts`
-- [ ] T009 [P] [US1] Integration test for `send-message.ts` (creates a message, updates `lastMessageAt`, blocked for an unverified session) in `src/lib/actions/send-message.test.ts`
-- [ ] T010 [US1] Playwright e2e spec covering the list view, search, opening a conversation, sending a message, and group-chat sender-grouping, including an axe-core scan — creates `e2e/inbox.spec.ts`
+- [X] T007 [P] [US1] Unit tests for `inbox.ts`'s schemas in `src/lib/validations/inbox.test.ts`
+- [X] T008 [P] [US1] Unit tests for `get-inbox-list.ts`'s merge/sort logic in `src/lib/inbox/get-inbox-list.test.ts`
+- [X] T009 [P] [US1] Integration test for `send-message.ts` (creates a message, updates `lastMessageAt`, blocked for an unverified session) in `src/lib/actions/send-message.test.ts`
+- [X] T010 [US1] Playwright e2e spec covering the list view, search, opening a conversation, sending a message, and group-chat sender-grouping, including an axe-core scan — creates `e2e/inbox.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build `send-message.ts` in `src/lib/actions/send-message.ts` — depends on T004
-- [ ] T012 [US1] Build `src/components/inbox/conversation-list.tsx` (including search) — depends on T005
-- [ ] T013 [US1] Build `src/components/inbox/message-thread.tsx`, including an `aria-live` region and sender-grouping for consecutive group-chat messages — depends on T004
-- [ ] T014 [US1] Build `src/app/inbox/[conversationId]/page.tsx`: fetch history, render `message-thread.tsx`, wire the composer to `send-message.ts`, and a client-side poll wrapper (research.md #2) — depends on T011, T013
-- [ ] T015 [US1] Wire `conversation-list.tsx` into `src/app/inbox/layout.tsx` — depends on T006, T012
+- [X] T011 [US1] Build `send-message.ts` in `src/lib/actions/send-message.ts` — depends on T004
+- [X] T012 [US1] Build `src/components/inbox/conversation-list.tsx` (including search) — depends on T005
+- [X] T013 [US1] Build `src/components/inbox/message-thread.tsx`, including an `aria-live` region and sender-grouping for consecutive group-chat messages — depends on T004
+- [X] T014 [US1] Build `src/app/inbox/[conversationId]/page.tsx`: fetch history, render `message-thread.tsx`, wire the composer to `send-message.ts`, and a client-side poll wrapper (research.md #2) — depends on T011, T013
+- [X] T015 [US1] Wire `conversation-list.tsx` into `src/app/inbox/layout.tsx` — depends on T006, T012
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -79,15 +79,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T016 [P] [US2] Integration test for `start-conversation.ts` (direct conversations reuse an existing one; group creation; block exclusion enforced server-side even if the UI is bypassed) in `src/lib/actions/start-conversation.test.ts`
-- [ ] T017 [US2] Add the compose scenario (direct, group, blocked-exclusion) to `e2e/inbox.spec.ts`, including an axe-core scan of the compose modal — depends on T010 (same file)
+- [X] T016 [P] [US2] Integration test for `start-conversation.ts` (direct conversations reuse an existing one; group creation; block exclusion enforced server-side even if the UI is bypassed) in `src/lib/actions/start-conversation.test.ts`
+- [X] T017 [US2] Add the compose scenario (direct, group, blocked-exclusion) to `e2e/inbox.spec.ts`, including an axe-core scan of the compose modal — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Build `search-contacts.ts` in `src/lib/inbox/search-contacts.ts` — excludes self and any blocked/blocking user (research.md #4) — depends on T002
-- [ ] T019 [US2] Build `start-conversation.ts` in `src/lib/actions/start-conversation.ts` — depends on T004, T018
-- [ ] T020 [US2] Build `src/components/inbox/compose-modal.tsx` — depends on T019
-- [ ] T021 [US2] Wire the "New" entry point into `src/app/inbox/layout.tsx` — depends on T015, T020
+- [X] T018 [US2] Build `search-contacts.ts` in `src/lib/inbox/search-contacts.ts` — excludes self and any blocked/blocking user (research.md #4) — depends on T002
+- [X] T019 [US2] Build `start-conversation.ts` in `src/lib/actions/start-conversation.ts` — depends on T004, T018
+- [X] T020 [US2] Build `src/components/inbox/compose-modal.tsx` — depends on T019
+- [X] T021 [US2] Wire the "New" entry point into `src/app/inbox/layout.tsx` — depends on T015, T020
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -101,16 +101,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T022 [P] [US3] Integration test for `accept-request.ts` (atomic Application/Posting/Conversation update; a forced mid-transaction failure leaves nothing partially applied) in `src/lib/actions/accept-request.test.ts`
-- [ ] T023 [P] [US3] Integration test for `decline-request.ts` (Application declined, no change to `seatsOpen`, no conversation created) in `src/lib/actions/decline-request.test.ts`
-- [ ] T024 [US3] Add the accept/decline scenario to `e2e/inbox.spec.ts` — depends on T017 (same file)
+- [X] T022 [P] [US3] Integration test for `accept-request.ts` (atomic Application/Posting/Conversation update; a forced mid-transaction failure leaves nothing partially applied) in `src/lib/actions/accept-request.test.ts`
+- [X] T023 [P] [US3] Integration test for `decline-request.ts` (Application declined, no change to `seatsOpen`, no conversation created) in `src/lib/actions/decline-request.test.ts`
+- [X] T024 [US3] Add the accept/decline scenario to `e2e/inbox.spec.ts` — depends on T017 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Build `accept-request.ts` in `src/lib/actions/accept-request.ts` — a single database transaction (research.md #3) — depends on T004
-- [ ] T026 [US3] Build `decline-request.ts` in `src/lib/actions/decline-request.ts` — depends on T004
-- [ ] T027 [US3] Build `src/components/inbox/request-banner.tsx` — depends on T025, T026
-- [ ] T028 [US3] Wire `request-banner.tsx` into `src/app/inbox/[conversationId]/page.tsx` for request-type items — depends on T014, T027
+- [X] T025 [US3] Build `accept-request.ts` in `src/lib/actions/accept-request.ts` — a single database transaction (research.md #3) — depends on T004
+- [X] T026 [US3] Build `decline-request.ts` in `src/lib/actions/decline-request.ts` — depends on T004
+- [X] T027 [US3] Build `src/components/inbox/request-banner.tsx` — depends on T025, T026
+- [X] T028 [US3] Wire `request-banner.tsx` into `src/app/inbox/[conversationId]/page.tsx` for request-type items — depends on T014, T027
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -118,9 +118,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T029 Confirm `next build` succeeds locally and CI stays green with the new routes, six Server Actions, and two new tables
-- [ ] T030 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T031 [P] Update `docs/feature-list.md`, marking Inbox / messaging's spec/plan/tasks as complete
+- [X] T029 Confirm `next build` succeeds locally and CI stays green with the new routes, six Server Actions, and two new tables
+- [X] T030 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [X] T031 [P] Update `docs/feature-list.md`, marking Inbox / messaging's spec/plan/tasks as complete
 
 ---
 

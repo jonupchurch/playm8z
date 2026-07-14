@@ -3,9 +3,9 @@
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
-Blocked Users, Forum index, and Forum Thread are done and merged.
-Inbox/messaging is next.
-**Last updated**: 2026-07-13
+Blocked Users, Forum index, Forum Thread, and Inbox/messaging are done
+and merged. Notifications + Report modal is next.
+**Last updated**: 2026-07-14
 
 ## Where things stand
 
@@ -1648,6 +1648,108 @@ quickstart.md Scenarios 1-3 end to end, including an axe-core scan.
 passing, confirmed twice in a row. `npm run typecheck`, `npm run
 lint`, `npm test`, `npm run test:e2e`, and `npm run build` all
 verified green before merging.
+
+## Inbox / messaging implemented (2026-07-14)
+
+**Inbox / messaging: implemented** — all 31 tasks in
+`specs/011-inbox-messaging/tasks.md` complete, merged to `main`. A
+two-pane `/inbox` (conversation-list layout + `/inbox/[id]` chat pane)
+merging real `conversations` the user belongs to with pending
+Applications on postings they host into one searchable, unified list
+(FR-002) — search is client-side (Forum Thread's own reply-sort
+precedent: a single user's own inbox is a bounded, single-parent list,
+unlike Forum index's ever-growing cross-category thread list).
+
+**New `conversations`/`messages` tables** — `conversations.lastReadAt`
+is a per-member JSON map (`{userId: ISO timestamp}`), added beyond
+data-model.md's original two-column sketch for the same reason
+`threadSubscriptions`' unique constraint was added retroactively during
+Forum Thread: FR-002/FR-004's "accurate unread indicator" can't be
+satisfied without some per-viewer read cursor, and a JSON column on a
+table this feature already owns is the smallest addition that works.
+A pending Application's own `message` field doubles as a synthesized
+"request" list item's opening line — no `Conversation`/`Message` row
+exists for it until the host accepts (research.md #1), avoiding any
+amendment to Listing detail's already-merged `apply-to-posting.ts`.
+
+**`accept-request.ts` is this project's first `db.transaction()`** —
+Application status, the posting's `seatsOpen`/`status`, and a new
+`Conversation` (with a system message) all change together. The
+guarded update is checked via `.returning()`, not just fired blind: if
+a concurrent accept already won, the WHERE clause matches zero rows and
+the whole transaction throws/rolls back, rather than double-decrementing
+`seatsOpen` or creating two conversations. Verified with a genuine
+concurrent-call test (`Promise.all` of two `acceptRequest()` calls on
+the same pending Application, asserting exactly one wins and `seatsOpen`
+decrements exactly once) — this is a *valid* use of concurrent-call
+testing, unlike Forum Thread's own toggle-race lesson: accepting is a
+one-way state transition guarded by a WHERE clause, not a toggle, so
+there's no ambiguity about which branch a second concurrent call takes.
+
+**`search-contacts.ts` excludes a block in *either* direction** —
+Blocked Users' own `search-users.ts` only excludes users the searching
+user has blocked (all its own "pick someone to block" flow needs); this
+feature is the first to also exclude someone who has blocked the
+searching user, since messaging is exactly the interaction Blocked
+Users' own UI promises blocking prevents. `start-conversation.ts`
+re-checks the same relationship server-side per recipient — the compose
+search's own exclusion is a UX nicety, not the real guard.
+
+**Three real bugs found and fixed**:
+
+1. A native `<dialog>` styled with a bare Tailwind `flex` utility
+   never actually hides when closed. Tailwind v4 emits utilities inside
+   `@layer`, and per the CSS cascade-layers spec, layered author styles
+   always win over the User-Agent stylesheet's `dialog:not([open]) {
+   display: none }` rule *regardless of selector specificity* — confirmed
+   by inspecting `getComputedStyle(dialog).display` directly (`"flex"`
+   while closed, no `open` attribute). Fixed via `hidden open:flex`
+   (Tailwind's `open:` variant targets the `[open]` attribute). The same
+   latent bug is likely present in Blocked Users'/Forum index's own
+   `<dialog>`-based modals (`block-modal.tsx`, `new-thread-modal.tsx`) —
+   left unfixed there as out of this feature's own scope, worth a
+   follow-up pass.
+2. This Next.js version's client `router.refresh()`, called immediately
+   after `router.push()` to a different route, can lose a race and
+   revert the browser back to the pre-push URL — confirmed via dev-server
+   logs showing the pushed route's own fetch succeeding server-side while
+   the browser still displayed the old URL. This app's Next.js version
+   (per `node_modules/next/dist/docs/`) has moved cache/router
+   invalidation into Server Actions themselves: `next/cache`'s `refresh()`
+   and `revalidatePath()` are now Server-Action-only APIs. Fixed by
+   calling `revalidatePath("/inbox", "layout")` server-side inside
+   `start-conversation.ts`/`accept-request.ts`/`decline-request.ts`
+   right before returning, with client code doing a bare `router.push()`
+   afterward and nothing else. `next/cache` is mocked globally in
+   `vitest.setup.ts` since it requires a real Next.js request context
+   that doesn't exist under Vitest.
+3. A Playwright `getByText()` assertion produced a false positive,
+   matching a message composer `<textarea>`'s still-pending typed value
+   before its async `sendMessage()` call had actually resolved and
+   written to the database — fixed by first asserting the textarea
+   cleared (the send-succeeded signal), then checking for the rendered
+   message bubble specifically.
+
+Every write action (send/start/accept/decline) extends
+`requireVerifiedEmail()`; viewing `/inbox` itself only needs a plain
+session (`auth()` + redirect, Profile's own layout.tsx precedent) since
+reads are never blocked, only writes.
+
+40+ new unit/integration tests (Zod schemas, `get-inbox-list.ts`'s
+merge/sort/unread logic, `get-conversation.ts`'s conversation-or-request
+lookup, all four Server Actions including the transaction's concurrency
+test) and a 6-scenario `e2e/inbox.spec.ts` covering quickstart.md
+Scenarios 1-3 plus the unauthenticated-redirect and group-sender-
+grouping cases, including two axe-core scans. 51 e2e tests and 327
+unit tests total across the whole suite, all passing, confirmed twice
+in a row (both after a full dev-server restart — the long-running dev
+server had accumulated enough stale Postgres connections across this
+session's many HMR reloads to trip local Postgres's `max_connections`
+mid-suite, the same known "too many clients" issue noted in earlier
+features; a fresh server resolved it cleanly, unrelated to this
+feature's own code). `npm run typecheck`, `npm run lint`, `npm test`,
+`npm run test:e2e`, and `npm run build` all verified green before
+merging.
 
 ## Blockers
 
