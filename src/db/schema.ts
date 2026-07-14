@@ -7,6 +7,7 @@ import {
   uuid,
   boolean,
   unique,
+  jsonb,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
@@ -329,6 +330,46 @@ export const threadSubscriptions = pgTable(
   },
   (table) => [unique().on(table.userId, table.threadId)],
 );
+
+// Inbox / messaging (011) -- this feature's first writer for both new
+// tables. `memberIds` isn't FK-enforced by Postgres (arrays can't
+// reference a table); validated at the Server Action layer instead,
+// the same reasoning as forumThreads' free-text categoryId. A direct
+// (non-group) conversation between the same two members is never
+// duplicated -- start-conversation.ts checks for an existing one
+// first (data-model.md). `lastReadAt` maps each member's own id to
+// the ISO timestamp they last viewed this conversation, so per-viewer
+// unread counts can be derived without a separate per-member table --
+// not in data-model.md's original two-column sketch, added here for
+// the same reason threadSubscriptions' unique constraint was added
+// retroactively: FR-002/FR-004's "accurate unread indicator" can't be
+// satisfied without some per-viewer read cursor, and a JSON column on
+// the table this feature already owns is the smallest addition that
+// works.
+export const conversations = pgTable("conversations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  isGroup: boolean("isGroup").notNull().default(false),
+  name: text("name"),
+  memberIds: uuid("memberIds").array().notNull(),
+  lastMessageAt: timestamp("lastMessageAt", { mode: "date" }).notNull().defaultNow(),
+  lastReadAt: jsonb("lastReadAt").notNull().default({}).$type<Record<string, string>>(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Inbox / messaging (011) -- this feature's only writer. `senderId` is
+// nullable for system messages (e.g. "You accepted -- @applicant
+// joined the party"), created by accept-request.ts. Append-only -- no
+// edit/delete concern surfaces in this feature's own scope.
+export const messages = pgTable("messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  conversationId: uuid("conversationId")
+    .notNull()
+    .references(() => conversations.id, { onDelete: "cascade" }),
+  senderId: uuid("senderId").references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull().default("text"),
+  body: text("body").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
 
 export const verificationTokens = pgTable(
   "verificationToken",
