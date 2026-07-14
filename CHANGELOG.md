@@ -1609,3 +1609,21 @@ may begin on any/all of them per the constitution (v1.0.0).
   showed 16 unrelated `ERR_CONNECTION_REFUSED` failures, traced to two
   stale `next start -p 3001` servers left running from the prior day —
   killed and reran clean). `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 20)
+
+### Fixed
+- **Any forum thread posted with no tags 500'd when opened.**
+  `get-thread.ts`'s "related threads" query called Drizzle's
+  `arrayOverlaps(forumThreads.tags, thread.tags)` unconditionally, but
+  `arrayOverlaps` throws on an empty array — and Tags is an optional
+  field on New Thread. Found by matching the user's reported error
+  digest against production runtime logs. `search-postings.ts`
+  elsewhere already guards this same operator with `.length > 0`;
+  `get-thread.ts` didn't. Fixed by falling back to a category-only
+  match when the thread has no tags. Added a regression test (fails on
+  the old code, passes on the fix) — the existing suite never caught
+  this because its only untagged test thread was the one being
+  searched *for*, never the primary thread whose own tags feed the
+  query. Full suite green (403 unit, 71 e2e), `npm run build` confirmed
+  twice.

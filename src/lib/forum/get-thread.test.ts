@@ -163,4 +163,23 @@ describe("getThread (integration)", () => {
     const thread = await getThread(threadId, "top");
     expect(thread!.relatedThreads.some((r) => r.id === otherThreadId)).toBe(true);
   });
+
+  it("doesn't throw for a thread posted with no tags (arrayOverlaps requires a non-empty array)", async () => {
+    const [untaggedThread] = await db
+      .insert(forumThreads)
+      .values({
+        authorId,
+        categoryId: "gametalk",
+        title: `No tags ${runId}`,
+        body: "Posted with the Tags field left blank.",
+        tags: [],
+      })
+      .returning({ id: forumThreads.id });
+
+    const thread = await getThread(untaggedThread.id, "top");
+    expect(thread).not.toBeNull();
+    expect(thread!.relatedThreads.some((r) => r.id === otherThreadId)).toBe(true);
+
+    await db.delete(forumThreads).where(eq(forumThreads.id, untaggedThread.id));
+  });
 });

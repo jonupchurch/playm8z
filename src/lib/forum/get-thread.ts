@@ -138,7 +138,9 @@ export async function getThread(threadId: string, sort: ReplySort, viewerId?: st
     .where(
       and(
         ne(forumThreads.id, threadId),
-        or(eq(forumThreads.categoryId, thread.categoryId), arrayOverlaps(forumThreads.tags, thread.tags)),
+        thread.tags.length > 0
+          ? or(eq(forumThreads.categoryId, thread.categoryId), arrayOverlaps(forumThreads.tags, thread.tags))
+          : eq(forumThreads.categoryId, thread.categoryId),
       ),
     )
     .orderBy(desc(forumThreads.createdAt))

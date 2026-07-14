@@ -2189,6 +2189,37 @@ all were `net::ERR_CONNECTION_REFUSED` against two stale `next start
 work, unrelated to these code changes — killed those processes and
 reran clean). `npm run build` confirmed twice.
 
+## Forum thread pages 500'd for any thread posted with no tags (2026-07-14)
+
+The user hit a 500 opening the thread they'd just posted and gave the
+error digest from Vercel's error overlay (`1041041217`). Pulled
+production runtime logs directly (`vercel logs` / Vercel's error
+clustering) and matched that exact digest to `Error: arrayOverlaps
+requires at least one value` on `GET /forum/thread/[id]`.
+
+**Root cause**: `get-thread.ts`'s "related threads" query calls
+Drizzle's `arrayOverlaps(forumThreads.tags, thread.tags)` unconditionally
+— but `arrayOverlaps` throws if given an empty array, and Tags is an
+optional field on the New Thread form. Any thread posted with no tags
+has `tags: []`, so viewing it crashed every time. `search-postings.ts`
+elsewhere in this codebase already guards the same operator with a
+`.length > 0` check before calling it; `get-thread.ts` just didn't.
+The existing test suite never caught this because its one "no tags"
+test thread was always the *related* thread being searched for, never
+the primary thread whose own tags feed into `arrayOverlaps`.
+
+Fixed by falling back to a category-only match when the thread has no
+tags. Added a regression test (a thread posted with `tags: []` as the
+one being viewed) — confirmed it fails with the old code and passes
+with the fix. Full suite green (403 unit, 71 e2e), `npm run build`
+confirmed twice.
+
+Separately, the same incognito-Firefox modal report turned out to
+already be resolved: a cold, logged-out visit to `/forum` in real
+Firefox renders zero `<dialog>` elements at all (the New Thread modal
+isn't in the DOM for logged-out visitors), consistent with the
+dialog-visibility fix above.
+
 ## Blockers
 
 - None. `e2e/browse.spec.ts`'s CI-only facet-selection timeout above
