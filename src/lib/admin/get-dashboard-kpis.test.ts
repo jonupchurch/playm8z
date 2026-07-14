@@ -108,4 +108,38 @@ describe("getDashboardKpis (integration)", () => {
     await db.delete(postings).where(eq(postings.id, closedPosting.id));
     await db.delete(users).where(eq(users.id, closedUser.id));
   });
+
+  it("doesn't count a removed-but-still-'open' posting toward livePostings (Admin Postings 017's research.md #6)", async () => {
+    const before = await getDashboardKpis();
+
+    const [removedUser] = await db
+      .insert(users)
+      .values({ email: `dashboard-kpi-removed-${runId}@example.com`, handle: `dashkpiremoved${runId}` })
+      .returning({ id: users.id });
+
+    const [removedPosting] = await db
+      .insert(postings)
+      .values({
+        hostId: removedUser.id,
+        game: "Test Game",
+        title: "Removed posting",
+        blurb: "blurb",
+        vibe: "casual",
+        region: "na-west",
+        seatsTotal: 4,
+        seatsOpen: 4,
+        status: "open",
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+        removedAt: new Date(),
+      })
+      .returning({ id: postings.id });
+
+    const after = await getDashboardKpis();
+    expect(after.livePostings).toBe(before.livePostings);
+
+    await db.delete(postings).where(eq(postings.id, removedPosting.id));
+    await db.delete(users).where(eq(users.id, removedUser.id));
+  });
 });

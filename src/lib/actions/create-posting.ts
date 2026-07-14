@@ -1,8 +1,10 @@
 "use server";
 
+import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { postings } from "@/db/schema";
+import { postings, users } from "@/db/schema";
 import { requireVerifiedEmail, UnverifiedEmailError } from "@/lib/auth/require-verified-email";
+import { computeAutoFlagReason } from "@/lib/postings/auto-flag";
 import { postingSchema, type PostingInput } from "@/lib/validations/posting";
 
 export type CreatePostingResult =
@@ -30,9 +32,23 @@ export async function createPosting(input: PostingInput): Promise<CreatePostingR
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
 
+  // Admin Postings (017)/FR-012: a fixed, deterministic check at
+  // creation time -- not retroactively applied to postings created
+  // before this feature shipped.
+  const [[hostRow], [{ n: existingPostingCount }]] = await Promise.all([
+    db.select({ createdAt: users.createdAt }).from(users).where(eq(users.id, host.id)),
+    db.select({ n: sql<number>`count(*)::int` }).from(postings).where(eq(postings.hostId, host.id)),
+  ]);
+  const accountAgeDays = (Date.now() - hostRow.createdAt.getTime()) / 86_400_000;
+  const autoFlagReason = computeAutoFlagReason(
+    `${parsed.data.title} ${parsed.data.blurb}`,
+    accountAgeDays,
+    existingPostingCount === 0,
+  );
+
   const [row] = await db
     .insert(postings)
-    .values({ hostId: host.id, ...parsed.data, status: "open" })
+    .values({ hostId: host.id, ...parsed.data, status: "open", autoFlagReason })
     .returning({ id: postings.id });
 
   return { success: true, id: row.id };

@@ -1697,3 +1697,50 @@ may begin on any/all of them per the constitution (v1.0.0).
   "Yes", then back to the row's Ban button on Cancel) and that a
   removed posting is genuinely excluded from Browse. Full suite green
   (435 unit, 75 e2e), `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 23)
+
+### Added
+- Admin Postings (`specs/017-admin-postings/`, branch
+  `017-admin-postings` merged to `main`) — all 31 tasks complete:
+  `/admin/postings`'s stats (in queue/user-reported/auto-flagged/removed
+  today), a queue combining reported and auto-flagged postings under
+  one queue-membership formula, a computed-not-stored severity band
+  (worst of every open report's reason-implied severity and the
+  posting's auto-flag reason's own fixed severity), URL-driven filter
+  chips, and a per-posting review drawer (why it's here, author card
+  with prior-warnings/total-posts) with Approve/Remove/Warn/Ban. New
+  deterministic auto-flag ruleset (`src/lib/postings/auto-flag.ts`)
+  wired into Post a Game's (005) `create-posting.ts`. New `warnings`
+  table (this feature's only writer) and `postings.autoFlagReason`/
+  `moderationReviewedAt` columns. Ban delegates to Admin Users' (016)
+  existing `toggleUserBan` then removes the posting under review via
+  the same path Remove uses. `resolvePostingReport`/`banPostingAuthor`
+  are the project's first real callers of `logAuditEntry()` (015), also
+  retroactively wiring Admin Users' own `toggleUserBan`/
+  `removeUserContent` to it. `requireRole("moderator")` gates the route
+  and both new Server Actions independently — the fourth real consumer
+  after Content Page (014), Admin Dashboard (015), and Admin Users
+  (016) — so the real queue/drawer/resolution content can't be
+  exercised by a real session yet (no `role` column until Admin
+  Settings/024); every query/action is unit-tested directly instead,
+  and e2e covers the real, current access-denial behavior.
+
+### Fixed
+- Retroactively fixed a real over-count bug in Admin Dashboard's
+  `get-dashboard-kpis.ts` and Home's/Browse's shared `get-trending.ts`:
+  both were missing the same `removedAt IS NULL` exclusion Admin
+  Users' (016) own amendments already added to three other queries — a
+  removed-but-still-`open` posting was inflating "Live postings" and
+  could still appear in Trending.
+
+### Verified
+- Visual QA (temporary local role-gate bypass across `page.tsx` and all
+  three gated Server Actions, since `banPostingAuthor` transitively
+  re-triggers `toggleUserBan`'s own independent gate too, fully
+  reverted before commit) exercised all four resolution actions
+  end-to-end with no new bugs found. Confirmed via direct DB checks:
+  reports resolve, `warnings`/`auditEntries` rows land correctly, a
+  removed posting disappears from Browse, and Ban both bans the account
+  and removes the posting under review. Full suite green (474 unit, 77
+  e2e), `npm run build` confirmed twice.

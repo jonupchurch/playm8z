@@ -1,4 +1,4 @@
-import { eq, gte, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, reports, users } from "@/db/schema";
 import { countDistinctUsersOnDay, getActiveUserRowsSince, startOfToday } from "./activity-data";
@@ -14,6 +14,10 @@ export type DashboardKpis = {
 // FR-002/SC-001: five real-count KPIs, recalculated per request, never
 // a stale or hardcoded snapshot. "Active today" is research.md #1's
 // distinct-user union across five tables, not a presence system.
+// "Live postings" excludes a moderator-removed posting (Admin
+// Postings 017's research.md #6 -- this query predates Admin Users'
+// (016) removedAt and originally over-counted a removed-but-still-
+// 'open' posting as live).
 export async function getDashboardKpis(): Promise<DashboardKpis> {
   const today = startOfToday();
 
@@ -26,7 +30,7 @@ export async function getDashboardKpis(): Promise<DashboardKpis> {
     db
       .select({ n: sql<number>`count(*)::int` })
       .from(postings)
-      .where(eq(postings.status, "open")),
+      .where(and(eq(postings.status, "open"), isNull(postings.removedAt))),
     db
       .select({ n: sql<number>`count(*)::int` })
       .from(reports)

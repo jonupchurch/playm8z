@@ -60,6 +60,9 @@ describe("createPosting", () => {
     expect(row.status).toBe("open");
     expect(row.game).toBe("Valorant");
     expect(row.tags).toEqual(["chill", "no-toxicity"]);
+    // This account is brand-new and this is its first posting --
+    // Admin Postings (017)'s auto-flag ruleset should catch it.
+    expect(row.autoFlagReason).toBe("new_account_first_post");
   });
 
   it("blocks an unverified session and creates nothing (FR-017)", async () => {
@@ -122,5 +125,76 @@ describe("createPosting", () => {
 
     const rows = await db.select().from(postings).where(eq(postings.title, "Bad steppers"));
     expect(rows).toHaveLength(0);
+  });
+
+  it("auto-flags a scam/phishing-pattern posting (017's FR-012)", async () => {
+    const scamEmail = `post-scam-${runId}@example.com`;
+    await db.insert(users).values({
+      email: scamEmail,
+      handle: `postscam${runId}`,
+      emailVerified: new Date(),
+      createdAt: new Date(Date.now() - 365 * 86_400_000),
+    });
+    mockedAuth.mockResolvedValueOnce(fakeSession(scamEmail));
+
+    const result = await createPosting({
+      ...validInput,
+      title: "FREE SKINS CLICK HERE",
+      blurb: "Get free V-Bucks now, visit freevp.biz and claim now.",
+    });
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error("expected success");
+
+    const [row] = await db.select().from(postings).where(eq(postings.id, result.id));
+    expect(row.autoFlagReason).toBe("phishing_or_scam");
+
+    await db.delete(postings).where(eq(postings.id, result.id));
+    await db.delete(users).where(eq(users.email, scamEmail));
+  });
+
+  it("auto-flags a boosting-service posting (017's FR-012)", async () => {
+    const boostEmail = `post-boost-${runId}@example.com`;
+    await db.insert(users).values({
+      email: boostEmail,
+      handle: `postboost${runId}`,
+      emailVerified: new Date(),
+      createdAt: new Date(Date.now() - 365 * 86_400_000),
+    });
+    mockedAuth.mockResolvedValueOnce(fakeSession(boostEmail));
+
+    const result = await createPosting({
+      ...validInput,
+      title: "Cheap rank boosting, all regions",
+      blurb: "Professional boosting service, DM for rates.",
+    });
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error("expected success");
+
+    const [row] = await db.select().from(postings).where(eq(postings.id, result.id));
+    expect(row.autoFlagReason).toBe("boosting_service");
+
+    await db.delete(postings).where(eq(postings.id, result.id));
+    await db.delete(users).where(eq(users.email, boostEmail));
+  });
+
+  it("does not auto-flag an unremarkable posting from an established account", async () => {
+    const establishedEmail = `post-established-${runId}@example.com`;
+    await db.insert(users).values({
+      email: establishedEmail,
+      handle: `postestablished${runId}`,
+      emailVerified: new Date(),
+      createdAt: new Date(Date.now() - 365 * 86_400_000),
+    });
+    mockedAuth.mockResolvedValueOnce(fakeSession(establishedEmail));
+
+    const result = await createPosting({ ...validInput, title: "Ranked grind, need one more" });
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error("expected success");
+
+    const [row] = await db.select().from(postings).where(eq(postings.id, result.id));
+    expect(row.autoFlagReason).toBeNull();
+
+    await db.delete(postings).where(eq(postings.id, result.id));
+    await db.delete(users).where(eq(users.email, establishedEmail));
   });
 });

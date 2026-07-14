@@ -8,6 +8,7 @@ const runId = crypto.randomUUID().slice(0, 8);
 const email = `home-trending-${runId}@example.com`;
 const popularGame = `Popular-${runId}`;
 const rareGame = `Rare-${runId}`;
+const removedGame = `Removed-${runId}`;
 let hostId: string;
 
 beforeAll(async () => {
@@ -40,6 +41,9 @@ beforeAll(async () => {
     { ...common, game: rareGame, seatsOpen: 1, status: "open" },
     // A full posting for the rare game shouldn't count -- only 'open' rows do.
     { ...common, game: rareGame, seatsOpen: 0, status: "full" },
+    // Admin Postings (017)'s research.md #6: an open-but-removed
+    // posting shouldn't count either.
+    { ...common, game: removedGame, seatsOpen: 1, status: "open", removedAt: new Date() },
   ]);
 });
 
@@ -61,5 +65,10 @@ describe("getTrending", () => {
   it("caps results to the top 5", async () => {
     const result = await getTrending();
     expect(result.length).toBeLessThanOrEqual(5);
+  });
+
+  it("excludes an open-but-removed posting (Admin Postings 017's research.md #6)", async () => {
+    const result = await getTrending();
+    expect(result.some((row) => row.game === removedGame)).toBe(false);
   });
 });

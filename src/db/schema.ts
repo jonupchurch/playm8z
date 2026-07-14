@@ -138,6 +138,14 @@ export const postings = pgTable("postings", {
   // (ADR 0005). Home's/Browse's own open-postings queries exclude rows
   // where this is set (research.md #2); never cleared once set.
   removedAt: timestamp("removedAt", { mode: "date" }),
+  // Admin Postings (017) -- set once at creation by create-posting.ts's
+  // fixed, deterministic ruleset (research.md #2); never changed by
+  // this feature directly.
+  autoFlagReason: text("autoFlagReason"),
+  // Admin Postings (017) -- set by Approve/Warn (queue-exit without
+  // removal); left null by Remove/Ban, which exit the queue via
+  // removedAt instead. Never cleared once set.
+  moderationReviewedAt: timestamp("moderationReviewedAt", { mode: "date" }),
 });
 
 // Listing detail (006) -- its first real writer. A unique active
@@ -470,13 +478,14 @@ export type ContentBlock =
   | { type: "divider" };
 
 // Admin Dashboard (015) -- append-only audit trail (data-model.md),
-// feeding the dashboard's recent-activity feed. `logAuditEntry()` ships
-// fully built and tested here, but no other feature is retrofitted to
-// call it yet (research.md #3): Admin Users/Postings/Forum/News (all
-// not yet spec'd) are its real future writers. `actorId` null means a
-// system-generated entry. Never updated or deleted once written --
-// this table *is* the project's audit trail, so ADR 0005's "disable
-// instead of delete" doesn't apply in reverse here.
+// feeding the dashboard's recent-activity feed. Shipped with no real
+// callers; Admin Postings (017) is its first real writer
+// (Approve/Remove/Warn), and also retroactively wires Admin Users'
+// (016) own toggle-user-ban.ts/remove-user-content.ts to it, closing
+// the gap this table's own spec always anticipated. `actorId` null
+// means a system-generated entry. Never updated or deleted once
+// written -- this table *is* the project's audit trail, so ADR 0005's
+// "disable instead of delete" doesn't apply in reverse here.
 export const auditEntries = pgTable("auditEntries", {
   id: uuid("id").defaultRandom().primaryKey(),
   actorId: uuid("actorId").references(() => users.id, { onDelete: "cascade" }),
@@ -487,6 +496,27 @@ export const auditEntries = pgTable("auditEntries", {
   targetLabel: text("targetLabel"),
   reason: text("reason"),
   meta: jsonb("meta").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Admin Postings (017) -- this feature's only writer (Warn author),
+// the "first feature that needs a shared entity defines its minimal
+// shape" pattern already used for Notification/AuditEntry
+// (research.md #3). `postingId` is nullable, not a polymorphic
+// target -- Admin Forum (018)/Admin Reports (019) will very likely
+// need their own Warn action against this same table, but neither is
+// spec'd yet, so this stays exactly what this feature needs. Append-
+// only -- never updated or deleted (ADR 0005).
+export const warnings = pgTable("warnings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  moderatorId: uuid("moderatorId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  postingId: uuid("postingId").references(() => postings.id, { onDelete: "set null" }),
+  reason: text("reason"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 

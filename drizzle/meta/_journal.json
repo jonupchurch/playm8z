@@ -134,6 +134,13 @@
       "when": 1784063061209,
       "tag": "0018_nervous_thing",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1784066783345,
+      "tag": "0019_furry_tinkerer",
+      "breakpoints": true
     }
   ]
 }

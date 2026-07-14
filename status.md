@@ -5,7 +5,8 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-and Admin Users are done and merged. Admin Postings is next.
+Admin Users, and Admin Postings are done and merged. Admin Forum is
+next.
 **Last updated**: 2026-07-14
 
 ## Where things stand
@@ -2333,6 +2334,76 @@ was actually matching the search input's own echoed value, not a real
 result card).
 
 Full suite green (435 unit, 75 e2e), `npm run build` confirmed twice.
+
+## Admin Postings implemented (2026-07-14)
+
+`/admin/postings`'s main content area, all 31 tasks complete: stats (in
+queue/user-reported/auto-flagged/removed today), a queue combining
+reported and auto-flagged postings under one queue-membership formula
+(`removedAt IS NULL AND (hasOpenReport OR unreviewed autoFlagReason)`),
+a computed-not-stored severity band (worst of every open report's
+reason-implied severity and the posting's auto-flag reason's own fixed
+severity — never a stored column, this project's established
+compute-don't-duplicate precedent), URL-driven filter chips (spec.md's
+own edge case: a posting with both an open report and an auto-flag
+reason counts as "User-reported" only, never double-filed), and a
+per-posting review drawer (full posting, "why it's here," author card
+with prior-warnings/total-posts) with Approve/Remove/Warn/Ban.
+
+New deterministic, non-learned auto-flag ruleset
+(`src/lib/postings/auto-flag.ts` — fixed scam/boosting regex lists plus
+a new-account-first-post age/first-posting check) wired into Post a
+Game's (005) `create-posting.ts` at creation time. New `warnings` table
+(this feature's only writer — "first feature that needs a shared entity
+defines its minimal shape," the same pattern already used for
+Notification/AuditEntry) and `postings.autoFlagReason`/
+`moderationReviewedAt` columns.
+
+Ban delegates to Admin Users' (016) existing `toggleUserBan` directly
+(careful never to accidentally un-ban an already-banned author, since
+that action is a true toggle) then removes the posting under review via
+the same path Remove uses — banning someone without also removing the
+content that justified it would leave that content still live.
+`resolvePostingReport`/`banPostingAuthor` are this feature's — and the
+whole project's — first real callers of `logAuditEntry()` (015), also
+retroactively wiring Admin Users' own previously-unwired
+`toggleUserBan`/`removeUserContent` to it (closing a gap Admin
+Dashboard's own spec always anticipated). Also retroactively fixed a
+real over-count bug: Admin Dashboard's `get-dashboard-kpis.ts` and
+Home's/Browse's shared `get-trending.ts` were both missing the same
+`removedAt IS NULL` exclusion Admin Users' own amendments already added
+to three other queries — a removed-but-still-`open` posting was
+inflating "Live postings" and could still appear in Trending.
+
+`requireRole("moderator")` gates the route AND both new Server Actions
+independently — the fourth real consumer after Content Page (014),
+Admin Dashboard (015), and Admin Users (016) — so, same as those three,
+the real queue/drawer/resolution content can't be exercised by a real
+session yet (no `role` column until Admin Settings/024). Every query
+and action is unit/integration-tested directly instead, and
+`e2e/admin-postings.spec.ts` covers the real, current access-denial
+behavior for both an unauthenticated visitor and a logged-in
+non-moderator.
+
+**Visual QA pass found no new bugs** (a first for this project's admin
+features — Admin Dashboard and Admin Users' own QA passes each caught a
+real one): bypassed the role gate locally in `page.tsx` and all three
+gated Server Actions (`resolvePostingReport`, `banPostingAuthor`, and
+transitively `toggleUserBan` — `banPostingAuthor` re-triggers that
+action's own independent gate too, so all three needed bypassing, fully
+reverted before commit), seeded postings covering every severity/
+queue-membership/banner combination, and exercised all four resolution
+actions end-to-end in a real browser. Confirmed via direct DB checks:
+reports resolve to `resolved` on every path, `warnings`/`auditEntries`
+rows land with the correct data, a removed posting disappears from
+Browse while an untouched control posting still shows, and Ban both
+sets the author's `bannedAt` and removes the posting under review. (One
+false alarm during testing: the review drawer legitimately stays open
+after an in-drawer action, same as Admin Users' own drawer precedent —
+a naive "is this title still visible" check matched the drawer's own
+stale header text, not a lingering queue card.)
+
+Full suite green (474 unit, 77 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 
