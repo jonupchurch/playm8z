@@ -158,3 +158,11 @@ async function main() {
 }
 
 main();
+
+// Forces this file to be treated as an ES module (not a global script)
+// -- without any top-level static import/export, TypeScript's default
+// module detection puts every such script in one shared global scope,
+// so a second script also declaring `main()` (e.g. seed-news-posts.ts)
+// collides with this one on the name (a real, previously-latent bug,
+// only surfaced once a second such script existed).
+export {};

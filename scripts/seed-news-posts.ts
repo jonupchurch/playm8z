@@ -1,0 +1,98 @@
+// Dev convenience only -- Admin News doesn't exist yet to create posts
+// through the UI (quickstart.md). Run with:
+//   npx tsx scripts/seed-news-posts.ts
+// Idempotent: clears existing newsPosts before inserting the fresh
+// sample set. Includes exactly one `featured` post and one `upcoming`
+// Event post, as quickstart.md's setup expects.
+try {
+  process.loadEnvFile(".env.local");
+} catch {
+  // Missing .env.local is fine if DATABASE_URL is already set.
+}
+
+async function main() {
+  // Dynamic imports: src/db/index.ts reads DATABASE_URL at import time,
+  // and static imports are hoisted ahead of the loadEnvFile() call above
+  // regardless of source order -- deferring the import avoids that.
+  const { db } = await import("../src/db");
+  const { newsPosts } = await import("../src/db/schema");
+
+  await db.delete(newsPosts);
+
+  const DAY = 24 * 60 * 60 * 1000;
+  const now = Date.now();
+
+  const sample = [
+    {
+      title: "playm8z is now in open beta!",
+      excerpt:
+        "Anyone can now post games and find their party — no invite code needed. Here's everything that shipped for launch and what's next.",
+      category: "Announcement",
+      cover: "linear-gradient(135deg,#ffb000,#ff6b1a)",
+      readTimeMinutes: 3,
+      featured: true,
+      publishedAt: new Date(now - 0 * DAY),
+    },
+    {
+      title: "New: filter by tabletop & TTRPGs",
+      excerpt:
+        "D&D, Pathfinder, board games and more now have first-class genre filters and an in-person tabletop option.",
+      category: "Update",
+      cover: "linear-gradient(135deg,#ff6b1a,#ff3b6b)",
+      readTimeMinutes: 2,
+      publishedAt: new Date(now - 2 * DAY),
+    },
+    {
+      title: "Summer Co-op Fest — win prizes",
+      excerpt: "Two weeks of community co-op challenges with in-game rewards and a leaderboard. Mark your calendar.",
+      category: "Event",
+      cover: "linear-gradient(135deg,#35d0e0,#ff6b1a)",
+      readTimeMinutes: 2,
+      upcoming: true,
+      publishedAt: new Date(now - 4 * DAY),
+    },
+    {
+      title: "Discord integration preview",
+      excerpt: "Auto-create voice channels for your party and get LFG pings straight in Discord. Here's an early look.",
+      category: "Update",
+      cover: "linear-gradient(135deg,#ff3b6b,#ffb000)",
+      readTimeMinutes: 4,
+      publishedAt: new Date(now - 6 * DAY),
+    },
+    {
+      title: "v1.2 — faster matchmaking & fixes",
+      excerpt: "Search is 40% faster, filter chips persist across sessions, and we squashed a batch of profile bugs.",
+      category: "Patch Notes",
+      cover: "linear-gradient(135deg,#ffb000,#ff3b6b)",
+      readTimeMinutes: 5,
+      publishedAt: new Date(now - 8 * DAY),
+    },
+    {
+      title: "Party of the Month: the Deep Rock crew",
+      excerpt: "How five strangers became a weekly squad — and what makes a party actually stick together.",
+      category: "Community",
+      cover: "linear-gradient(135deg,#ff6b1a,#ffb000)",
+      readTimeMinutes: 3,
+      publishedAt: new Date(now - 10 * DAY),
+    },
+    {
+      title: "Mobile app is on the way",
+      excerpt: "Take your parties on the go. The playm8z mobile app enters closed testing next month.",
+      category: "Announcement",
+      cover: "linear-gradient(135deg,#ff3b6b,#ff6b1a)",
+      readTimeMinutes: 2,
+      publishedAt: new Date(now - 12 * DAY),
+    },
+  ];
+
+  await db.insert(newsPosts).values(sample);
+
+  console.log(`Seeded ${sample.length} news posts (1 featured, 1 upcoming Event).`);
+  process.exit(0);
+}
+
+main();
+
+// See seed-postings.ts's own comment -- forces module scope so this
+// file's `main()` doesn't collide with any sibling script's own.
+export {};
