@@ -1,0 +1,111 @@
+"use server";
+
+import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { db } from "@/db";
+import { applications, conversations, messages, postings, users } from "@/db/schema";
+import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
+import { requestActionSchema } from "@/lib/validations/inbox";
+
+export type AcceptRequestResult = { success: true; conversationId: string } | { success: false; error: string };
+
+// FR-007: only the posting's own host may accept, re-checked
+// server-side, never trusted from client state. Application status,
+// the posting's seatsOpen/status, and the new Conversation all change
+// together inside one transaction (research.md #3) -- a partial
+// failure here would silently corrupt the posting's capacity
+// accounting, which Principle V calls out as exactly the kind of seam
+// that needs this guarantee.
+export async function acceptRequest(input: { applicationId: string }): Promise<AcceptRequestResult> {
+  let host: { id: string };
+  try {
+    host = await requireVerifiedEmail();
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Not authenticated." };
+  }
+
+  const parsed = requestActionSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
+  }
+
+  try {
+    const result = await db.transaction(async (tx) => {
+      const [application] = await tx
+        .select({
+          id: applications.id,
+          applicantId: applications.applicantId,
+          status: applications.status,
+          postingId: applications.postingId,
+        })
+        .from(applications)
+        .where(eq(applications.id, parsed.data.applicationId));
+
+      if (!application || application.status !== "pending") {
+        throw new Error("This request is no longer pending.");
+      }
+
+      const [posting] = await tx
+        .select({ id: postings.id, hostId: postings.hostId, seatsOpen: postings.seatsOpen })
+        .from(postings)
+        .where(eq(postings.id, application.postingId));
+
+      if (!posting || posting.hostId !== host.id) {
+        throw new Error("You can't accept this request.");
+      }
+
+      // Guarded update, checked via .returning() -- if a concurrent
+      // accept already won (the WHERE status='pending' no longer
+      // matches once the other transaction commits), this affects zero
+      // rows and the whole transaction rolls back rather than
+      // double-decrementing seatsOpen or creating a second conversation.
+      const updated = await tx
+        .update(applications)
+        .set({ status: "accepted" })
+        .where(and(eq(applications.id, application.id), eq(applications.status, "pending")))
+        .returning({ id: applications.id });
+
+      if (updated.length === 0) {
+        throw new Error("This request is no longer pending.");
+      }
+
+      const nextSeatsOpen = Math.max(0, posting.seatsOpen - 1);
+      await tx
+        .update(postings)
+        .set({ seatsOpen: nextSeatsOpen, status: nextSeatsOpen === 0 ? "full" : undefined })
+        .where(eq(postings.id, posting.id));
+
+      const [applicant] = await tx
+        .select({ handle: users.handle })
+        .from(users)
+        .where(eq(users.id, application.applicantId));
+
+      const [conversation] = await tx
+        .insert(conversations)
+        .values({ memberIds: [host.id, application.applicantId] })
+        .returning({ id: conversations.id });
+
+      await tx.insert(messages).values({
+        conversationId: conversation.id,
+        senderId: null,
+        type: "system",
+        body: `You accepted — @${applicant?.handle ?? "player"} joined the party.`,
+      });
+
+      return { conversationId: conversation.id, postingId: posting.id };
+    });
+
+    // The client navigates to the new conversation right after this
+    // resolves -- revalidating server-side (rather than the client
+    // calling router.refresh() after router.push()) avoids a real
+    // observed race where a client-side refresh() issued immediately
+    // after push() can win and revert the navigation back to the old URL.
+    // The listing's roster (006-listing-detail) also needs to reflect
+    // the newly-accepted member.
+    revalidatePath("/inbox", "layout");
+    revalidatePath(`/listing/${result.postingId}`, "page");
+    return { success: true, conversationId: result.conversationId };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Couldn't accept this request." };
+  }
+}
