@@ -240,6 +240,12 @@ export const reports = pgTable("reports", {
   targetType: text("targetType").notNull(),
   targetId: uuid("targetId").notNull(),
   reason: text("reason"),
+  // Added by Notifications + Report modal (012) -- FR-007 requires
+  // persisting the report flow's optional free-text details, which
+  // neither data-model.md's original sketch nor Blocked Users'/Forum
+  // Thread's existing writes accounted for (both leave it null, same
+  // reasoning as `reason` starting out null before this feature).
+  details: text("details"),
   status: text("status").notNull().default("open"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
@@ -368,6 +374,30 @@ export const messages = pgTable("messages", {
   senderId: uuid("senderId").references(() => users.id, { onDelete: "cascade" }),
   type: text("type").notNull().default("text"),
   body: text("body").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Notifications + Report modal (012) -- this feature's only writer.
+// `type` is one of guidelines.md's documented values: join | accepted |
+// reply | mention | message | rating | news | system. `join`/`accepted`
+// (pending/resolved party requests) are instead synthesized live from
+// `applications` for real users (get-notifications.ts) rather than ever
+// inserted here, since no other feature calls createNotification() yet
+// (research.md #1) -- in production this table only ever holds rows a
+// future feature's own amendment writes, plus whatever this feature's
+// own tests/seed data insert directly. `actorId` is null for
+// system-originated notifications (e.g. `news`). Never removed, only
+// marked read (ADR 0005).
+export const notifications = pgTable("notifications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  actorId: uuid("actorId").references(() => users.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  targetRef: text("targetRef").notNull(),
+  read: boolean("read").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
