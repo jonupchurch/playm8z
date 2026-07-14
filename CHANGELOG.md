@@ -1393,3 +1393,38 @@ may begin on any/all of them per the constitution (v1.0.0).
   `npm run build` all verified green before merging. All 25 tasks in
   `specs/012-notifications-and-report-modal/tasks.md` checked off, plus
   Listing detail's previously-deferred T030.
+
+## [Unreleased] (cont. 14)
+
+### Added
+- **Implemented News feed**: the public `/news` page, no login
+  required, with a single featured post shown only when no category
+  filter or search is active, server-side URL-driven category/search
+  (Browse/Forum index's precedent), cumulative "Load more" pagination,
+  and a no-account-required newsletter subscribe strip.
+- **New `newsPosts` table** — minimal, read-only from this feature
+  (the future Admin News feature is the canonical writer and extends
+  it), and **new `newsletterSubscribers` table** with
+  `subscribe-newsletter.ts` — this project's first write action with
+  genuinely no session check at all, guarded only by a database-level
+  unique constraint on `email`.
+- **Two real, previously-latent bugs found and fixed, both pre-existing
+  and unrelated to this feature's own new code**: (1) a shared
+  `isUniqueViolation()`-style helper in FOUR other files
+  (`toggle-like.ts`, `toggle-subscription.ts`, Auth & Onboarding's
+  register route, Profile's `update-email.ts`) checked `err.code`
+  directly, but Drizzle wraps the raw postgres.js error in a
+  `DrizzleQueryError` whose own `code` is undefined — the real code
+  lives at `err.cause.code` — so every one of those catch branches had
+  silently never worked; fixed identically across all five call sites;
+  (2) two sibling dev-only seed scripts with no top-level import/export
+  both declared `main()` in the same TypeScript global scope and
+  collided the moment a second one existed — fixed by making both
+  explicit ES modules (`export {}`).
+- 30+ new unit/integration tests and a 7-scenario
+  `e2e/news-feed.spec.ts` covering quickstart.md Scenarios 1-2, with two
+  axe-core scans. 380 unit tests and 67 e2e tests total across the
+  whole suite, all passing, confirmed twice in a row. `npm run
+  typecheck`, `npm run lint`, `npm test`, `npm run test:e2e` (full
+  suite, all files), and `npm run build` all verified green before
+  merging. All 19 tasks in `specs/013-news-feed/tasks.md` checked off.

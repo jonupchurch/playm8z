@@ -3,8 +3,9 @@
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
-Blocked Users, Forum index, Forum Thread, Inbox/messaging, and
-Notifications + Report modal are done and merged. News feed is next.
+Blocked Users, Forum index, Forum Thread, Inbox/messaging,
+Notifications + Report modal, and News feed are done and merged.
+Content Page is next.
 **Last updated**: 2026-07-13
 
 ## Where things stand
@@ -1866,6 +1867,77 @@ session-stale dev server process holding port 3000 — the same recurring
 this feature's own code). `npm run typecheck`, `npm run lint`,
 `npm test`, `npm run test:e2e`, and `npm run build` all verified green
 before merging.
+
+## News feed implemented (2026-07-13)
+
+**News feed: implemented** — all 19 tasks in
+`specs/013-news-feed/tasks.md` complete, merged to `main`. The public
+`/news` page, no login required, with a single featured post shown
+only when no category filter or search is active, server-side
+URL-driven category/search (Browse/Forum index's precedent, since
+posts accumulate indefinitely), cumulative "Load more" pagination, and
+a no-account-required newsletter subscribe strip.
+
+**New `newsPosts` table** — minimal, read-only from this feature
+(`title`/`excerpt`/`category`/`cover`/`readTimeMinutes`/`featured`/
+`upcoming`/`publishedAt`), the same "define just what this feature
+needs" pattern Home used for `postings` before Post a Game existed —
+the future Admin News feature is the canonical writer and extends it.
+`search-news.ts` fetches one extra row past the page limit to cheaply
+derive `hasMore` without a separate `COUNT` query, and folds the
+featured post into ordinary filtering (rather than excluding it
+entirely) once any category/search is active, matching spec.md's edge
+case.
+
+**New `newsletterSubscribers` table and `subscribe-newsletter.ts`** —
+this project's first write action with genuinely no session check at
+all (a marketing email-capture form works the same whether or not the
+visitor is logged in); `email`'s database-level unique constraint is
+the actual duplicate-prevention mechanism, not an application-level
+check, mirroring `likes`' own precedent.
+
+**Two real, previously-latent bugs found and fixed, both pre-existing
+and unrelated to this feature's own new code**:
+
+1. **A shared `isUniqueViolation()`-style helper never actually worked,
+   in FIVE separate files.** `toggle-like.ts`, `toggle-subscription.ts`,
+   Auth & Onboarding's `register/route.ts`, and Profile's
+   `update-email.ts` all independently wrote the same check:
+   `"code" in err && err.code === "23505"`. Reproduced directly (insert
+   the same unique value twice, inspect the thrown error): Drizzle
+   wraps the raw `postgres.js` error in a `DrizzleQueryError`, whose own
+   `code` property is `undefined` — the real Postgres error code lives
+   one level down, at `err.cause.code`. Every one of those catch
+   branches had silently never matched a real duplicate-key error; each
+   was harmless in its own normal control flow only because the
+   surrounding code does a SELECT-based existence check before the
+   INSERT, making the catch a race-only backstop that (until now) never
+   actually caught anything. Fixed identically across all five call
+   sites. **Any future write action reaching for this pattern should
+   check `err.cause?.code` (falling back to `err.code`), not `err.code`
+   alone.**
+2. **Two sibling dev-only seed scripts collided the moment a second one
+   existed.** `scripts/seed-postings.ts` and the new
+   `scripts/seed-news-posts.ts` both use only dynamic `await import()`
+   (deferred past a `process.loadEnvFile()` call) with no top-level
+   static import/export — TypeScript's default module detection treats
+   such a file as a global script, not a module, so both files' own
+   `async function main()` declarations landed in the same shared
+   global scope and collided (`TS2393: Duplicate function
+   implementation`). Fixed by adding `export {}` to both, forcing
+   explicit module scope. **Any future standalone dev script with this
+   exact shape (env-load-then-dynamic-import, no static imports) needs
+   the same `export {}` the moment a second such script exists.**
+
+30+ new unit/integration tests (Zod schemas, `search-news.ts`'s
+featured-exclusion/AND-filtering/pagination logic including the
+whole-table test-isolation discipline Home's own `getTrending()` bug
+already established as necessary here, and `subscribe-newsletter.ts`'s
+duplicate-rejection) and a 7-scenario `e2e/news-feed.spec.ts` covering
+quickstart.md Scenarios 1-2, with two axe-core scans. 380 unit tests
+and 67 e2e tests total across the whole suite, all passing, confirmed
+twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
+run test:e2e`, and `npm run build` all verified green before merging.
 
 ## Blockers
 

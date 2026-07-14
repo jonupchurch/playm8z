@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Add a small local seed script (e.g. `scripts/seed-news-posts.ts`) inserting sample `newsPosts` rows (including exactly one `featured` and one `upcoming` Event post) — needed because Admin News doesn't exist yet to create them through the UI
+- [X] T001 Add a small local seed script (e.g. `scripts/seed-news-posts.ts`) inserting sample `newsPosts` rows (including exactly one `featured` and one `upcoming` Event post) — needed because Admin News doesn't exist yet to create them through the UI
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `newsPosts` and `newsletterSubscribers` tables to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/news.ts` — Zod schemas for `searchParams` and the subscribe email (data-model.md)
-- [ ] T005 Create `src/lib/news/search-news.ts` — validated `searchParams` → featured post + paginated, filtered/searched grid — depends on T002
+- [X] T002 Add the `newsPosts` and `newsletterSubscribers` tables to `src/db/schema.ts` (data-model.md)
+- [X] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [X] T004 [P] Create `src/lib/validations/news.ts` — Zod schemas for `searchParams` and the subscribe email (data-model.md)
+- [X] T005 Create `src/lib/news/search-news.ts` — validated `searchParams` → featured post + paginated, filtered/searched grid — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,15 +53,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit tests for `news.ts`'s schemas in `src/lib/validations/news.test.ts`
-- [ ] T007 [P] [US1] Unit tests for `search-news.ts`'s featured-exclusion, filter/search AND-combination, and pagination logic in `src/lib/news/search-news.test.ts`
-- [ ] T008 [US1] Playwright e2e spec covering browse, filter, search, "Load more," and the empty state, including an axe-core scan — creates `e2e/news-feed.spec.ts`
+- [X] T006 [P] [US1] Unit tests for `news.ts`'s schemas in `src/lib/validations/news.test.ts`
+- [X] T007 [P] [US1] Unit tests for `search-news.ts`'s featured-exclusion, filter/search AND-combination, and pagination logic in `src/lib/news/search-news.test.ts`
+- [X] T008 [US1] Playwright e2e spec covering browse, filter, search, "Load more," and the empty state, including an axe-core scan — creates `e2e/news-feed.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Build `src/components/news/news-post-card.tsx` — depends on T004
-- [ ] T010 [US1] Build `src/components/news/featured-post.tsx` — depends on T004
-- [ ] T011 [US1] Build `src/app/news/page.tsx`: fetch via `search-news.ts`, render the featured post, grid, "Load more," and empty state — depends on T005, T009, T010
+- [X] T009 [US1] Build `src/components/news/news-post-card.tsx` — depends on T004
+- [X] T010 [US1] Build `src/components/news/featured-post.tsx` — depends on T004
+- [X] T011 [US1] Build `src/app/news/page.tsx`: fetch via `search-news.ts`, render the featured post, grid, "Load more," and empty state — depends on T005, T009, T010
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -75,14 +75,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] Integration test for `subscribe-newsletter.ts` (creates a subscriber; rejects a malformed email; rejects a duplicate at the database level) in `src/lib/actions/subscribe-newsletter.test.ts`
-- [ ] T013 [US2] Add the subscribe scenario to `e2e/news-feed.spec.ts` — depends on T008 (same file)
+- [X] T012 [P] [US2] Integration test for `subscribe-newsletter.ts` (creates a subscriber; rejects a malformed email; rejects a duplicate at the database level) in `src/lib/actions/subscribe-newsletter.test.ts`
+- [X] T013 [US2] Add the subscribe scenario to `e2e/news-feed.spec.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Build `subscribe-newsletter.ts` in `src/lib/actions/subscribe-newsletter.ts` — no session check (research.md #3) — depends on T004
-- [ ] T015 [US2] Build `src/components/news/subscribe-strip.tsx` — depends on T014
-- [ ] T016 [US2] Wire `subscribe-strip.tsx` into `src/app/news/page.tsx` — depends on T011, T015
+- [X] T014 [US2] Build `subscribe-newsletter.ts` in `src/lib/actions/subscribe-newsletter.ts` — no session check (research.md #3) — depends on T004
+- [X] T015 [US2] Build `src/components/news/subscribe-strip.tsx` — depends on T014
+- [X] T016 [US2] Wire `subscribe-strip.tsx` into `src/app/news/page.tsx` — depends on T011, T015
 
 **Checkpoint**: Both user stories independently functional.
 
@@ -90,9 +90,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T017 Confirm `next build` succeeds locally and CI stays green with the new route, one Server Action, and two new tables
-- [ ] T018 Manually run quickstart.md Scenarios 1-2 end to end against local dev and confirm each passes
-- [ ] T019 [P] Update `docs/feature-list.md`, marking News feed's spec/plan/tasks as complete
+- [X] T017 Confirm `next build` succeeds locally and CI stays green with the new route, one Server Action, and two new tables
+- [X] T018 Manually run quickstart.md Scenarios 1-2 end to end against local dev and confirm each passes
+- [X] T019 [P] Update `docs/feature-list.md`, marking News feed's spec/plan/tasks as complete
 
 ---
 
