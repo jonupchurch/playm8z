@@ -226,9 +226,16 @@ test.describe("Inbox / messaging (quickstart.md Scenarios 1-3)", () => {
     // The composer's own (still-pending) value would otherwise satisfy
     // a plain getByText(freshMessage) match before the send resolves --
     // wait for it to clear (send-succeeded signal) before checking for
-    // the rendered message bubble specifically.
+    // the rendered message bubble specifically. Also scope to the
+    // message thread's own aria-live region, not the whole page: once
+    // the send resolves, the conversation list's sidebar preview text
+    // *also* updates to the same fresh message, so an unscoped
+    // getByText matches both and hits a strict-mode violation -- a
+    // real, timing-dependent race this test's own assertion could
+    // always have hit, caught by a slower CI runner (found 2026-07-14).
     await expect(composer).toHaveValue("");
-    await expect(page.getByText(freshMessage)).toBeVisible();
+    const messageThread = page.locator('[aria-live="polite"]');
+    await expect(messageThread.getByText(freshMessage)).toBeVisible();
 
     const [messageRow] = await db
       .select()

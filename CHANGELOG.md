@@ -1578,3 +1578,34 @@ may begin on any/all of them per the constitution (v1.0.0).
   centering either) — found by reproducing a user's screenshot report
   directly with a throwaway script. Fixed with one global CSS rule,
   fixing all five modals at once and any future one for free.
+
+## [Unreleased] (cont. 19)
+
+### Fixed
+- **`block-modal.tsx` and `new-thread-modal.tsx` never actually hid
+  after closing** — a more severe bug hiding behind the centering fix
+  above, found via a user's incognito-window screenshot showing a
+  stuck modal fragment. Both used an unconditional `className="flex
+  ..."` on their `<dialog>`; since author-stylesheet rules (Tailwind)
+  always beat user-agent rules regardless of specificity, this
+  permanently defeated the browser's own `dialog:not([open]) {
+  display: none }`, leaving the dialog fully rendered (mispositioned
+  top-left) forever after `.close()`. Fixed by switching both to the
+  `"hidden ... open:flex ..."` pattern already used correctly in
+  `report-modal.tsx`/`compose-modal.tsx`. Verified via a throwaway
+  Playwright script: `display: none` and a zero-size rect after
+  closing, versus a full-size rect at `(0,0)` before.
+- **`e2e/inbox.spec.ts` had a genuine strict-mode-violation race**,
+  found in real CI logs the user pasted (16 documents from a run still
+  failing after the settings-row fix): a freshly-sent message's text
+  matched both the sidebar conversation list's preview *and* the
+  message thread's own bubble, so an unscoped `getByText(freshMessage)`
+  hit two elements once the send resolved. Fixed by scoping the
+  assertion to the thread's own `[aria-live="polite"]` region.
+- `e2e/browse.spec.ts`'s "multi-select OR within a facet, AND across
+  facets" CI failure (from the same pasted logs) remains open —
+  investigated but not reproduced locally, no fix yet.
+- Full suite reconfirmed: 402 unit, 71 e2e (a first post-fix e2e run
+  showed 16 unrelated `ERR_CONNECTION_REFUSED` failures, traced to two
+  stale `next start -p 3001` servers left running from the prior day —
+  killed and reran clean). `npm run build` confirmed twice.

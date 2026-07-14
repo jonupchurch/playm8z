@@ -102,7 +102,7 @@ export function BlockModal({
       ref={dialogRef}
       aria-labelledby="block-modal-heading"
       onClose={handleDialogClose}
-      className="flex max-h-[84vh] w-110 max-w-[92vw] flex-col rounded-2xl border border-border bg-surface-2 p-0 text-text backdrop:bg-black/65 backdrop:backdrop-blur-sm"
+      className="hidden max-h-[84vh] w-110 max-w-[92vw] flex-col rounded-2xl border border-border bg-surface-2 p-0 text-text open:flex backdrop:bg-black/65 backdrop:backdrop-blur-sm"
     >
       <div className="flex shrink-0 items-center justify-between border-b border-border p-5">
         <h2 id="block-modal-heading" className="text-base font-bold text-text">

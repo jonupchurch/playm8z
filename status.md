@@ -2131,6 +2131,65 @@ script and inspecting the resulting screenshots.
 Full suite (402 unit, 71 e2e) green, e2e confirmed twice in a row,
 `npm run build` confirmed twice.
 
+## A more severe dialog bug, found via a second user report (2026-07-14)
+
+After the centering fix above shipped, the user sent a screenshot from
+an **incognito window** showing the Forum's "New thread" modal still
+visible as a small, mispositioned Cancel/Post-thread fragment stuck in
+the top-left corner — after it had supposedly been closed. This was a
+second, more severe bug hiding behind the first one.
+
+**Root cause**: `block-modal.tsx` and `new-thread-modal.tsx` both used
+an unconditional `className="flex ..."` on their `<dialog>` element.
+CSS cascade rule: author-stylesheet rules (Tailwind classes) always
+beat user-agent-stylesheet rules, regardless of selector specificity.
+The browser's own UA rule `dialog:not([open]) { display: none }` is
+what makes a closed dialog disappear — but an unconditional `flex`
+class permanently forces `display: flex`, so these two dialogs could
+**never actually hide** after `.close()`. They just lost centering
+(reverting to `position: fixed; margin: 0`, i.e. pinned top-left) while
+staying fully rendered and interactive forever. Confirmed with a
+diagnostic script: after closing, `hasAttribute("open")` was `false`
+but computed `display` was still `"flex"` with a full-size bounding
+rect at `(0, 0)`.
+
+`report-modal.tsx` and `compose-modal.tsx` already used the correct
+`"hidden ... open:flex ..."` pattern (Tailwind's `open:` variant only
+applies `flex` when the dialog's `open` attribute is present) and never
+had this bug — that pattern is now applied to all five dialogs. Fixed
+`block-modal.tsx` and `new-thread-modal.tsx` to match. Verified locally
+via a throwaway Playwright script (sign up, open New Thread modal,
+click Cancel, inspect `display`/bounding rect): `display: "none"` and a
+zero-dimension rect after the fix, plus a clean screenshot with no
+artifact.
+
+**Separately**, the user pasted all 16 real CI log documents from a
+still-failing GitHub Actions run (the settings-row fix above resolved
+one failure but not the whole job). The logs showed two more failures,
+both in files untouched by any recent commit:
+- `e2e/inbox.spec.ts`: a genuine strict-mode-violation race — a
+  freshly-sent message's text matched both the sidebar's conversation-
+  list preview *and* the message thread's own bubble once the send
+  resolved, so an unscoped `getByText(freshMessage)` hit two elements.
+  Fixed by scoping the assertion to the thread's own
+  `[aria-live="polite"]` region. This was a real, pre-existing
+  assertion ambiguity, not a product bug.
+- `e2e/browse.spec.ts`: "multi-select OR within a facet, AND across
+  facets" times out waiting for a heading after selecting a facet.
+  Investigated (full test, the `selectFacet` helper, and
+  `use-browse-url-params.ts`'s lack of any debounce on
+  `router.replace()`) but **not yet fixed** — never reproduced locally
+  across many full-suite runs this session, so this remains an open,
+  CI-environment-specific failure.
+
+Full suite reconfirmed after these two fixes: 402 unit tests and 71
+e2e tests green (the first post-fix e2e run showed 16 failures, but
+all were `net::ERR_CONNECTION_REFUSED` against two stale `next start
+-p 3001` production-build servers left running from the previous day's
+work, unrelated to these code changes — killed those processes and
+reran clean). `npm run build` confirmed twice.
+
 ## Blockers
 
-- None.
+- None. `e2e/browse.spec.ts`'s CI-only facet-selection timeout above
+  remains open and unaddressed — not currently reproducible locally.
