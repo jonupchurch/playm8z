@@ -401,6 +401,38 @@ export const notifications = pgTable("notifications", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+// News feed (013) -- this feature's own minimal, read-only shape
+// (data-model.md); the future Admin News feature is the canonical
+// writer and extends this table (e.g. a full body-content column) for
+// its own authoring needs, same "define the minimal shape now" pattern
+// as Home's original `postings` before Post a Game existed. `category`
+// is one of five hardcoded values (research.md #2), not a foreign key.
+// `featured`/`upcoming` are never written here -- Admin News owns
+// ensuring at most one post is featured at a time.
+export const newsPosts = pgTable("newsPosts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull(),
+  category: text("category").notNull(),
+  cover: text("cover"),
+  readTimeMinutes: integer("readTimeMinutes"),
+  featured: boolean("featured").notNull().default(false),
+  upcoming: boolean("upcoming").notNull().default(false),
+  publishedAt: timestamp("publishedAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// News feed (013) -- this feature's only writer. No relationship to
+// `user` -- subscribing needs no account (research.md #3), this
+// project's first write action with no auth check at all. `email`'s
+// database-level unique constraint (not an application-level check)
+// is the actual duplicate-prevention mechanism, same reasoning as
+// `likes`' own unique constraint.
+export const newsletterSubscribers = pgTable("newsletterSubscribers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
