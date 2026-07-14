@@ -12,7 +12,10 @@ as `/speckit-specify`/`/speckit-plan`/`/speckit-tasks` are run per feature.
 
 ## Exempt from the gate (infrastructure, not product surface)
 
-- **Design System / shared UI primitives** — nav shell, admin shell,
+- **Design System / shared UI primitives** — nav shell (🚀 **built**
+  2026-07-14, see `status.md`'s "Real global nav shell built" section —
+  `site-header.tsx`/`nav-links.tsx`/`profile-menu.tsx`, replacing the
+  bare logo+bell slot every prior feature had deferred to), admin shell,
   buttons, cards, tags, toggles, and the loading/error patterns (skeleton
   loading, fetch-error state, pending-submit buttons — see `status.md`'s
   fourth gap-analysis pass; this was briefly in `guidelines.md` §4.6 but

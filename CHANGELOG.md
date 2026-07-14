@@ -1504,3 +1504,34 @@ may begin on any/all of them per the constitution (v1.0.0).
   typecheck`, `npm run lint`, `npm test`, `npm run test:e2e` (full
   suite, all files), and `npm run build` all verified green before
   merging. All 21 tasks in `specs/014-content-page/tasks.md` checked off.
+
+## [Unreleased] (cont. 17)
+
+### Added
+- **Built the real global nav shell** (`site-header.tsx`, `nav-links.tsx`,
+  `profile-menu.tsx`) — Design System infrastructure, exempt from the
+  per-feature spec gate, built directly. Replaces the bare logo+bell
+  slot every prior feature deferred to: Browse/Forum/News links with
+  active-state highlighting, a "Post a game" CTA, and a signed-in
+  avatar dropdown (Profile/Inbox/Log out). Groups intentionally
+  omitted despite `sitemap.md`'s nav line still listing it (product
+  vision already deferred it — an ADR-precedent override, not an
+  oversight). **First place in the app a signed-in user can actually
+  log out.**
+
+### Fixed
+- **Maintenance mode is a `proxy.ts` *rewrite***, so the nav's first
+  attempt at hiding itself there via `usePathname()` string-matching
+  `"/maintenance"` never worked (the browser URL stays whatever route
+  the visitor actually requested). Fixed by checking `getSettings()`
+  directly in `site-header.tsx`, the same already-cached flag
+  `proxy.ts` itself gates on.
+- **`ErrorState`'s own decorative `<header>` became a duplicate banner
+  landmark** once the real global nav existed, failing axe-core on
+  404/500. Converting it to a `<div>` traded that for a *different*
+  violation (content orphaned from any landmark). Removed the logo
+  bar outright instead — fully redundant with the real nav's own logo
+  everywhere it shows except actual maintenance mode, where it's moot.
+- Both caught by the existing e2e suite, not speculative. No new
+  tests added (pure UI infra); full suite (401 unit, 71 e2e) green,
+  e2e confirmed twice in a row, `npm run build` confirmed twice.

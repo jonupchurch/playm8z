@@ -1991,6 +1991,60 @@ Settings (024) ships — revisit `e2e/content-page.spec.ts` then.**
 twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
 run test:e2e`, and `npm run build` all verified green before merging.
 
+## Real global nav shell built (2026-07-14)
+
+Prompted by the user asking, after 14 features' worth of pages were
+already live, why the deployed site still only seemed to show Home —
+every one of those pages (Browse, Forum, News, Listing detail, Content
+pages, ...) was real and reachable by URL the whole time, just not
+discoverable: every feature so far had explicitly deferred the top nav
+as future Design System infrastructure and rendered nothing but a bare
+logo + notification bell (`site-header.tsx`). Design System / shared UI
+primitives are exempt from the per-feature spec/plan/tasks gate (built
+directly, per the constitution), so this was built now rather than
+waiting for its own spec.
+
+**What shipped**: `site-header.tsx` rewritten into a real nav —
+Browse/Forum/News links (`nav-links.tsx`, active-state via
+`usePathname()`), a "Post a game" CTA, and for a signed-in visitor an
+avatar dropdown (`profile-menu.tsx`: Profile, Inbox, Log out) next to
+the existing notification bell. Groups is deliberately omitted even
+though `sitemap.md`'s nav line still lists it — same "encode the
+decision, not the stale doc" precedent as the age-policy/hard-deletes
+ADRs (product vision already deferred Groups entirely). **This is also
+the very first place a signed-in user can log out anywhere in the
+app** — no such control existed before this.
+
+**Two real bugs found and fixed while verifying against the existing
+e2e suite** (not speculative — both broke real tests):
+
+1. **Maintenance mode is a proxy.ts *rewrite*, not a distinct route**
+   (the browser URL stays whatever the visitor originally requested,
+   e.g. `/`) — so the first attempt at hiding the nav on maintenance via
+   client-side `usePathname()` matching literal `"/maintenance"` could
+   never actually catch it; the nav kept rendering during a real
+   maintenance-mode visit. Fixed by checking `getSettings()` directly
+   inside `site-header.tsx` itself (the same flag `proxy.ts` already
+   gates on, cheap and already cached) instead of guessing from the URL.
+2. **A duplicate/orphaned landmark regression on `ErrorState`** (backs
+   404/500/maintenance): it rendered its own decorative `<header>` with
+   a small logo, which — now that a real global nav `<header>` exists —
+   tripped axe-core's "at most one banner landmark" rule on 404/500 (both
+   headers present at once). Converting it to a plain `<div>` fixed that
+   but introduced a *different* violation ("all page content should be
+   contained by landmarks" — the logo Link sat outside `<main>`,
+   contained by nothing). Resolved by removing it outright: it was fully
+   redundant with the real nav's own logo on every page it's shown on,
+   except actual maintenance mode, where the nav is intentionally hidden
+   and a "go home" link would be moot anyway (every route redirects
+   there).
+
+No new schema/tests were needed (pure UI infrastructure), but the full
+existing suite was the real verification: it caught both bugs above.
+`npm run typecheck`, `npm run lint`, the full unit suite (401, unaffected)
+and the full e2e suite (71) all green, e2e confirmed twice in a row,
+`npm run build` confirmed twice.
+
 ## Blockers
 
 - None.
