@@ -9,24 +9,51 @@ import { relativeAge } from "@/components/listings/listing-card";
 import { PawMark } from "@/components/brand/paw-mark";
 import { Wordmark } from "@/components/brand/wordmark";
 import { NotificationBell, type BellPreviewItem } from "@/components/nav/notification-bell";
+import { NavLinks } from "@/components/nav/nav-links";
+import { ProfileMenu } from "@/components/nav/profile-menu";
+import { SiteHeaderFrame } from "@/components/nav/site-header-frame";
+import { getSettings } from "@/lib/settings/get-settings";
 
-// FR-001: the bell needs to be reachable from anywhere, but no shared
-// nav shell exists yet anywhere in this codebase -- every prior
-// feature explicitly deferred nav/footer as future Design System
-// infrastructure and simply rendered none (spec.md's Assumptions, same
-// wording as every feature before this one). This is the smallest
-// slot that actually satisfies FR-001: a thin sticky bar with just the
-// logo and the bell, no Browse/Groups/Forum links -- the real global
-// nav remains deferred, unchanged. Renders nothing for an
-// unauthenticated visitor (only /login-style pages hit that path,
-// since every authenticated route already redirects otherwise).
+// The real global nav, finally built directly (Design System
+// infrastructure, exempt from the per-feature spec gate) after 14
+// features in a row each deferred it and rendered nothing but a bare
+// logo + bell -- every page built so far (Browse, Forum, News,
+// Listing detail, Content pages, ...) was already live and reachable
+// by URL, just not discoverable through any actual nav.
 export async function SiteHeader() {
-  const session = await auth();
-  if (!session?.user?.email) {
+  // proxy.ts's maintenance gate is a *rewrite* (the browser URL stays
+  // whatever the visitor originally requested, e.g. "/browse"), so a
+  // pathname-based check here could never detect it -- checking the
+  // same flag directly is the only way that actually works, and it's
+  // a cheap, already-cached read (get-settings.ts).
+  const settings = await getSettings();
+  if (settings.maintenanceMode) {
     return null;
   }
 
-  const [user] = await db.select({ id: users.id }).from(users).where(eq(users.email, session.user.email));
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    return (
+      <SiteHeaderFrame>
+        <Logo />
+        <NavLinks />
+        <div className="ml-auto flex items-center gap-3">
+          <Link href="/login" className="text-sm font-semibold text-accent-2">
+            Log in
+          </Link>
+          <Link href="/post" className="rounded-lg bg-accent px-3.5 py-2 text-sm font-bold text-on-accent">
+            Post a game
+          </Link>
+        </div>
+      </SiteHeaderFrame>
+    );
+  }
+
+  const [user] = await db
+    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor })
+    .from(users)
+    .where(eq(users.email, session.user.email));
   if (!user) {
     return null;
   }
@@ -47,14 +74,28 @@ export async function SiteHeader() {
     }));
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center gap-4 border-b border-border bg-bg/85 px-6 backdrop-blur-md">
-      <Link href="/" className="flex items-center gap-2.5">
-        <PawMark size={28} />
-        <Wordmark className="text-lg" />
-      </Link>
-      <div className="ml-auto flex items-center">
+    <SiteHeaderFrame>
+      <Logo />
+      <NavLinks />
+      <div className="ml-auto flex items-center gap-3">
+        <Link
+          href="/post"
+          className="hidden rounded-lg bg-accent px-3.5 py-2 text-sm font-bold text-on-accent sm:block"
+        >
+          Post a game
+        </Link>
         <NotificationBell unreadCount={unreadCount} preview={preview} />
+        <ProfileMenu handle={user.handle ?? "player"} avatarColor={user.avatarColor} />
       </div>
-    </header>
+    </SiteHeaderFrame>
+  );
+}
+
+function Logo() {
+  return (
+    <Link href="/" className="flex items-center gap-2.5">
+      <PawMark size={28} />
+      <Wordmark className="text-lg" />
+    </Link>
   );
 }

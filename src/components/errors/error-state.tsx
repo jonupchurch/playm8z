@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { PawMark } from "@/components/brand/paw-mark";
-import { Wordmark } from "@/components/brand/wordmark";
 
 type ErrorAction =
   | { label: string; href: string; onClick?: never }
@@ -59,13 +57,10 @@ export function ErrorState({
         backgroundImage: "radial-gradient(circle at 50% 20%, rgba(255,107,26,0.13), transparent 55%)",
       }}
     >
-      <header className="p-6 sm:p-8">
-        <Link href="/" className="flex items-center gap-2.5">
-          <PawMark size={30} />
-          <Wordmark className="text-lg" />
-        </Link>
-      </header>
-
+      {/* No top logo bar -- the real site nav (site-header.tsx) already
+          renders a clickable home logo on every page this component
+          shows on, except actual maintenance mode, where every route
+          redirects here anyway and a "go home" link would be moot. */}
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20 text-center">
         <div
           aria-hidden="true"

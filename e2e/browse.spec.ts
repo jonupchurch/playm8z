@@ -205,10 +205,9 @@ test.describe("Browse", () => {
   }) => {
     await page.goto("/browse?q=nonexistent-game-xyz");
     await expect(page.getByText("No parties match those filters.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Post a game" })).toHaveAttribute(
-      "href",
-      "/post?game=nonexistent-game-xyz",
-    );
+    // Scoped by href, not role+name -- the nav's own "Post a game" link
+    // (site-header.tsx) now shares this exact accessible name.
+    await expect(page.locator('a[href="/post?game=nonexistent-game-xyz"]')).toBeVisible();
 
     await page.getByRole("button", { name: "Clear filters" }).click();
     await expect(page).toHaveURL("http://localhost:3000/browse");
