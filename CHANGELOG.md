@@ -1428,3 +1428,31 @@ may begin on any/all of them per the constitution (v1.0.0).
   typecheck`, `npm run lint`, `npm test`, `npm run test:e2e` (full
   suite, all files), and `npm run build` all verified green before
   merging. All 19 tasks in `specs/013-news-feed/tasks.md` checked off.
+
+## [Unreleased] (cont. 15)
+
+### Fixed
+- **Production was down (every page returning HTTP 500)**: the Neon
+  database backing `https://playm8z.vercel.app` had only the four
+  Auth.js tables (`account`/`session`/`user`/`verificationToken`) — the
+  result of a single `drizzle-kit push` done at initial Vercel/Neon
+  setup, never repeated since. All 15 migrations generated since then
+  (postings, browse, profile, forum, inbox, notifications, news, the
+  `settings` table, etc.) were applied to local dev Postgres via
+  `db:migrate` but never to production — there is no migration step
+  anywhere in the deploy pipeline (`build` is plain `next build`). This
+  stayed invisible because Google OAuth sign-in only touches the four
+  tables that did exist; it became fatal once `proxy.ts`'s
+  maintenance-mode gate started querying `settings` on every request
+  (`relation "settings" does not exist`). Fixed by pulling the
+  production `DATABASE_URL` to an isolated scratch file (never
+  `.env.local`) and running `drizzle-kit push` against it to reconcile
+  prod with `schema.ts` — confirmed safe first by checking all 15
+  migration files are additive-only (no `DROP TABLE`/`TRUNCATE`) — then
+  manually inserting the one missing default `settings` row (`push`
+  reconciles structure only, not migration files' seed `INSERT`s).
+  Verified `/`, `/login`, `/browse`, `/news`, and `/forum` all return
+  200 in production afterward. No application code changed. **Every
+  future feature that touches `src/db/schema.ts` needs its migration
+  separately pushed to production — committing the migration file alone
+  does nothing for prod.**
