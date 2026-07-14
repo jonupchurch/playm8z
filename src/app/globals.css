@@ -72,6 +72,21 @@ body {
   color: var(--color-text);
 }
 
+/* Tailwind's preflight resets `margin: 0` on every element (including
+   `<dialog>`), which silently overrides the browser's own UA-stylesheet
+   centering rule for an open modal dialog (`dialog:modal { margin: auto }`).
+   Every native <dialog>-based modal in this app (block-modal.tsx,
+   unblock-modal.tsx, compose-modal.tsx, new-thread-modal.tsx,
+   report-modal.tsx) has been silently rendering pinned to the
+   top-left of the viewport instead of centered, since none of them set
+   an explicit centering utility class of their own -- found 2026-07-14
+   while investigating a user-reported "new thread modal looks broken"
+   report. Restoring the browser's own default here fixes all of them
+   at once, and any future <dialog>-based modal for free. */
+dialog:modal {
+  margin: auto;
+}
+
 @keyframes floaty {
   0%,
   100% {

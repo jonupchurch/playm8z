@@ -8,6 +8,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { credentialsSchema } from "@/lib/validations/auth";
 import { reactivateOnSignIn } from "@/lib/auth/reactivate-on-sign-in";
+import { verifyGoogleEmail } from "@/lib/auth/verify-google-email";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -20,9 +21,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // account (user.deactivatedAt set) reactivates automatically on
     // its next successful sign-in -- no separate "undo" step. Runs for
     // both providers; a no-op UPDATE when already null.
-    async signIn({ user }) {
+    //
+    // Also fixes a real bug (verify-google-email.ts): the Google
+    // provider's own `profile()` below computes `emailVerified` from
+    // Google's `email_verified` claim, but @auth/core's OAuth callback
+    // handler unconditionally forces `emailVerified: null` for a
+    // brand-new account, overriding it.
+    async signIn({ user, account, profile }) {
       if (user.id) {
         await reactivateOnSignIn(user.id);
+      }
+      if (account?.provider === "google" && profile?.email_verified && user.id) {
+        await verifyGoogleEmail(user.id);
       }
       return true;
     },
