@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts`, Inbox's `accept-request.ts`/`decline-request.ts` (`011`), and Blocked Users' `reports`/`blocks` tables (`008`) all exist in the codebase before starting — all are direct dependencies of this feature
+- [X] T001 Confirm `src/lib/auth/require-verified-email.ts`, Inbox's `accept-request.ts`/`decline-request.ts` (`011`), and Blocked Users' `reports`/`blocks` tables (`008`) all exist in the codebase before starting — all are direct dependencies of this feature
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add the `notifications` table to `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/notifications.ts` — Zod schemas for report reason/details/target and mark-read input (data-model.md)
-- [ ] T005 [P] Create `src/lib/notifications/create-notification.ts` — the reusable helper (research.md #1; no callers wired up by this feature)
-- [ ] T006 Create `src/lib/notifications/get-notifications.ts` — filtered (All/Unread/Requests/Forum/System) and Today/Earlier-grouped read — depends on T002
+- [X] T002 Add the `notifications` table to `src/db/schema.ts` (data-model.md)
+- [X] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [X] T004 [P] Create `src/lib/validations/notifications.ts` — Zod schemas for report reason/details/target and mark-read input (data-model.md)
+- [X] T005 [P] Create `src/lib/notifications/create-notification.ts` — the reusable helper (research.md #1; no callers wired up by this feature)
+- [X] T006 Create `src/lib/notifications/get-notifications.ts` — filtered (All/Unread/Requests/Forum/System) and Today/Earlier-grouped read — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,18 +54,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `notifications.ts`'s schemas in `src/lib/validations/notifications.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `get-notifications.ts`'s filter/grouping logic in `src/lib/notifications/get-notifications.test.ts`
-- [ ] T009 [P] [US1] Integration test for `mark-notification-read.ts` and `mark-all-read.ts` in `src/lib/actions/mark-notification-read.test.ts`
-- [ ] T010 [US1] Playwright e2e spec covering the bell dropdown, full-page filters, mark-read/mark-all-read, and the empty state, including an axe-core scan — creates `e2e/notifications.spec.ts`
+- [X] T007 [P] [US1] Unit tests for `notifications.ts`'s schemas in `src/lib/validations/notifications.test.ts`
+- [X] T008 [P] [US1] Unit tests for `get-notifications.ts`'s filter/grouping logic in `src/lib/notifications/get-notifications.test.ts`
+- [X] T009 [P] [US1] Integration test for `mark-notification-read.ts` and `mark-all-read.ts` in `src/lib/actions/mark-notification-read.test.ts`
+- [X] T010 [US1] Playwright e2e spec covering the bell dropdown, full-page filters, mark-read/mark-all-read, and the empty state, including an axe-core scan — creates `e2e/notifications.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build `mark-notification-read.ts` in `src/lib/actions/mark-notification-read.ts` — depends on T004
-- [ ] T012 [US1] Build `mark-all-read.ts` in `src/lib/actions/mark-all-read.ts` — depends on T004
-- [ ] T013 [US1] Build `src/components/nav/notification-bell.tsx` — a real disclosure widget (`aria-expanded`/`aria-haspopup`) — depends on T006
-- [ ] T014 [US1] Build `src/app/notifications/page.tsx`: filters, Today/Earlier grouping, mark-read/mark-all-read, empty state — depends on T006, T011, T012
-- [ ] T015 [US1] Wire `notification-bell.tsx` into the shared nav shell's existing slot — depends on T013
+- [X] T011 [US1] Build `mark-notification-read.ts` in `src/lib/actions/mark-notification-read.ts` — depends on T004
+- [X] T012 [US1] Build `mark-all-read.ts` in `src/lib/actions/mark-all-read.ts` — depends on T004
+- [X] T013 [US1] Build `src/components/nav/notification-bell.tsx` — a real disclosure widget (`aria-expanded`/`aria-haspopup`) — depends on T006
+- [X] T014 [US1] Build `src/app/notifications/page.tsx`: filters, Today/Earlier grouping, mark-read/mark-all-read, empty state — depends on T006, T011, T012
+- [X] T015 [US1] Wire `notification-bell.tsx` into the shared nav shell's existing slot — depends on T013
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -79,11 +79,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T016 [US2] Add the accept/decline-from-notification scenario to `e2e/notifications.spec.ts`, confirming identical results to Inbox's own flow — depends on T010 (same file)
+- [X] T016 [US2] Add the accept/decline-from-notification scenario to `e2e/notifications.spec.ts`, confirming identical results to Inbox's own flow — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T017 [US2] Wire Accept/Decline controls on request-type notification rows directly to Inbox's existing `accept-request.ts`/`decline-request.ts` (research.md #2) — depends on T014
+- [X] T017 [US2] Wire Accept/Decline controls on request-type notification rows directly to Inbox's existing `accept-request.ts`/`decline-request.ts` (research.md #2) — depends on T014
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -97,14 +97,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T018 [P] [US3] Integration test for `submit-report.ts` (creates a `reports` row with a real reason; the optional `blocks` row; blocked for an unverified session) in `src/lib/actions/submit-report.test.ts`
-- [ ] T019 [US3] Add the report-flow scenario (with/without "Also block," gate-blocked) to `e2e/notifications.spec.ts`, including an axe-core scan of the report modal — depends on T016 (same file)
+- [X] T018 [P] [US3] Integration test for `submit-report.ts` (creates a `reports` row with a real reason; the optional `blocks` row; blocked for an unverified session) in `src/lib/actions/submit-report.test.ts`
+- [X] T019 [US3] Add the report-flow scenario (with/without "Also block," gate-blocked) to `e2e/notifications.spec.ts`, including an axe-core scan of the report modal — depends on T016 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Build `submit-report.ts` in `src/lib/actions/submit-report.ts` — depends on T004
-- [ ] T021 [US3] Build `src/components/reports/report-modal.tsx` — the 3-step flow, following the established dialog pattern — depends on T020
-- [ ] T022 [US3] Wire `report-modal.tsx` into Listing detail's newly-un-deferred Report action (`006-listing-detail`'s amended FR-019/T030) — depends on T021
+- [X] T020 [US3] Build `submit-report.ts` in `src/lib/actions/submit-report.ts` — depends on T004
+- [X] T021 [US3] Build `src/components/reports/report-modal.tsx` — the 3-step flow, following the established dialog pattern — depends on T020
+- [X] T022 [US3] Wire `report-modal.tsx` into Listing detail's newly-un-deferred Report action (`006-listing-detail`'s amended FR-019/T030) — depends on T021
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -112,9 +112,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T023 Confirm `next build` succeeds locally and CI stays green with the new route, the nav-slot addition, the new table, and the reused `reports`/`blocks` writes
-- [ ] T024 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T025 [P] Update `docs/feature-list.md`, marking Notifications + Report modal's spec/plan/tasks as complete
+- [X] T023 Confirm `next build` succeeds locally and CI stays green with the new route, the nav-slot addition, the new table, and the reused `reports`/`blocks` writes
+- [X] T024 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [X] T025 [P] Update `docs/feature-list.md`, marking Notifications + Report modal's spec/plan/tasks as complete
 
 ---
 

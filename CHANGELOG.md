@@ -1337,3 +1337,59 @@ may begin on any/all of them per the constitution (v1.0.0).
   run test:e2e` (full suite, all files), and `npm run build` all
   verified green before merging. All 31 tasks in
   `specs/011-inbox-messaging/tasks.md` checked off.
+
+## [Unreleased] (cont. 13)
+
+### Added
+- **Implemented Notifications + Report modal**: a nav-level bell
+  dropdown (accurate unread count + preview) plus a full
+  `/notifications` page (All/Unread/Requests/Forum/System filters,
+  Today/Earlier grouping, mark-read/mark-all-read, empty state), and a
+  reusable, canonical 3-step Report modal (reason → optional details +
+  "Also block" → done).
+- **New `notifications` table and a `createNotification()` helper**,
+  shipped with no live callers yet (each already-existing write
+  action's own retrofit is tracked in `docs/future-work.md`),
+  demonstrated against seeded data plus one genuinely live source:
+  pending/resolved join-request Applications are synthesized into
+  "request" items, the same pattern Inbox's own merged `/inbox` list
+  uses — except this feed also keeps `accepted`/`declined` ones around
+  (Inbox's own list only ever shows `pending`) so a resolved request
+  still shows its resolved state instead of disappearing. Accept/Decline
+  on a request notification call Inbox's (`011`) existing
+  `accept-request.ts`/`decline-request.ts` directly — no duplicated
+  transaction logic.
+- **Extends Blocked Users' (`008`) `reports` table** with its first real
+  `reason` values and a new `details` column (data-model.md's original
+  sketch specified `details` as validated input but never actually
+  added a column for it). `submit-report.ts` decouples "what's
+  reported" from "who gets blocked" via an explicit `blockUserId`,
+  separate from `targetId` — reporting a posting blocks its host, not
+  the posting id.
+- **Retroactively un-defers Listing detail's (`006`) Report action**
+  (T030): the apply panel reports the posting (blocking its host); each
+  Q&A entry reports its asker directly.
+- **Three real issues found and fixed**: (1) no shared nav shell exists
+  anywhere in this codebase (every prior feature deferred it as future
+  Design System infra) — created the smallest possible slot, a thin
+  `SiteHeader` (logo + bell only) in the root layout, and shrank
+  Inbox's own fixed `h-screen` layout by the new header's height so it
+  doesn't overflow; (2) a client component imported a runtime function
+  from the same module that also exported the DB-touching
+  `getNotifications()`, pulling the `postgres` driver into the browser
+  bundle and crashing every page — fixed by splitting the pure
+  filter/grouping logic into its own client-safe `filter-notifications.ts`
+  (Inbox's own `InboxItem` import avoided this only because it was
+  type-only, which a runtime function import doesn't get for free); (3)
+  the same axe-core color-contrast violation class Inbox already hit
+  once (`text-dim` on an accent-tinted background, 4.37:1) — fixed with
+  `text-muted`.
+- 30+ new unit/integration tests and a 9-scenario
+  `e2e/notifications.spec.ts` covering quickstart.md Scenarios 1-3 plus
+  unauthenticated-redirect and empty-state, including three axe-core
+  scans. 359 unit tests and 60 e2e tests total across the whole suite,
+  all passing, confirmed twice in a row. `npm run typecheck`, `npm run
+  lint`, `npm test`, `npm run test:e2e` (full suite, all files), and
+  `npm run build` all verified green before merging. All 25 tasks in
+  `specs/012-notifications-and-report-modal/tasks.md` checked off, plus
+  Listing detail's previously-deferred T030.

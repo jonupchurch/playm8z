@@ -3,9 +3,9 @@
 **Phase**: Project-wide spec/plan/tasks gate closed. Implementing
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
-Blocked Users, Forum index, Forum Thread, and Inbox/messaging are done
-and merged. Notifications + Report modal is next.
-**Last updated**: 2026-07-14
+Blocked Users, Forum index, Forum Thread, Inbox/messaging, and
+Notifications + Report modal are done and merged. News feed is next.
+**Last updated**: 2026-07-13
 
 ## Where things stand
 
@@ -1750,6 +1750,122 @@ features; a fresh server resolved it cleanly, unrelated to this
 feature's own code). `npm run typecheck`, `npm run lint`, `npm test`,
 `npm run test:e2e`, and `npm run build` all verified green before
 merging.
+
+## Notifications + Report modal implemented (2026-07-13)
+
+**Notifications + Report modal: implemented** — all 25 tasks in
+`specs/012-notifications-and-report-modal/tasks.md` complete, merged to
+`main`. A nav-level bell dropdown (accurate unread count + preview of
+the most recent unread items) plus a full `/notifications` page
+(All/Unread/Requests/Forum/System filters, Today/Earlier grouping,
+mark-read/mark-all-read, an empty state), and a reusable, canonical
+3-step Report modal (reason taxonomy → optional details + "Also block"
+→ done).
+
+**New `notifications` table and a `createNotification()` helper** —
+shipped with zero live callers, on purpose (research.md #1, matching
+the same pattern already established by `requireVerifiedEmail()`/
+`requireRole()`): retrofitting every already-existing write action
+(apply, accept/decline, forum reply/mention, direct message) to
+actually call it is each of those already-merged features' own
+follow-up, tracked in `docs/future-work.md`. This feature demonstrates
+the mechanism against seeded data and one genuinely live source:
+pending/resolved join-request `applications` are synthesized into
+"request" notification items exactly like Inbox's own merged
+`/inbox` list, except this feed also keeps `accepted`/`declined` ones
+around (Inbox's own request list only ever shows `pending`) so a
+resolved request still displays its resolved state ("✓ You added
+@handle to your party" / "Request declined") instead of vanishing.
+Accept/Decline on a request notification call Inbox's (`011`) existing
+`accept-request.ts`/`decline-request.ts` directly — no duplicated
+Application/Posting/Conversation transaction logic.
+
+**Extends Blocked Users' (`008`) `reports` table** with its first real
+`reason` values (Blocked Users'/Forum Thread's existing writes continue
+to leave it null) and a new `details` column — data-model.md's original
+sketch specified `details` as a Zod-validated field but never actually
+added a column to persist it, a gap only surfaced once the write path
+was actually implemented (the same class of retroactive schema fix as
+Inbox's `lastReadAt`/Forum Thread's `threadSubscriptions` unique
+constraint). `submit-report.ts` decouples "what's being reported" from
+"who gets blocked" via an explicit `blockUserId`, separate from
+`targetId` — reporting a posting targets the posting, but "Also block"
+needs to block its *host*, not the posting id itself; report-modal.tsx
+only renders the block checkbox when its caller supplies one.
+
+**Retroactively un-defers Listing detail's (`006`) Report action** —
+T030, previously blocked on this feature existing, is now complete: the
+apply panel's Report button targets the posting (blocking its host),
+and each Q&A entry's Report link targets its own asker directly
+(`targetType='user'`, since `reports.targetType`'s fixed enum has no
+"question" variant).
+
+**Three real issues found and fixed**:
+
+1. No shared nav shell exists anywhere in this codebase — every prior
+   feature's spec explicitly deferred "the top nav bar" as future
+   Design System infrastructure and simply rendered none, so there was
+   no slot for a persistent bell to live in. Rather than either
+   building a full global nav (real scope creep) or skipping the bell's
+   cross-page reachability (failing FR-001), this feature created the
+   smallest possible slot itself: a thin sticky `SiteHeader` (logo +
+   bell only, no nav links) mounted once in the root layout, rendering
+   nothing for an unauthenticated visitor. The one real side effect:
+   Inbox's own `/inbox` layout used a fixed `h-screen` two-pane grid,
+   which would now overflow the viewport by the new header's height —
+   fixed with a one-line `h-[calc(100vh-3.5rem)]` amendment.
+2. A client component (`notifications-list.tsx`) imported
+   `filterAndGroupNotifications` — a runtime function — from the same
+   module that also exported the DB-touching `getNotifications()`.
+   Importing any runtime value (not just a type) from a module pulls
+   the *entire* module into the client bundle, so Turbopack tried to
+   bundle the `postgres` driver for the browser and crashed every
+   single page in the app (`Module not found: Can't resolve 'fs'`).
+   Inbox's own `conversation-list.tsx` imports `InboxItem` from
+   `get-inbox-list.ts` the same way this file imported types, but as a
+   `type`-only import, which TypeScript erases entirely — that's why
+   Inbox never hit this. Fixed by splitting the pure, DB-free
+   filter/grouping logic and its types into their own
+   `filter-notifications.ts`, safe for client components to import from
+   directly; `get-notifications.ts` now holds only the server-only
+   `getNotifications()` DB query. Caught immediately by the first real
+   e2e run (every test failed at the login page, which was itself
+   broken by this bundle crash) rather than by typecheck/lint/unit
+   tests, none of which exercise real bundling.
+3. The same axe-core color-contrast violation class Inbox already hit
+   once (`request-banner.tsx`'s `text-dim` on an accent-tinted
+   background) recurred here: the Report modal's reason description
+   text at `text-dim` on a selected reason's `bg-accent-2/10`
+   background measured 4.37:1 against the required 4.5:1. Fixed the
+   same way — switched to `text-muted`.
+
+Also found and fixed a genuine test-authoring bug in this feature's own
+e2e spec, not a product bug: two early draft assertions ("the Requests
+filter is empty" and "0 unread after Mark all read") assumed pending
+join-requests had already been resolved by tests that actually run
+*later* in the same file — fixed by asserting the correct in-progress
+counts (2 pending, not 0) and adding a dedicated, fully isolated user
+with zero data for the one legitimate empty-state check.
+
+Every write action (mark-read/mark-all-read/submit-report) extends
+`requireVerifiedEmail()`, matching this project's uniform convention
+even for lightweight actions (Post a Game's `toggleSavedListing`
+precedent) rather than inventing a lighter "just logged in" tier.
+
+30+ new unit/integration tests (Zod schemas, `filter-notifications.ts`'s
+pure filter/group logic, `create-notification.ts`, `get-notifications.ts`'s
+merge behavior including the withdrawn-application exclusion, both
+mark-read actions, and `submit-report.ts` including the decoupled-block
+case) and a 9-scenario `e2e/notifications.spec.ts` covering quickstart.md
+Scenarios 1-3 plus the unauthenticated-redirect and empty-state cases,
+with three axe-core scans (bell dropdown, notifications page, report
+modal). 359 unit tests and 60 e2e tests total across the whole suite,
+all passing, confirmed twice in a row (after killing a long-lived,
+session-stale dev server process holding port 3000 — the same recurring
+"too many clients"-class issue noted in earlier features, unrelated to
+this feature's own code). `npm run typecheck`, `npm run lint`,
+`npm test`, `npm run test:e2e`, and `npm run build` all verified green
+before merging.
 
 ## Blockers
 
