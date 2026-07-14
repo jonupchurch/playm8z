@@ -1456,3 +1456,51 @@ may begin on any/all of them per the constitution (v1.0.0).
   future feature that touches `src/db/schema.ts` needs its migration
   separately pushed to production — committing the migration file alone
   does nothing for prod.**
+- Wired a `vercel-build` script (`drizzle-kit push --verbose && next
+  build`) into `package.json` so this can't recur structurally — Vercel
+  runs `vercel-build` instead of `build` when present, so every future
+  deploy reconciles schema before building. Deliberately no `--force`
+  (that only auto-approves data-loss statements; every migration so far
+  has been additive, matching ADR 0005): a genuinely destructive future
+  migration should fail the build loudly, not auto-apply silently.
+  Verified locally end-to-end and in a real production deploy.
+
+## [Unreleased] (cont. 16)
+
+### Added
+- **Implemented Content Page**: a slug-based public page at
+  `/pages/[slug]`, block-rendered from a single JSONB array (Heading/
+  Paragraph/List/Quote/Callout/Divider) on a new `contentPages` table,
+  with an inline moderator-or-higher edit mode directly on the page
+  itself — batched local-state add/reorder/delete/edit with an explicit
+  Save/Cancel (no per-keystroke autosave), and an independent Publish/
+  Unpublish toggle. An unpublished (draft) page is indistinguishable
+  from a genuinely missing slug for anyone below moderator — both 404.
+- **`require-role.ts` (Error Pages, 002)'s first real consumer** — both
+  the draft-visibility check (wrapped in a try/catch converting any
+  rejection into the same `notFound()` a missing slug gets) and the two
+  new Server Actions (`save-content-page.ts`, `toggle-page-status.ts`,
+  called directly/un-caught) reuse it. Its rank check is still
+  hardcoded to `user` for every session (no `role` column exists until
+  Admin Settings/024), so today every real session — including a
+  genuinely logged-in one — is correctly rejected by the moderator
+  gate; this is expected, not a bug.
+- **A genuine, structural testing gap, not a shortcut**: User Stories 2
+  and 3 (inline edit, publish/unpublish) are fully implemented, real
+  code paths, but no test account can currently pass
+  `requireRole("moderator")` to exercise them through an actual browser
+  session. `save-content-page.test.ts`/`toggle-page-status.test.ts`
+  cover the persistence logic directly by mocking `requireRole` (both
+  the "passes" and "rejects" cases); `e2e/content-page.spec.ts` covers
+  everything genuinely reachable today — public reading of all six
+  block types (axe-clean), 404 for a missing/draft slug for both an
+  anonymous and a logged-in non-moderator visitor, and confirming no
+  edit controls render for that non-moderator session either. The "a
+  real moderator succeeds" e2e scenario stays untestable until Admin
+  Settings ships the real `role` column.
+- 21 new unit/integration tests and a 4-scenario `e2e/content-page.spec.ts`
+  with one axe-core scan. 401 unit tests and 71 e2e tests total across
+  the whole suite, all passing, confirmed twice in a row. `npm run
+  typecheck`, `npm run lint`, `npm test`, `npm run test:e2e` (full
+  suite, all files), and `npm run build` all verified green before
+  merging. All 21 tasks in `specs/014-content-page/tasks.md` checked off.

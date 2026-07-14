@@ -4,9 +4,9 @@
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
-Notifications + Report modal, and News feed are done and merged.
-Content Page is next.
-**Last updated**: 2026-07-13
+Notifications + Report modal, News feed, and Content Page are done and
+merged. Admin Dashboard is next.
+**Last updated**: 2026-07-14
 
 ## Where things stand
 
@@ -1936,6 +1936,58 @@ already established as necessary here, and `subscribe-newsletter.ts`'s
 duplicate-rejection) and a 7-scenario `e2e/news-feed.spec.ts` covering
 quickstart.md Scenarios 1-2, with two axe-core scans. 380 unit tests
 and 67 e2e tests total across the whole suite, all passing, confirmed
+twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
+run test:e2e`, and `npm run build` all verified green before merging.
+
+## Content Page implemented (2026-07-14)
+
+**Content Page: implemented** — all 21 tasks in
+`specs/014-content-page/tasks.md` complete, merged to `main`. A
+slug-based public page at `/pages/[slug]`, block-rendered from a single
+JSONB array (Heading/Paragraph/List/Quote/Callout/Divider) on a new
+`contentPages` table, with an inline moderator-or-higher edit mode
+directly on the page itself (no separate admin editor screen): batched
+local-state add/reorder/delete/edit with an explicit Save/Cancel (no
+per-keystroke autosave), and an independent Publish/Unpublish toggle.
+An unpublished (draft) page is indistinguishable from a genuinely
+missing slug for anyone below moderator — both 404, never a "coming
+soon" state, so drafts can't be discovered by URL-guessing.
+
+**`require-role.ts` (Error Pages, 002)'s first real consumer** — both
+the draft-visibility check and the two new Server Actions
+(`save-content-page.ts`, `toggle-page-status.ts`) call it directly.
+Its rank check is still hardcoded to `user` for every session (no
+`role` column exists until Admin Settings/024 adds one), so **today,
+every real session — including a genuinely logged-in one — is rejected
+by the moderator gate**, same as before this feature existed. This is
+expected, not a bug: the page-load check wraps `requireRole` in a
+try/catch specifically to convert that rejection into the same
+`notFound()` a missing slug gets (never leaking that a draft exists via
+a distinct 401/403), and the two Server Actions call it directly,
+un-caught, so a rejection renders the same forbidden/unauthorized
+boundary any future `/admin/*` page will eventually use.
+
+**Real, structural consequence for testing**: User Story 2 (inline
+edit) and User Story 3 (publish/unpublish) are fully implemented, real
+code paths — but no test account, however constructed, can currently
+pass `requireRole("moderator")` to exercise them through an actual
+browser session. Handled by mocking `requireRole` directly in
+`save-content-page.test.ts`/`toggle-page-status.test.ts` (proving the
+persistence logic is correct once a real moderator session exists,
+exactly what Admin Settings shipping the `role` column will unlock)
+plus a real rejection-path test with `requireRole` throwing (today's
+actual behavior). `e2e/content-page.spec.ts` covers what's genuinely
+reachable today: public reading (all six block types, axe-clean),
+404 for a missing slug, 404 for a draft page for both an anonymous
+visitor and a logged-in non-moderator, and confirming no edit controls
+render for that non-moderator session either. **US2/US3's "a real
+moderator succeeds" scenario stays untestable end-to-end until Admin
+Settings (024) ships — revisit `e2e/content-page.spec.ts` then.**
+
+21 new unit/integration tests (block discriminated-union Zod schema,
+`get-content-page.ts`, and both Server Actions) and a 4-scenario
+`e2e/content-page.spec.ts` with one axe-core scan. 401 unit tests and
+71 e2e tests total across the whole suite, all passing, confirmed
 twice in a row. `npm run typecheck`, `npm run lint`, `npm test`, `npm
 run test:e2e`, and `npm run build` all verified green before merging.
 
