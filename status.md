@@ -2078,7 +2078,58 @@ table entirely, confirmed the test failed the old way, applied the
 fix, confirmed it now passes against a truly empty table). No other
 e2e spec has this same "assumes a pre-seeded singleton row" shape
 (checked: `maintenance.spec.ts` was the only file calling `.limit(1)`
-in `e2e/`).
+in `e2e/`). **CI is still failing after this fix** — reproduced the
+exact CI scenario locally (a truly fresh Postgres database, `drizzle-kit
+push --force`, matching placeholder `AUTH_SECRET`/Google env vars, `CI=true`)
+and the full 71-test e2e suite passed clean, so whatever's still
+failing in the real GitHub Actions run is specific to that environment
+in a way this reproduction didn't capture — couldn't pull the actual
+Playwright failure output to diagnose further (`gh` isn't authenticated
+in this environment, and the raw job-logs API requires auth even for
+public repos). Needs either a `GH_TOKEN`/`gh auth login` to actually
+read the failing run's output, or the user checking the Playwright
+HTML report artifact GitHub Actions uploads on failure.
+
+## Two more real bugs found and fixed (2026-07-14), from user reports
+
+**Google OAuth sign-ins were permanently stuck "unverified," blocking
+posting/applying/messaging, with no way to ever pass verification.**
+`src/auth.ts`'s Google provider `profile()` correctly computes
+`emailVerified` from Google's own `email_verified` claim — but
+`@auth/core`'s own OAuth callback handler unconditionally forces
+`emailVerified: null` when creating a brand-new user with no existing
+account found, overriding it. This is core `next-auth`/`@auth/core`
+behavior, not something fixable via provider config. Fixed by adding
+`verify-google-email.ts` (unit tested), called from the existing
+`signIn` callback for any Google sign-in where Google's own claim says
+verified — runs on every sign-in, not just creation, so it also
+retroactively fixes any account already stuck this way. The user's own
+already-stuck production account was manually patched at the same time
+so they weren't blocked waiting for the next deploy.
+
+**A systemic dialog-centering bug affecting every native `<dialog>`-based
+modal in the app** (`block-modal.tsx`, `unblock-modal.tsx`,
+`compose-modal.tsx`, `new-thread-modal.tsx`, `report-modal.tsx` — Blocked
+Users, Inbox, Forum, and Notifications respectively). Tailwind's
+preflight resets `margin: 0` on every element, silently overriding the
+browser's own UA-stylesheet centering rule for an open modal dialog
+(`dialog:modal { margin: auto }`) — every one of these modals has been
+rendering pinned to the top-left of the viewport, not centered, since
+its own feature shipped. Never caught by any e2e test because
+Playwright's functional assertions (element present, text visible,
+click works) don't care about visual centering, and axe-core doesn't
+check it either — purely a visual defect invisible to every automated
+check this project runs. Found by reproducing a user's screenshot
+report directly with a throwaway Playwright script (log in, open the
+New Thread modal, resize, screenshot) confirming the dialog was
+mispositioned even before any resize. Fixed with one global CSS rule
+(`dialog:modal { margin: auto; }` in `globals.css`) restoring the
+browser default for every dialog-based modal in the app at once, and
+any future one for free — confirmed by re-running the same repro
+script and inspecting the resulting screenshots.
+
+Full suite (402 unit, 71 e2e) green, e2e confirmed twice in a row,
+`npm run build` confirmed twice.
 
 ## Blockers
 

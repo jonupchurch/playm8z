@@ -1551,4 +1551,30 @@ may begin on any/all of them per the constitution (v1.0.0).
   didn't. Fixed by inserting a row when none exists rather than
   assuming an UPDATE always finds one. Verified by reproducing the
   exact scenario locally (cleared the local `settings` table entirely,
-  confirmed the old code failed, confirmed the fix passes).
+  confirmed the old code failed, confirmed the fix passes). **CI is
+  still failing after this fix** — a full local repro (fresh Postgres,
+  matching CI's exact push/env-var setup) passed clean, so the
+  remaining failure is CI-environment-specific; couldn't pull the real
+  Playwright output to diagnose further without authenticated `gh`/API
+  access. See `status.md`.
+- **Google OAuth sign-ins were permanently stuck "unverified,"** unable
+  to ever pass verification and blocked from posting/applying/
+  messaging. `@auth/core`'s own OAuth callback handler unconditionally
+  forces `emailVerified: null` on a brand-new account, overriding
+  whatever `src/auth.ts`'s Google `profile()` computed from Google's own
+  claim — core library behavior, not fixable via provider config. Fixed
+  with `verify-google-email.ts` (unit tested), called from the existing
+  `signIn` callback, which also retroactively fixes any account already
+  stuck this way since it runs on every sign-in. The reporting user's
+  own stuck production account was patched directly at the same time.
+- **Every native `<dialog>`-based modal in the app** (`block-modal.tsx`,
+  `unblock-modal.tsx`, `compose-modal.tsx`, `new-thread-modal.tsx`,
+  `report-modal.tsx`) **was rendering pinned to the top-left of the
+  viewport instead of centered**, since each one's own feature shipped.
+  Tailwind's preflight resets `margin: 0` on every element, silently
+  overriding the browser's own `dialog:modal { margin: auto }` centering
+  rule. Invisible to every automated check this project runs (Playwright
+  checks function, not visual position; axe-core doesn't check
+  centering either) — found by reproducing a user's screenshot report
+  directly with a throwaway script. Fixed with one global CSS rule,
+  fixing all five modals at once and any future one for free.
