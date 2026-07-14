@@ -2045,6 +2045,41 @@ existing suite was the real verification: it caught both bugs above.
 and the full e2e suite (71) all green, e2e confirmed twice in a row,
 `npm run build` confirmed twice.
 
+## CI had been silently failing since Error Pages shipped (2026-07-14)
+
+The user was getting a steady stream of "CI: All jobs have failed"
+GitHub emails and asked about it. GitHub Actions run history showed
+CI green through run #125 ("docs: mark Auth & Onboarding implemented")
+and failing on **every single run since** #126 ("docs: mark Error
+Pages implemented") — 23 consecutive failures across every feature
+merged this whole session, none of it ever surfaced because local
+verification (this session's own typecheck/lint/vitest/playwright/
+build discipline) was the only thing actually checked before merging.
+
+**Root cause**: `ci.yml`'s "Push Drizzle schema to the CI database"
+step runs `drizzle-kit push --force` against a brand-new, empty
+Postgres service container for every run — and `push` only applies
+structural DDL, never a migration file's seed `INSERT`s (the exact
+same gap behind today's earlier "prod DB migration gap" incident above,
+just surfacing here as a CI failure instead of a production 500). Error
+Pages' own migration seeds exactly one `settings` row so
+`get-settings.ts` never has to handle "no row yet" — but
+`e2e/maintenance.spec.ts`'s own `setMaintenance()` helper assumed that
+row already existed (`const [row] = await db.select()...; ...
+where(eq(settings.id, row.id))`), so on a freshly-pushed CI database
+`row` was `undefined` and `row.id` threw, failing that spec file (and
+therefore the whole `npm run test:e2e` step, and therefore the whole
+job) on every run touching real code from Error Pages onward.
+
+Fixed by making the helper insert a row if none exists rather than
+assuming an UPDATE will always find one. Verified by literally
+reproducing the CI scenario locally (cleared the local `settings`
+table entirely, confirmed the test failed the old way, applied the
+fix, confirmed it now passes against a truly empty table). No other
+e2e spec has this same "assumes a pre-seeded singleton row" shape
+(checked: `maintenance.spec.ts` was the only file calling `.limit(1)`
+in `e2e/`).
+
 ## Blockers
 
 - None.

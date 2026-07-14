@@ -1535,3 +1535,20 @@ may begin on any/all of them per the constitution (v1.0.0).
 - Both caught by the existing e2e suite, not speculative. No new
   tests added (pure UI infra); full suite (401 unit, 71 e2e) green,
   e2e confirmed twice in a row, `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 18)
+
+### Fixed
+- **CI had been silently failing on every run since Error Pages
+  shipped** (23 consecutive failures, entirely unnoticed since only
+  local verification was ever checked before merging). Root cause:
+  `ci.yml`'s CI database is freshly `drizzle-kit push`'d on every
+  run — structural DDL only, no migration files' seed `INSERT`s (the
+  same class of gap as today's earlier production migration incident,
+  here breaking CI instead). `e2e/maintenance.spec.ts`'s own
+  `setMaintenance()` helper assumed Error Pages' seeded `settings` row
+  already existed and crashed (`row.id` on `undefined`) the moment it
+  didn't. Fixed by inserting a row when none exists rather than
+  assuming an UPDATE always finds one. Verified by reproducing the
+  exact scenario locally (cleared the local `settings` table entirely,
+  confirmed the old code failed, confirmed the fix passes).

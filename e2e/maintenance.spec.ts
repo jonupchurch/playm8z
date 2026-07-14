@@ -9,8 +9,20 @@ import { settings } from "@/db/schema";
 // rather than working around it.
 const CACHE_TTL_WAIT_MS = 5500;
 
+// `drizzle-kit push` (both CI's fresh database and, until today,
+// production -- see status.md's "prod DB migration gap" entry) never
+// runs a migration file's seed INSERTs, only structural DDL -- so the
+// singleton `settings` row Error Pages' own migration seeds can't be
+// assumed to exist. Insert one if missing rather than assuming an
+// UPDATE will always find a target row (this is very likely why
+// maintenance.spec.ts has been silently failing CI since Error Pages
+// first shipped: `row` was `undefined`, and `row.id` threw).
 async function setMaintenance(mode: boolean, message: string | null) {
   const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ maintenanceMode: mode, maintenanceMessage: message });
+    return;
+  }
   await db
     .update(settings)
     .set({ maintenanceMode: mode, maintenanceMessage: message })
