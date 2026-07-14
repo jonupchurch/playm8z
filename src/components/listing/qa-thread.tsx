@@ -7,9 +7,11 @@ import { askQuestion } from "@/lib/actions/ask-question";
 import { replyToQuestion } from "@/lib/actions/reply-to-question";
 import { relativeAge } from "@/components/listings/listing-card";
 import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { ReportModal, type ReportTarget } from "@/components/reports/report-modal";
 
 export type ThreadQuestion = {
   id: string;
+  askerId: string;
   askerHandle: string | null;
   askerAvatarColor: string | null;
   text: string;
@@ -17,14 +19,35 @@ export type ThreadQuestion = {
   createdAt: Date;
 };
 
-function QuestionRow({ question, isHost }: { question: ThreadQuestion; isHost: boolean }) {
+function QuestionRow({
+  question,
+  isHost,
+  isLoggedIn,
+}: {
+  question: ThreadQuestion;
+  isHost: boolean;
+  isLoggedIn: boolean;
+}) {
   const router = useRouter();
   const [replyText, setReplyText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
   const avatarGradient =
     AVATAR_COLORS.find((swatch) => swatch.id === question.askerAvatarColor)?.gradient ??
     AVATAR_COLORS[0].gradient;
+
+  // FR-010 (006-listing-detail's amended, previously-deferred Report
+  // action): per-question reports target the asker directly
+  // (targetType='user') -- reportTargetTypeEnum has no dedicated
+  // "question" variant (data-model.md), so blockUserId is just the
+  // same id being reported.
+  const reportTarget: ReportTarget = {
+    targetType: "user",
+    targetId: question.askerId,
+    label: `Question by @${question.askerHandle ?? "player"}`,
+    blockUserId: question.askerId,
+  };
 
   async function handleReply(event: React.FormEvent) {
     event.preventDefault();
@@ -51,6 +74,15 @@ function QuestionRow({ question, isHost }: { question: ThreadQuestion; isHost: b
         <div className="mb-0.5 flex items-center gap-2">
           <span className="text-[13px] font-bold text-text">@{question.askerHandle ?? "player"}</span>
           <span className="font-mono text-[10px] text-text-dim">{relativeAge(question.createdAt)}</span>
+          {isLoggedIn && (
+            <button
+              type="button"
+              onClick={() => setReportOpen(true)}
+              className="ml-auto rounded-lg px-2 py-1 text-xs font-semibold text-text-dim"
+            >
+              ⚑ Report
+            </button>
+          )}
         </div>
         <p className="text-sm leading-relaxed text-text-muted">{question.text}</p>
 
@@ -90,6 +122,8 @@ function QuestionRow({ question, isHost }: { question: ThreadQuestion; isHost: b
           </form>
         )}
       </div>
+
+      <ReportModal open={reportOpen} target={reportTarget} onClose={() => setReportOpen(false)} />
     </div>
   );
 }
@@ -138,7 +172,7 @@ export function QaThread({
 
       <div className="mb-4.5 flex flex-col gap-4">
         {questions.map((question) => (
-          <QuestionRow key={question.id} question={question} isHost={isHost} />
+          <QuestionRow key={question.id} question={question} isHost={isHost} isLoggedIn={isLoggedIn} />
         ))}
       </div>
 

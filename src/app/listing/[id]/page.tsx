@@ -91,6 +91,7 @@ export default async function ListingDetailPage({
     db
       .select({
         id: questions.id,
+        askerId: questions.askerId,
         askerHandle: users.handle,
         askerAvatarColor: users.avatarColor,
         text: questions.text,
@@ -287,7 +288,9 @@ export default async function ListingDetailPage({
           <aside className="flex flex-col gap-4">
             <ApplyPanel
               postingId={posting.id}
+              hostId={posting.hostId}
               hostHandle={posting.hostHandle ?? "player"}
+              title={posting.title}
               viewerState={viewerState}
               applicationId={application?.id}
               seatsOpen={posting.seatsOpen}

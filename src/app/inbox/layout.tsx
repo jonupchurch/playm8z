@@ -24,7 +24,11 @@ export default async function InboxLayout({ children }: { children: React.ReactN
   const items = await getInboxList(user.id);
 
   return (
-    <main className="h-screen bg-bg text-text">
+    // Notifications + Report modal (012) added a global sticky header
+    // (h-14) above every page -- subtracted here so this two-pane
+    // layout still fills exactly the remaining viewport instead of
+    // overflowing it by the header's own height.
+    <main className="h-[calc(100vh-3.5rem)] bg-bg text-text">
       <div className="grid h-full grid-cols-1 md:grid-cols-[340px_1fr]">
         <ConversationList items={items} />
         <div className="flex min-h-0 flex-col">{children}</div>

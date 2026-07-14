@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, Space_Mono } from "next/font/google";
+import { SiteHeader } from "@/components/nav/site-header";
 import "./globals.css";
 
 const sora = Sora({
@@ -30,7 +31,10 @@ export default function RootLayout({
       lang="en"
       className={`${sora.variable} ${spaceMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }

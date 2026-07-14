@@ -6,12 +6,15 @@ import { useRouter } from "next/navigation";
 import { applyToPosting } from "@/lib/actions/apply-to-posting";
 import { withdrawApplication } from "@/lib/actions/withdraw-application";
 import { toggleSavedListing } from "@/lib/actions/toggle-saved-listing";
+import { ReportModal, type ReportTarget } from "@/components/reports/report-modal";
 
 export type ViewerState = "host" | "accepted" | "pending" | "full" | "not-applied";
 
 export function ApplyPanel({
   postingId,
+  hostId,
   hostHandle,
+  title,
   viewerState,
   applicationId,
   seatsOpen,
@@ -20,7 +23,9 @@ export function ApplyPanel({
   initialSaved,
 }: {
   postingId: string;
+  hostId: string;
   hostHandle: string;
+  title: string;
   viewerState: ViewerState;
   applicationId?: string;
   seatsOpen: number;
@@ -34,6 +39,17 @@ export function ApplyPanel({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(initialSaved);
   const [shareCopied, setShareCopied] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+
+  // FR-010 (006-listing-detail's amended, previously-deferred Report
+  // action): targets the posting itself, but "Also block" blocks the
+  // *host* -- decoupled on purpose (report-modal.tsx's ReportTarget).
+  const reportTarget: ReportTarget = {
+    targetType: "posting",
+    targetId: postingId,
+    label: `Posting by @${hostHandle} — "${title}"`,
+    blockUserId: hostId,
+  };
 
   async function handleApply(event: React.FormEvent) {
     event.preventDefault();
@@ -212,7 +228,25 @@ export function ApplyPanel({
             Save
           </Link>
         )}
+        {isLoggedIn ? (
+          <button
+            type="button"
+            onClick={() => setReportOpen(true)}
+            className="rounded-lg border border-pop/35 px-3 py-2 text-xs font-bold text-pop-text"
+          >
+            ⚑ Report
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="rounded-lg border border-pop/35 px-3 py-2 text-center text-xs font-bold text-pop-text"
+          >
+            ⚑ Report
+          </Link>
+        )}
       </div>
+
+      <ReportModal open={reportOpen} target={reportTarget} onClose={() => setReportOpen(false)} />
     </div>
   );
 }
