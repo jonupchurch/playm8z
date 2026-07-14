@@ -14,8 +14,10 @@ export type Role = keyof typeof ROLE_RANK;
  * Reusable gate for role/auth-restricted pages (FR-006/FR-007/FR-008) --
  * calls unauthorized() (401) when there's no session, forbidden() (403)
  * when the session's role is below the given minimum, and returns
- * normally otherwise. Ready for future gated pages (most notably
- * `/admin/*`) to call; no real caller exists yet in this codebase.
+ * normally otherwise. Content Page (014) is its first real consumer
+ * (both the draft-visibility check and its save/publish actions); since
+ * `currentRank` is still hardcoded to `user`, every real session is
+ * rejected there until Admin Settings (024) adds the real column.
  */
 export async function requireRole(minimum: Role): Promise<void> {
   const session = await auth();
