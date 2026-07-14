@@ -52,7 +52,15 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     // Belt-and-suspenders against a race between the SELECT above and this
     // INSERT -- the unique constraints on email/handle are the real guard.
-    if (err && typeof err === "object" && "code" in err && err.code === "23505") {
+    // Drizzle wraps the raw postgres.js error in a `DrizzleQueryError`,
+    // whose own `code` is undefined -- the real code lives at
+    // `err.cause.code` (fixed 2026-07-13, News feed/013's session,
+    // after finding the identical bug in toggle-like.ts).
+    const code =
+      err && typeof err === "object"
+        ? ((err as { code?: unknown }).code ?? (err as { cause?: { code?: unknown } }).cause?.code)
+        : undefined;
+    if (code === "23505") {
       return NextResponse.json(
         { error: "That email or handle is already taken." },
         { status: 409 },

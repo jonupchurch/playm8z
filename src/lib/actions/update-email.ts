@@ -36,7 +36,15 @@ export async function updateEmail(input: { email: string }): Promise<UpdateEmail
       .set({ email: newEmail, emailVerified: null })
       .where(eq(users.id, authUser.id));
   } catch (err) {
-    if (err && typeof err === "object" && "code" in err && err.code === "23505") {
+    // Drizzle wraps the raw postgres.js error in a `DrizzleQueryError`,
+    // whose own `code` is undefined -- the real code lives at
+    // `err.cause.code` (fixed 2026-07-13, News feed/013's session,
+    // after finding the identical bug in toggle-like.ts).
+    const code =
+      err && typeof err === "object"
+        ? ((err as { code?: unknown }).code ?? (err as { cause?: { code?: unknown } }).cause?.code)
+        : undefined;
+    if (code === "23505") {
       return { success: false, error: "That email is already registered." };
     }
     throw err;
