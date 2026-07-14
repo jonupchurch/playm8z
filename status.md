@@ -4,8 +4,8 @@
 features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
-Notifications + Report modal, News feed, and Content Page are done and
-merged. Admin Dashboard is next.
+Notifications + Report modal, News feed, Content Page, Admin Dashboard,
+and Admin Users are done and merged. Admin Postings is next.
 **Last updated**: 2026-07-14
 
 ## Where things stand
@@ -2264,6 +2264,75 @@ weekday labels, Needs-attention counts, Top games ranking/bar widths,
 and the recent-activity feed all matched the seeded data exactly.
 
 Full suite green (413 unit, 73 e2e), `npm run build` confirmed twice.
+
+## Admin Users implemented (2026-07-14)
+
+`/admin/users`'s main content area, all 27 tasks complete: stats
+(total/active/flagged/banned), a real server-side searchable/
+filterable table with computed "flagged" status (an unbanned user with
+an open `user`-targeted report — never a stored value, same "compute,
+don't duplicate" precedent as Admin Dashboard's own reuse of `reports`
+and Error Pages' computed "HOT" badge), Ban/Unban (the single severe
+account action — no separate Delete, directly reapplying Profile's
+already-made Deactivate-vs-Delete resolution), and a per-user detail
+drawer (native `<dialog>`, real focus trap/Escape-to-close, real ARIA
+tab semantics for Postings/Forum-posts) with a real, effect-having
+Remove action.
+
+New `search-admin-users.ts` computes "flagged"/counts via three small
+aggregate subqueries LEFT JOINed against `users` and a single SQL CASE
+expression aliased as `status` — both the stats query and the search-
+able row list select from that same aliased subquery, so status can
+never drift between the two. Caught and fixed a genuine bug immediately
+via its own unit test: all three subqueries originally aliased their
+count column as `"count"`, which Postgres correctly rejected as
+ambiguous once combined in the outer stats query (`column reference
+"count" is ambiguous`) — fixed by giving each a distinct name
+(`reportCount`/`postingCount`/`threadCount`).
+
+Extends `user` with `bannedAt` and `postings`/`forumThreads` with
+`removedAt`. Bounded amendments (research.md's own explicit, narrow
+scope) to exactly three already-merged functions — Home's
+`get-open-postings.ts`, Browse's `search-postings.ts`
+(`buildFilterConditions`, shared with `get-facet-counts.ts` for free),
+and Forum index's `search-threads.ts` — now exclude `removedAt`-set
+rows; each got a new regression test confirming exclusion, and the
+drawer's own `get-user-detail.ts` excludes removed items from its
+Postings/Forum-posts tabs too (spec.md's own acceptance criteria: a
+removed item "no longer appears in the drawer," not shown with a
+removed badge as the wireframe's mock data depicted).
+
+`requireRole("moderator")` gates the whole route AND both new Server
+Actions independently (never trusting the page alone) — the third real
+consumer after Content Page (014) and Admin Dashboard (015) — so, same
+as those two, the real table/ban/drawer content can't be exercised by a
+real session yet (no `role` column until Admin Settings/024). Every
+query and action is unit/integration-tested directly instead — KPI-
+style stats tests use before/after deltas against the shared global
+`user`/`postings`/`reports` tables (this feature's own pattern, first
+established for Admin Dashboard) so they stay correct regardless of
+whatever else already exists — and `e2e/admin-users.spec.ts` covers the
+real, current access-denial behavior for both an unauthenticated
+visitor and a logged-in non-moderator.
+
+**Found and fixed a real bug during the visual QA pass** (not caught by
+the automated suite, since it can't exercise a real session yet):
+`toggle-user-ban.ts` and `remove-user-content.ts` both called
+`revalidatePath("/admin/users")` without the `"layout"` type argument —
+the exact same stale-UI-after-Server-Action class of bug this project
+already hit and fixed once for Inbox/messaging (011). Caught by
+temporarily bypassing the role gate in both `page.tsx` and the two
+Server Actions locally (fully reverted before commit), seeding real
+data, and clicking through the actual Ban/Unban/Remove flows in a
+browser — confirmed the inline Ban-confirm's focus management works
+correctly (focus moves to "Yes" when the confirm appears, back to the
+row's own Ban button on Cancel) and that a removed posting is correctly
+excluded from Browse (confirmed via Browse's own "No parties match"
+empty state, after an earlier false alarm from a naive text-grep that
+was actually matching the search input's own echoed value, not a real
+result card).
+
+Full suite green (435 unit, 75 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

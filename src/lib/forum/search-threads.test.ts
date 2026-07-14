@@ -94,6 +94,22 @@ describe("searchThreads / getCategoryCounts (integration)", () => {
         likes: 50,
         createdAt: new Date(Date.now() - 20 * 60_000),
       },
+      {
+        ...base,
+        // A category getCategoryCounts()'s own assertions below don't
+        // check -- that function is deliberately out of this
+        // amendment's scope (research.md #2 names exactly three
+        // functions, not getCategoryCounts), so a removed thread still
+        // counts there; using an unchecked category avoids a collision.
+        categoryId: "tabletop",
+        title: `Removed thread ${runId}`,
+        body: "spam",
+        tags: [],
+        replyCount: 0,
+        likes: 0,
+        createdAt: new Date(),
+        removedAt: new Date(),
+      },
     ]);
   });
 
@@ -142,6 +158,11 @@ describe("searchThreads / getCategoryCounts (integration)", () => {
     const nonPinned = rows.filter((row) => !row.pinned);
     expect(nonPinned.every((row) => row.replyCount === 0)).toBe(true);
     expect(nonPinned.some((row) => row.title.includes("Quiet thread"))).toBe(true);
+  });
+
+  it("excludes a moderator-removed thread (Admin Users 016's FR-009)", async () => {
+    const rows = await searchThreads({ category: "all", q: "", sort: "latest" });
+    expect(rows.some((row) => row.title.includes("Removed thread"))).toBe(false);
   });
 
   it("returns accurate per-category counts", async () => {

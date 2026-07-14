@@ -35,10 +35,11 @@ export function buildFilterConditions(
   options: { excludeGames?: boolean; excludeRegions?: boolean } = {},
 ): SQL[] {
   // Excludes a deactivated host's postings (Profile + Account settings
-  // 007's FR-013/SC-005) -- both callers of this helper (searchPostings
-  // and get-facet-counts.ts) already join `users`, so this applies
+  // 007's FR-013/SC-005) and a moderator-removed posting (Admin Users
+  // 016's FR-009) -- both callers of this helper (searchPostings and
+  // get-facet-counts.ts) already join `users`, so this applies
   // consistently to results and facet counts alike.
-  const conditions: SQL[] = [eq(postings.status, "open"), isNull(users.deactivatedAt)];
+  const conditions: SQL[] = [eq(postings.status, "open"), isNull(users.deactivatedAt), isNull(postings.removedAt)];
 
   const q = filters.q.trim();
   if (q) {

@@ -1658,3 +1658,42 @@ may begin on any/all of them per the constitution (v1.0.0).
   via a throwaway local QA pass (temporarily bypassing the role gate,
   screenshotting, then fully reverting before commit). Full suite green
   (413 unit, 73 e2e), `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 22)
+
+### Added
+- Admin Users (`specs/016-admin-users/`, branch `016-admin-users`
+  merged to `main`) — all 27 tasks complete: `/admin/users`'s stats
+  (total/active/flagged/banned), a real server-side searchable/
+  filterable table with computed "flagged" status (an unbanned user
+  with an open `user`-targeted report, never stored), Ban/Unban (the
+  single severe account action — no separate Delete, reapplying
+  Profile's Deactivate-vs-Delete resolution), and a per-user detail
+  drawer (native `<dialog>`, real focus trap/Escape-to-close, real ARIA
+  tab semantics) with a real, effect-having Remove action. Extends
+  `user` with `bannedAt` and `postings`/`forumThreads` with
+  `removedAt`; bounded amendments to Home's `get-open-postings.ts`,
+  Browse's `search-postings.ts`, and Forum index's `search-threads.ts`
+  now exclude removed rows. `requireRole("moderator")` gates the route
+  and both new Server Actions independently — the third real consumer
+  after Content Page (014) and Admin Dashboard (015) — so the real
+  table/ban/drawer content can't be exercised by a real session yet (no
+  `role` column until Admin Settings/024); every query/action is
+  unit-tested directly instead, and e2e covers the real, current
+  access-denial behavior.
+
+### Fixed
+- Caught two real bugs during development/QA: (1) `search-admin-
+  users.ts`'s three count subqueries all aliased their column as
+  `"count"`, which Postgres rejected as ambiguous once joined together
+  — fixed with distinct names, caught immediately by the query's own
+  unit test; (2) both new Server Actions called
+  `revalidatePath("/admin/users")` without the `"layout"` type
+  argument — the same stale-UI-after-Server-Action bug this project
+  already hit and fixed once for Inbox/messaging (011) — caught by
+  temporarily bypassing the role gate locally and clicking through the
+  real Ban/Unban/Remove flows (fully reverted before commit); also
+  confirmed the inline Ban-confirm's focus management (focus moves to
+  "Yes", then back to the row's Ban button on Cancel) and that a
+  removed posting is genuinely excluded from Browse. Full suite green
+  (435 unit, 75 e2e), `npm run build` confirmed twice.

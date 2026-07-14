@@ -1,4 +1,4 @@
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { forumThreads, users } from "@/db/schema";
@@ -36,7 +36,8 @@ export function isHotThread(replyCount: number, createdAt: Date, pinned: boolean
 }
 
 function buildConditions(filters: ForumSearchParams): SQL[] {
-  const conditions: SQL[] = [];
+  // Excludes a moderator-removed thread (Admin Users 016's FR-009).
+  const conditions: SQL[] = [isNull(forumThreads.removedAt)];
 
   if (filters.category !== "all") {
     conditions.push(eq(forumThreads.categoryId, filters.category));

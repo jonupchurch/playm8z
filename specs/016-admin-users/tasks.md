@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (Error Pages, `002`) exists in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (Error Pages, `002`) exists in the codebase before starting
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend `user` with `bannedAt`, and `postings` (`003`) and `forumThreads` (`009`) with `removedAt`, in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/admin-users.ts` — Zod schemas for search/filter and the ban/remove actions (data-model.md)
-- [ ] T005 Build `src/app/admin/users/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
+- [x] T002 Extend `user` with `bannedAt`, and `postings` (`003`) and `forumThreads` (`009`) with `removedAt`, in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/admin-users.ts` — Zod schemas for search/filter and the ban/remove actions (data-model.md)
+- [x] T005 Build `src/app/admin/users/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,15 +53,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit tests for `admin-users.ts`'s schemas in `src/lib/validations/admin-users.test.ts`
-- [ ] T007 [P] [US1] Unit tests for `search-admin-users.ts` (computed-flagged logic, search/filter combination) in `src/lib/admin/search-admin-users.test.ts`
-- [ ] T008 [US1] Playwright e2e spec covering stats, search, filter (including computed "Flagged"), and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-users.spec.ts`
+- [x] T006 [P] [US1] Unit tests for `admin-users.ts`'s schemas in `src/lib/validations/admin-users.test.ts`
+- [x] T007 [P] [US1] Unit tests for `search-admin-users.ts` (computed-flagged logic, search/filter combination) in `src/lib/admin/search-admin-users.test.ts`
+- [x] T008 [US1] Playwright e2e spec covering stats, search, filter (including computed "Flagged"), and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-users.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Build `src/lib/admin/search-admin-users.ts` (research.md #3 for computed "Flagged") — depends on T002, T004
-- [ ] T010 [US1] Build `src/components/admin/user-table.tsx` (stats + rows) — depends on T009
-- [ ] T011 [US1] Wire `user-table.tsx` into `src/app/admin/users/page.tsx` — depends on T005, T010
+- [x] T009 [US1] Build `src/lib/admin/search-admin-users.ts` (research.md #3 for computed "Flagged") — depends on T002, T004
+- [x] T010 [US1] Build `src/components/admin/user-table.tsx` (stats + rows) — depends on T009
+- [x] T011 [US1] Wire `user-table.tsx` into `src/app/admin/users/page.tsx` — depends on T005, T010
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -75,13 +75,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] Integration test for `toggle-user-ban.ts` (ban/unban; role-gate rejection; unban reverts to "flagged" if still reported, else "active") in `src/lib/actions/toggle-user-ban.test.ts`
-- [ ] T013 [US2] Add the ban/unban scenario to `e2e/admin-users.spec.ts` — depends on T008 (same file)
+- [x] T012 [P] [US2] Integration test for `toggle-user-ban.ts` (ban/unban; role-gate rejection; unban reverts to "flagged" if still reported, else "active") in `src/lib/actions/toggle-user-ban.test.ts`
+- [x] T013 [US2] Add the ban/unban scenario to `e2e/admin-users.spec.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Build `toggle-user-ban.ts` in `src/lib/actions/toggle-user-ban.ts` — depends on T004
-- [ ] T015 [US2] Wire the Ban/Unban control into `user-table.tsx` rows — depends on T010, T014
+- [x] T014 [US2] Build `toggle-user-ban.ts` in `src/lib/actions/toggle-user-ban.ts` — depends on T004
+- [x] T015 [US2] Wire the Ban/Unban control into `user-table.tsx` rows — depends on T010, T014
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -95,18 +95,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T016 [P] [US3] Integration test for `remove-user-content.ts` (marks `removedAt` on a posting or forum thread; role-gate rejection) in `src/lib/actions/remove-user-content.test.ts`
-- [ ] T017 [P] [US3] Integration test confirming Home's `get-open-postings.ts` (`003`), Browse's `search-postings.ts` (`004`), and Forum index's `search-threads.ts` (`009`) now exclude `removedAt`-set rows (research.md #2)
-- [ ] T018 [US3] Add the drawer review/remove scenario to `e2e/admin-users.spec.ts` — depends on T013 (same file)
+- [x] T016 [P] [US3] Integration test for `remove-user-content.ts` (marks `removedAt` on a posting or forum thread; role-gate rejection) in `src/lib/actions/remove-user-content.test.ts`
+- [x] T017 [P] [US3] Integration test confirming Home's `get-open-postings.ts` (`003`), Browse's `search-postings.ts` (`004`), and Forum index's `search-threads.ts` (`009`) now exclude `removedAt`-set rows (research.md #2)
+- [x] T018 [US3] Add the drawer review/remove scenario to `e2e/admin-users.spec.ts` — depends on T013 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] Build `src/lib/admin/get-user-detail.ts` (postings, forum threads, open-report count) — depends on T002
-- [ ] T020 [US3] Build `remove-user-content.ts` in `src/lib/actions/remove-user-content.ts` — depends on T004
-- [ ] T021 [US3] Amend `src/lib/postings/get-open-postings.ts` (`003-home`) and `src/lib/postings/search-postings.ts` (`004-browse`): add a `removedAt IS NULL` condition — depends on T002
-- [ ] T022 [US3] Amend `src/lib/forum/search-threads.ts` (`009-forum-index`): add the same `removedAt IS NULL` condition for `forumThreads` — depends on T002
-- [ ] T023 [US3] Build `src/components/admin/user-drawer.tsx` (dialog/panel, focus trap, Postings/Forum-posts tabs, Ban/Message/Remove) — depends on T019, T014, T020
-- [ ] T024 [US3] Wire `user-drawer.tsx` into `src/app/admin/users/page.tsx`, opened via each row's View action — depends on T011, T023
+- [x] T019 [US3] Build `src/lib/admin/get-user-detail.ts` (postings, forum threads, open-report count) — depends on T002
+- [x] T020 [US3] Build `remove-user-content.ts` in `src/lib/actions/remove-user-content.ts` — depends on T004
+- [x] T021 [US3] Amend `src/lib/postings/get-open-postings.ts` (`003-home`) and `src/lib/postings/search-postings.ts` (`004-browse`): add a `removedAt IS NULL` condition — depends on T002
+- [x] T022 [US3] Amend `src/lib/forum/search-threads.ts` (`009-forum-index`): add the same `removedAt IS NULL` condition for `forumThreads` — depends on T002
+- [x] T023 [US3] Build `src/components/admin/user-drawer.tsx` (dialog/panel, focus trap, Postings/Forum-posts tabs, Ban/Message/Remove) — depends on T019, T014, T020
+- [x] T024 [US3] Wire `user-drawer.tsx` into `src/app/admin/users/page.tsx`, opened via each row's View action — depends on T011, T023
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -114,9 +114,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Confirm `next build` succeeds locally and CI stays green with the new gated route, three Server Actions, and the extended schema
-- [ ] T026 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
-- [ ] T027 [P] Update `docs/feature-list.md`, marking Admin Users' spec/plan/tasks as complete
+- [x] T025 Confirm `next build` succeeds locally and CI stays green with the new gated route, three Server Actions, and the extended schema
+- [x] T026 Manually run quickstart.md Scenarios 1-3 end to end against local dev and confirm each passes
+- [x] T027 [P] Update `docs/feature-list.md`, marking Admin Users' spec/plan/tasks as complete
 
 ---
 

@@ -21,8 +21,8 @@ export type OpenPosting = {
 // never appears on Home. Joins users for the host's real handle/avatar
 // (FR-005) -- the host's display name is never shown to other users
 // (ADR 0006); only the handle is. Excludes a deactivated host's
-// postings (Profile + Account settings 007's FR-013/SC-005 -- a
-// bounded amendment, same pattern as Admin Users' removedAt exclusion).
+// postings (Profile + Account settings 007's FR-013/SC-005) and a
+// moderator-removed posting (Admin Users 016's FR-009).
 export async function getOpenPostings(): Promise<OpenPosting[]> {
   const rows = await db
     .select({
@@ -41,7 +41,7 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
     })
     .from(postings)
     .innerJoin(users, eq(postings.hostId, users.id))
-    .where(and(eq(postings.status, "open"), isNull(users.deactivatedAt)))
+    .where(and(eq(postings.status, "open"), isNull(users.deactivatedAt), isNull(postings.removedAt)))
     .orderBy(desc(postings.createdAt));
 
   return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));

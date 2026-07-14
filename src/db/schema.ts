@@ -45,6 +45,10 @@ export const users = pgTable("user", {
   // cleared automatically on the owner's next successful sign-in
   // (research.md #3, src/auth.ts's signIn callback).
   deactivatedAt: timestamp("deactivatedAt", { mode: "date" }),
+  // Admin Users (016) -- the only severe account action this feature
+  // offers (no separate "Delete", ADR 0005/research.md #1). "Flagged"
+  // is never stored -- always computed from open `reports` rows.
+  bannedAt: timestamp("bannedAt", { mode: "date" }),
 });
 
 export const accounts = pgTable(
@@ -130,6 +134,10 @@ export const postings = pgTable("postings", {
   tags: text("tags").array().notNull().default([]),
   recurring: boolean("recurring").notNull().default(false),
   voiceLink: text("voiceLink"),
+  // Admin Users (016) -- a moderation-hide flag, never a real delete
+  // (ADR 0005). Home's/Browse's own open-postings queries exclude rows
+  // where this is set (research.md #2); never cleared once set.
+  removedAt: timestamp("removedAt", { mode: "date" }),
 });
 
 // Listing detail (006) -- its first real writer. A unique active
@@ -272,6 +280,10 @@ export const forumThreads = pgTable("forumThreads", {
   viewCount: integer("viewCount").notNull().default(0),
   likes: integer("likes").notNull().default(0),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Admin Users (016) -- same moderation-hide pattern as
+  // postings.removedAt; Forum index's own thread query excludes rows
+  // where this is set (research.md #2). Never cleared once set.
+  removedAt: timestamp("removedAt", { mode: "date" }),
 });
 
 // Forum Thread (010) -- this feature's only writer. `likes` is

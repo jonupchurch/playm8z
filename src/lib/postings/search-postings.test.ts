@@ -86,6 +86,20 @@ beforeAll(async () => {
       createdAt: new Date(),
       scheduledDate: null,
     },
+    {
+      ...base,
+      game: tag("Removed Game"),
+      genre: "FPS",
+      title: tag("Removed posting"),
+      vibe: "serious",
+      region: "eu-west",
+      timeSlots: ["evening"],
+      seatsOpen: 3,
+      status: "open",
+      createdAt: new Date(),
+      scheduledDate: null,
+      removedAt: new Date(),
+    },
   ]);
 });
 
@@ -101,6 +115,11 @@ describe("searchPostings", () => {
   it("only returns rows with status = 'open'", async () => {
     const result = await searchPostings({ q: `${runId}` });
     expect(titles(result)).not.toContain("This one is full");
+  });
+
+  it("excludes an open posting a moderator has removed (Admin Users 016's FR-009)", async () => {
+    const result = await searchPostings({ q: `${runId}` });
+    expect(titles(result)).not.toContain(tag("Removed posting"));
   });
 
   it("matches keyword against game, title, blurb, genre, or host handle", async () => {

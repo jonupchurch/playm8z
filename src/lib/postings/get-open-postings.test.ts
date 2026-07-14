@@ -56,6 +56,17 @@ beforeAll(async () => {
       seatsOpen: 1,
       status: "closed",
     },
+    {
+      ...common,
+      game: `RemovedGame-${runId}`,
+      title: "Removed one",
+      vibe: "fun",
+      region: "na-west",
+      seatsTotal: 4,
+      seatsOpen: 2,
+      status: "open",
+      removedAt: new Date(),
+    },
   ]);
 });
 
@@ -77,5 +88,10 @@ describe("getOpenPostings", () => {
     expect(openRow?.hostAvatarColor).toBe("amber-orange");
     expect(openRow?.seatsOpen).toBe(2);
     expect(openRow?.seatsTotal).toBe(4);
+  });
+
+  it("excludes an open posting a moderator has removed (Admin Users 016's FR-009)", async () => {
+    const result = await getOpenPostings();
+    expect(result.map((row) => row.game)).not.toContain(`RemovedGame-${runId}`);
   });
 });
