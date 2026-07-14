@@ -433,6 +433,30 @@ export const newsletterSubscribers = pgTable("newsletterSubscribers", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+// Content Page (014) -- this feature's only writer, for an EXISTING
+// page's content/blocks/status; creating a new page (choosing its
+// slug) is the future Admin Content Pages feature's job, extending
+// this same table. `blocks` is a single ordered JSONB array, not a
+// normalized per-block table, since every read/write always touches
+// the whole array as one atomic unit (research.md #1) -- array
+// position is the rendering order, no separate `order` column.
+export const contentPages = pgTable("contentPages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  blocks: jsonb("blocks").notNull().default([]).$type<ContentBlock[]>(),
+  status: text("status").notNull().default("draft"),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export type ContentBlock =
+  | { type: "h2"; text: string }
+  | { type: "p"; text: string }
+  | { type: "list"; items: string[] }
+  | { type: "quote"; text: string }
+  | { type: "callout"; text: string }
+  | { type: "divider" };
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
