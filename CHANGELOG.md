@@ -1627,3 +1627,34 @@ may begin on any/all of them per the constitution (v1.0.0).
   searched *for*, never the primary thread whose own tags feed the
   query. Full suite green (403 unit, 71 e2e), `npm run build` confirmed
   twice.
+
+## [Unreleased] (cont. 21)
+
+### Added
+- Admin Dashboard (`specs/015-admin-dashboard/`, branch
+  `015-admin-dashboard` merged to `main`) — all 24 tasks complete:
+  `/admin`'s main content area (sidebar shell is Design System infra,
+  not yet built), five real-count KPI cards, a 7-day activity chart
+  with a Signups/Active/Postings metric switcher (real ARIA tab
+  semantics, a visually-hidden `<table>` as the non-visual data
+  equivalent), Needs-attention (three `reports`-table queues by
+  `targetType`), a recent-activity feed backed by a new `auditEntries`
+  table, and Top games (reuses Home's/Browse's existing Trending query
+  directly). New `src/lib/admin/activity-data.ts` centralizes the
+  "active today" distinct-user union across five tables plus local-
+  calendar-day bucketing, shared by the KPI and chart queries so the
+  source list can't drift between them; day-bucketing happens in JS
+  (matching `filter-notifications.ts`'s existing "today" convention)
+  rather than a SQL `date_trunc`, avoiding a database-timezone
+  mismatch. `requireRole("moderator")` gates the whole route — its
+  second real consumer after Content Page (014) — so, like that
+  feature's own US2/US3, the real content can't be exercised by a real
+  session yet (no `role` column until Admin Settings/024); every
+  `lib/admin/*.ts` query is unit-tested directly instead (KPI tests use
+  before/after deltas against shared global tables to stay correct
+  regardless of pre-existing data), and e2e covers the real, current
+  access-denial behavior for both an unauthenticated visitor and a
+  logged-in non-moderator. Visually verified against real seeded data
+  via a throwaway local QA pass (temporarily bypassing the role gate,
+  screenshotting, then fully reverting before commit). Full suite green
+  (413 unit, 73 e2e), `npm run build` confirmed twice.

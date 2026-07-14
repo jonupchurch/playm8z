@@ -457,6 +457,27 @@ export type ContentBlock =
   | { type: "callout"; text: string }
   | { type: "divider" };
 
+// Admin Dashboard (015) -- append-only audit trail (data-model.md),
+// feeding the dashboard's recent-activity feed. `logAuditEntry()` ships
+// fully built and tested here, but no other feature is retrofitted to
+// call it yet (research.md #3): Admin Users/Postings/Forum/News (all
+// not yet spec'd) are its real future writers. `actorId` null means a
+// system-generated entry. Never updated or deleted once written --
+// this table *is* the project's audit trail, so ADR 0005's "disable
+// instead of delete" doesn't apply in reverse here.
+export const auditEntries = pgTable("auditEntries", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  actorId: uuid("actorId").references(() => users.id, { onDelete: "cascade" }),
+  action: text("action").notNull(),
+  category: text("category").notNull(),
+  targetType: text("targetType"),
+  targetId: uuid("targetId"),
+  targetLabel: text("targetLabel"),
+  reason: text("reason"),
+  meta: jsonb("meta").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {

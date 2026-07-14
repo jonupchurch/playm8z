@@ -2220,7 +2220,56 @@ Firefox renders zero `<dialog>` elements at all (the New Thread modal
 isn't in the DOM for logged-out visitors), consistent with the
 dialog-visibility fix above.
 
+## Admin Dashboard implemented (2026-07-14)
+
+The first of the admin-CMS features (15-21, 24-25 in `docs/feature-
+list.md`) — `/admin`'s main content area only, per spec.md's explicit
+scope; the admin sidebar shell remains Design System infrastructure,
+not yet built. All 24 tasks complete: five real-count KPI cards (total
+users, active today, new signups, live postings, open reports), a
+7-day activity chart with a Signups/Active/Postings metric switcher,
+Needs-attention (three `reports`-table queues grouped by `targetType`),
+a recent-activity feed backed by a new `auditEntries` table, and Top
+games (open-postings-by-game, reusing Home's/Browse's existing
+Trending query directly rather than a fourth copy of the same
+aggregate).
+
+New `src/lib/admin/activity-data.ts` centralizes both "active today"'s
+distinct-user union (postings/applications/forumThreads/forumReplies/
+messages) and local-calendar-day bucketing, shared by the KPI and
+chart queries so the exact same five-table source list can't drift
+between the two. Day-bucketing is done in JS against each row's own
+`createdAt` (matching `filter-notifications.ts`'s existing "today"
+convention) rather than a SQL `date_trunc`/`GROUP BY`, avoiding any
+mismatch between the database's timezone and this convention.
+
+`requireRole("moderator")` gates the whole route — its second real
+consumer after Content Page (014) — and since no `role` column exists
+yet (Admin Settings/024 adds it), every real session is honestly
+forbidden today, exactly like Content Page's own US2/US3. The KPI/
+chart/needs-attention/activity content can't be exercised through a
+real browser session as a result; every `lib/admin/*.ts` query is
+instead unit-tested directly (with before/after-delta assertions for
+KPIs touching shared global tables — `users`/`postings`/`reports` — to
+stay correct regardless of whatever other data already exists), and
+`e2e/admin-dashboard.spec.ts` covers the real, current behavior: an
+unauthenticated visitor and a logged-in non-moderator are both denied,
+never shown dashboard content.
+
+Visually verified against real seeded data via a throwaway local QA
+pass (temporarily bypassing the role gate, screenshotting both the
+default and "Active" metric views, then fully reverting the bypass and
+deleting all seed data before commit) — KPIs, the chart's real dynamic
+weekday labels, Needs-attention counts, Top games ranking/bar widths,
+and the recent-activity feed all matched the seeded data exactly.
+
+Full suite green (413 unit, 73 e2e), `npm run build` confirmed twice.
+
 ## Blockers
 
 - None. `e2e/browse.spec.ts`'s CI-only facet-selection timeout above
-  remains open and unaddressed — not currently reproducible locally.
+  remains open and unaddressed — the user has since pasted the actual
+  CI failure output (a genuine missing "Ranked grind" heading after
+  selecting the "Serious" facet, not a bare timeout), but investigation
+  is deliberately on hold per the user's own instruction to prioritize
+  feature work first.
