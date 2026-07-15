@@ -12,7 +12,13 @@ export function useBrowseUrlParams() {
   const searchParams = useSearchParams();
 
   function replace(mutator: (params: URLSearchParams) => void) {
-    const params = new URLSearchParams(searchParams.toString());
+    // Base each update on the *live* URL, not the `searchParams` snapshot
+    // captured at last render -- router.replace() only resolves that
+    // snapshot on the next render, so two rapid toggles (e.g. selecting
+    // two facets back-to-back, as in browse.spec.ts) would otherwise both
+    // read the same stale params and the second call would silently drop
+    // the first's change.
+    const params = new URLSearchParams(window.location.search);
     mutator(params);
     router.replace(`${pathname}?${params.toString()}`);
   }
