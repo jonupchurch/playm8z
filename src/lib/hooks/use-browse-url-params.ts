@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Shared by search-header.tsx, filter-sidebar.tsx, and active-pills.tsx --
@@ -11,16 +12,29 @@ export function useBrowseUrlParams() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // router.replace() doesn't call history.replaceState() synchronously --
+  // it dispatches to Next's internal async action-queue/reducer, which only
+  // resolves (updating both window.location and this hook's own
+  // `searchParams`) once React re-renders with the result. So neither
+  // `searchParams` nor `window.location.search` can be trusted as the base
+  // for a SECOND rapid update issued before the first one's reducer cycle
+  // has completed -- two facet toggles fired back-to-back (as in
+  // browse.spec.ts) would read the same not-yet-updated value and the
+  // second call would silently drop the first's change. Instead, track the
+  // params *this hook instance* last asked the router for, and reconcile it
+  // back to `null` (defer to the real `searchParams`) once a render finally
+  // reflects it -- an optimistic-local-state pattern that doesn't depend on
+  // any Next.js-internal timing at all.
+  const pendingRef = useRef<string | null>(null);
+  const searchParamsString = searchParams.toString();
+  if (pendingRef.current === searchParamsString) pendingRef.current = null;
+
   function replace(mutator: (params: URLSearchParams) => void) {
-    // Base each update on the *live* URL, not the `searchParams` snapshot
-    // captured at last render -- router.replace() only resolves that
-    // snapshot on the next render, so two rapid toggles (e.g. selecting
-    // two facets back-to-back, as in browse.spec.ts) would otherwise both
-    // read the same stale params and the second call would silently drop
-    // the first's change.
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(pendingRef.current ?? searchParamsString);
     mutator(params);
-    router.replace(`${pathname}?${params.toString()}`);
+    const next = params.toString();
+    pendingRef.current = next;
+    router.replace(`${pathname}?${next}`);
   }
 
   return {
@@ -59,6 +73,7 @@ export function useBrowseUrlParams() {
       });
     },
     clearAll() {
+      pendingRef.current = "";
       router.replace(pathname);
     },
   };

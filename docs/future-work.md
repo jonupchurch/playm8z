@@ -233,3 +233,31 @@ to actually populate that column). Upgrading either to open `012`'s
 richer three-step modal instead would be more consistent, but both
 already work as specced — optional polish, not a correction of
 anything broken.
+
+## Admin Users master-detail layout redesign (declined for now)
+
+`resources/wireframes/admin/playm8z - Admin Users (Master-Detail).dc.html`
+(added 2026-07-15) redraws the existing Admin Users drawer (`016`) as an
+always-visible inline side panel instead of a `<dialog>` flyout, plus a
+literal "Delete user" action with a confirm-delete banner. Reviewed with
+the user (2026-07-15): it's a same-scope layout variant, not the bulk
+multi-select management they were actually asking about (it has no
+checkboxes/batch actions), and its "Delete user" button would need to be
+redirected to the existing soft-ban/deactivate flow rather than built
+literally, since nothing is ever hard-deleted platform-wide (ADR 0005).
+Declined for now in favor of a smaller, real gap: feature `027` (view
+full profile in a new tab) instead. Revisit this wireframe on its own
+merits later if the drawer's current flyout treatment becomes a real
+problem.
+
+## AI writing assist for Admin Forum (no authoring surface exists yet)
+
+Raised alongside the AI writing-assist feature for Admin News/Content
+Pages (2026-07-15): Admin Forum's admin-facing UI
+(`forum-review-drawer.tsx`) is moderation-only (hide/remove/escalate/
+dismiss) — there's no textarea or authoring surface an admin uses to
+write or edit forum content, so there's nothing for an AI assist
+control to attach to today. Confirmed with the user: dropped from that
+feature's scope rather than also building a net-new "edit a flagged
+reply before republishing" surface as a side effect. Revisit if Admin
+Forum ever grows a real admin-authored-text surface.
