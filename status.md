@@ -11,8 +11,11 @@ log, and the Logged-out marketing landing page. The project-wide
 feature list is complete — future work is iteration (bug fixes,
 refinements, revisiting `docs/future-work.md`'s deferred items) rather
 than new ground-up features. Feature 27 (Admin Users drawer — view
-full profile in a new tab) has since shipped as exactly that kind of
-iteration, a small enhancement to already-shipped feature 016.
+full profile in a new tab) shipped as exactly that kind of iteration,
+a small enhancement to already-shipped feature 016. Feature 28
+(Admin-only AI writing assist) is this project's first genuinely new
+top-level feature since the original 26 — this project's first
+external-AI-provider integration.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -3340,6 +3343,96 @@ for both an active and a banned target user and asserts the link's
 comment claiming the drawer "can't be exercised end-to-end" — no
 longer true since Admin Settings (024) shipped the real `role` column;
 this is simply the first feature to actually take advantage of that.
+
+## Admin-only AI writing assist implemented (2026-07-15) — 28th feature, first external-AI-provider integration
+
+The user asked for AI (Claude Haiku) writing help on admin-authored
+content across "Forum posts, pages, news, etc." Checked before
+building: Admin Forum's admin-facing UI (`forum-review-drawer.tsx`) is
+moderation-only (hide/remove/escalate/dismiss) — there's no admin
+authoring/editing surface there at all, so nothing for an AI control
+to attach to. Confirmed with the user: dropped Forum from scope,
+logged to `docs/future-work.md`. Scoped to the two real admin
+authoring surfaces instead: Admin News' (020) editor and — a real
+correction caught mid-plan — the Content Page (021) block editor,
+which turned out NOT to live under `/admin/content-pages/` (that
+route, `content-page-table.tsx`, is list/create/delete only); it's
+actually rendered inline on the real public `/pages/[slug]` route for
+a moderator-or-higher session, per 021's own "public render + inline
+admin edit" design. Caught by actually reading the code before writing
+the plan's file list, not assumed from the route name.
+
+Went through the full spec/plan/tasks cycle (`specs/028-ai-writing-
+assist/`, branch `028-ai-writing-assist`), all 24 tasks complete.
+**ADR 0007** records the one real architectural tradeoff: Vercel AI
+SDK + AI Gateway (`anthropic/claude-haiku-4.5`, a plain model string)
+over a direct Anthropic SDK, matching how this project already
+provisions Neon through the Marketplace rather than a hand-wired
+client. Confirmed the current Haiku alias via a live
+`GET https://ai-gateway.vercel.sh/v1/models` call rather than trusting
+training-data model names, which drift.
+
+Two admin-only actions (gated at `admin` specifically, stricter than
+every other admin page's `moderator` minimum — this generates real
+content moderators can already publish, and it's the first external-
+AI-provider call):
+
+- **Write from scratch** — a short topic in, a complete structured
+  draft out (News: title/excerpt/body; Content Page: a set of blocks),
+  via `generateText`'s `output: Output.object()` — this AI SDK version
+  has no standalone `generateObject`, confirmed by reading
+  `node_modules/ai/docs/` directly rather than assumed from training
+  data (exactly the kind of breaking change AGENTS.md warns about).
+- **Improve/rewrite** — the admin's own already-drafted text in, a
+  revised version out. Implemented as ONE shared, surface-agnostic
+  Server Action (`improve-draft-text.ts`) for both News and Content
+  Pages: it always operates on plain text, reusing the Content Page
+  editor's own existing `blockToText`/`withText` round-trip (already
+  handles every block type, including joining a `list` block's items
+  with newlines) rather than a bespoke per-block schema. Found by
+  reading the existing editor code before designing a new abstraction.
+
+Neither action ever saves or publishes anything itself — both only
+populate the same draft form state a human typing would; the existing
+save/publish actions are completely unchanged. Every completed action
+logs an audit entry (015, `category: "content"`), matching Admin
+Settings'/Moderator Audit Log's own established precedent.
+
+**A real design correction surfaced while writing this feature's own
+unit tests, worth remembering broadly**: the plan's original approach
+trusted the AI SDK's internal `Output.object()` schema conformance
+check as the sole validation of the AI's structured response
+(Principle II). Writing the Vitest suite — which mocks `generateText`
+entirely, per its own test-strategy decision to never make a real,
+billed network call in tests — surfaced that this internal SDK
+validation is completely bypassed by that mock, meaning a test
+asserting "malformed AI output is rejected" couldn't actually prove
+anything real. Fixed by re-validating with the same Zod schema
+explicitly in `src/lib/ai/gateway.ts` itself — this project's own
+established discipline is to validate at ITS OWN boundary, not assume
+a third-party dependency's internal, unobservable behavior as the only
+guarantee.
+
+Full Vitest coverage of all three Server Actions (`ai` mocked, real
+seeded `admin`/`moderator` roles — no bypass of the gate itself,
+matching Admin Settings'/Moderator Audit Log's own pattern): role
+gate, input validation, audit logging, and the malformed-output
+rejection above. `e2e/admin-news.spec.ts`/`e2e/content-page.spec.ts`
+extended with a real seeded admin/moderator session proving the
+admin-only gate and control-availability state (including "Improve/
+rewrite" correctly absent on empty text, and absent on the seeded
+page's empty `divider` block) — deliberately never clicking a request
+through to a real AI response in an automated test, since Playwright's
+own request interception only intercepts browser-made requests, not
+the server-side call this Server Action makes, and every CI run making
+real, billed, non-deterministic calls to Claude Haiku is unacceptable.
+Instead, the real end-to-end Gateway call was verified once, live,
+outside the test suite (a real structured News draft and a real plain
+rewrite, both against the actual provisioned `AI_GATEWAY_API_KEY`) —
+confirming the actual wiring works beyond what the mocks alone prove.
+
+Full suite green (updated unit count reflecting the new tests, full
+142+ e2e), typecheck and lint clean.
 
 ## Blockers
 

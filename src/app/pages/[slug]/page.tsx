@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getContentPageBySlug } from "@/lib/content-page/get-content-page";
-import { requireRole } from "@/lib/auth/require-role";
+import { getCurrentRole, requireRole } from "@/lib/auth/require-role";
 import { BlockRenderer } from "@/components/content-page/block-renderer";
 import { PageEditor } from "@/components/content-page/page-editor";
 
@@ -22,6 +22,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const page = await getContentPageBySlug(slug);
   const canEdit = await canEditPage();
+  const role = canEdit ? await getCurrentRole() : null;
 
   if (!page || (page.status === "draft" && !canEdit)) {
     notFound();
@@ -37,6 +38,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             initialBlocks={page.blocks}
             initialStatus={page.status}
             updatedAt={page.updatedAt.toISOString()}
+            isAdmin={role === "admin"}
           />
         ) : (
           <>

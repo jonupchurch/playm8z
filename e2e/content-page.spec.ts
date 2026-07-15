@@ -1,21 +1,17 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { hash } from "bcrypt-ts";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { contentPages, users } from "@/db/schema";
 
-// Moderator-or-higher editing (US2/US3) can't be exercised end-to-end
-// here: require-role.ts's rank check is currently hardcoded to reject
-// every real session (no `role` column exists yet -- Admin Settings/024
-// adds it), so no test account, however constructed, can ever pass
-// requireRole("moderator") today. save-content-page.test.ts and
-// toggle-page-status.test.ts already cover that logic directly (with
-// requireRole mocked to simulate a passing check); this spec covers
-// what's actually reachable through a real browser today: public
+// save-content-page.test.ts/toggle-page-status.test.ts already cover
+// moderator-or-higher editing logic directly; this spec covers public
 // reading (US1, fully real) and confirming a logged-in ordinary user
 // sees no edit controls at all and is held to the same draft-404 rule
-// as an anonymous visitor (the real, current behavior of FR-004/FR-003).
+// as an anonymous visitor. The AI-writing-assist describe block
+// further down (028) exercises the inline editor for real through a
+// seeded admin/moderator session.
 const runId = crypto.randomUUID().slice(0, 8);
 const password = "correcthorse";
 const verifiedEmail = `e2e-cp-verified-${runId}@example.com`;
@@ -110,5 +106,59 @@ test.describe("Content Page (quickstart.md Scenario 1)", () => {
 
     const response = await page.goto(`/pages/${draftSlug}`);
     expect(response?.status()).toBe(404);
+  });
+});
+
+test.describe("AI writing assist -- admin-only gate (028, quickstart.md)", () => {
+  const adminEmail = `e2e-cp-ai-admin-${runId}@example.com`;
+  const modEmail = `e2e-cp-ai-mod-${runId}@example.com`;
+
+  test.beforeAll(async () => {
+    const passwordHash = await hash(password, 10);
+    await db.insert(users).values([
+      { email: adminEmail, passwordHash, handle: `e2ecpaiadmin${runId}`, emailVerified: new Date(), role: "admin" },
+      { email: modEmail, passwordHash, handle: `e2ecpaimod${runId}`, emailVerified: new Date(), role: "moderator" },
+    ]);
+  });
+
+  test.afterAll(async () => {
+    await db.delete(users).where(inArray(users.email, [adminEmail, modEmail]));
+  });
+
+  test("an admin session sees the 'Write from scratch' control while editing", async ({ page }) => {
+    await login(page, adminEmail);
+    await page.goto(`/pages/${publishedSlug}`);
+    await page.getByRole("button", { name: "Edit page" }).click();
+
+    await expect(page.getByPlaceholder(/short topic/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Write from scratch" })).toBeVisible();
+  });
+
+  test("a moderator (not admin) session does not see the control while editing", async ({ page }) => {
+    await login(page, modEmail);
+    await page.goto(`/pages/${publishedSlug}`);
+    await page.getByRole("button", { name: "Edit page" }).click();
+
+    await expect(page.getByPlaceholder(/short topic/)).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "Write from scratch" })).not.toBeVisible();
+  });
+
+  test("an admin sees 'Improve / rewrite' on populated blocks, but not on the empty divider block", async ({
+    page,
+  }) => {
+    await login(page, adminEmail);
+    await page.goto(`/pages/${publishedSlug}`);
+    await page.getByRole("button", { name: "Edit page" }).click();
+
+    // The seeded page has 5 text-bearing blocks (h2/p/list/quote/callout) plus one divider.
+    await expect(page.getByRole("button", { name: "Improve / rewrite", exact: true })).toHaveCount(5);
+  });
+
+  test("a moderator sees no 'Improve / rewrite' controls on any block", async ({ page }) => {
+    await login(page, modEmail);
+    await page.goto(`/pages/${publishedSlug}`);
+    await page.getByRole("button", { name: "Edit page" }).click();
+
+    await expect(page.getByRole("button", { name: "Improve / rewrite", exact: true })).toHaveCount(0);
   });
 });
