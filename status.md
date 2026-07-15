@@ -6,8 +6,9 @@ Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
 Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News,
-Admin Content Pages, Public profile page, News article detail, and
-Admin Settings are done and merged. Moderator audit log is next.
+Admin Content Pages, Public profile page, News article detail, Admin
+Settings, and Moderator audit log are done and merged. Logged-out
+marketing landing page is next (the last one).
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -3078,6 +3079,92 @@ Full suite green (673 unit, 115 e2e), `npm run build` confirmed twice.
 Schema migration (`0028_admin_settings_schema.sql`) pushed to local dev
 DB, verified via direct `information_schema` query before any test ran
 against it.
+
+## Moderator audit log implemented (2026-07-15)
+
+`/admin/audit-log`, all 21 tasks complete — gated at `moderator`
+(deliberately less strict than Admin Settings' `024` admin-only gate:
+this is a read-only transparency tool for the whole moderation team,
+not a mutation surface). Its own `require-role.ts` gate needed no
+local bypass at all — like Public Profile/News Article detail before
+it, the real role column (024) means a genuine seeded
+moderator/admin session exercises it end-to-end.
+
+A real, server-side `searchParams`-driven view over Admin Dashboard's
+(015) existing `auditEntries` table — its first full, dedicated,
+filterable/paginated viewer (the dashboard's own recent-activity feed
+only ever showed a short preview). Search matches actor/action/
+target/reason; an actor dropdown lists every real actor who has ever
+logged an entry plus a "System" sentinel for a null `actorId`; a
+category filter narrows to the real, stored 4-value `category`
+(`moderation`\|`content`\|`access`\|`system`) — the wireframe's own
+richer 11-value badge scheme (Removal/Ban/Warning/...) has no backing
+column, so rather than inventing a fragile keyword classifier off
+free-text `action` strings, the badge just shows the real value,
+capitalized. Entries group into Today/Yesterday/Earlier (one bucket
+further back than Notifications' own Today/Earlier, since this log is
+expected to be browsed further back than a notification feed).
+Cumulative "Load more" pagination (News feed's own precedent) since
+the table accumulates indefinitely. Each row is a real, keyboard-
+operable disclosure (`aria-expanded`) revealing its `reason` and every
+`meta` key/value pair recorded at write time. "Export CSV" is a real
+gated GET route handler (`/admin/audit-log/export`) that re-validates
+and re-runs the exact same filter, unpaginated — what's on screen is
+what downloads, never the full unfiltered table.
+
+Closes a real gap this feature's own design surfaced (the third such
+gap found this way this session, after Public Profile's in Admin
+Settings): Admin News (020) and Admin Content Pages (021) were the
+only two admin features that never wired 015's `logAuditEntry()`
+despite its own spec explicitly anticipating "Admin Users/Postings/
+Forum/News" (and, by the same CMS-shaped reasoning, Content Pages) as
+real callers. Small, bounded amendments: `save-news-post.ts` now logs
+a `content`-category entry on a genuine first-time publish, a
+schedule, or an edit to an already-published post (never on
+save-draft/delete, matching the gap's own stated scope); `create-
+content-page.ts`/`toggle-page-status.ts`/`delete-content-page.ts` each
+now log one too. Every amended action needed a second change alongside
+its new `logAuditEntry()` call: each now also calls `requireAuth()` to
+get a real actor id to attribute the entry to, which meant every
+existing test file for these four actions needed a `@/auth` mock and a
+seeded real user added (previously only `requireRole` was mocked) —
+mechanical but necessary across all four.
+
+Full unit/integration coverage: `audit-log.ts`'s Zod schemas (search/
+actor/category/page, including a union+`.catch()` for the actor filter
+so a tampered non-uuid value degrades to "all" rather than ever
+reaching a real `uuid` column comparison), `get-audit-log.ts`'s search/
+filter/day-grouping/pagination (a pure `groupByDay()` tested with
+synthetic entries, no DB needed, plus a real-Postgres integration
+suite scoped via a unique runId embedded in every seeded row's own
+text — deliberately NOT a wholesale table wipe, since `auditEntries`
+is this project's real, append-only audit trail and wiping it in a
+test would erase genuine history), `export-audit-log-csv.ts`'s exact
+filter-mirroring and comma/quote escaping, and all four amended `020`/
+`021` actions each proven to call `logAuditEntry()` with the right
+category/target against a real seeded moderator (no mocking of the
+gate itself). `e2e/audit-log.spec.ts` (11 tests, zero-violation axe
+scan) covers access control (unauthenticated/non-moderator/moderator,
+real sessions), browse/search/day-grouping, combined actor+category
+filtering, the empty state, expand/collapse, CSV export mirroring the
+active filter, a delta-count proof that browsing never writes a new
+entry itself, and both gap-fix scenarios exercised through the real
+Admin News/Admin Content Pages UI (publishing a real post, publishing
+a real page) — confirmed visible here afterward. One real test-design
+bug caught and fixed during this feature's own e2e work: the news post
+this suite publishes for its own gap-fix scenario was never being
+deleted afterward, and since News Article detail's (023) "Keep
+reading" query ranks the 3 most-recently-published posts across the
+WHOLE `newsPosts` table with no per-test scoping, the leftover row
+intermittently displaced that spec's own expected results in a
+full-suite run (passed in isolation, failed combined) — fixed by
+tracking and deleting the created post in this spec's own `afterAll`,
+the same "clean up after yourself in a shared, unscoped table" rule
+already established multiple times elsewhere in this project.
+
+Full suite green (693 unit, 126 e2e), `npm run build` confirmed. No
+schema migration — this feature is read-only against `auditEntries`
+plus small logic-only amendments to two existing actions.
 
 ## Blockers
 

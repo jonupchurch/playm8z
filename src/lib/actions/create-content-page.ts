@@ -4,7 +4,9 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { contentPages } from "@/db/schema";
+import { requireAuth } from "@/lib/auth/require-auth";
 import { requireRole } from "@/lib/auth/require-role";
+import { logAuditEntry } from "@/lib/admin/log-audit-entry";
 
 export type CreateContentPageResult = { success: true; slug: string } | { success: false; error: string };
 
@@ -30,10 +32,25 @@ async function generateUniqueSlug(): Promise<string> {
 // this feature never builds a second content-editing UI.
 export async function createContentPage(): Promise<CreateContentPageResult> {
   await requireRole("moderator");
+  const moderator = await requireAuth();
 
   const slug = await generateUniqueSlug();
 
-  await db.insert(contentPages).values({ slug, title: "Untitled page", status: "draft", system: false });
+  const [row] = await db
+    .insert(contentPages)
+    .values({ slug, title: "Untitled page", status: "draft", system: false })
+    .returning({ id: contentPages.id });
+
+  // 025's own gap fix (research.md #2) -- this feature never wired
+  // logAuditEntry() despite 015's own spec anticipating it.
+  await logAuditEntry({
+    actorId: moderator.id,
+    action: "created a content page",
+    category: "content",
+    targetType: "contentPage",
+    targetId: row.id,
+    targetLabel: "Untitled page",
+  });
 
   revalidatePath("/admin/content-pages", "layout");
   return { success: true, slug };

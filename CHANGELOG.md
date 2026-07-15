@@ -2118,3 +2118,50 @@ may begin on any/all of them per the constitution (v1.0.0).
   sessions with real roles — the first admin/moderation feature in the
   project needing no local QA bypass of any kind. Full suite green (673
   unit, 115 e2e), `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 31)
+
+### Added
+- Moderator audit log (`specs/025-moderator-audit-log/`, branch
+  `025-moderator-audit-log` merged to `main`) — all 21 tasks complete:
+  `/admin/audit-log`, gated at `moderator` (deliberately less strict
+  than Admin Settings', 024, admin-only gate — a read-only
+  transparency tool, not a mutation surface). A real, server-side
+  `searchParams`-driven search (actor/action/target/reason)/actor
+  filter (every real actor who has ever logged, plus a "System"
+  sentinel for a null `actorId`)/category filter (the real, stored
+  4-value `moderation`\|`content`\|`access`\|`system`, never a
+  fabricated finer classification) over Admin Dashboard's (015)
+  existing `auditEntries` — its first full, dedicated, filterable/
+  paginated viewer. Day-grouped Today/Yesterday/Earlier, cumulative
+  "Load more" pagination (News feed's own precedent). Each row is a
+  real, keyboard-operable disclosure (`aria-expanded`) revealing its
+  `reason`/`meta` detail. "Export CSV" is a real gated GET route
+  handler re-running the exact same filter, unpaginated.
+
+### Fixed
+- Admin News (020) and Admin Content Pages (021) were the only two
+  admin features that never wired 015's `logAuditEntry()` despite its
+  own spec anticipating them — `save-news-post.ts` now logs on a
+  genuine first-time publish, a schedule, or an edit to an
+  already-published post; `create-content-page.ts`/
+  `toggle-page-status.ts`/`delete-content-page.ts` each now log too.
+- A leftover, uncleaned real news post from this feature's own e2e
+  gap-fix test intermittently displaced News Article detail's (023)
+  "Keep reading" results in a full-suite run (that query ranks the 3
+  most-recent live posts across the whole, unscoped `newsPosts` table)
+  — fixed by deleting the created post in this spec's own `afterAll`.
+
+### Verified
+- Full unit/integration coverage: `audit-log.ts`'s Zod schemas,
+  `get-audit-log.ts`'s search/filter/day-grouping/pagination (a pure
+  `groupByDay()` plus a real-Postgres integration suite scoped via a
+  unique run id rather than wiping the shared audit table),
+  `export-audit-log-csv.ts`'s filter-mirroring, and all four amended
+  `020`/`021` actions proven to call `logAuditEntry()` against a real
+  seeded moderator. `e2e/audit-log.spec.ts` (11 tests, zero-violation
+  axe scan) covers access control, browse/search/filter/day-grouping,
+  expand/collapse, CSV export fidelity, a no-self-logging delta check,
+  and both gap-fix scenarios through the real Admin News/Admin Content
+  Pages UI — no bypass of any kind, same as Admin Settings' own suite.
+  Full suite green (693 unit, 126 e2e), `npm run build` confirmed.

@@ -4,7 +4,9 @@ import { eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { newsPosts } from "@/db/schema";
+import { requireAuth } from "@/lib/auth/require-auth";
 import { requireRole } from "@/lib/auth/require-role";
+import { logAuditEntry } from "@/lib/admin/log-audit-entry";
 import { saveNewsPostSchema, type SaveNewsPostInput } from "@/lib/validations/admin-news";
 
 export type SaveNewsPostResult = { success: true; id: string } | { success: false; error: string };
@@ -50,6 +52,7 @@ async function generateUniqueSlug(tx: Tx, title: string): Promise<string> {
 // footer action the moderator clicks, not its own separate save).
 export async function saveNewsPost(input: SaveNewsPostInput): Promise<SaveNewsPostResult> {
   await requireRole("moderator");
+  const actor = await requireAuth();
 
   const parsed = saveNewsPostSchema.safeParse(input);
   if (!parsed.success) {
@@ -61,7 +64,7 @@ export async function saveNewsPost(input: SaveNewsPostInput): Promise<SaveNewsPo
     return { success: false, error: "Cannot delete a post that hasn't been saved yet." };
   }
 
-  const id = await db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     let existingStatus: string | undefined;
     if (postId) {
       const [row] = await tx.select({ status: newsPosts.status }).from(newsPosts).where(eq(newsPosts.id, postId));
@@ -103,11 +106,22 @@ export async function saveNewsPost(input: SaveNewsPostInput): Promise<SaveNewsPo
       await tx.update(newsPosts).set({ featured: false }).where(ne(newsPosts.id, rowId));
     }
 
-    return rowId;
+    return { id: rowId, existingStatus };
   });
 
-  if (!id) {
+  if (!result) {
     return { success: false, error: "Post not found." };
+  }
+  const { id, existingStatus } = result;
+
+  // FR-007 (research.md #2, the gap this feature/025 closes): only
+  // publish/schedule/update actually log -- save-draft/delete aren't
+  // named in that gap-fix scope.
+  let auditAction: string | null = null;
+  if (action === "schedule") auditAction = "scheduled a news post";
+  else if (action === "publish") auditAction = existingStatus === "published" ? "updated a news post" : "published a news post";
+  if (auditAction) {
+    await logAuditEntry({ actorId: actor.id, action: auditAction, category: "content", targetType: "newsPost", targetId: id, targetLabel: title });
   }
 
   revalidatePath("/admin/news", "layout");

@@ -1,14 +1,28 @@
-import { afterAll, describe, expect, it, vi } from "vitest";
-import { eq } from "drizzle-orm";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { newsPosts } from "@/db/schema";
+import { auditEntries, newsPosts, users } from "@/db/schema";
 
+// requireRole is mocked directly (its rank check is hardcoded to
+// reject every real session until Admin Settings/024's role column --
+// pre-existing convention). `@/auth` is separately mocked so
+// requireAuth() (used to attribute the new logAuditEntry() call,
+// 025's own gap fix, to a real moderator row) succeeds.
 vi.mock("@/lib/auth/require-role", () => ({ requireRole: vi.fn() }));
+vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { requireRole } = await import("@/lib/auth/require-role");
+const { auth } = await import("@/auth");
 const { saveNewsPost } = await import("./save-news-post");
 const mockedRequireRole = requireRole as unknown as ReturnType<typeof vi.fn>;
+const mockedAuth = auth as unknown as ReturnType<typeof vi.fn>;
+
+function fakeSession(email: string) {
+  return { user: { email }, expires: new Date(Date.now() + 60_000).toISOString() };
+}
 
 const runId = crypto.randomUUID().slice(0, 8);
+const moderatorEmail = `save-news-post-mod-${runId}@example.com`;
+let moderatorId: string;
 const postIds: string[] = [];
 
 const base = {
@@ -20,8 +34,19 @@ const base = {
   featured: false,
 };
 
+beforeAll(async () => {
+  const [moderator] = await db
+    .insert(users)
+    .values({ email: moderatorEmail, handle: `savenewspostmod${runId}` })
+    .returning({ id: users.id });
+  moderatorId = moderator.id;
+  mockedAuth.mockResolvedValue(fakeSession(moderatorEmail));
+});
+
 afterAll(async () => {
   for (const id of postIds) await db.delete(newsPosts).where(eq(newsPosts.id, id));
+  await db.delete(auditEntries).where(eq(auditEntries.actorId, moderatorId));
+  await db.delete(users).where(eq(users.id, moderatorId));
 });
 
 describe("saveNewsPost", () => {
@@ -43,6 +68,14 @@ describe("saveNewsPost", () => {
     const [row] = await db.select().from(newsPosts).where(eq(newsPosts.id, result.id));
     expect(row.status).toBe("published");
     expect(row.publishedAt.getTime()).toBeGreaterThanOrEqual(before);
+
+    // FR-007 (025's own gap fix, research.md #2): a first-time publish logs.
+    const [entry] = await db
+      .select()
+      .from(auditEntries)
+      .where(and(eq(auditEntries.targetId, result.id), eq(auditEntries.action, "published a news post")));
+    expect(entry.actorId).toBe(moderatorId);
+    expect(entry.category).toBe("content");
   });
 
   it("schedule: sets status=scheduled and publishedAt to the entered future date", async () => {
@@ -56,6 +89,12 @@ describe("saveNewsPost", () => {
     const [row] = await db.select().from(newsPosts).where(eq(newsPosts.id, result.id));
     expect(row.status).toBe("scheduled");
     expect(row.publishedAt.getTime()).toBe(future.getTime());
+
+    const [entry] = await db
+      .select()
+      .from(auditEntries)
+      .where(and(eq(auditEntries.targetId, result.id), eq(auditEntries.action, "scheduled a news post")));
+    expect(entry.actorId).toBe(moderatorId);
   });
 
   it("save-draft always overrides to draft, even for an already-published post", async () => {
@@ -89,6 +128,14 @@ describe("saveNewsPost", () => {
     expect(afterRow.status).toBe("published");
     expect(afterRow.publishedAt.getTime()).toBe(beforeRow.publishedAt.getTime());
     expect(afterRow.title).toBe("Updated title");
+
+    // FR-007: an edit to an already-published post logs as "updated," not
+    // a second "published" entry.
+    const [entry] = await db
+      .select()
+      .from(auditEntries)
+      .where(and(eq(auditEntries.targetId, created.id), eq(auditEntries.action, "updated a news post")));
+    expect(entry.actorId).toBe(moderatorId);
   });
 
   it("pin exclusivity: featuring one post clears it on whichever post previously had it", async () => {

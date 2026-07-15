@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (`002`) and the `auditEntries` table/`logAuditEntry()` helper (`015`) exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (`002`) and the `auditEntries` table/`logAuditEntry()` helper (`015`) exist in the codebase before starting
 
 ---
 
@@ -36,8 +36,8 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 [P] Create `src/lib/validations/audit-log.ts` — Zod schemas for the `searchParams` boundary (data-model.md)
-- [ ] T003 Build `src/app/admin/audit-log/page.tsx` shell, gated by `require-role.ts` (moderator minimum — deliberately less strict than Admin Settings, `024`) — depends on T001
+- [x] T002 [P] Create `src/lib/validations/audit-log.ts` — Zod schemas for the `searchParams` boundary (data-model.md)
+- [x] T003 Build `src/app/admin/audit-log/page.tsx` shell, gated by `require-role.ts` (moderator minimum — deliberately less strict than Admin Settings, `024`) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -51,15 +51,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T004 [P] [US1] Unit tests for `audit-log.ts`'s schemas in `src/lib/validations/audit-log.test.ts`
-- [ ] T005 [P] [US1] Unit tests for `get-audit-log.ts` (search/filter combination, day-grouping into Today/Yesterday/Earlier, category-badge accuracy) in `src/lib/admin/get-audit-log.test.ts`
-- [ ] T006 [US1] Playwright e2e covering browse, search, actor/category filters, day-grouping, the empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/audit-log.spec.ts`
+- [x] T004 [P] [US1] Unit tests for `audit-log.ts`'s schemas in `src/lib/validations/audit-log.test.ts`
+- [x] T005 [P] [US1] Unit tests for `get-audit-log.ts` (search/filter combination, day-grouping into Today/Yesterday/Earlier, category-badge accuracy) in `src/lib/admin/get-audit-log.test.ts`
+- [x] T006 [US1] Playwright e2e covering browse, search, actor/category filters, day-grouping, the empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/audit-log.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Build `src/lib/admin/get-audit-log.ts` (research.md #1 for the real-category badge, #4 for day-grouping, #6 for the search/filter/pagination pattern) — depends on T002
-- [ ] T008 [US1] Build `src/components/admin/audit-log-list.tsx` (search bar, actor/category filter controls, day-grouped rows) — depends on T007
-- [ ] T009 [US1] Wire `audit-log-list.tsx` into `src/app/admin/audit-log/page.tsx` — depends on T003, T008
+- [x] T007 [US1] Build `src/lib/admin/get-audit-log.ts` (research.md #1 for the real-category badge, #4 for day-grouping, #6 for the search/filter/pagination pattern) — depends on T002
+- [x] T008 [US1] Build `src/components/admin/audit-log-list.tsx` (search bar, actor/category filter controls, day-grouped rows) — depends on T007
+- [x] T009 [US1] Wire `audit-log-list.tsx` into `src/app/admin/audit-log/page.tsx` — depends on T003, T008
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -73,13 +73,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Unit tests for `export-audit-log-csv.ts` (produces exactly the filtered result set — research.md #5) in `src/lib/admin/export-audit-log-csv.test.ts`
-- [ ] T011 [US2] Add the expand/collapse and CSV-export scenarios to `e2e/audit-log.spec.ts` — depends on T006 (same file)
+- [x] T010 [P] [US2] Unit tests for `export-audit-log-csv.ts` (produces exactly the filtered result set — research.md #5) in `src/lib/admin/export-audit-log-csv.test.ts`
+- [x] T011 [US2] Add the expand/collapse and CSV-export scenarios to `e2e/audit-log.spec.ts` — depends on T006 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Build `src/lib/admin/export-audit-log-csv.ts` (reuses `get-audit-log.ts`'s same filter, unpaginated) — depends on T007
-- [ ] T013 [US2] Wire expand/collapse (`aria-expanded`, keyboard-operable) and the "Export CSV" button into `audit-log-list.tsx` — depends on T008, T012
+- [x] T012 [US2] Build `src/lib/admin/export-audit-log-csv.ts` (reuses `get-audit-log.ts`'s same filter, unpaginated) — depends on T007
+- [x] T013 [US2] Wire expand/collapse (`aria-expanded`, keyboard-operable) and the "Export CSV" button into `audit-log-list.tsx` — depends on T008, T012
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -93,14 +93,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T014 [P] [US3] Integration test confirming `save-news-post.ts`'s (`020`) publish/schedule/update paths each call `logAuditEntry()` (`category = 'content'`) — extends `020`'s existing `save-news-post.test.ts`
-- [ ] T015 [P] [US3] Integration test confirming `create-content-page.ts`/`toggle-page-status.ts`/`delete-content-page.ts` (`021`) each call `logAuditEntry()` (`category = 'content'`) — extends `021`'s existing test files
-- [ ] T016 [US3] Add the gap-fix verification scenario (publish via `020`, edit/create via `021`, confirm both appear here) to `e2e/audit-log.spec.ts` — depends on T011 (same file)
+- [x] T014 [P] [US3] Integration test confirming `save-news-post.ts`'s (`020`) publish/schedule/update paths each call `logAuditEntry()` (`category = 'content'`) — extends `020`'s existing `save-news-post.test.ts`
+- [x] T015 [P] [US3] Integration test confirming `create-content-page.ts`/`toggle-page-status.ts`/`delete-content-page.ts` (`021`) each call `logAuditEntry()` (`category = 'content'`) — extends `021`'s existing test files
+- [x] T016 [US3] Add the gap-fix verification scenario (publish via `020`, edit/create via `021`, confirm both appear here) to `e2e/audit-log.spec.ts` — depends on T011 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Amend `src/lib/actions/save-news-post.ts` (`020-admin-news`): add `logAuditEntry()` on publish/schedule/update (research.md #2) — depends on T001
-- [ ] T018 [US3] Amend `src/lib/actions/create-content-page.ts`, `toggle-page-status.ts`, and `delete-content-page.ts` (`021-admin-content-pages`): each add `logAuditEntry()` (research.md #2) — depends on T001
+- [x] T017 [US3] Amend `src/lib/actions/save-news-post.ts` (`020-admin-news`): add `logAuditEntry()` on publish/schedule/update (research.md #2) — depends on T001
+- [x] T018 [US3] Amend `src/lib/actions/create-content-page.ts`, `toggle-page-status.ts`, and `delete-content-page.ts` (`021-admin-content-pages`): each add `logAuditEntry()` (research.md #2) — depends on T001
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -108,9 +108,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T019 Confirm `next build` succeeds locally and CI stays green with the new gated route and the amended `020`/`021` files
-- [ ] T020 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
-- [ ] T021 [P] Update `docs/feature-list.md`, marking Moderator audit log's spec/plan/tasks as complete
+- [x] T019 Confirm `next build` succeeds locally and CI stays green with the new gated route and the amended `020`/`021` files
+- [x] T020 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
+- [x] T021 [P] Update `docs/feature-list.md`, marking Moderator audit log's spec/plan/tasks as complete
 
 ---
 
