@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import type { RelatedArticle } from "@/lib/news/get-news-article";
 
 function formatDate(date: Date): string {
@@ -28,7 +29,7 @@ export function ArticleRelated({ posts }: { posts: RelatedArticle[] }) {
               >
                 <div
                   className="h-27.5"
-                  style={{ background: post.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
+                  style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
                 />
                 <div className="p-3.5">
                   <div className="mb-2 flex items-center gap-2">

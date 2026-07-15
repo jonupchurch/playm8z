@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
+    "@vercel/blob": "^2.6.1",
     "ai": "^7.0.29",
     "bcrypt-ts": "^9.0.1",
     "drizzle-orm": "^0.45.2",

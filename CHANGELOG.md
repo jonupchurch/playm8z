@@ -2308,3 +2308,49 @@ may begin on any/all of them per the constitution (v1.0.0).
   CI. The real end-to-end Gateway call was verified once, live,
   outside the test suite (both a structured draft and a plain
   rewrite), confirming the actual wiring works beyond the mocks.
+
+## [Unreleased] (cont. 35)
+
+### Added
+- Real image upload for News post covers
+  (`specs/029-news-cover-image-upload/`, branch
+  `029-news-cover-image-upload`) — all 17 tasks complete, the 29th
+  feature. The Admin News (020) editor's Cover field now accepts a
+  real uploaded image (JPEG/PNG/WebP, 5MB cap) alongside its existing
+  4 gradient swatches, via Vercel Blob (`ADR 0008`, `access: "public"`)
+  — this project's first user-uploaded file. `newsPosts.cover` is
+  reused as-is; a new shared `newsCoverStyle()` helper
+  (`src/lib/news/cover-style.ts`) distinguishes a gradient from a real
+  image URL by string shape at render time, adopted by all 6 real
+  consumers (feed cards, featured post, article detail, related
+  articles, Profile's Saved tab, admin list thumbnail). Gated at
+  `moderator` (not admin-only, unlike feature 028's AI assist).
+- `.env.example`/`.env.local` documented/provisioned with
+  `BLOB_READ_WRITE_TOKEN`; a Vercel Blob store was provisioned
+  (`vercel blob create-store`) and connected across Production/
+  Preview/Development.
+
+### Fixed
+- `vercel blob create-store --yes` triggered the same full local
+  `env pull` risk already on file from the Neon Marketplace incident —
+  wiped `AUTH_SECRET`/`AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET`/
+  `AI_GATEWAY_API_KEY` and replaced `DATABASE_URL` with Neon's again.
+  Restored immediately from values still in session context; no
+  lasting damage, but a reminder that `--yes`/non-interactive flags on
+  Vercel CLI commands default to "also sync env vars locally" more
+  often than the command name implies.
+
+### Verified
+- Full Vitest coverage of `upload-news-cover-image.ts` (role gate via
+  a real seeded `moderator` role, file-type/size validation, `put()`
+  called with `access: "public"`) and `newsCoverStyle()`, with
+  `@vercel/blob` mocked. `e2e/admin-news.spec.ts` extended to prove
+  only the upload control's presence for a real seeded moderator
+  session — never a real upload in CI, matching feature 028's own
+  external-call-boundary precedent. The full e2e suite (150 tests) was
+  run immediately after adopting `newsCoverStyle()` across all 6
+  consumers, before the upload capability itself existed, to prove
+  zero visual regression for already-published gradient-only posts.
+  The real end-to-end Blob write was verified once, live, outside the
+  test suite (upload → public URL → fetches with the correct
+  `image/png` content-type), then cleaned up.

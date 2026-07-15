@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { getNewsArticleBySlug, getNewsEngagement, getRelatedArticles } from "@/lib/news/get-news-article";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import { ReadingProgress } from "@/components/news/reading-progress";
 import { ArticleHeader, ArticleTagsShare } from "@/components/news/article-header";
 import { ArticleBody } from "@/components/news/article-body";
@@ -57,7 +58,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
       <div className="mx-auto mb-2 max-w-225 px-8">
         <div
           className="h-70 rounded-[20px]"
-          style={{ background: article.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
+          style={newsCoverStyle(article.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
         />
       </div>
 

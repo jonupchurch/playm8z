@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { saveNewsPost } from "@/lib/actions/save-news-post";
 import { generateNewsDraft } from "@/lib/actions/generate-news-draft";
 import { improveDraftText } from "@/lib/actions/improve-draft-text";
+import { uploadNewsCoverImage } from "@/lib/actions/upload-news-cover-image";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import { NEWS_CATEGORIES, newsCategoryColor, type NewsCategory } from "@/lib/validations/news";
 import { statusBadgeClass, statusLabel } from "@/components/admin/news-post-list";
 import type { AdminNewsPost } from "@/lib/admin/get-news-posts";
@@ -34,8 +36,10 @@ function formatDisplayDate(date: Date): string {
 // + conditional schedule date + pin toggle), a live preview that
 // tracks every field change before saving, and footer actions whose
 // label/behavior depend on the post's own loaded status (research.md
-// #1, #5) -- never a rich-text editor, never a real image upload
-// (research.md #4, spec.md's Assumptions). `key={post?.id ?? "new"}`
+// #1, #5) -- never a rich-text editor. Cover also supports a real
+// uploaded image (feature 029, Vercel Blob) alongside the 4 gradient
+// swatches, distinguished at render time by newsCoverStyle().
+// `key={post?.id ?? "new"}`
 // on the parent remounts this component (and thus resets all local
 // state) whenever a different post is selected.
 export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; isAdmin: boolean }) {
@@ -61,6 +65,29 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
   const [aiTopic, setAiTopic] = useState("");
   const [aiPending, setAiPending] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [coverUploadError, setCoverUploadError] = useState<string | null>(null);
+
+  async function handleCoverFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || coverUploading) return;
+
+    setCoverUploading(true);
+    setCoverUploadError(null);
+
+    const formData = new FormData();
+    formData.set("file", file);
+    const result = await uploadNewsCoverImage(formData);
+
+    setCoverUploading(false);
+    if (!result.success) {
+      setCoverUploadError(result.error);
+      return;
+    }
+    setCover(result.url);
+  }
 
   async function handleWriteFromScratch() {
     if (aiPending || !aiTopic.trim()) return;
@@ -209,7 +236,28 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
         <div className="flex flex-col gap-5">
           <div>
             <label className="mb-2.5 block text-[13px] font-bold text-text">Cover</label>
-            <div className="mb-2.5 h-30 rounded-2xl" style={{ background: cover }} />
+            <div className="mb-2.5 h-30 rounded-2xl" style={newsCoverStyle(cover, cover)} />
+            <div className="mb-2.5 flex items-center gap-2">
+              <label
+                htmlFor="news-cover-upload"
+                className="cursor-pointer rounded-lg border border-border bg-surface-2 px-3 py-1.5 font-mono text-xs font-bold text-text"
+              >
+                {coverUploading ? "Uploading…" : "Upload image"}
+              </label>
+              <input
+                id="news-cover-upload"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleCoverFileChange}
+                disabled={coverUploading}
+                className="sr-only"
+              />
+            </div>
+            {coverUploadError && (
+              <p role="alert" className="mb-2.5 text-xs text-pop-text">
+                {coverUploadError}
+              </p>
+            )}
             <div className="flex items-center gap-2">
               <span className="font-mono text-[10px] text-text-dim">or pick a color:</span>
               {COVER_SWATCHES.map((swatch) => (
@@ -412,7 +460,7 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
         <div className="sticky top-6">
           <div className="mb-3 font-mono text-[10px] tracking-wider text-text-dim uppercase">Feed preview</div>
           <div className="overflow-hidden rounded-2xl border border-border bg-surface-2">
-            <div className="relative h-30" style={{ background: cover }}>
+            <div className="relative h-30" style={newsCoverStyle(cover, cover)}>
               {featured && (
                 <span className="absolute top-2.5 left-2.5 rounded-md bg-[#ffb000] px-2.5 py-1 font-mono text-[10px] font-bold text-bg">
                   📌 Pinned
