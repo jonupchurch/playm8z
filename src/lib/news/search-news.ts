@@ -1,4 +1,4 @@
-import { and, desc, eq, ilike, ne, or } from "drizzle-orm";
+import { and, desc, eq, ilike, lte, ne, or } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { newsPosts } from "@/db/schema";
@@ -34,8 +34,21 @@ const SELECT_COLUMNS = {
   publishedAt: newsPosts.publishedAt,
 };
 
+// Admin News (020) -- a post is actually live when it's published, or
+// scheduled with a publish date/time that has already passed
+// (research.md #3, computed at read time -- no background job ever
+// flips a scheduled row's stored status). Every pre-020 row implicitly
+// satisfies this (status defaults to 'draft' at the schema level, but
+// every row that existed before this feature shipped was inserted by
+// a seed script expecting immediate visibility -- those scripts are
+// updated to pass `status: 'published'` explicitly alongside this
+// amendment).
+function isLiveCondition(): SQL {
+  return or(eq(newsPosts.status, "published"), and(eq(newsPosts.status, "scheduled"), lte(newsPosts.publishedAt, new Date()))) as SQL;
+}
+
 function buildConditions(filters: NewsFilters): SQL[] {
-  const conditions: SQL[] = [];
+  const conditions: SQL[] = [isLiveCondition()];
 
   if (filters.category !== "all") {
     conditions.push(eq(newsPosts.category, filters.category));
@@ -67,7 +80,15 @@ export async function searchNews(filters: NewsFilters): Promise<NewsResult> {
 
   let featured: NewsPostRow | null = null;
   if (showFeatured) {
-    const [row] = await db.select(SELECT_COLUMNS).from(newsPosts).where(eq(newsPosts.featured, true)).limit(1);
+    // Admin News (020) allows pinning a not-yet-live post (a draft or a
+    // still-future scheduled one) -- the featured pick respects the
+    // same live-check as the rest of the public feed, rather than
+    // exempting it.
+    const [row] = await db
+      .select(SELECT_COLUMNS)
+      .from(newsPosts)
+      .where(and(eq(newsPosts.featured, true), isLiveCondition()))
+      .limit(1);
     featured = row ?? null;
   }
 

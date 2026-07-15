@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (`002`) exists in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (`002`) exists in the codebase before starting
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend `newsPosts` (`013`) with `body` and `status` in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/admin-news.ts` — Zod schemas for the save action (data-model.md)
-- [ ] T005 Build `src/app/admin/news/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
+- [x] T002 Extend `newsPosts` (`013`) with `body` and `status` in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/admin-news.ts` — Zod schemas for the save action (data-model.md)
+- [x] T005 Build `src/app/admin/news/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,15 +53,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit tests for `admin-news.ts`'s schemas in `src/lib/validations/admin-news.test.ts`
-- [ ] T007 [P] [US1] Unit tests for `get-news-posts.ts` (list/filter logic) in `src/lib/admin/get-news-posts.test.ts`
-- [ ] T008 [US1] Playwright e2e covering the list, filters, row-to-editor loading, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-news.spec.ts`
+- [x] T006 [P] [US1] Unit tests for `admin-news.ts`'s schemas in `src/lib/validations/admin-news.test.ts`
+- [x] T007 [P] [US1] Unit tests for `get-news-posts.ts` (list/filter logic) in `src/lib/admin/get-news-posts.test.ts`
+- [x] T008 [US1] Playwright e2e covering the list, filters, row-to-editor loading, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-news.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Build `src/lib/admin/get-news-posts.ts` (research.md #6 for the list/filter pattern) — depends on T002, T004
-- [ ] T010 [US1] Build `src/components/admin/news-post-list.tsx` (filter chips, rows with cover/status/date/pin indicator, "+ New") — depends on T009
-- [ ] T011 [US1] Wire `news-post-list.tsx` into `src/app/admin/news/page.tsx` — depends on T005, T010
+- [x] T009 [US1] Build `src/lib/admin/get-news-posts.ts` (research.md #6 for the list/filter pattern) — depends on T002, T004
+- [x] T010 [US1] Build `src/components/admin/news-post-list.tsx` (filter chips, rows with cover/status/date/pin indicator, "+ New") — depends on T009
+- [x] T011 [US1] Wire `news-post-list.tsx` into `src/app/admin/news/page.tsx` — depends on T005, T010
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -75,14 +75,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] Integration test for `save-news-post.ts` (publish sets `publishedAt`/status; schedule sets a future `publishedAt`/status; save-draft always overrides to `draft`; updating an already-published post preserves its original `publishedAt` — research.md #1, #5) in `src/lib/actions/save-news-post.test.ts`
-- [ ] T013 [US2] Add the editor/publish/schedule/draft scenario to `e2e/admin-news.spec.ts` — depends on T008 (same file)
+- [x] T012 [P] [US2] Integration test for `save-news-post.ts` (publish sets `publishedAt`/status; schedule sets a future `publishedAt`/status; save-draft always overrides to `draft`; updating an already-published post preserves its original `publishedAt` — research.md #1, #5) in `src/lib/actions/save-news-post.test.ts`
+- [x] T013 [US2] Add the editor/publish/schedule/draft scenario to `e2e/admin-news.spec.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Build `src/lib/actions/save-news-post.ts` (create/update, branching by `action` per research.md #1) — depends on T004
-- [ ] T015 [US2] Build `src/components/admin/news-post-editor.tsx` (cover swatches, title, category chips, excerpt, body textarea + markdown-snippet toolbar, publish-settings panel, live preview) — depends on T014
-- [ ] T016 [US2] Wire `news-post-editor.tsx` into `src/app/admin/news/page.tsx`, loaded from list selection or "+ New" — depends on T011, T015
+- [x] T014 [US2] Build `src/lib/actions/save-news-post.ts` (create/update, branching by `action` per research.md #1) — depends on T004
+- [x] T015 [US2] Build `src/components/admin/news-post-editor.tsx` (cover swatches, title, category chips, excerpt, body textarea + markdown-snippet toolbar, publish-settings panel, live preview) — depends on T014
+- [x] T016 [US2] Wire `news-post-editor.tsx` into `src/app/admin/news/page.tsx`, loaded from list selection or "+ New" — depends on T011, T015
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -96,14 +96,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T017 [P] [US3] Integration test for `save-news-post.ts`'s pin-exclusivity transaction (setting `featured` on one row clears it on the previous one, atomically — research.md #2) — extends `src/lib/actions/save-news-post.test.ts` (same file as T012)
-- [ ] T018 [P] [US3] Integration test for `save-news-post.ts`'s `delete` action (sets `status = 'draft'`, never removes the row) — same file as T012/T017
-- [ ] T019 [US3] Add the pin/delete scenario to `e2e/admin-news.spec.ts` — depends on T013 (same file)
+- [x] T017 [P] [US3] Integration test for `save-news-post.ts`'s pin-exclusivity transaction (setting `featured` on one row clears it on the previous one, atomically — research.md #2) — extends `src/lib/actions/save-news-post.test.ts` (same file as T012)
+- [x] T018 [P] [US3] Integration test for `save-news-post.ts`'s `delete` action (sets `status = 'draft'`, never removes the row) — same file as T012/T017
+- [x] T019 [US3] Add the pin/delete scenario to `e2e/admin-news.spec.ts` — depends on T013 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Extend `save-news-post.ts` with the pin-exclusivity transaction and the `delete` (unpublish) action — depends on T014
-- [ ] T021 [US3] Wire the Pin toggle and Delete button into `news-post-editor.tsx` — depends on T015, T020
+- [x] T020 [US3] Extend `save-news-post.ts` with the pin-exclusivity transaction and the `delete` (unpublish) action — depends on T014
+- [x] T021 [US3] Wire the Pin toggle and Delete button into `news-post-editor.tsx` — depends on T015, T020
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -113,16 +113,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: A small, single-purpose addition to `013`'s already-merged public query. Independent of Phases 3-5 (only needs T002 from Foundational).
 
-- [ ] T022 [P] Amend `src/lib/news/search-news.ts` (`013-news-feed`): include a post when `status = 'published'`, OR `status = 'scheduled'` AND its publish date/time has passed — depends on T002
-- [ ] T023 [P] Extend `013`'s `search-news.test.ts` to cover T022's new behavior — depends on T022
+- [x] T022 [P] Amend `src/lib/news/search-news.ts` (`013-news-feed`): include a post when `status = 'published'`, OR `status = 'scheduled'` AND its publish date/time has passed — depends on T002
+- [x] T023 [P] Extend `013`'s `search-news.test.ts` to cover T022's new behavior — depends on T022
 
 ---
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T024 Confirm `next build` succeeds locally and CI stays green with the new gated route, the save action, the extended schema, and the amended `013` query
-- [ ] T025 Manually run quickstart.md Scenarios 1-11 end to end against local dev and confirm each passes
-- [ ] T026 [P] Update `docs/feature-list.md`, marking Admin News' spec/plan/tasks as complete
+- [x] T024 Confirm `next build` succeeds locally and CI stays green with the new gated route, the save action, the extended schema, and the amended `013` query
+- [x] T025 Manually run quickstart.md Scenarios 1-11 end to end against local dev and confirm each passes
+- [x] T026 [P] Update `docs/feature-list.md`, marking Admin News' spec/plan/tasks as complete
 
 ---
 

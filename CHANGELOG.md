@@ -1862,3 +1862,51 @@ may begin on any/all of them per the constitution (v1.0.0).
   banning from a message report both bans the account and removes that
   message. Full suite green (534 unit, 81 e2e), `npm run build`
   confirmed twice.
+
+## [Unreleased] (cont. 26)
+
+### Added
+- Admin News (`specs/020-admin-news/`, branch `020-admin-news` merged
+  to `main`) — all 26 tasks complete: `/admin/news`'s two-pane CMS —
+  News feed's (013) first real `NewsPost` writer. A filterable
+  (All/Published/Drafts/Scheduled) post list alongside an editor
+  (cover swatches, title, category chips, excerpt, a
+  markdown-snippet-assisted body textarea, publish settings) with a
+  live preview tracking every field change before saving. One
+  `save-news-post.ts` Server Action handles Publish now/Update/
+  Schedule/Save draft/Delete via a discriminated `action` field:
+  `publish` only sets `publishedAt=now()` when the row isn't already
+  published; `save-draft` always overrides to `draft` regardless of
+  the on-screen status control; `delete` sets `status=draft` (never a
+  hard delete, ADR 0005). Reuses `013`'s `featured` column for "pin,"
+  enforcing the at-most-one-featured invariant in the same transaction
+  as every save. `requireRole("moderator")` gates the route and the
+  Server Action — the eighth real consumer after Content Page (014),
+  Admin Dashboard (015), Admin Users (016), Admin Postings (017),
+  Admin Forum (018), and Admin Reports (019) — so the real list/editor
+  content can't be exercised by a real session yet; every query/action
+  is unit-tested directly, and e2e covers the real, current
+  access-denial behavior.
+
+### Changed
+- Amended `013`'s `search-news.ts` (main grid query and the
+  featured-post pick) so the public feed only shows posts that are
+  `published`, or `scheduled` with a publish date/time that has
+  passed — computed at read time, no background job.
+- Updated `scripts/seed-news-posts.ts` and `e2e/news-feed.spec.ts` to
+  seed `status: "published"` explicitly, since `newsPosts.status`'s
+  new schema default is `draft`.
+
+### Verified
+- Visual QA (temporary local role-gate bypass across `page.tsx` and
+  `save-news-post.ts`, fully reverted before commit) exercised
+  create+publish (live preview confirmed live on the real `/news`
+  page), edit-and-Update (publishedAt unchanged), schedule (absent
+  from `/news`), Save-draft-overrides-the-status-control,
+  pin-exclusivity, and delete-as-unpublish (gone from `/news`, still
+  editable under Drafts) end-to-end with no product bugs found — every
+  QA-script failure was a locator ambiguity from a real, harmless UI
+  coincidence ("Update"/"Scheduled"/"Published" each double as a
+  category/filter-chip label and an editor control label), not a
+  defect. Full suite green (553 unit, 83 e2e), `npm run build`
+  confirmed twice.

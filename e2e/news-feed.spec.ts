@@ -37,6 +37,7 @@ test.beforeAll(async () => {
       excerpt: "The big one everyone's been waiting for.",
       category: "Announcement",
       featured: true,
+      status: "published",
       publishedAt: new Date(now),
     })
     .returning({ id: newsPosts.id });
@@ -60,6 +61,7 @@ test.beforeAll(async () => {
         excerpt: `Excerpt for ${post.title}`,
         category: post.category,
         upcoming: post.upcoming ?? false,
+        status: "published",
         publishedAt: new Date(now - post.offset * 60_000),
       })
       .returning({ id: newsPosts.id });

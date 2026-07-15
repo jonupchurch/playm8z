@@ -5,8 +5,8 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, Admin Postings, Admin Forum, and Admin Reports are done and
-merged. Admin News is next.
+Admin Users, Admin Postings, Admin Forum, Admin Reports, and Admin News
+are done and merged. Admin Content Pages is next.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -2583,6 +2583,89 @@ profile writes a `null`-targeted `warnings` row, and banning from a
 message report both bans the account and removes that message.
 
 Full suite green (534 unit, 81 e2e), `npm run build` confirmed twice.
+
+## Admin News implemented (2026-07-15)
+
+`/admin/news`'s two-pane CMS, all 26 tasks complete — News feed's
+(013) first real `NewsPost` writer. A filterable (All/Published/
+Drafts/Scheduled) post list (cover thumb, status badge, date, pin
+indicator, "+ New") alongside an editor (cover color swatches, title,
+category chips, excerpt, a markdown-snippet-assisted body textarea,
+publish settings) with a live preview reflecting every field change
+before saving — matching Post a Game's (005) own established local-
+state-plus-live-preview pattern, not a server round-trip per
+keystroke. Selection lives in the URL's `?postId=` param (every other
+admin drawer/editor's own convention); `key={post?.id ?? "new"}` on
+the editor remounts it (resetting local form state) whenever a
+different post is selected or "+ New" is clicked.
+
+Adds `newsPosts.body` (plain markdown text, not a rich document —
+research.md #4 explicitly rejected a WYSIWYG editor or a Content-
+Page-style JSONB block structure as disproportionate for a single
+scrolling announcement) and `newsPosts.status` (`draft`\|`published`\|
+`scheduled`, defaulting to `draft`). One `save-news-post.ts` Server
+Action handles every one of the wireframe's five footer actions
+(Publish now/Update/Schedule/Save draft/Delete) via a discriminated
+`action` field rather than five near-identical actions: `publish`
+only sets `publishedAt = now()` when the row's current status isn't
+already `published` (an edit to an already-live post via "Update"
+never re-dates it and doesn't jump the public feed's ordering);
+`save-draft` always overrides to `draft` regardless of what the
+editor's status segmented control currently shows (FR-007's explicit
+override); `delete` is the ADR-0005-safe "Unpublish" (`status →
+draft`, the row itself never removed, still editable from the
+Drafts filter). Reuses News feed's own `featured` column for "pin,"
+finally implementing the at-most-one-featured invariant that
+feature's own data-model.md had explicitly deferred to "the future
+Admin News feature" — enforced in the same transaction as every save
+(not its own separate action), since the wireframe's own pin toggle
+only mutates local draft state until the next footer-button click.
+
+Small, bounded amendment to News feed's (013) `search-news.ts`: a
+post is only actually live when `status = 'published'`, or `status =
+'scheduled'` with a `publishedAt` that has already passed — computed
+at read time by both the main grid query AND the featured-post pick
+(a draft or not-yet-due scheduled post can be pinned locally without
+ever leaking onto the real public feed), no cron/background job
+involved, matching this project's repeated preference (posting
+auto-expiry/ADR 0003, Admin Reports' own resolvedAt-driven stats).
+Every pre-existing `newsPosts` row (this feature's own DB default is
+`draft`) needed an explicit `status: "published"` to stay visible:
+`scripts/seed-news-posts.ts` (dev convenience) and `e2e/news-feed.spec.ts`
+(real e2e seed data) both updated accordingly, confirmed via a full
+e2e run rather than assumed.
+
+`requireRole("moderator")` gates the route and the one Server Action
+independently — its eighth real consumer after Content Page (014),
+Admin Dashboard (015), Admin Users (016), Admin Postings (017), Admin
+Forum (018), and Admin Reports (019) — so the real list/editor content
+can't be exercised by a real session yet (no `role` column until Admin
+Settings/024); every query/action is unit/integration-tested directly
+(553 unit tests total after this feature), and `e2e/admin-news.spec.ts`
+covers the real, current access-denial behavior.
+
+**Visual QA pass found no product bugs** (fourth consecutive clean
+pass): bypassed the role gate locally in `page.tsx` and
+`save-news-post.ts` (the smallest bypass list yet — this feature
+doesn't delegate into any other feature's gated action or page, unlike
+every prior moderation-queue feature). Exercised create+publish (live
+preview updating per keystroke, confirmed live on the real `/news`
+page), edit-and-Update (confirmed `publishedAt` unchanged), schedule-a-
+future-post (confirmed absent from `/news`), Save-draft-overrides-the-
+status-control, pin-exclusivity (pinning a second post unpinned the
+first), and delete-as-unpublish (confirmed gone from `/news`, still
+present and editable under the admin list's own Drafts filter) --- all
+end-to-end in a real browser. Every QA-script failure along the way
+was a locator ambiguity from a real, harmless UI coincidence rather
+than a defect: "Update" is simultaneously a `NEWS_CATEGORIES` chip
+label and the primary button's own label when editing an
+already-published post; "Scheduled"/"Published" are simultaneously
+list filter-chip labels and the editor's own status-segmented-control
+labels — a human glancing at the two-pane layout never confuses them
+(different regions, different styling), only a naive accessible-name
+locator does.
+
+Full suite green (553 unit, 83 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

@@ -27,6 +27,7 @@ describe("searchNews (integration)", () => {
         excerpt: "The big one everyone's been waiting for.",
         category: "Announcement",
         featured: true,
+        status: "published",
         publishedAt: new Date(now),
       })
       .returning({ id: newsPosts.id });
@@ -56,6 +57,7 @@ describe("searchNews (integration)", () => {
           excerpt: `Excerpt for ${post.title}`,
           category: post.category,
           upcoming: post.upcoming ?? false,
+          status: "published",
           publishedAt: new Date(now - post.offset * 60_000),
         })
         .returning({ id: newsPosts.id });
@@ -110,5 +112,81 @@ describe("searchNews (integration)", () => {
     expect(result.featured).toBeNull();
     expect(result.posts).toEqual([]);
     expect(result.hasMore).toBe(false);
+  });
+
+  // Admin News (020, research.md #3): a post is only actually live when
+  // published, or scheduled with a publish date/time that has passed --
+  // computed at read time, no background job involved.
+  it("excludes a draft post from the public feed", async () => {
+    const [draft] = await db
+      .insert(newsPosts)
+      .values({
+        title: `Draft post ${runId}`,
+        excerpt: "e",
+        category: "Announcement",
+        status: "draft",
+        publishedAt: new Date(Date.now()),
+      })
+      .returning({ id: newsPosts.id });
+    postIds.push(draft.id);
+
+    const result = await searchNews({ category: "all", q: "", page: 2 });
+    expect(result.posts.some((post) => post.id === draft.id)).toBe(false);
+  });
+
+  it("excludes a scheduled post whose publish date/time hasn't passed yet", async () => {
+    const [future] = await db
+      .insert(newsPosts)
+      .values({
+        title: `Future scheduled post ${runId}`,
+        excerpt: "e",
+        category: "Announcement",
+        status: "scheduled",
+        publishedAt: new Date(Date.now() + 7 * 86_400_000),
+      })
+      .returning({ id: newsPosts.id });
+    postIds.push(future.id);
+
+    const result = await searchNews({ category: "all", q: "", page: 2 });
+    expect(result.posts.some((post) => post.id === future.id)).toBe(false);
+  });
+
+  it("includes a scheduled post whose publish date/time has already passed", async () => {
+    const [past] = await db
+      .insert(newsPosts)
+      .values({
+        title: `Past scheduled post ${runId}`,
+        excerpt: "e",
+        category: "Announcement",
+        status: "scheduled",
+        publishedAt: new Date(Date.now() - 60_000),
+      })
+      .returning({ id: newsPosts.id });
+    postIds.push(past.id);
+
+    const result = await searchNews({ category: "Announcement", q: "", page: 1 });
+    expect(result.posts.some((post) => post.id === past.id)).toBe(true);
+  });
+
+  it("never shows a featured post that isn't itself live", async () => {
+    const [draftFeatured] = await db
+      .insert(newsPosts)
+      .values({
+        title: `Draft featured post ${runId}`,
+        excerpt: "e",
+        category: "Announcement",
+        status: "draft",
+        featured: true,
+        publishedAt: new Date(Date.now()),
+      })
+      .returning({ id: newsPosts.id });
+    postIds.push(draftFeatured.id);
+
+    const result = await searchNews({ category: "all", q: "", page: 1 });
+    expect(result.featured?.id).not.toBe(draftFeatured.id);
+    // The real published `featured` row from beforeAll still wins.
+    expect(result.featured?.id).toBe(featuredId);
+
+    await db.update(newsPosts).set({ featured: false }).where(eq(newsPosts.id, draftFeatured.id));
   });
 });

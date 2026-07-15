@@ -458,13 +458,13 @@ export const notifications = pgTable("notifications", {
 });
 
 // News feed (013) -- this feature's own minimal, read-only shape
-// (data-model.md); the future Admin News feature is the canonical
-// writer and extends this table (e.g. a full body-content column) for
-// its own authoring needs, same "define the minimal shape now" pattern
-// as Home's original `postings` before Post a Game existed. `category`
-// is one of five hardcoded values (research.md #2), not a foreign key.
-// `featured`/`upcoming` are never written here -- Admin News owns
-// ensuring at most one post is featured at a time.
+// (data-model.md); Admin News (020) is the canonical writer and
+// extends this table with `body`/`status` for its own authoring needs,
+// same "define the minimal shape now" pattern as Home's original
+// `postings` before Post a Game existed. `category` is one of five
+// hardcoded values (research.md #2), not a foreign key. `featured` is
+// Admin News' own "pin" -- that feature enforces at most one featured
+// post at a time; `upcoming` is still never written by any feature.
 export const newsPosts = pgTable("newsPosts", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
@@ -475,6 +475,13 @@ export const newsPosts = pgTable("newsPosts", {
   featured: boolean("featured").notNull().default(false),
   upcoming: boolean("upcoming").notNull().default(false),
   publishedAt: timestamp("publishedAt", { mode: "date" }).notNull().defaultNow(),
+  // Admin News (020) -- this feature's own first real writer of this
+  // table. `body` is full markdown content (plain text, not a rich
+  // document -- research.md #4); `status` is one of
+  // draft|published|scheduled, defaulting to draft so a brand-new post
+  // never appears live before an explicit publish/schedule action.
+  body: text("body").notNull().default(""),
+  status: text("status").notNull().default("draft"),
 });
 
 // News feed (013) -- this feature's only writer. No relationship to

@@ -1,9 +1,12 @@
-// Dev convenience only -- Admin News doesn't exist yet to create posts
-// through the UI (quickstart.md). Run with:
+// Dev convenience -- faster than authoring these through Admin News'
+// (020) own UI one at a time. Run with:
 //   npx tsx scripts/seed-news-posts.ts
 // Idempotent: clears existing newsPosts before inserting the fresh
 // sample set. Includes exactly one `featured` post and one `upcoming`
-// Event post, as quickstart.md's setup expects.
+// Event post, as quickstart.md's setup expects. Every row is explicitly
+// `status: "published"` -- 020's amended search-news.ts only shows
+// published (or passed-date scheduled) posts, and the schema's own
+// default is `draft`.
 try {
   process.loadEnvFile(".env.local");
 } catch {
@@ -32,6 +35,7 @@ async function main() {
       readTimeMinutes: 3,
       featured: true,
       publishedAt: new Date(now - 0 * DAY),
+      status: "published",
     },
     {
       title: "New: filter by tabletop & TTRPGs",
@@ -41,6 +45,7 @@ async function main() {
       cover: "linear-gradient(135deg,#ff6b1a,#ff3b6b)",
       readTimeMinutes: 2,
       publishedAt: new Date(now - 2 * DAY),
+      status: "published",
     },
     {
       title: "Summer Co-op Fest — win prizes",
@@ -50,6 +55,7 @@ async function main() {
       readTimeMinutes: 2,
       upcoming: true,
       publishedAt: new Date(now - 4 * DAY),
+      status: "published",
     },
     {
       title: "Discord integration preview",
@@ -58,6 +64,7 @@ async function main() {
       cover: "linear-gradient(135deg,#ff3b6b,#ffb000)",
       readTimeMinutes: 4,
       publishedAt: new Date(now - 6 * DAY),
+      status: "published",
     },
     {
       title: "v1.2 — faster matchmaking & fixes",
@@ -66,6 +73,7 @@ async function main() {
       cover: "linear-gradient(135deg,#ffb000,#ff3b6b)",
       readTimeMinutes: 5,
       publishedAt: new Date(now - 8 * DAY),
+      status: "published",
     },
     {
       title: "Party of the Month: the Deep Rock crew",
@@ -74,6 +82,7 @@ async function main() {
       cover: "linear-gradient(135deg,#ff6b1a,#ffb000)",
       readTimeMinutes: 3,
       publishedAt: new Date(now - 10 * DAY),
+      status: "published",
     },
     {
       title: "Mobile app is on the way",
@@ -82,6 +91,7 @@ async function main() {
       cover: "linear-gradient(135deg,#ff3b6b,#ff6b1a)",
       readTimeMinutes: 2,
       publishedAt: new Date(now - 12 * DAY),
+      status: "published",
     },
   ];
 

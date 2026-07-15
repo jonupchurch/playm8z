@@ -162,6 +162,13 @@
       "when": 1784075272447,
       "tag": "0022_admin_reports_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1784078146734,
+      "tag": "0023_admin_news_schema",
+      "breakpoints": true
     }
   ]
 }
