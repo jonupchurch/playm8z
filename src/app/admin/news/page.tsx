@@ -1,4 +1,4 @@
-import { requireRole } from "@/lib/auth/require-role";
+import { getCurrentRole, requireRole } from "@/lib/auth/require-role";
 import { getNewsPosts } from "@/lib/admin/get-news-posts";
 import { newsPostIdParamSchema } from "@/lib/validations/admin-news";
 import { NewsPostList } from "@/components/admin/news-post-list";
@@ -19,6 +19,7 @@ export default async function AdminNewsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   await requireRole("moderator");
+  const role = await getCurrentRole();
 
   const rawParams = await searchParams;
   const postId = newsPostIdParamSchema.parse(rawParams.postId);
@@ -29,7 +30,7 @@ export default async function AdminNewsPage({
   return (
     <main className="grid min-h-screen grid-cols-[308px_1fr] bg-bg text-text">
       <NewsPostList posts={posts} />
-      <NewsPostEditor key={selectedPost?.id ?? "new"} post={selectedPost} />
+      <NewsPostEditor key={selectedPost?.id ?? "new"} post={selectedPost} isAdmin={role === "admin"} />
     </main>
   );
 }

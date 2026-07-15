@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Shared by search-header.tsx, filter-sidebar.tsx, and active-pills.tsx --
@@ -27,7 +27,13 @@ export function useBrowseUrlParams() {
   // any Next.js-internal timing at all.
   const pendingRef = useRef<string | null>(null);
   const searchParamsString = searchParams.toString();
-  if (pendingRef.current === searchParamsString) pendingRef.current = null;
+  // Refs must not be read/written during render (react-hooks/refs) --
+  // the reconciliation runs as a post-commit effect instead, not
+  // inline in the render body. replace() below still reads/writes the
+  // ref freely, since it only ever runs from an event handler.
+  useEffect(() => {
+    if (pendingRef.current === searchParamsString) pendingRef.current = null;
+  }, [searchParamsString]);
 
   function replace(mutator: (params: URLSearchParams) => void) {
     const params = new URLSearchParams(pendingRef.current ?? searchParamsString);

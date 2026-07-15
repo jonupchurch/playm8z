@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { saveNewsPost } from "@/lib/actions/save-news-post";
+import { generateNewsDraft } from "@/lib/actions/generate-news-draft";
+import { improveDraftText } from "@/lib/actions/improve-draft-text";
 import { NEWS_CATEGORIES, newsCategoryColor, type NewsCategory } from "@/lib/validations/news";
 import { statusBadgeClass, statusLabel } from "@/components/admin/news-post-list";
 import type { AdminNewsPost } from "@/lib/admin/get-news-posts";
@@ -36,7 +38,7 @@ function formatDisplayDate(date: Date): string {
 // (research.md #4, spec.md's Assumptions). `key={post?.id ?? "new"}`
 // on the parent remounts this component (and thus resets all local
 // state) whenever a different post is selected.
-export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
+export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; isAdmin: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -55,6 +57,42 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
   const [featured, setFeatured] = useState(post?.featured ?? false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiPending, setAiPending] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  async function handleWriteFromScratch() {
+    if (aiPending || !aiTopic.trim()) return;
+    setAiPending(true);
+    setAiError(null);
+
+    const result = await generateNewsDraft({ topic: aiTopic });
+
+    setAiPending(false);
+    if (!result.success) {
+      setAiError(result.error);
+      return;
+    }
+    setTitle(result.draft.title);
+    setExcerpt(result.draft.excerpt);
+    setBody(result.draft.body);
+  }
+
+  async function handleImproveBody() {
+    if (aiPending || !body.trim()) return;
+    setAiPending(true);
+    setAiError(null);
+
+    const result = await improveDraftText({ text: body, surface: "news" });
+
+    setAiPending(false);
+    if (!result.success) {
+      setAiError(result.error);
+      return;
+    }
+    setBody(result.text);
+  }
 
   const isExisting = !!post;
   const wasAlreadyPublished = post?.status === "published";
@@ -134,6 +172,37 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
         <p role="alert" className="mb-4 text-sm text-pop-text">
           {error}
         </p>
+      )}
+
+      {isAdmin && (
+        <div className="mb-5 rounded-2xl border border-border bg-surface-2 p-4.5">
+          <div className="mb-2.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">AI writing assist</div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="ai-topic-news" className="sr-only">
+              Topic
+            </label>
+            <input
+              id="ai-topic-news"
+              value={aiTopic}
+              onChange={(event) => setAiTopic(event.target.value.slice(0, 300))}
+              placeholder="A short topic, e.g. 'weekend tournament announcement'…"
+              className="w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-sm text-text outline-none"
+            />
+            <button
+              type="button"
+              disabled={aiPending || !aiTopic.trim()}
+              onClick={handleWriteFromScratch}
+              className="shrink-0 rounded-lg border border-border bg-surface px-4 py-2.5 text-[13px] font-bold text-text disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {aiPending ? "Writing…" : "Write from scratch"}
+            </button>
+          </div>
+          {aiError && (
+            <p role="alert" className="mt-2 text-xs text-pop-text">
+              {aiError}
+            </p>
+          )}
+        </div>
       )}
 
       <div className="grid grid-cols-1 items-start gap-7 xl:grid-cols-[1fr_340px]">
@@ -222,6 +291,16 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
               <button type="button" onClick={() => insertSnippet("- ")} className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 font-mono text-xs text-text-muted">
                 • List
               </button>
+              {isAdmin && body.trim().length > 0 && (
+                <button
+                  type="button"
+                  disabled={aiPending}
+                  onClick={handleImproveBody}
+                  className="ml-auto rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 font-mono text-xs font-bold text-accent-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {aiPending ? "Improving…" : "Improve / rewrite"}
+                </button>
+              )}
             </div>
             <textarea
               id="news-body"

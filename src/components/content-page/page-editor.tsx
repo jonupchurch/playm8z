@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { ContentBlock } from "@/db/schema";
 import { saveContentPage } from "@/lib/actions/save-content-page";
 import { togglePageStatus } from "@/lib/actions/toggle-page-status";
+import { generateContentPageDraft } from "@/lib/actions/generate-content-page-draft";
+import { improveDraftText } from "@/lib/actions/improve-draft-text";
 import { BlockRenderer } from "./block-renderer";
 
 type DraftBlock = { localId: string; block: ContentBlock };
@@ -68,12 +70,14 @@ export function PageEditor({
   initialBlocks,
   initialStatus,
   updatedAt,
+  isAdmin,
 }: {
   slug: string;
   initialTitle: string;
   initialBlocks: ContentBlock[];
   initialStatus: "published" | "draft";
   updatedAt: string;
+  isAdmin: boolean;
 }) {
   const router = useRouter();
   const titleId = useId();
@@ -90,9 +94,52 @@ export function PageEditor({
   const [draftTitle, setDraftTitle] = useState(initialTitle);
   const [draftBlocks, setDraftBlocks] = useState<DraftBlock[]>([]);
 
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiPending, setAiPending] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [improvingLocalId, setImprovingLocalId] = useState<string | null>(null);
+
   function makeLocalId(): string {
     nextLocalId.current += 1;
     return `b${nextLocalId.current}`;
+  }
+
+  async function handleWriteFromScratch() {
+    if (aiPending || !aiTopic.trim()) return;
+    setAiPending(true);
+    setAiError(null);
+
+    const result = await generateContentPageDraft({ topic: aiTopic });
+
+    setAiPending(false);
+    if (!result.success) {
+      setAiError(result.error);
+      return;
+    }
+    setDraftBlocks(result.draft.blocks.map((block) => ({ localId: makeLocalId(), block })));
+    setSaved(false);
+  }
+
+  async function handleImproveBlock(localId: string) {
+    if (aiPending) return;
+    const entry = draftBlocks.find((candidate) => candidate.localId === localId);
+    if (!entry) return;
+    const text = blockToText(entry.block);
+    if (!text.trim()) return;
+
+    setAiPending(true);
+    setImprovingLocalId(localId);
+    setAiError(null);
+
+    const result = await improveDraftText({ text, surface: "contentPage" });
+
+    setAiPending(false);
+    setImprovingLocalId(null);
+    if (!result.success) {
+      setAiError(result.error);
+      return;
+    }
+    updateBlock(localId, result.text);
   }
 
   function startEdit() {
@@ -246,6 +293,37 @@ export function PageEditor({
             className="mb-8 w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-[28px] font-bold tracking-tight text-text outline-none"
           />
 
+          {isAdmin && (
+            <div className="mb-8 rounded-2xl border border-border bg-surface-2 p-4.5">
+              <div className="mb-2.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">AI writing assist</div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="ai-topic-content-page" className="sr-only">
+                  Topic
+                </label>
+                <input
+                  id="ai-topic-content-page"
+                  value={aiTopic}
+                  onChange={(event) => setAiTopic(event.target.value.slice(0, 300))}
+                  placeholder="A short topic, e.g. 'community guidelines'…"
+                  className="w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-sm text-text outline-none"
+                />
+                <button
+                  type="button"
+                  disabled={aiPending || !aiTopic.trim()}
+                  onClick={handleWriteFromScratch}
+                  className="shrink-0 rounded-lg border border-border bg-surface px-4 py-2.5 text-[13px] font-bold text-text disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {aiPending ? "Writing…" : "Write from scratch"}
+                </button>
+              </div>
+              {aiError && (
+                <p role="alert" className="mt-2 text-xs text-pop-text">
+                  {aiError}
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="flex flex-col gap-3.5">
             {draftBlocks.map((entry, index) => (
               <BlockEditRow
@@ -257,6 +335,10 @@ export function PageEditor({
                 onMoveUp={() => moveBlock(entry.localId, -1)}
                 onMoveDown={() => moveBlock(entry.localId, 1)}
                 onDelete={() => deleteBlock(entry.localId)}
+                isAdmin={isAdmin}
+                aiPending={aiPending}
+                isImproving={improvingLocalId === entry.localId}
+                onImprove={() => handleImproveBlock(entry.localId)}
               />
             ))}
           </div>
@@ -296,6 +378,10 @@ function BlockEditRow({
   onMoveUp,
   onMoveDown,
   onDelete,
+  isAdmin,
+  aiPending,
+  isImproving,
+  onImprove,
 }: {
   entry: DraftBlock;
   index: number;
@@ -304,6 +390,10 @@ function BlockEditRow({
   onMoveUp: () => void;
   onMoveDown: () => void;
   onDelete: () => void;
+  isAdmin: boolean;
+  aiPending: boolean;
+  isImproving: boolean;
+  onImprove: () => void;
 }) {
   const fieldId = `content-block-${entry.localId}`;
   const typeLabel = BLOCK_TYPE_LABEL[entry.block.type];
@@ -318,6 +408,16 @@ function BlockEditRow({
         >
           {typeLabel}
         </label>
+        {isAdmin && !isDivider && blockToText(entry.block).trim().length > 0 && (
+          <button
+            type="button"
+            disabled={aiPending}
+            onClick={onImprove}
+            className="rounded-lg border border-border bg-surface px-2.5 py-1 font-mono text-[10px] font-bold text-accent-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isImproving ? "Improving…" : "Improve / rewrite"}
+          </button>
+        )}
         <div className="ml-auto flex gap-1">
           <button
             type="button"

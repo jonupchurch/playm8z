@@ -2259,3 +2259,52 @@ may begin on any/all of them per the constitution (v1.0.0).
   end-to-end" (untrue since Admin Settings/024 shipped the real `role`
   column). `browse.spec.ts` re-run 3x plus the full 140-test e2e suite,
   typecheck, and lint all green after the race-condition fix.
+
+## [Unreleased] (cont. 34)
+
+### Added
+- Admin-only AI writing assist (News & Content Pages)
+  (`specs/028-ai-writing-assist/`, branch `028-ai-writing-assist`) —
+  all 24 tasks complete, the 28th feature. Two new actions, "Write
+  from scratch" and "Improve/rewrite," added to Admin News' (020)
+  editor and the inline Content Page (021) editor, calling Claude
+  Haiku via the Vercel AI SDK + AI Gateway (`ADR 0007`,
+  `anthropic/claude-haiku-4.5`) — this project's first external-AI-
+  provider integration. Gated at `admin` specifically, stricter than
+  every other admin page's `moderator` minimum. `src/lib/ai/gateway.ts`
+  wraps `generateText`'s `output: Output.object()` for structured
+  drafts (this AI SDK version has no standalone `generateObject`) and
+  plain `generateText` for revisions. `improve-draft-text.ts` is ONE
+  shared, surface-agnostic Server Action for both surfaces, reusing
+  the Content Page editor's own existing `blockToText`/`withText`
+  round-trip rather than a bespoke per-block schema. Neither action
+  ever saves/publishes anything — both only populate existing draft
+  form state; every completed action logs an audit entry (015).
+- `.env.example`/`.env.local` documented/provisioned with
+  `AI_GATEWAY_API_KEY`.
+
+### Changed
+- Admin Forum was explicitly scoped out of this feature (no admin
+  authoring surface exists there today — moderation-only); logged to
+  `docs/future-work.md`.
+
+### Fixed
+- `src/lib/ai/gateway.ts`'s structured-draft helper now re-validates
+  the AI response with the same Zod schema itself, rather than relying
+  solely on the AI SDK's internal `Output.object()` conformance check
+  — surfaced while writing this feature's own unit tests (which mock
+  `generateText` entirely and so bypass the SDK's internal validation
+  too), making the boundary check this project's own, observable code
+  rather than an unverifiable assumption about a dependency.
+
+### Verified
+- Full Vitest coverage of all three Server Actions (`ai` mocked, real
+  seeded `admin`/`moderator` roles, no bypass of the gate itself) —
+  role gate, input validation, audit logging, and malformed-AI-output
+  rejection. `e2e/admin-news.spec.ts`/`e2e/content-page.spec.ts`
+  extended to prove the admin-only gate and control-availability state
+  (including "Improve/rewrite" absent on empty text) through real
+  seeded sessions — deliberately never triggering a real AI call in
+  CI. The real end-to-end Gateway call was verified once, live,
+  outside the test suite (both a structured draft and a plain
+  rewrite), confirming the actual wiring works beyond the mocks.
