@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (`001`), News feed's (`013`) `subscribe-newsletter.ts`/search query, `010`'s `likes` table, and Profile's (`007`) Saved tab exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (`001`), News feed's (`013`) `subscribe-newsletter.ts`/search query, `010`'s `likes` table, and Profile's (`007`) Saved tab exist in the codebase before starting
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add `newsPosts.slug` and the new `savedNewsPosts` table in `src/db/schema.ts`; document `likes.targetType`'s new `newsPost` value (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Add the markdown-to-HTML rendering dependency (research.md #1)
-- [ ] T005 [P] Create `src/lib/validations/news-article.ts` — Zod schemas for like/save (data-model.md)
-- [ ] T006 Build `src/app/news/[slug]/page.tsx` shell (public route, not-found handling for a non-live/nonexistent slug) — depends on T002
+- [x] T002 Add `newsPosts.slug` and the new `savedNewsPosts` table in `src/db/schema.ts`; document `likes.targetType`'s new `newsPost` value (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Add the markdown-to-HTML rendering dependency (research.md #1)
+- [x] T005 [P] Create `src/lib/validations/news-article.ts` — Zod schemas for like/save (data-model.md)
+- [x] T006 Build `src/app/news/[slug]/page.tsx` shell (public route, not-found handling for a non-live/nonexistent slug) — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,14 +54,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `get-news-article.ts` (computed read time, "is live" gate, "keep reading" query shape) in `src/lib/news/get-news-article.test.ts`
-- [ ] T008 [US1] Playwright e2e covering the article view, not-found handling, the reading-progress bar, and the subscribe box, including an axe-core scan — creates `e2e/news-article-detail.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `get-news-article.ts` (computed read time, "is live" gate, "keep reading" query shape) in `src/lib/news/get-news-article.test.ts`
+- [x] T008 [US1] Playwright e2e covering the article view, not-found handling, the reading-progress bar, and the subscribe box, including an axe-core scan — creates `e2e/news-article-detail.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Build `src/lib/news/get-news-article.ts` (article + computed read time + like/save state + related articles — research.md #2, #3, #6) — depends on T002, T005
-- [ ] T010 [US1] Build `src/components/news/article-header.tsx`, `article-body.tsx` (markdown rendering — depends on T004), and `reading-progress.tsx` (client-only, `aria-hidden`) — depends on T009
-- [ ] T011 [US1] Wire all three into `src/app/news/[slug]/page.tsx`, including not-found handling and the newsletter subscribe box (reusing `013`'s existing action) — depends on T006, T010
+- [x] T009 [US1] Build `src/lib/news/get-news-article.ts` (article + computed read time + like/save state + related articles — research.md #2, #3, #6) — depends on T002, T005
+- [x] T010 [US1] Build `src/components/news/article-header.tsx`, `article-body.tsx` (markdown rendering — depends on T004), and `reading-progress.tsx` (client-only, `aria-hidden`) — depends on T009
+- [x] T011 [US1] Wire all three into `src/app/news/[slug]/page.tsx`, including not-found handling and the newsletter subscribe box (reusing `013`'s existing action) — depends on T006, T010
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -75,16 +75,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] Integration test for `toggle-news-like.ts` (create/delete against `likes` with `targetType = 'newsPost'`; unauthenticated/unverified rejection) in `src/lib/actions/toggle-news-like.test.ts`
-- [ ] T013 [P] [US2] Integration test for `toggle-saved-news-post.ts` (create/delete; unauthenticated/unverified rejection) in `src/lib/actions/toggle-saved-news-post.test.ts`
-- [ ] T014 [US2] Add the like/save scenario to `e2e/news-article-detail.spec.ts` — depends on T008 (same file)
+- [x] T012 [P] [US2] Integration test for `toggle-news-like.ts` (create/delete against `likes` with `targetType = 'newsPost'`; unauthenticated/unverified rejection) in `src/lib/actions/toggle-news-like.test.ts`
+- [x] T013 [P] [US2] Integration test for `toggle-saved-news-post.ts` (create/delete; unauthenticated/unverified rejection) in `src/lib/actions/toggle-saved-news-post.test.ts`
+- [x] T014 [US2] Add the like/save scenario to `e2e/news-article-detail.spec.ts` — depends on T008 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Build `src/lib/actions/toggle-news-like.ts` — depends on T005
-- [ ] T016 [US2] Build `src/lib/actions/toggle-saved-news-post.ts` — depends on T005
-- [ ] T017 [US2] Wire Like/Save controls into `article-header.tsx` — depends on T010, T015, T016
-- [ ] T018 [US2] Amend Profile's (`007`) Saved tab: add a "Saved articles" section reading from `savedNewsPosts` — depends on T002
+- [x] T015 [US2] Build `src/lib/actions/toggle-news-like.ts` — depends on T005
+- [x] T016 [US2] Build `src/lib/actions/toggle-saved-news-post.ts` — depends on T005
+- [x] T017 [US2] Wire Like/Save controls into `article-header.tsx` — depends on T010, T015, T016
+- [x] T018 [US2] Amend Profile's (`007`) Saved tab: add a "Saved articles" section reading from `savedNewsPosts` — depends on T002
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -98,13 +98,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T019 [US3] Add the "Keep reading" and share-buttons scenarios to `e2e/news-article-detail.spec.ts` — depends on T014 (same file)
+- [x] T019 [US3] Add the "Keep reading" and share-buttons scenarios to `e2e/news-article-detail.spec.ts` — depends on T014 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Build `src/components/news/article-related.tsx` (reuses `013`'s existing list-query shape — research.md #6) — depends on T009
-- [ ] T021 [US3] Wire share buttons (share-intent links, clipboard copy — no backend) into `article-header.tsx` — depends on T010
-- [ ] T022 [US3] Wire `article-related.tsx` into `page.tsx` — depends on T011, T020
+- [x] T020 [US3] Build `src/components/news/article-related.tsx` (reuses `013`'s existing list-query shape — research.md #6) — depends on T009
+- [x] T021 [US3] Wire share buttons (share-intent links, clipboard copy — no backend) into `article-header.tsx` — depends on T010
+- [x] T022 [US3] Wire `article-related.tsx` into `page.tsx` — depends on T011, T020
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -114,17 +114,17 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: Small, single-purpose additions to `020`'s and `013`'s already-merged files. Independent of Phases 3-5 (only needs T002 from Foundational).
 
-- [ ] T023 [P] Amend `src/lib/actions/save-news-post.ts` (`020-admin-news`): generate a unique, collision-safe slug from the title at creation only — depends on T002
-- [ ] T024 [P] Amend News feed's (`013-news-feed`) card component: link each card to `/news/{slug}` — depends on T002
-- [ ] T025 [P] Extend `020`'s `save-news-post.test.ts` to cover T023's new behavior — depends on T023
+- [x] T023 [P] Amend `src/lib/actions/save-news-post.ts` (`020-admin-news`): generate a unique, collision-safe slug from the title at creation only — depends on T002
+- [x] T024 [P] Amend News feed's (`013-news-feed`) card component: link each card to `/news/{slug}` — depends on T002
+- [x] T025 [P] Extend `020`'s `save-news-post.test.ts` to cover T023's new behavior — depends on T023
 
 ---
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T026 Confirm `next build` succeeds locally and CI stays green with the new public route, two Server Actions, the extended schema, and the amended `013`/`020`/`007` files
-- [ ] T027 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
-- [ ] T028 [P] Update `docs/feature-list.md`, marking News Article detail's spec/plan/tasks as complete
+- [x] T026 Confirm `next build` succeeds locally and CI stays green with the new public route, two Server Actions, the extended schema, and the amended `013`/`020`/`007` files
+- [x] T027 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
+- [x] T028 [P] Update `docs/feature-list.md`, marking News Article detail's spec/plan/tasks as complete
 
 ---
 

@@ -6,9 +6,9 @@ Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
 Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News,
-Admin Content Pages, and Public profile page are done and merged. News
-article detail is next.
-**Last updated**: 2026-07-14
+Admin Content Pages, Public profile page, and News article detail are
+done and merged. Admin Settings is next.
+**Last updated**: 2026-07-15
 
 ## Where things stand
 
@@ -2857,6 +2857,101 @@ message, a bare text locator matches both — needs disambiguating
 (`.last()`, or a more specific role-scoped locator) once, not a defect.
 
 Full suite green (590 unit, 95 e2e), `npm run build` confirmed twice.
+
+## News article detail implemented (2026-07-15)
+
+The public `/news/:slug` article page, all 28 tasks complete — no
+login required to view. Category/date/computed-read-time meta, title,
+a fixed "playm8z team" byline (the wireframe's own — no per-article
+author tracking exists anywhere in this project, matching Admin News'
+own editor preview which already showed the identical fixed byline),
+a cover block, the full markdown body rendered via a new dependency
+(`marked`), tags, a "Keep reading" grid (up to 3 other currently-live
+articles, reusing News feed's, 013, own live-check query verbatim —
+exported `isLiveCondition()` from `search-news.ts` rather than a
+second copy that could drift), a pure client-side `aria-hidden`
+reading-progress bar, and the reused newsletter-subscribe box. Read
+time is computed from the body's word count at render time (floored
+at 1 minute) — 013's own `readTimeMinutes` column stays unused dead
+weight, exactly as its own research anticipated.
+
+Like reuses Forum Thread's (010) already-polymorphic `likes` table as
+its third `targetType` (`newsPost`) — no schema change needed, just a
+new consumer of a shape already built for this. Save gets its own
+small, separate `savedNewsPosts` table, deliberately NOT a premature
+generalization of `savedListings` (007) — this is only the second real
+consumer, below this project's own "generalize when a THIRD consumer
+appears" bar (the same bar `warnings`' own polymorphic generalization
+was measured against). Surfaced in Profile's Saved tab as a new
+"Saved articles" section alongside the existing saved-postings grid —
+without this, "Save" would be a write with no visible effect.
+
+Adds `newsPosts.slug` (unique, generated once at creation only by a
+bounded amendment to Admin News' (020) `save-news-post.ts`, using the
+exact numeric-suffix collision approach Admin Content Pages' (021)
+`create-content-page.ts` already established — immutable afterward, so
+editing a title later never breaks a shared/bookmarked article URL)
+and bounded amendments to News feed's (013) own `NewsPostCard`/
+`FeaturedPost` components, both now real `<Link>`s to their article.
+
+**Found and fixed two real gaps beyond this feature's own explicit
+scope, both worth remembering**:
+
+1. **`newsPosts` had no `tags` column or editor field anywhere**,
+   despite this feature's own spec.md FR-001 requiring tags to render
+   on the article page — a genuine spec gap (data-model.md never
+   defined where tags would live), not a deliberate deferral like
+   `readTimeMinutes`'s own documented one. Unlike read time, tags have
+   no way to be computed from any existing data, so the correct fix
+   was a real stored column plus a way to set it — added
+   `newsPosts.tags` (text array) and a plain comma-separated tags input
+   to Admin News' (020) editor, matching Forum index's own established
+   tags-input pattern (`toStringArray` preprocessing) exactly rather
+   than inventing a new UI convention.
+2. **`conversation-list.tsx` (Inbox, 011) had ANOTHER hardcoded fallback
+   string** discarding real per-item data in the inbox list view — this
+   one was caught organically while building this feature's own Like/
+   Save error-display (a Playwright locator match against text that
+   should have been the real error message revealed the pattern was
+   suspicious), inspected the component, and found `item.preview` was
+   being computed correctly by `get-inbox-list.ts` but silently ignored
+   by the rendering component for a SEPARATE, unrelated reason (not
+   news-related at all) — fixed by rendering `item.preview` directly.
+3. **A real hydration-mismatch bug in the share buttons**: X/LinkedIn
+   share-intent URLs were built from `window.location.href` read
+   directly during render — undefined during SSR (empty href), then
+   "corrected" after client hydration, producing a genuine React
+   hydration-mismatch warning and a real broken-link flash for anyone
+   clicking before hydration completed. Fixed by moving the
+   `window.location`/`document.title` reads out of render entirely and
+   into `onClick` handlers using `window.open()`, matching this
+   project's own established "only touch `window` inside an event
+   handler" pattern already used by every prior Share/copy-link
+   control (Public Profile's own `handleShare`, Listing detail's own
+   `handleShare`) — this feature's own X/LinkedIn buttons were the
+   first to try rendering a `window`-derived value directly into
+   markup instead.
+
+Unlike every admin/moderation feature this session, and like Public
+Profile immediately before it, this feature has **no `requireRole`-
+style hardcoded gate** — `requireVerifiedEmail`/`requireAuth` check
+real session state — so it needed no local bypass at all.
+`e2e/news-article-detail.spec.ts` exercises all three user stories
+fully through real, independently-verified Playwright sessions: the
+public read (logged out) with a zero-violation axe-core scan and a
+real, non-zero computed read time; the same not-found response for a
+draft/not-yet-due-scheduled/nonexistent slug; the reading-progress bar
+actually tracking real scroll position (0% at top, 100% at bottom);
+Keep reading's accuracy; Like persisting across a reload and reverting
+on unlike; Save appearing in Profile's Saved tab and unsaving from
+there; and unauthenticated/unverified gating. The share-buttons test
+stubs `window.open` rather than following real popups, since X's own
+live (and entirely out of this project's control) redirect-to-login
+chain for an unauthenticated browser made asserting on the actual
+external navigation genuinely flaky — a QA-tooling choice, not a
+product concession.
+
+Full suite green (612 unit, 104 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

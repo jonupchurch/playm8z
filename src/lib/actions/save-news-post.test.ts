@@ -132,4 +132,48 @@ describe("saveNewsPost", () => {
     const result = await saveNewsPost({ ...base, postId: crypto.randomUUID(), action: "save-draft" });
     expect(result).toEqual({ success: false, error: "Post not found." });
   });
+
+  // News Article detail (023)/research.md #2: a human-legible, unique
+  // slug generated once, at creation only.
+  it("generates a slug from the title at creation, appending a numeric suffix on collision, and never regenerates it on edit", async () => {
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const slugTitle = `Slug Collision Test ${runId}`;
+    const first = await saveNewsPost({ ...base, title: slugTitle, action: "save-draft" });
+    expect(first.success).toBe(true);
+    if (!first.success) return;
+    postIds.push(first.id);
+
+    const [firstRow] = await db.select({ slug: newsPosts.slug }).from(newsPosts).where(eq(newsPosts.id, first.id));
+    const expectedBase = `slug-collision-test-${runId}`.toLowerCase();
+    expect(firstRow.slug).toBe(expectedBase);
+
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const second = await saveNewsPost({ ...base, title: slugTitle, action: "save-draft" });
+    expect(second.success).toBe(true);
+    if (!second.success) return;
+    postIds.push(second.id);
+
+    const [secondRow] = await db.select({ slug: newsPosts.slug }).from(newsPosts).where(eq(newsPosts.id, second.id));
+    expect(secondRow.slug).toBe(`${expectedBase}-2`);
+
+    // Editing the title afterward never changes the already-generated slug.
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const edited = await saveNewsPost({ ...base, postId: first.id, title: "A completely different title", action: "save-draft" });
+    expect(edited.success).toBe(true);
+
+    const [afterEdit] = await db.select({ slug: newsPosts.slug, title: newsPosts.title }).from(newsPosts).where(eq(newsPosts.id, first.id));
+    expect(afterEdit.slug).toBe(expectedBase);
+    expect(afterEdit.title).toBe("A completely different title");
+  });
+
+  it("persists tags from a comma-separated string", async () => {
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const result = await saveNewsPost({ ...base, tags: "launch, beta ,  product", action: "save-draft" });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    postIds.push(result.id);
+
+    const [row] = await db.select({ tags: newsPosts.tags }).from(newsPosts).where(eq(newsPosts.id, result.id));
+    expect(row.tags).toEqual(["launch", "beta", "product"]);
+  });
 });

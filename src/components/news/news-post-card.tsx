@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { newsCategoryColor } from "@/lib/validations/news";
 import type { NewsPostRow } from "@/lib/news/search-news";
 
@@ -5,11 +6,17 @@ function formatDate(date: Date) {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+// FR-011 (023-news-article-detail): links to the article's own
+// /news/{slug} -- this feature's own bounded amendment, added once
+// News Article detail existed to link to.
 export function NewsPostCard({ post }: { post: NewsPostRow }) {
   const color = newsCategoryColor(post.category);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface-2">
+    <Link
+      href={`/news/${post.slug}`}
+      className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface-2"
+    >
       <div
         className="relative h-32.5"
         style={{ background: post.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
@@ -38,6 +45,6 @@ export function NewsPostCard({ post }: { post: NewsPostRow }) {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

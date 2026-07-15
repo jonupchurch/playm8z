@@ -17,11 +17,26 @@ describe("getNewsPosts (integration)", () => {
 
     const [draft] = await db
       .insert(newsPosts)
-      .values({ title: `Draft post ${runId}`, excerpt: "e", body: "b", category: "Announcement", status: "draft" })
+      .values({
+        title: `Draft post ${runId}`,
+        excerpt: "e",
+        body: "b",
+        category: "Announcement",
+        status: "draft",
+        slug: `gnp-draft-${runId}`,
+      })
       .returning({ id: newsPosts.id });
     const [published] = await db
       .insert(newsPosts)
-      .values({ title: `Published post ${runId}`, excerpt: "e", body: "b", category: "Update", status: "published", featured: true })
+      .values({
+        title: `Published post ${runId}`,
+        excerpt: "e",
+        body: "b",
+        category: "Update",
+        status: "published",
+        featured: true,
+        slug: `gnp-published-${runId}`,
+      })
       .returning({ id: newsPosts.id });
     const [scheduled] = await db
       .insert(newsPosts)
@@ -32,6 +47,7 @@ describe("getNewsPosts (integration)", () => {
         category: "Event",
         status: "scheduled",
         publishedAt: new Date(Date.now() + 86_400_000),
+        slug: `gnp-scheduled-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(draft.id, published.id, scheduled.id);

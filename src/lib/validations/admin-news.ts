@@ -5,6 +5,19 @@ import { NEWS_CATEGORIES } from "@/lib/validations/news";
 export const newsPostFilterSchema = z.enum(["all", "published", "draft", "scheduled"]);
 export type NewsPostFilter = z.infer<typeof newsPostFilterSchema>;
 
+// News Article detail (023) -- same comma-separated free-text tags
+// pattern as Forum index's own tags input, matching its `toStringArray`
+// preprocessing exactly.
+function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== "string") return [];
+  return value
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
 // research.md #1: one save action, discriminated by what the moderator
 // actually clicked -- every one of the wireframe's footer actions
 // (Publish now/Update/Schedule/Save draft/Delete) is really the same
@@ -21,6 +34,7 @@ export const saveNewsPostSchema = z
     category: z.enum(NEWS_CATEGORIES),
     cover: z.string().min(1),
     featured: z.boolean().default(false),
+    tags: z.preprocess(toStringArray, z.array(z.string().max(30)).max(6)).default([]),
     action: saveNewsPostActionEnum,
     // Required (and validated as a real future date) only when
     // action === "schedule" -- the refinement below enforces that.

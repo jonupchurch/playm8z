@@ -26,7 +26,9 @@ function formatDisplayDate(date: Date): string {
 
 // FR-004/FR-005/FR-006/FR-007/FR-008/FR-009: the editor -- cover
 // swatches, title, category chips, excerpt, a markdown-snippet-
-// assisted body textarea, publish settings (status segmented control
+// assisted body textarea, tags (News Article detail/023's own bounded
+// amendment -- a plain comma-separated input, matching Forum index's
+// own tags input exactly), publish settings (status segmented control
 // + conditional schedule date + pin toggle), a live preview that
 // tracks every field change before saving, and footer actions whose
 // label/behavior depend on the post's own loaded status (research.md
@@ -45,6 +47,7 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
   const [body, setBody] = useState(post?.body ?? "");
   const [category, setCategory] = useState<NewsCategory>((post?.category as NewsCategory) ?? "Announcement");
   const [cover, setCover] = useState(post?.cover ?? COVER_SWATCHES[0]);
+  const [tags, setTags] = useState((post?.tags ?? []).join(", "));
   const [statusSeg, setStatusSeg] = useState<StatusSeg>((post?.status as StatusSeg) ?? "draft");
   const [publishDateText, setPublishDateText] = useState(
     post?.status === "scheduled" ? toDateInputValue(post.publishedAt) : "",
@@ -86,6 +89,7 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
       category,
       cover,
       featured,
+      tags,
       action,
       publishDate: action === "schedule" && publishDateText ? new Date(publishDateText) : undefined,
     });
@@ -227,6 +231,19 @@ export function NewsPostEditor({ post }: { post: AdminNewsPost | null }) {
               rows={9}
               placeholder="Write the full announcement…"
               className="w-full resize-y rounded-lg border border-border bg-bg px-3.5 py-3.5 text-sm leading-relaxed text-text outline-none"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="news-tags" className="mb-1.5 block text-[13px] font-bold text-text">
+              Tags <span className="font-normal text-text-dim">(optional)</span>
+            </label>
+            <input
+              id="news-tags"
+              value={tags}
+              onChange={(event) => setTags(event.target.value)}
+              placeholder="launch, beta, product… (comma separated)"
+              className="w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-sm text-text outline-none"
             />
           </div>
 

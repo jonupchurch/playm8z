@@ -29,6 +29,7 @@ describe("searchNews (integration)", () => {
         featured: true,
         status: "published",
         publishedAt: new Date(now),
+        slug: `sn-featured-${runId}`,
       })
       .returning({ id: newsPosts.id });
     featuredId = featured.id;
@@ -59,6 +60,7 @@ describe("searchNews (integration)", () => {
           upcoming: post.upcoming ?? false,
           status: "published",
           publishedAt: new Date(now - post.offset * 60_000),
+          slug: `sn-rest-${post.offset}-${runId}`,
         })
         .returning({ id: newsPosts.id });
       postIds.push(row.id);
@@ -126,6 +128,7 @@ describe("searchNews (integration)", () => {
         category: "Announcement",
         status: "draft",
         publishedAt: new Date(Date.now()),
+        slug: `sn-draft-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(draft.id);
@@ -143,6 +146,7 @@ describe("searchNews (integration)", () => {
         category: "Announcement",
         status: "scheduled",
         publishedAt: new Date(Date.now() + 7 * 86_400_000),
+        slug: `sn-future-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(future.id);
@@ -160,6 +164,7 @@ describe("searchNews (integration)", () => {
         category: "Announcement",
         status: "scheduled",
         publishedAt: new Date(Date.now() - 60_000),
+        slug: `sn-past-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(past.id);
@@ -178,6 +183,7 @@ describe("searchNews (integration)", () => {
         status: "draft",
         featured: true,
         publishedAt: new Date(Date.now()),
+        slug: `sn-draft-featured-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(draftFeatured.id);

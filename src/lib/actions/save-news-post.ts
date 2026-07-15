@@ -9,9 +9,39 @@ import { saveNewsPostSchema, type SaveNewsPostInput } from "@/lib/validations/ad
 
 export type SaveNewsPostResult = { success: true; id: string } | { success: false; error: string };
 
+// News Article detail (023)/research.md #2: a human-legible slug
+// derived from the title, checked against the same collision-suffix
+// approach Admin Content Pages' (021) create-content-page.ts already
+// established. Generated once, at creation only -- never regenerated
+// on a later title edit, so a shared/bookmarked article URL stays
+// stable.
+function slugify(title: string): string {
+  const base = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+  return base || "post";
+}
+
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+async function generateUniqueSlug(tx: Tx, title: string): Promise<string> {
+  const base = slugify(title);
+  let candidate = base;
+  let suffix = 2;
+  while (true) {
+    const [existing] = await tx.select({ id: newsPosts.id }).from(newsPosts).where(eq(newsPosts.slug, candidate)).limit(1);
+    if (!existing) return candidate;
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+}
+
 // research.md #1: one save action, discriminated by `action` --
 // publish/schedule/save-draft/delete are all just this row getting a
-// different status/publishedAt combination. research.md #5: `publish`
+// different status/publishedAt/featured combination. research.md #5: `publish`
 // only sets publishedAt=now() when the row isn't ALREADY published (a
 // genuine first-time publish, not an edit to one) -- "Update" never
 // re-dates an already-live post. research.md #2: `featured` is
@@ -25,7 +55,7 @@ export async function saveNewsPost(input: SaveNewsPostInput): Promise<SaveNewsPo
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
-  const { postId, title, excerpt, body, category, cover, featured, action, publishDate } = parsed.data;
+  const { postId, title, excerpt, body, category, cover, featured, tags, action, publishDate } = parsed.data;
 
   if (action === "delete" && !postId) {
     return { success: false, error: "Cannot delete a post that hasn't been saved yet." };
@@ -57,14 +87,15 @@ export async function saveNewsPost(input: SaveNewsPostInput): Promise<SaveNewsPo
       }
     }
 
-    const values = { title, excerpt, body, category, cover, status, featured, ...(publishedAt ? { publishedAt } : {}) };
+    const values = { title, excerpt, body, category, cover, status, featured, tags, ...(publishedAt ? { publishedAt } : {}) };
 
     let rowId: string;
     if (postId) {
       await tx.update(newsPosts).set(values).where(eq(newsPosts.id, postId));
       rowId = postId;
     } else {
-      const [row] = await tx.insert(newsPosts).values(values).returning({ id: newsPosts.id });
+      const slug = await generateUniqueSlug(tx, title);
+      const [row] = await tx.insert(newsPosts).values({ ...values, slug }).returning({ id: newsPosts.id });
       rowId = row.id;
     }
 

@@ -359,6 +359,9 @@ export const forumReplies = pgTable("forumReplies", {
 // Unliking deletes the row outright -- a like carries no audit/trust
 // value worth preserving (same reasoning as SavedListing/UserGame,
 // ADR 0005's scoped exception).
+// `targetType` values: `thread` | `reply` (010-forum-thread), plus
+// `newsPost` (023-news-article-detail, its third consumer of this
+// already-polymorphic shape -- no schema change needed for that one).
 export const likes = pgTable(
   "likes",
   {
@@ -489,6 +492,22 @@ export const newsPosts = pgTable("newsPosts", {
   // never appears live before an explicit publish/schedule action.
   body: text("body").notNull().default(""),
   status: text("status").notNull().default("draft"),
+  // News Article detail (023) -- generated once, at creation, by
+  // Admin News' (020) amended save-news-post.ts (research.md #2);
+  // never regenerated on a later title edit, so a shared/bookmarked
+  // article URL stays stable (the same reasoning as handle
+  // immutability). No default -- every pre-023 row is verified empty.
+  slug: text("slug").notNull().unique(),
+  // News Article detail (023) -- spec.md's own FR-001 requires
+  // rendering tags, but neither `013` nor `020` ever added a column or
+  // editor field for them (a real gap, not a deliberate deferral like
+  // `readTimeMinutes`). Added here with a small, bounded amendment to
+  // `020`'s own editor (a plain comma-separated input, matching Forum
+  // index's `tags` input exactly) -- unlike read time, tags genuinely
+  // have no way to be computed from existing data, so a stored,
+  // moderator-set column is the correct shape, not a "leave it
+  // unpopulated" resolution.
+  tags: text("tags").array().notNull().default([]),
 });
 
 // News feed (013) -- this feature's only writer. No relationship to
@@ -619,6 +638,28 @@ export const reviews = pgTable("reviews", {
   game: text("game"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
+
+// News Article detail (023) -- deliberately NOT a generalization of
+// `savedListings` (research.md #4): with only two total consumers
+// (postings, now news posts), this doesn't yet meet the "generalize
+// when a THIRD real consumer appears" bar this project applied to
+// `warnings`' own polymorphic generalization. Unsaving deletes the
+// row -- no trust/safety history value, same exception as
+// `savedListings`/`likes`/`follows`.
+export const savedNewsPosts = pgTable(
+  "savedNewsPosts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    newsPostId: uuid("newsPostId")
+      .notNull()
+      .references(() => newsPosts.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.userId, table.newsPostId)],
+);
 
 export const verificationTokens = pgTable(
   "verificationToken",

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { newsCategoryColor } from "@/lib/validations/news";
 import type { NewsPostRow } from "@/lib/news/search-news";
 
@@ -6,14 +7,18 @@ function formatDate(date: Date) {
 }
 
 // FR-002: shown only when no filter/search is active (page.tsx's own
-// call site decides that, not this component). No link to a full
-// article -- News article detail (023) isn't built yet and `newsPosts`
-// has no `slug` column for it to link to (that feature's own job to add).
+// call site decides that, not this component). FR-011 (023-news-
+// article-detail): now links to the article's own /news/{slug} --
+// this feature's own bounded amendment, added once News article
+// detail existed to link to.
 export function FeaturedPost({ post }: { post: NewsPostRow }) {
   const color = newsCategoryColor(post.category);
 
   return (
-    <div className="mb-7 grid grid-cols-1 overflow-hidden rounded-2xl border border-accent-2/30 bg-surface-2 md:grid-cols-[1.1fr_1fr]">
+    <Link
+      href={`/news/${post.slug}`}
+      className="mb-7 grid grid-cols-1 overflow-hidden rounded-2xl border border-accent-2/30 bg-surface-2 md:grid-cols-[1.1fr_1fr]"
+    >
       <div
         className="relative min-h-60"
         style={{ background: post.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
@@ -38,6 +43,6 @@ export function FeaturedPost({ post }: { post: NewsPostRow }) {
         <h2 className="mb-3 text-[26px] leading-tight font-bold tracking-tight text-text">{post.title}</h2>
         <p className="text-[15px] leading-relaxed text-text-muted">{post.excerpt}</p>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -6,6 +6,7 @@ import type { NewsFilters } from "@/lib/validations/news";
 
 export type NewsPostRow = {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   category: string;
@@ -25,6 +26,7 @@ const PAGE_SIZE = 6;
 
 const SELECT_COLUMNS = {
   id: newsPosts.id,
+  slug: newsPosts.slug,
   title: newsPosts.title,
   excerpt: newsPosts.excerpt,
   category: newsPosts.category,
@@ -43,7 +45,10 @@ const SELECT_COLUMNS = {
 // a seed script expecting immediate visibility -- those scripts are
 // updated to pass `status: 'published'` explicitly alongside this
 // amendment).
-function isLiveCondition(): SQL {
+// Exported for News Article detail (023-news-article-detail) to reuse
+// directly -- its own "is live" gate and "keep reading" query both
+// need the exact same rule, not a second copy that could drift.
+export function isLiveCondition(): SQL {
   return or(eq(newsPosts.status, "published"), and(eq(newsPosts.status, "scheduled"), lte(newsPosts.publishedAt, new Date()))) as SQL;
 }
 

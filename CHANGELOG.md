@@ -2020,3 +2020,49 @@ may begin on any/all of them per the constitution (v1.0.0).
   Report/Block opening the canonical flows; unauthenticated/unverified
   gating). Full suite green (590 unit, 95 e2e), `npm run build`
   confirmed twice.
+
+## [Unreleased] (cont. 29)
+
+### Added
+- News article detail (`specs/023-news-article-detail/`, branch
+  `023-news-article-detail` merged to `main`) — all 28 tasks complete:
+  the public `/news/:slug` article page (no login required) —
+  category/date/computed-read-time meta, title, a fixed "playm8z team"
+  byline, cover, full markdown body (rendered via a new `marked`
+  dependency), tags, a "Keep reading" grid (reusing News feed's, 013,
+  own live-check query), a client-only reading-progress bar, and the
+  reused newsletter-subscribe box. New Like (reuses Forum Thread's,
+  010, polymorphic `likes` table as a third `targetType`) and Save
+  (new, separate `savedNewsPosts` table — not a premature
+  `savedListings` generalization), surfaced in Profile's (007) Saved
+  tab as a new "Saved articles" section. Adds `newsPosts.slug`
+  (generated once at creation by an amended `save-news-post.ts`,
+  immutable afterward) and `newsPosts.tags` (new — see Fixed below),
+  plus bounded amendments linking News feed's own cards to their
+  article.
+
+### Fixed
+- `newsPosts` had no `tags` column or editor field anywhere despite
+  this feature's own FR-001 requiring tags to render — added
+  `newsPosts.tags` and a comma-separated tags input to Admin News'
+  (020) editor, matching Forum index's own tags-input pattern.
+- A real, previously-latent bug in `conversation-list.tsx` (Inbox,
+  011): its inbox row preview text was hardcoded to a generic fallback
+  string for every request-kind item, discarding the real message —
+  fixed by rendering `item.preview` directly.
+- A real hydration-mismatch bug in the article's own share buttons:
+  X/LinkedIn share URLs were built from `window.location.href` read
+  directly during render (empty during SSR, "corrected" after
+  hydration). Fixed by moving those reads into `onClick` handlers using
+  `window.open()`, matching this project's established "only touch
+  `window` inside an event handler" pattern.
+
+### Verified
+- No `requireRole`-style hardcoded gate blocks this feature
+  (`requireVerifiedEmail`/`requireAuth` check real session state), so
+  it needed no local bypass. `e2e/news-article-detail.spec.ts` covers
+  all three user stories (read + not-found + reading-progress +
+  subscribe with a zero-violation axe scan; Like/Save + Profile
+  Saved-tab surfacing; Keep reading + share buttons; unauthenticated/
+  unverified gating). Full suite green (612 unit, 104 e2e), `npm run
+  build` confirmed twice.

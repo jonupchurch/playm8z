@@ -4,6 +4,7 @@ import { newsPosts } from "@/db/schema";
 
 export type AdminNewsPost = {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   body: string;
@@ -11,6 +12,7 @@ export type AdminNewsPost = {
   cover: string | null;
   status: string;
   featured: boolean;
+  tags: string[];
   publishedAt: Date;
 };
 
@@ -24,6 +26,7 @@ export async function getNewsPosts(): Promise<AdminNewsPost[]> {
   return db
     .select({
       id: newsPosts.id,
+      slug: newsPosts.slug,
       title: newsPosts.title,
       excerpt: newsPosts.excerpt,
       body: newsPosts.body,
@@ -31,6 +34,7 @@ export async function getNewsPosts(): Promise<AdminNewsPost[]> {
       cover: newsPosts.cover,
       status: newsPosts.status,
       featured: newsPosts.featured,
+      tags: newsPosts.tags,
       publishedAt: newsPosts.publishedAt,
     })
     .from(newsPosts)

@@ -36,6 +36,9 @@ async function main() {
       featured: true,
       publishedAt: new Date(now - 0 * DAY),
       status: "published",
+      slug: "playm8z-is-now-in-open-beta",
+      tags: ["launch", "beta", "product"],
+      body: "After months of closed testing with a few thousand players, playm8z is officially open to everyone. No invite code, no waitlist — just post the games you want to play and find your party.\n\n## What shipped for launch\n\n- **Post a game** — set the vibe, region, platform, time slots, party size and more.\n- **Powerful search** — filter by casual vs serious, open slots, age group, mic and keywords.\n- **A community forum** — talk strategy, share clips, and organize groups.\n\n## What's next\n\nWe're already working on deep Discord integration. See you in the lobby.",
     },
     {
       title: "New: filter by tabletop & TTRPGs",
@@ -46,6 +49,9 @@ async function main() {
       readTimeMinutes: 2,
       publishedAt: new Date(now - 2 * DAY),
       status: "published",
+      slug: "new-filter-by-tabletop-and-ttrpgs",
+      tags: ["tabletop", "ttrpg", "update"],
+      body: "Not just video games — playm8z now has first-class support for tabletop and TTRPGs too, including an in-person option so you can find a local table as easily as an online lobby.",
     },
     {
       title: "Summer Co-op Fest — win prizes",
@@ -56,6 +62,9 @@ async function main() {
       upcoming: true,
       publishedAt: new Date(now - 4 * DAY),
       status: "published",
+      slug: "summer-co-op-fest-win-prizes",
+      tags: ["event", "community"],
+      body: "Two weeks of community co-op challenges kick off next month, with in-game rewards and a community leaderboard.",
     },
     {
       title: "Discord integration preview",
@@ -65,6 +74,9 @@ async function main() {
       readTimeMinutes: 4,
       publishedAt: new Date(now - 6 * DAY),
       status: "published",
+      slug: "discord-integration-preview",
+      tags: ["discord", "update"],
+      body: "We're building deep Discord integration: auto-created voice channels for your party and LFG pings piped straight into your server.",
     },
     {
       title: "v1.2 — faster matchmaking & fixes",
@@ -74,6 +86,9 @@ async function main() {
       readTimeMinutes: 5,
       publishedAt: new Date(now - 8 * DAY),
       status: "published",
+      slug: "v1-2-faster-matchmaking-and-fixes",
+      tags: ["patch-notes"],
+      body: "Search is 40% faster, filter chips now persist across sessions, and we squashed a batch of profile bugs reported by the beta crew.",
     },
     {
       title: "Party of the Month: the Deep Rock crew",
@@ -83,6 +98,9 @@ async function main() {
       readTimeMinutes: 3,
       publishedAt: new Date(now - 10 * DAY),
       status: "published",
+      slug: "party-of-the-month-the-deep-rock-crew",
+      tags: ["community"],
+      body: "How five strangers became a weekly squad — and what makes a party actually stick together, in their own words.",
     },
     {
       title: "Mobile app is on the way",
@@ -92,6 +110,9 @@ async function main() {
       readTimeMinutes: 2,
       publishedAt: new Date(now - 12 * DAY),
       status: "published",
+      slug: "mobile-app-is-on-the-way",
+      tags: ["mobile", "announcement"],
+      body: "Take your parties on the go. The playm8z mobile app enters closed testing next month — sign up for the waitlist from your account settings.",
     },
   ];
 

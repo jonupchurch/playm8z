@@ -39,6 +39,7 @@ test.beforeAll(async () => {
       featured: true,
       status: "published",
       publishedAt: new Date(now),
+      slug: `nf-featured-${runId}`,
     })
     .returning({ id: newsPosts.id });
   postIds.push(featured.id);
@@ -63,6 +64,7 @@ test.beforeAll(async () => {
         upcoming: post.upcoming ?? false,
         status: "published",
         publishedAt: new Date(now - post.offset * 60_000),
+        slug: `nf-rest-${post.offset}-${runId}`,
       })
       .returning({ id: newsPosts.id });
     postIds.push(row.id);
