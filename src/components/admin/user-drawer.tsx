@@ -134,17 +134,27 @@ export function UserDrawer({ detail }: { detail: UserDetail | null }) {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleToggleBan}
-              className={
-                currentStatus === "banned"
-                  ? "w-full rounded-xl bg-[linear-gradient(120deg,#8fe0a3,#4ec96a)] px-4 py-2.5 text-sm font-bold text-on-accent"
-                  : "w-full rounded-xl bg-pop px-4 py-2.5 text-sm font-bold text-on-accent"
-              }
-            >
-              {currentStatus === "banned" ? "Unban user" : "Ban user"}
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleToggleBan}
+                className={
+                  currentStatus === "banned"
+                    ? "flex-1 rounded-xl bg-[linear-gradient(120deg,#8fe0a3,#4ec96a)] px-4 py-2.5 text-sm font-bold text-on-accent"
+                    : "flex-1 rounded-xl bg-pop px-4 py-2.5 text-sm font-bold text-on-accent"
+                }
+              >
+                {currentStatus === "banned" ? "Unban user" : "Ban user"}
+              </button>
+              <a
+                href={`/u/${detail.handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center rounded-xl border border-border bg-surface px-4 py-2.5 text-center text-sm font-bold text-text"
+              >
+                View full profile
+              </a>
+            </div>
           </div>
 
           <div role="tablist" aria-label="User content" className="flex gap-1 border-b border-border px-5.5 pt-3.5">

@@ -1,16 +1,18 @@
 # Status
 
-**Phase**: All 26 tracked features are implemented and merged: Auth &
-Onboarding, Error Pages, Home, Browse, Post a Game, Listing detail,
-Profile + Account settings, Blocked Users, Forum index, Forum Thread,
-Inbox/messaging, Notifications + Report modal, News feed, Content
-Page, Admin Dashboard, Admin Users, Admin Postings, Admin Forum, Admin
-Reports, Admin News, Admin Content Pages, Public profile page, News
-article detail, Admin Settings, Moderator audit log, and the
-Logged-out marketing landing page. The project-wide feature list is
-complete — future work is iteration (bug fixes, refinements, revisiting
-`docs/future-work.md`'s deferred items) rather than new ground-up
-features.
+**Phase**: All 26 originally-tracked features are implemented and
+merged: Auth & Onboarding, Error Pages, Home, Browse, Post a Game,
+Listing detail, Profile + Account settings, Blocked Users, Forum
+index, Forum Thread, Inbox/messaging, Notifications + Report modal,
+News feed, Content Page, Admin Dashboard, Admin Users, Admin Postings,
+Admin Forum, Admin Reports, Admin News, Admin Content Pages, Public
+profile page, News article detail, Admin Settings, Moderator audit
+log, and the Logged-out marketing landing page. The project-wide
+feature list is complete — future work is iteration (bug fixes,
+refinements, revisiting `docs/future-work.md`'s deferred items) rather
+than new ground-up features. Feature 27 (Admin Users drawer — view
+full profile in a new tab) has since shipped as exactly that kind of
+iteration, a small enhancement to already-shipped feature 016.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -3287,11 +3289,58 @@ mechanisms — `createNotification()`'s still-unwired callers,
 `support`/`viewer` roles still functionally identical to `user`, five
 of six feature flags still inert — that accumulated across the build).
 
+## `browse.spec.ts`'s CI-only e2e flake — root-caused and fixed (2026-07-15)
+
+The user pasted a real CI failure: `browse.spec.ts`'s "active filter
+pills are removable independently" test intermittently failed on
+`expect(seriousPill).toBeVisible()` after selecting "Serious" then
+"FPS" back-to-back — reproducible in CI, never locally in a single
+run (140/140 passed here first try). Root cause: `use-browse-url-
+params.ts`'s `replace()` built each new URL from the `useSearchParams()`
+hook's snapshot from the *last completed render* — but `router.replace()`
+only resolves that hook on the *next* render, so two facet toggles
+fired in quick succession both read the same stale params, and the
+second silently dropped the first's change. A real correctness bug
+(a real user double-clicking two filters could lose one), not just a
+flaky test — just far more likely to manifest on a loaded CI runner
+than a fast local machine. Fixed by building each update from the live
+`window.location.search` instead of the closure-captured snapshot.
+Verified: `browse.spec.ts` run 3x back-to-back plus the full 140-test
+e2e suite, typecheck, and lint all green.
+
+## Admin Users drawer — view full profile in a new tab implemented (2026-07-15) — 27th feature, an enhancement not a new page
+
+A small, scoped addition to already-shipped Admin Users (016),
+prompted by reviewing a newly-designed "Admin Users (Master-Detail)"
+wireframe with the user: that wireframe turned out to be a same-scope
+layout redesign (drawer → inline side panel), not the bulk multi-user
+management the user was actually asking about, and its literal
+"Delete user" button would need to be redirected to the existing
+soft-ban flow (nothing is ever hard-deleted, ADR 0005) if built as
+drawn. Declined for now (`docs/future-work.md`) in favor of a smaller
+real gap the same conversation surfaced instead: the drawer showed no
+way to see a user's actual public-facing presence.
+
+Went through the full spec/plan/tasks cycle at the user's explicit
+request despite the small size (`specs/027-admin-user-profile-link/`,
+branch `027-admin-user-profile-link`), all 7 tasks complete. The
+drawer (`user-drawer.tsx`) now shows a "View full profile" link next
+to the existing Ban/Unban button, pointing at that same user's real
+Public Profile (022, `/u/[handle]`) via the `handle` `get-user-
+detail.ts` already returns — `target="_blank"` + `rel="noopener
+noreferrer"` so the admin queue's tab/state is never disturbed, no new
+route/page/schema. Rendered unconditionally for active, flagged, and
+banned users alike — a moderator cross-referencing a banned user's
+public profile is a real use case, not one to hide.
+
+`e2e/admin-users.spec.ts` gained a new describe block: a real seeded
+`role: "moderator"` session (no mocking, no bypass) opens the drawer
+for both an active and a banned target user and asserts the link's
+`href`/`target`/`rel`. This also retired that file's own stale header
+comment claiming the drawer "can't be exercised end-to-end" — no
+longer true since Admin Settings (024) shipped the real `role` column;
+this is simply the first feature to actually take advantage of that.
+
 ## Blockers
 
-- None. `e2e/browse.spec.ts`'s CI-only facet-selection timeout above
-  remains open and unaddressed — the user has since pasted the actual
-  CI failure output (a genuine missing "Ranked grind" heading after
-  selecting the "Serious" facet, not a bare timeout), but investigation
-  is deliberately on hold per the user's own instruction to prioritize
-  feature work first.
+- None.

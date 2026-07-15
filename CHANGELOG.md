@@ -2217,3 +2217,45 @@ may begin on any/all of them per the constitution (v1.0.0).
   (704 unit, 140 e2e), `npm run build` confirmed.
 
 **All 26 tracked features are now fully implemented and merged.**
+
+## [Unreleased] (cont. 33)
+
+### Added
+- `docs/summary.md` — an architecture/data-model/feature-area/
+  conventions TL;DR, produced by a read-only reconnaissance pass over
+  the whole codebase.
+- A new "Admin Users (Master-Detail)" wireframe
+  (`resources/wireframes/admin/`) — reviewed with the user; its layout
+  redesign was declined for now (see `docs/future-work.md`) in favor of
+  a smaller real gap, feature 027 below.
+- Admin Users drawer — view full profile in a new tab
+  (`specs/027-admin-user-profile-link/`, branch
+  `027-admin-user-profile-link`) — all 7 tasks complete: a small
+  enhancement to already-shipped Admin Users (016), not a new page. The
+  per-user drawer (`user-drawer.tsx`) now shows a "View full profile"
+  link to that same user's real Public Profile (022, `/u/[handle]`),
+  using the `handle` `get-user-detail.ts` already returns, opened with
+  `target="_blank"` + `rel="noopener noreferrer"` so the admin queue's
+  tab/state is never disturbed. Rendered unconditionally for active,
+  flagged, and banned users alike.
+
+### Fixed
+- A real race condition in Browse's facet filters
+  (`use-browse-url-params.ts`): two facet toggles fired back-to-back
+  (e.g. selecting "Serious" then "FPS") both read the same
+  `useSearchParams()` snapshot from the last completed render — since
+  `router.replace()` only resolves that hook on the *next* render, the
+  second toggle silently dropped the first's change. Fixed by building
+  each update from the live `window.location.search` instead. Root
+  cause of an intermittent `browse.spec.ts` e2e failure in CI (fast
+  local machines rarely hit the timing window; a loaded CI runner hit
+  it reliably).
+
+### Verified
+- `e2e/admin-users.spec.ts` extended with a real seeded `moderator`
+  session (no bypass) asserting the new link's `href`/`target`/`rel`
+  for both an active and a banned target user — also retires that
+  file's stale header comment claiming the drawer "can't be exercised
+  end-to-end" (untrue since Admin Settings/024 shipped the real `role`
+  column). `browse.spec.ts` re-run 3x plus the full 140-test e2e suite,
+  typecheck, and lint all green after the race-condition fix.
