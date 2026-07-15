@@ -220,6 +220,12 @@ export const applications = pgTable("applications", {
   // determines which party is authorized to accept/decline it
   // (accept-request.ts/decline-request.ts's amended ownership check).
   initiatedBy: text("initiatedBy").notNull().default("applicant"),
+  // Landing page (026) -- set once by accept-request.ts alongside its
+  // existing status='accepted' write; `createdAt` is when the request
+  // was SUBMITTED, this is when it was ACCEPTED, needed for "parties
+  // formed this week." Never set for pending/declined/withdrawn rows,
+  // never cleared afterward.
+  acceptedAt: timestamp("acceptedAt", { mode: "date" }),
 });
 
 // Listing detail (006) -- a listing's public Q&A thread. One reply per

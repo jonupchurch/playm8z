@@ -1,14 +1,16 @@
 # Status
 
-**Phase**: Project-wide spec/plan/tasks gate closed. Implementing
-features one at a time, in order: Auth & Onboarding, Error Pages, Home,
-Browse, Post a Game, Listing detail, Profile + Account settings,
-Blocked Users, Forum index, Forum Thread, Inbox/messaging,
-Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News,
-Admin Content Pages, Public profile page, News article detail, Admin
-Settings, and Moderator audit log are done and merged. Logged-out
-marketing landing page is next (the last one).
+**Phase**: All 26 tracked features are implemented and merged: Auth &
+Onboarding, Error Pages, Home, Browse, Post a Game, Listing detail,
+Profile + Account settings, Blocked Users, Forum index, Forum Thread,
+Inbox/messaging, Notifications + Report modal, News feed, Content
+Page, Admin Dashboard, Admin Users, Admin Postings, Admin Forum, Admin
+Reports, Admin News, Admin Content Pages, Public profile page, News
+article detail, Admin Settings, Moderator audit log, and the
+Logged-out marketing landing page. The project-wide feature list is
+complete — future work is iteration (bug fixes, refinements, revisiting
+`docs/future-work.md`'s deferred items) rather than new ground-up
+features.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -3165,6 +3167,125 @@ already established multiple times elsewhere in this project.
 Full suite green (693 unit, 126 e2e), `npm run build` confirmed. No
 schema migration — this feature is read-only against `auditEntries`
 plus small logic-only amendments to two existing actions.
+
+## Logged-out marketing landing page implemented (2026-07-15) — 26th and final feature
+
+`/` for an unauthenticated visitor now renders this feature's real
+marketing content instead of redirecting to `/login` — the exact loop
+Home's (003) own spec left open from day one. An authenticated
+visitor's experience is completely unchanged (same branch, same
+route, just checking `auth()` first).
+
+Every "live-feeling" number is real, computed at render time by a new
+`get-landing-stats.ts`:
+
+- **Total players** — `COUNT(*) FROM user`.
+- **Games & tables** — `COUNT(DISTINCT postings.game)` across ALL
+  postings ever (deliberately a catalog-breadth stat, not a "right
+  now" one — the only number on this page that isn't scoped to
+  currently-open postings).
+- **Parties formed this week** — a new `applications.acceptedAt`
+  (nullable timestamp), set by Inbox's (011) existing
+  `accept-request.ts` alongside its already-existing `status =
+  'accepted'` write. No prior feature ever captured *when* an
+  application was accepted, only *that* it was — the same class of gap
+  Admin Reports' (019) own `resolvedAt` addition closed for a different
+  table.
+- **The hero's floating card(s)** — 1-2 real, currently-open postings,
+  reusing `listing-card.tsx` directly (not a bespoke hero-only
+  component) for the primary card, plus a smaller compact secondary
+  card for a second real posting. Zero open postings shows a clearly
+  decorative fallback ("No open parties yet — be the first to post
+  one"), never styled to look like a real listing.
+
+The wireframe's fake "4,300+ players online now" presence badge and
+"4.9★ avg teammate rating" are both dropped entirely — no real
+presence-tracking or rating-submission system exists anywhere in this
+project (Public Profile's, 022, `Review` entity still has no writer),
+the same no-fake-data discipline already applied to Home, Profile,
+Forum index, Inbox, Admin Dashboard, and Public Profile. The "Why
+playm8z" feature grid's profile card is reworded to "Real player
+profiles," describing only what's real today (games played,
+region/platform) rather than claiming reliability scores or live
+ratings; testimonials are the one deliberate, reasoned exception —
+fixed, hand-written marketing copy, since a testimonial section is
+universally understood as curated editorial content, not a real-time
+data claim. "Browse by genre" shows real per-genre open-posting counts
+across Browse's (004) own 8-genre enum, each genre card linking into a
+real, working, pre-filtered Browse view (`/browse?genres=X`). The
+footer links About/Privacy/Terms to Admin Content Pages' (021) real
+seeded system pages; Community Guidelines/Careers/Safety Center point
+at plain, not-yet-created slugs — visiting one before an admin creates
+it shows Content Page's (014) real not-found behavior, exactly as any
+other not-yet-created custom page would.
+
+**Found and fixed one real bug during this feature's own test-writing,
+worth remembering broadly**: postgres.js converts a JS `Date` object
+differently than Postgres's own `now()`/`defaultNow()` for a
+"timestamp without time zone" column — comparing a row stamped via an
+explicit JS `new Date(...)` against a sibling row stamped via the
+schema's own `defaultNow()` produced a multi-hour skew, silently
+reversing an intended "this row is older than that one" ordering in a
+test. Fixed by giving BOTH compared rows an explicit JS Date from the
+same clock reference, never mixing one explicit value with the
+schema's own server-side default when a test's own correctness depends
+on their relative order. This doesn't affect any shipped production
+code (every real row's own `createdAt`/`acceptedAt` values come from a
+single consistent source — either always `defaultNow()` for organic
+postings, or always a JS `new Date()` written by one specific action —
+never a mix within the same comparison), but it's a real trap for any
+FUTURE test that seeds two rows and needs to control their relative
+timestamp ordering.
+
+A second, smaller lesson from the same test-writing pass: `getByText()`
+substring-matching a short, common word (here, "players") can
+silently match multiple unrelated page sections at once (a hero
+paragraph, body copy, a heading) without Playwright raising a
+strict-mode error, if the multi-match locator gets chained with
+`.locator("..")` before a final `.first()` — the result silently
+resolves to whatever the FIRST match's ancestor happens to contain,
+not necessarily the intended element. `{exact: true}` against a label
+that's genuinely a bare, standalone word (not embedded in longer
+copy) resolved it cleanly.
+
+Full unit/integration coverage: `get-landing-stats.ts`'s three real
+stats (delta assertions against the shared, unscoped `users`/
+`postings`/`applications` tables — deliberately never a wholesale wipe
+of those tables, the same reasoning the audit log feature, 025,
+already established for a different table), a component-level
+`landing-hero.test.tsx` covering the real-posting and zero-postings
+fallback cases directly via `@testing-library/react` (this project's
+established but lightly-used precedent, alongside `listing-card.test.tsx`/
+`empty-state.test.tsx`), and `accept-request.ts`'s new `acceptedAt`
+write. `e2e/landing-page.spec.ts` (14 tests, zero-violation axe scan)
+covers both the unauthenticated and authenticated root-route branches,
+real stats/hero-card/genre-counts display, every CTA (hero, final
+section; the nav's own "Log in" link, since nav/footer chrome remains
+Design System infrastructure out of this feature's scope, same as
+every prior feature), footer link correctness, and `acceptedAt`
+propagating end-to-end from a real Inbox accept action into this
+page's own "parties formed this week" stat on next load — no bypass of
+any kind needed.
+
+Schema migration (`0029_landing_page_accepted_at.sql`, adding
+`applications.acceptedAt`) pushed to local dev via `drizzle-kit push`
+(generate+migrate silently no-op'd against the already-provisioned
+local DB, the same recurring quirk documented for every prior
+schema-changing feature — verified the column landed via a direct
+`information_schema` query, not by trusting the CLI's own success
+output).
+
+Full suite green (704 unit, 140 e2e), `npm run build` confirmed.
+
+**This closes out the whole 26-feature build.** Every tracked feature
+now has real, shipped, tested code — future work shifts from
+ground-up feature building to iteration: bug fixes, refinements, and
+revisiting `docs/future-work.md`'s already-logged deferred items
+(rating submission, Groups/Clans, a per-game hub page, password reset,
+mobile-specific layouts, and the several "define now, adopt later"
+mechanisms — `createNotification()`'s still-unwired callers,
+`support`/`viewer` roles still functionally identical to `user`, five
+of six feature flags still inert — that accumulated across the build).
 
 ## Blockers
 

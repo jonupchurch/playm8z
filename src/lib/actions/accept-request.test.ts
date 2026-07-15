@@ -80,6 +80,7 @@ describe("acceptRequest (integration)", () => {
 
   it("accepts: sets status accepted, decrements seatsOpen, creates a conversation with a system message", async () => {
     const seeded = await seedPendingApplication();
+    const before = Date.now();
     mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
 
     const result = await acceptRequest({ applicationId: seeded.applicationId });
@@ -89,6 +90,10 @@ describe("acceptRequest (integration)", () => {
 
     const [application] = await db.select().from(applications).where(eq(applications.id, seeded.applicationId));
     expect(application.status).toBe("accepted");
+    // Landing page (026): acceptedAt now set alongside status, backing
+    // that feature's "parties formed this week" stat.
+    expect(application.acceptedAt).not.toBeNull();
+    expect(application.acceptedAt!.getTime()).toBeGreaterThanOrEqual(before);
 
     const [posting] = await db.select().from(postings).where(eq(postings.id, seeded.postingId));
     expect(posting.seatsOpen).toBe(0);

@@ -1,17 +1,44 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getOpenPostings } from "@/lib/postings/get-open-postings";
 import { getTrending } from "@/lib/postings/get-trending";
 import { LiveFeed } from "@/components/home/live-feed";
+import { getLandingStats } from "@/lib/landing/get-landing-stats";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { LandingTrustBar } from "@/components/landing/landing-trust-bar";
+import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
+import { LandingFeatures } from "@/components/landing/landing-features";
+import { LandingGenres } from "@/components/landing/landing-genres";
+import { LandingTestimonials } from "@/components/landing/landing-testimonials";
+import { LandingFinalCta } from "@/components/landing/landing-final-cta";
+import { LandingFooter } from "@/components/landing/landing-footer";
 
-// Nav/footer are shared Design System infrastructure, out of this
-// feature's own scope (spec.md's Assumptions) -- this covers only the
-// hero/search/trending/live-feed content area. Unauthenticated visitors
-// redirect to /login until Landing exists (research.md #3).
+// Nav/footer shell are shared Design System infrastructure, out of
+// this feature's own scope (spec.md's Assumptions) -- this covers only
+// the hero/search/trending/live-feed content area. Landing page (026)
+// closes the loop left open here (research.md #3 there): an
+// unauthenticated visitor now sees that feature's real marketing
+// content instead of a redirect to /login; an authenticated visitor's
+// experience below is completely unchanged.
 export default async function Home() {
   const session = await auth();
   if (!session?.user) {
-    redirect("/login");
+    const stats = await getLandingStats();
+    return (
+      <main className="min-h-screen bg-bg text-text">
+        <LandingHero openPartiesNow={stats.openPartiesNow} totalPlayers={stats.totalPlayers} heroPostings={stats.heroPostings} />
+        <LandingTrustBar
+          totalPlayers={stats.totalPlayers}
+          gamesAndTables={stats.gamesAndTables}
+          partiesFormedThisWeek={stats.partiesFormedThisWeek}
+        />
+        <LandingHowItWorks />
+        <LandingFeatures />
+        <LandingGenres genreCounts={stats.genreCounts} />
+        <LandingTestimonials />
+        <LandingFinalCta />
+        <LandingFooter />
+      </main>
+    );
   }
 
   const [postings, trending] = await Promise.all([getOpenPostings(), getTrending()]);

@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm Home's root `src/app/page.tsx` (`003`, its existing unauthenticated-redirect placeholder), `011`'s `accept-request.ts`, Browse's (`004`) 8-genre enum, and Admin Content Pages' (`021`) seeded system pages all exist in the codebase before starting
+- [x] T001 Confirm Home's root `src/app/page.tsx` (`003`, its existing unauthenticated-redirect placeholder), `011`'s `accept-request.ts`, Browse's (`004`) 8-genre enum, and Admin Content Pages' (`021`) seeded system pages all exist in the codebase before starting
 
 ---
 
@@ -36,9 +36,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add `applications.acceptedAt` (nullable timestamp) in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 Build `src/lib/landing/get-landing-stats.ts` (total players, distinct games, parties formed this week, 1-2 real open postings for the hero card with a fallback case, per-genre open counts — research.md #1-#2, #4, #7) — depends on T002
+- [x] T002 Add `applications.acceptedAt` (nullable timestamp) in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 Build `src/lib/landing/get-landing-stats.ts` (total players, distinct games, parties formed this week, 1-2 real open postings for the hero card with a fallback case, per-genre open counts — research.md #1-#2, #4, #7) — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -52,16 +52,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T005 [P] [US1] Unit tests for `get-landing-stats.ts` (the three real stats, hero-card selection including the zero-postings fallback, per-genre counts) in `src/lib/landing/get-landing-stats.test.ts`
-- [ ] T006 [US1] Playwright e2e covering the unauthenticated root route's content, the authenticated root route's unaffected behavior, the real stats (and absence of any fabricated ones), the reworded features copy, and genre counts, including an axe-core scan — creates `e2e/landing-page.spec.ts`
+- [x] T005 [P] [US1] Unit tests for `get-landing-stats.ts` (the three real stats, hero-card selection including the zero-postings fallback, per-genre counts) in `src/lib/landing/get-landing-stats.test.ts`
+- [x] T006 [US1] Playwright e2e covering the unauthenticated root route's content, the authenticated root route's unaffected behavior, the real stats (and absence of any fabricated ones), the reworded features copy, and genre counts, including an axe-core scan — creates `e2e/landing-page.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Build `src/components/landing/landing-hero.tsx` (rotating word, real "open parties right now" stat, real floating card(s) with an honest fallback — research.md #2, #4) — depends on T004
-- [ ] T008 [US1] Build `src/components/landing/landing-trust-bar.tsx` (three real stats, no fourth fabricated one — research.md #1) — depends on T004
-- [ ] T009 [US1] Build `src/components/landing/landing-genres.tsx` (real per-genre open counts — research.md #7) — depends on T004
-- [ ] T010 [US1] Build `src/components/landing/landing-how-it-works.tsx`, `landing-features.tsx` (reworded profiles/ratings copy — research.md #5), `landing-testimonials.tsx` (fixed marketing copy — research.md #6), and `landing-final-cta.tsx` (static content, no data dependency)
-- [ ] T011 [US1] Amend Home's (`003`) `src/app/page.tsx`: render this feature's assembled content for an unauthenticated visitor instead of redirecting to `/login`; leave the authenticated branch completely unchanged (research.md #8) — depends on T007, T008, T009, T010
+- [x] T007 [US1] Build `src/components/landing/landing-hero.tsx` (rotating word, real "open parties right now" stat, real floating card(s) with an honest fallback — research.md #2, #4) — depends on T004
+- [x] T008 [US1] Build `src/components/landing/landing-trust-bar.tsx` (three real stats, no fourth fabricated one — research.md #1) — depends on T004
+- [x] T009 [US1] Build `src/components/landing/landing-genres.tsx` (real per-genre open counts — research.md #7) — depends on T004
+- [x] T010 [US1] Build `src/components/landing/landing-how-it-works.tsx`, `landing-features.tsx` (reworded profiles/ratings copy — research.md #5), `landing-testimonials.tsx` (fixed marketing copy — research.md #6), and `landing-final-cta.tsx` (static content, no data dependency)
+- [x] T011 [US1] Amend Home's (`003`) `src/app/page.tsx`: render this feature's assembled content for an unauthenticated visitor instead of redirecting to `/login`; leave the authenticated branch completely unchanged (research.md #8) — depends on T007, T008, T009, T010
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -75,11 +75,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T012 [US2] Add the CTA-navigation scenario (hero "Get started"/"Browse games," nav "Log in"/"Sign up free," final CTA) to `e2e/landing-page.spec.ts` — depends on T006 (same file)
+- [x] T012 [US2] Add the CTA-navigation scenario (hero "Get started"/"Browse games," nav "Log in"/"Sign up free," final CTA) to `e2e/landing-page.spec.ts` — depends on T006 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Wire every CTA (`landing-hero.tsx`'s two buttons, the shared nav's "Log in"/"Sign up free," `landing-final-cta.tsx`'s button) to sign-up (`001`), log-in (`001`), and Browse (`004`) respectively — depends on T007, T010, T011
+- [x] T013 [US2] Wire every CTA (`landing-hero.tsx`'s two buttons, the shared nav's "Log in"/"Sign up free," `landing-final-cta.tsx`'s button) to sign-up (`001`), log-in (`001`), and Browse (`004`) respectively — depends on T007, T010, T011
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -93,12 +93,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T014 [P] [US3] Integration test confirming `011`'s `accept-request.ts` now also sets `acceptedAt` alongside its existing `status = 'accepted'` write — extends `011`'s existing `accept-request.test.ts`
-- [ ] T015 [US3] Add the "parties formed this week" real-data verification scenario to `e2e/landing-page.spec.ts` — depends on T012 (same file)
+- [x] T014 [P] [US3] Integration test confirming `011`'s `accept-request.ts` now also sets `acceptedAt` alongside its existing `status = 'accepted'` write — extends `011`'s existing `accept-request.test.ts`
+- [x] T015 [US3] Add the "parties formed this week" real-data verification scenario to `e2e/landing-page.spec.ts` — depends on T012 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Amend `src/lib/actions/accept-request.ts` (`011-inbox-messaging`): set `acceptedAt = now()` alongside its existing `status` transition (research.md #3) — depends on T002
+- [x] T016 [US3] Amend `src/lib/actions/accept-request.ts` (`011-inbox-messaging`): set `acceptedAt = now()` alongside its existing `status` transition (research.md #3) — depends on T002
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -106,9 +106,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T017 Confirm `next build` succeeds locally and CI stays green with the amended root route, the extended schema, and the amended `011` action
-- [ ] T018 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
-- [ ] T019 [P] Update `docs/feature-list.md`, marking Landing page's spec/plan/tasks as complete — this is the 26th and final feature, closing the project-wide constitutional gate (v1.0.0): every tracked feature now has a complete spec/plan/tasks trio, and implementation may begin on any/all of them
+- [x] T017 Confirm `next build` succeeds locally and CI stays green with the amended root route, the extended schema, and the amended `011` action
+- [x] T018 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
+- [x] T019 [P] Update `docs/feature-list.md`, marking Landing page's spec/plan/tasks as complete — this is the 26th and final feature, closing the project-wide constitutional gate (v1.0.0): every tracked feature now has a complete spec/plan/tasks trio, and implementation may begin on any/all of them
 
 ---
 

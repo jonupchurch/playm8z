@@ -70,7 +70,7 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
       // double-decrementing seatsOpen or creating a second conversation.
       const updated = await tx
         .update(applications)
-        .set({ status: "accepted" })
+        .set({ status: "accepted", acceptedAt: new Date() })
         .where(and(eq(applications.id, application.id), eq(applications.status, "pending")))
         .returning({ id: applications.id });
 

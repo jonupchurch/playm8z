@@ -2165,3 +2165,55 @@ may begin on any/all of them per the constitution (v1.0.0).
   and both gap-fix scenarios through the real Admin News/Admin Content
   Pages UI — no bypass of any kind, same as Admin Settings' own suite.
   Full suite green (693 unit, 126 e2e), `npm run build` confirmed.
+
+## [Unreleased] (cont. 32)
+
+### Added
+- Logged-out marketing landing page (`specs/026-landing-page/`, branch
+  `026-landing-page` merged to `main`) — all 19 tasks complete, the
+  26th and final tracked feature. `/` now renders this feature's real
+  marketing content for an unauthenticated visitor instead of
+  redirecting to `/login`, closing the loop Home's (003) own spec left
+  open; an authenticated visitor's experience is unchanged. A new
+  `get-landing-stats.ts` computes every "live-feeling" number for
+  real: total players, games & tables (all postings ever, a
+  catalog-breadth stat), parties formed this week (a new
+  `applications.acceptedAt`, set by Inbox's, 011, existing
+  `accept-request.ts`), and the hero's floating card(s) (1-2 real
+  currently-open postings via the shared `listing-card.tsx`, with a
+  clearly-decorative fallback when none exist — never fabricated
+  example content). "Browse by genre" shows real per-genre open-count
+  data across Browse's (004) 8-genre enum, each linking into a real
+  pre-filtered Browse view. Footer links About/Privacy/Terms to Admin
+  Content Pages' (021) real seeded system pages.
+
+### Changed
+- The wireframe's fake "players online now" presence badge and "avg
+  teammate rating" are both dropped entirely (no real presence-
+  tracking or rating-submission system exists); the "Why playm8z"
+  profile/ratings feature card is reworded to "Real player profiles,"
+  describing only real, current capabilities.
+
+### Fixed
+- postgres.js converts a JS `Date` differently than Postgres's own
+  `now()`/`defaultNow()` for a "timestamp without time zone" column —
+  comparing an explicit-JS-Date-stamped row against a
+  `defaultNow()`-stamped sibling produced a multi-hour skew, reversing
+  an intended relative-order assertion in this feature's own e2e test.
+  Fixed by giving both compared rows an explicit JS Date from the same
+  clock; doesn't affect any shipped production code, which never mixes
+  the two sources within one comparison.
+
+### Verified
+- Full unit/integration coverage (`get-landing-stats.ts`'s three real
+  stats via delta assertions against the shared, unscoped `users`/
+  `postings`/`applications` tables; a component-level
+  `landing-hero.test.tsx` for the real-posting and zero-postings
+  fallback cases; `accept-request.ts`'s new `acceptedAt` write) plus
+  `e2e/landing-page.spec.ts` (14 tests, zero-violation axe scan)
+  covering both root-route branches, real stats/hero-card/genre-count
+  display, every CTA, footer links, and `acceptedAt` propagating from a
+  real Inbox accept action — no bypass of any kind. Full suite green
+  (704 unit, 140 e2e), `npm run build` confirmed.
+
+**All 26 tracked features are now fully implemented and merged.**

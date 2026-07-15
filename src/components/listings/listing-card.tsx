@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AVATAR_COLORS } from "@/lib/validations/onboarding";
 
-const REGION_LABELS: Record<string, string> = {
+export const REGION_LABELS: Record<string, string> = {
   "na-east": "NA-East",
   "na-west": "NA-West",
   "eu-west": "EU-West",
