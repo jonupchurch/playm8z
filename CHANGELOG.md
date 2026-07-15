@@ -2354,3 +2354,24 @@ may begin on any/all of them per the constitution (v1.0.0).
   The real end-to-end Blob write was verified once, live, outside the
   test suite (upload → public URL → fetches with the correct
   `image/png` content-type), then cleaned up.
+
+## [Unreleased] (cont. 36)
+
+### Fixed
+- News cover image upload (029) hung indefinitely on "Uploading…" for
+  any real photo over ~1MB, reported live by the user. Root cause:
+  Next.js Server Actions default to a 1MB request-body cap
+  (`next.config.ts`'s `experimental.serverActions.bodySizeLimit`),
+  well under this feature's own advertised 5MB limit — the framework
+  itself silently rejected the request before
+  `upload-news-cover-image.ts`'s own validation ever ran. Raised the
+  cap to `6mb` (headroom for multipart/form-data's own boundary
+  overhead on a 5MB file). Also fixed a real robustness gap the same
+  bug exposed: `news-post-editor.tsx`'s upload handler had no
+  `try/catch` around the Server Action call, so a *thrown* failure
+  (as opposed to a returned `{ success: false }`) left the UI stuck in
+  the pending state forever with no error shown — now caught, with a
+  clear error message and the pending state always released via
+  `finally`. Verified live with a real 2MB upload (well over the old
+  1MB cap) completing correctly; full 724-test unit suite and
+  151-test e2e suite green.

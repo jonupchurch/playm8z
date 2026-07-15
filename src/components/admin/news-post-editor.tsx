@@ -77,16 +77,25 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
     setCoverUploading(true);
     setCoverUploadError(null);
 
-    const formData = new FormData();
-    formData.set("file", file);
-    const result = await uploadNewsCoverImage(formData);
+    try {
+      const formData = new FormData();
+      formData.set("file", file);
+      const result = await uploadNewsCoverImage(formData);
 
-    setCoverUploading(false);
-    if (!result.success) {
-      setCoverUploadError(result.error);
-      return;
+      if (!result.success) {
+        setCoverUploadError(result.error);
+        return;
+      }
+      setCover(result.url);
+    } catch {
+      // A thrown (not returned) failure -- e.g. the request itself
+      // being rejected before this action's own body ever runs --
+      // must still surface an error and release the pending state,
+      // never leave the control stuck on "Uploading…" indefinitely.
+      setCoverUploadError("Couldn't upload this image right now. Please try again.");
+    } finally {
+      setCoverUploading(false);
     }
-    setCover(result.url);
   }
 
   async function handleWriteFromScratch() {

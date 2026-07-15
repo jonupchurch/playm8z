@@ -3505,6 +3505,24 @@ via a real seeded role, file-type/size rejection before any Blob call,
 branches (gradient/image/null-fallback), `@vercel/blob` mocked
 throughout. Full suite green, typecheck and lint clean.
 
+## Cover image upload hang — fixed (2026-07-15)
+
+The user reported live: uploading a News cover image "just hangs
+there and doesn't change the image." Root cause: Next.js Server
+Actions default to a 1MB request-body cap — well under this feature's
+own advertised 5MB limit — so any real photo between 1–5MB was
+silently rejected by the framework itself, before
+`upload-news-cover-image.ts`'s own validation ever ran. Compounded by
+a missing `try/catch` in `news-post-editor.tsx`'s upload handler: a
+*thrown* failure (as opposed to a returned `{ success: false }`) left
+`coverUploading` stuck `true` forever, with no error surfaced — exactly
+matching the reported symptom. Fixed both: raised
+`next.config.ts`'s `serverActions.bodySizeLimit` to `6mb`, and wrapped
+the handler in `try/catch/finally` so any thrown failure now shows a
+clear error and always releases the pending state. Verified live with
+a real 2MB upload (well over the old 1MB cap) completing correctly;
+full suite green.
+
 ## Blockers
 
 - None.
