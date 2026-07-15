@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "playm8z — assemble your party",
   description:
     "Find people to play with. Post a game, browse open parties, and join the conversation.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
