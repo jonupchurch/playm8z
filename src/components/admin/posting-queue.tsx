@@ -118,6 +118,11 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                     <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] font-bold ${severityBadgeClass(row.severity)}`}>
                       {severityLabel(row.severity)}
                     </span>
+                    {row.needsBanReview && (
+                      <span className="rounded-md border border-[rgba(255,59,107,0.45)] bg-[rgba(255,59,107,0.13)] px-2 py-1 font-mono text-[9px] font-bold tracking-wide text-pop-text">
+                        NEEDS BAN REVIEW
+                      </span>
+                    )}
                     <span className="font-mono text-[10px] tracking-wider text-accent-2 uppercase">{row.game}</span>
                     <span className="font-mono text-[10px] text-text-dim">· {relativeAge(row.createdAt)}</span>
                   </div>

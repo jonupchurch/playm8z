@@ -129,6 +129,11 @@ describe("getPublicProfileByHandle (integration)", () => {
     expect(profile.region).toBe("na-west");
     expect(profile.ageGroup).toBe("18");
     expect(profile.platforms).toEqual(["pc"]);
+    // Admin Settings (024)/research.md #7: privacy preferences pass
+    // through unchanged (default true here) -- the page decides
+    // whether to render Region/Age group.
+    expect(profile.showRegion).toBe(true);
+    expect(profile.showAgeGroup).toBe(true);
 
     // Reads from userGames, not the stale users.gamesPlayed onboarding snapshot.
     expect(profile.games).toEqual(["Real Current Game"]);
@@ -145,5 +150,26 @@ describe("getPublicProfileByHandle (integration)", () => {
 
     // sessions = 1 accepted application (as applicant) + 1 closed/full hosted posting
     expect(profile.stats.sessions).toBe(2);
+  });
+
+  it("passes through a false privacy preference (024/research.md #7)", async () => {
+    const handle = `gppprivate${runId}`;
+    const [privateUser] = await db
+      .insert(users)
+      .values({
+        email: `gpp-private-${runId}@example.com`,
+        handle,
+        region: "na-west",
+        ageGroup: "18",
+        privacyShowRegion: false,
+        privacyShowAge: false,
+      })
+      .returning({ id: users.id });
+
+    const profile = await getPublicProfileByHandle(handle);
+    expect(profile?.showRegion).toBe(false);
+    expect(profile?.showAgeGroup).toBe(false);
+
+    await db.delete(users).where(eq(users.id, privateUser.id));
   });
 });

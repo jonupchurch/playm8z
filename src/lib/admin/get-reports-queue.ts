@@ -2,13 +2,15 @@ import { and, asc, eq, gte, inArray, isNotNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { conversations, forumReplies, forumThreads, messages, postings, reports, users } from "@/db/schema";
 import type { ReportsQueueFilter, ReportTargetType } from "@/lib/validations/admin-reports";
-import { computeSeverity, reasonLabel, type Severity } from "@/lib/moderation/reason-severity";
+import { computeSeverity, meetsEscalationThreshold, reasonLabel, type Severity } from "@/lib/moderation/reason-severity";
+import { getSettings } from "@/lib/settings/get-settings";
 import { startOfToday } from "./activity-data";
 
 export type ReportsQueueItem = {
   targetType: ReportTargetType;
   targetId: string;
   severity: Severity;
+  needsBanReview: boolean;
   reason: string;
   reportCount: number;
   reporterHandle: string;
@@ -53,7 +55,7 @@ type ReportGroup = {
 // "avg response" (research.md #5) read the new `reports.resolvedAt`
 // directly -- report-row-level stats, not grouped-target counts.
 export async function getReportsQueue(filter: ReportsQueueFilter): Promise<ReportsQueueResult> {
-  const [openReportRows, [resolvedTodayRow], [avgResponseRow]] = await Promise.all([
+  const [openReportRows, [resolvedTodayRow], [avgResponseRow], moderationSettings] = await Promise.all([
     db
       .select({
         targetType: reports.targetType,
@@ -76,6 +78,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       .select({ avgMinutes: sql<number | null>`avg(extract(epoch from (${reports.resolvedAt} - ${reports.createdAt})) / 60)` })
       .from(reports)
       .where(isNotNull(reports.resolvedAt)),
+    getSettings(),
   ]);
 
   const groups = new Map<string, ReportGroup>();
@@ -183,10 +186,12 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
 
   const allRows: ReportsQueueItem[] = [];
   for (const group of allGroups) {
+    const severity = computeSeverity(group.reasons, null);
     const base = {
       targetType: group.targetType,
       targetId: group.targetId,
-      severity: computeSeverity(group.reasons, null),
+      severity,
+      needsBanReview: meetsEscalationThreshold(severity, moderationSettings.autoEscalateSeverity),
       reason: group.representative.reason,
       reportCount: group.reportCount,
       reporterHandle: group.representative.reporterHandle,

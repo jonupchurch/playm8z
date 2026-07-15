@@ -31,6 +31,11 @@ export type PublicProfile = {
   platforms: string[];
   createdAt: Date;
   deactivatedAt: Date | null;
+  // Admin Settings (024)/research.md #7: the real gap fix -- honored by
+  // the page's own sidebar, not by hiding the value here (the owner's
+  // own view of their own profile always sees everything).
+  showRegion: boolean;
+  showAgeGroup: boolean;
   games: string[];
   openPostings: PublicProfileOpenPosting[];
   reviews: PublicProfileReview[];
@@ -59,6 +64,8 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
       platforms: users.platforms,
       createdAt: users.createdAt,
       deactivatedAt: users.deactivatedAt,
+      showRegion: users.privacyShowRegion,
+      showAgeGroup: users.privacyShowAge,
     })
     .from(users)
     .where(eq(users.handle, handle));
@@ -120,6 +127,8 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
     platforms: user.platforms ?? [],
     createdAt: user.createdAt,
     deactivatedAt: user.deactivatedAt,
+    showRegion: user.showRegion,
+    showAgeGroup: user.showAgeGroup,
     games: gameRows.map((row) => row.game),
     openPostings: openPostingRows,
     reviews: reviewRows.map((row) => ({ ...row, reviewerHandle: row.reviewerHandle ?? "player" })),

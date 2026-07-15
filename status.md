@@ -6,8 +6,8 @@ Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
 Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News,
-Admin Content Pages, Public profile page, and News article detail are
-done and merged. Admin Settings is next.
+Admin Content Pages, Public profile page, News article detail, and
+Admin Settings are done and merged. Moderator audit log is next.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -2952,6 +2952,132 @@ external navigation genuinely flaky — a QA-tooling choice, not a
 product concession.
 
 Full suite green (612 unit, 104 e2e), `npm run build` confirmed twice.
+
+## Admin Settings implemented (2026-07-15)
+
+`/admin/settings`, all 43 tasks complete — gated at `admin`
+specifically, stricter than every other `/admin/*` page's `moderator`
+minimum. This is the feature `require-role.ts`'s own comment had named
+since Content Page (014): it finally adds the real `users.role` column
+(`user`\|`support`\|`viewer`\|`moderator`\|`admin`), so `requireRole()`
+now queries it fresh per request (never the JWT) rather than the
+hardcoded rank-0 every session got before. That makes this the FIRST
+admin feature — and retroactively every prior one too — whose gate can
+be exercised by a real, non-bypassed session.
+
+A tabbed client shell (`role="tablist"`, plain `useState` section
+state, no URL param — this page is never linked to mid-section) over
+five sections:
+
+- **General**: site name/tagline/support email/default theme (no
+  current reader — nav/footer/theming remain Design System infra) plus
+  Error Pages' (002) long-deferred real maintenance-mode toggle, saved
+  immediately on click rather than gated behind the section's own Save
+  button, given how consequential it is.
+- **Moderation & auto-flag**: the admin-editable banned-phrases list
+  plus four independent filter toggles (banned-phrase/external-link/
+  boosting-keyword/new-account-review) now drive `017`'s/`018`'s
+  shared `auto-flag-rules.ts` instead of its own hardcoded constants —
+  the built-in regex patterns/thresholds stay fixed, only the extra
+  admin-supplied phrases and each check's on/off state are
+  configurable, matching the wireframe's own actual scope. A computed
+  — never stored — auto-hide-after-N-reports rule was added as a
+  SECOND amendment to Home's/Browse's/Forum index's (003/004/009)
+  already-once-amended queries (Admin Users, 016, added the first),
+  so resolving enough open reports via any of 017/018/019's own
+  actions automatically un-hides a row with zero extra code anywhere
+  else. A computed "needs ban review" display badge (never an
+  automated ban) was added to 017's/018's/019's own queue queries,
+  comparing each row's already-computed severity against the
+  configured threshold.
+- **Roles & access**: a live team list (role dropdown + remove) plus
+  "Invite a team member" — deliberately ONE `assignTeamRole` action
+  serves both a known member's dropdown AND a by-email lookup for a
+  brand-new plain `user` (who has no team-list row yet, since
+  `get-team.ts` only lists role >= support) — no separate invite-token/
+  pending-invite system, per research.md's own reasoning.
+- **Feature flags**: only Open Signups gets real enforcement
+  (Credentials sign-up's `register/route.ts`); the other five
+  (Discord/Groups/Ratings/Forum/Tabletop) persist but are consulted by
+  nothing yet, logged to `docs/future-work.md`.
+- **Safety**: Discoverable-profiles-by-default, wired to both sign-up
+  paths' account-creation moment (register/route.ts for Credentials, a
+  new `events.createUser` in `src/auth.ts` for Google OAuth, since the
+  adapter creates that row itself with no app code in between).
+
+Extends Error Pages' (002) singleton `settings` table with all ~19 new
+fields exactly as that feature's own data-model.md anticipated
+("the future Admin Settings feature owns writing to it and will extend
+this same table... rather than this feature inventing a shape that
+gets replaced later") — never a second, competing config table. Every
+settings-save Server Action across all five sections logs an audit
+entry (015), closing the loop 002's own spec said would eventually
+happen.
+
+**Found and fixed two real bugs beyond this feature's own explicit
+scope, both worth remembering**:
+
+1. **An admin toggling maintenance mode on was NOT actually unaffected
+   sitewide** — only `/admin/*` was ever exempt in `proxy.ts`; every
+   OTHER route, including the post-login `/continue` redirect and even
+   `/login` itself, still showed the maintenance page to an
+   authenticated admin, since `proxy.ts` had no concept of role at all
+   before this feature (there was no real role to check). Fixed with a
+   sitewide admin bypass (`getCurrentRole()` >= admin skips the
+   maintenance rewrite for any route), plus a separate `/login`
+   exemption — without it, an admin who isn't CURRENTLY logged in (a
+   different browser, an expired session) would have no way to reach
+   the login form at all during an active maintenance window, since
+   that visitor has no session yet for the bypass to apply to. Caught
+   by this feature's own e2e suite: a non-admin login flow during
+   maintenance genuinely hung on the maintenance page instead of
+   reaching Home.
+2. **Every settings-save Server Action called `revalidatePath()` (only
+   invalidates Next.js's own route cache) but never invalidated
+   `get-settings.ts`'s separate, hand-rolled 5-second TTL cache** — so
+   an admin saving General/Moderation/Features/Safety settings and
+   immediately reloading the page would see stale (pre-save) values
+   for up to 5 seconds. Also caught by the e2e suite (a reload
+   immediately after Save showed the OLD banned-phrase/toggle state).
+   Fixed by renaming the test-only `_resetSettingsCacheForTests` to
+   the now-genuinely-production-purposed `invalidateSettingsCache()`
+   and calling it from the shared `upsertSettings()` helper every save
+   action already used — a single, central fix for all seven actions
+   at once.
+
+A small, bounded retroactive fix closes a gap this feature's own
+research surfaced while designing the Safety section: Public Profile
+(022) never actually honored Profile's (007) existing `showRegion`/
+`showAgeGroup` privacy toggles, unconditionally showing Region/Age
+group to every visitor regardless of the owner's own preference —
+`get-public-profile.ts` now selects both columns and the profile page
+conditionally omits each field for a non-owner viewer (the owner's own
+view of their own profile is unaffected).
+
+Full unit/integration coverage: validations, `get-team.ts`, and all 7
+Server Actions — each proven against a REAL `admin` session succeeding
+AND a real `moderator` session being rejected, no mocking of
+`requireRole` itself (the first admin feature able to do this, since
+the role column is finally real). `e2e/admin-settings.spec.ts` (11
+tests) exercises all three user stories through real sessions with
+real roles — access control (unauthenticated/moderator/admin), general
+settings persistence + audit logging, maintenance mode's real sitewide
+effect (admin unaffected, a separate non-admin session blocked,
+restores on toggle-off), moderation settings persistence, a role
+promotion taking effect on the promoted user's very next request (no
+staleness), team removal reverting to plain `user`, invite-by-email
+for both an existing and a nonexistent account, Open Signups rejecting
+a real sign-up while leaving existing logins unaffected,
+Discoverable-by-default initializing a brand-new account correctly,
+and the Public Profile privacy fix — plus a zero-violation axe-core
+scan. This is the first admin/moderation feature in the whole project
+that needed NO local QA bypass of any kind, for its own gate or any
+other admin feature's.
+
+Full suite green (673 unit, 115 e2e), `npm run build` confirmed twice.
+Schema migration (`0028_admin_settings_schema.sql`) pushed to local dev
+DB, verified via direct `information_schema` query before any test ran
+against it.
 
 ## Blockers
 

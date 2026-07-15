@@ -1,8 +1,19 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { conversations, forumThreads, messages, postings, reports, users } from "@/db/schema";
+import { conversations, forumThreads, messages, postings, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { getReportsQueue } from "./get-reports-queue";
+
+async function setAutoEscalateSeverity(value: "low" | "med" | "high") {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoEscalateSeverity: value });
+  } else {
+    await db.update(settings).set({ autoEscalateSeverity: value }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 describe("getReportsQueue (integration)", () => {
   const runId = crypto.randomUUID().slice(0, 8);
@@ -36,6 +47,7 @@ describe("getReportsQueue (integration)", () => {
   });
 
   it("groups open reports by target, computes severity/stats, and filters by target type", async () => {
+    await setAutoEscalateSeverity("high");
     const before = await getReportsQueue("all");
 
     const [reporter] = await db
@@ -142,12 +154,14 @@ describe("getReportsQueue (integration)", () => {
     expect(postingRow.note).toBe("faking a staff account");
     expect(postingRow.ownerHandle).toBe(`reportsqueueposta${runId}`);
     expect(postingRow.context).toBe("Test Game posting");
+    expect(postingRow.needsBanReview).toBe(true);
 
     const threadRow = after.rows.find((row) => row.targetType === "forum" && row.targetId === threadId)!;
     expect(threadRow.reportCount).toBe(1);
     expect(threadRow.severity).toBe("low");
     expect(threadRow.forumTargetType).toBe("forumThread");
     expect(threadRow.context).toBe("Thread");
+    expect(threadRow.needsBanReview).toBe(false);
 
     const messageRow = after.rows.find((row) => row.targetType === "message" && row.targetId === messageId)!;
     expect(messageRow.severity).toBe("high");

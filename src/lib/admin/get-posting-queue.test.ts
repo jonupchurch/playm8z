@@ -1,8 +1,19 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { postings, reports, users } from "@/db/schema";
+import { postings, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { getPostingQueue } from "./get-posting-queue";
+
+async function setAutoEscalateSeverity(value: "low" | "med" | "high") {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoEscalateSeverity: value });
+  } else {
+    await db.update(settings).set({ autoEscalateSeverity: value }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 describe("getPostingQueue (integration)", () => {
   const runId = crypto.randomUUID().slice(0, 8);
@@ -27,6 +38,7 @@ describe("getPostingQueue (integration)", () => {
   });
 
   it("computes accurate queue membership, stats, filters, and severity", async () => {
+    await setAutoEscalateSeverity("high");
     const before = await getPostingQueue("all");
 
     const [author] = await db
@@ -119,11 +131,15 @@ describe("getPostingQueue (integration)", () => {
     const reportedRow = after.rows.find((r) => r.id === reportedId)!;
     expect(reportedRow.severity).toBe("high");
     expect(reportedRow.reports).toEqual([{ reason: "harassment", reporterHandle: `postingqueuereporter${runId}` }]);
+    // Admin Settings (024)/research.md #4: a "high" row meets a "high" threshold.
+    expect(reportedRow.needsBanReview).toBe(true);
 
     const flaggedRow = after.rows.find((r) => r.id === flaggedId)!;
     expect(flaggedRow.severity).toBe("high");
 
     const bothRow = after.rows.find((r) => r.id === bothId)!;
     expect(bothRow.severity).toBe("med");
+    // A "med" row does not meet a "high" threshold -- never an automated ban either way.
+    expect(bothRow.needsBanReview).toBe(false);
   });
 });

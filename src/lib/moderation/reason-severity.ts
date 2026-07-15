@@ -78,3 +78,11 @@ export function severityLabel(severity: Severity): string {
   if (severity === "med") return "Medium";
   return "Low / routine";
 }
+
+// Admin Settings (024)/research.md #4: a computed "needs ban review"
+// display badge in 017's/018's/019's own queues -- never an automated
+// ban. Exported so every queue query can share the exact same
+// low<med<high comparison against the admin-configured threshold.
+export function meetsEscalationThreshold(severity: Severity, threshold: Severity): boolean {
+  return SEVERITY_RANK[severity] >= SEVERITY_RANK[threshold];
+}

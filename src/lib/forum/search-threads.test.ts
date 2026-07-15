@@ -1,8 +1,19 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { forumThreads, users } from "@/db/schema";
+import { forumThreads, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { getCategoryCounts, isHotThread, searchThreads } from "./search-threads";
+
+async function setAutoHide(enabled: boolean, threshold = 3) {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoHideEnabled: enabled, autoHideThreshold: threshold });
+  } else {
+    await db.update(settings).set({ autoHideEnabled: enabled, autoHideThreshold: threshold }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 describe("isHotThread", () => {
   const now = Date.now();
@@ -118,6 +129,10 @@ describe("searchThreads / getCategoryCounts (integration)", () => {
     await db.delete(users).where(eq(users.id, authorId));
   });
 
+  afterEach(async () => {
+    await setAutoHide(false);
+  });
+
   it("narrows to the active category", async () => {
     const rows = await searchThreads({ category: "lfg", q: "", sort: "latest" });
     expect(rows).toHaveLength(2);
@@ -171,5 +186,22 @@ describe("searchThreads / getCategoryCounts (integration)", () => {
     expect(counts.lfg).toBe(2);
     expect(counts.gametalk).toBe(1);
     expect(counts.offtopic ?? 0).toBe(0);
+  });
+
+  it("excludes a thread whose open-report count meets the configured auto-hide threshold (024/research.md #2)", async () => {
+    const [target] = await db.select({ id: forumThreads.id }).from(forumThreads).where(eq(forumThreads.title, `Meta debate ${runId}`));
+    const [reporter] = await db
+      .insert(users)
+      .values({ email: `forum-autohide-${runId}@example.com`, handle: `forumautohide${runId}` })
+      .returning({ id: users.id });
+
+    await db.insert(reports).values({ reporterId: reporter.id, targetType: "forum", targetId: target.id, status: "open" });
+    await setAutoHide(true, 1);
+
+    const rows = await searchThreads({ category: "all", q: "", sort: "latest" });
+    expect(rows.some((row) => row.title.includes("Meta debate"))).toBe(false);
+
+    await db.delete(reports).where(eq(reports.targetId, target.id));
+    await db.delete(users).where(eq(users.email, `forum-autohide-${runId}@example.com`));
   });
 });

@@ -49,6 +49,13 @@ export const users = pgTable("user", {
   // offers (no separate "Delete", ADR 0005/research.md #1). "Flagged"
   // is never stored -- always computed from open `reports` rows.
   bannedAt: timestamp("bannedAt", { mode: "date" }),
+  // Admin Settings (024) -- extends the 2-tier admin model (moderator|
+  // admin) every existing require-role.ts('moderator') gate already
+  // used, to 5 tiers: user < support/viewer < moderator < admin
+  // (research.md #5). `support`/`viewer` are assignable and persisted
+  // but functionally identical to a plain `user` at every existing
+  // gate -- no feature differentiates them further yet.
+  role: text("role").notNull().default("user"),
 });
 
 export const accounts = pgTable(
@@ -81,14 +88,54 @@ export const sessions = pgTable("session", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-// Singleton config row. This feature (Error Pages) only reads it; the
-// future Admin Settings feature owns writing to it and will extend this
-// same table with its other toggles rather than this feature inventing
-// a shape that gets replaced later (research.md #2).
+// Singleton config row. Error Pages (002) only read/wrote
+// maintenanceMode/maintenanceMessage; Admin Settings (024) is this
+// table's real owner and extends it here with every other section's
+// toggles (research.md #1 there), exactly as 002's own data-model.md
+// anticipated -- never a second, competing config table. Remains a
+// singleton row -- every settings-save Server Action only ever UPDATEs
+// it, never inserts a second one.
 export const settings = pgTable("settings", {
   id: uuid("id").defaultRandom().primaryKey(),
   maintenanceMode: boolean("maintenanceMode").notNull().default(false),
   maintenanceMessage: text("maintenanceMessage"),
+  // General -- no current reader (nav/footer/theming are Design System
+  // infra, out of this feature's scope, same as every prior feature's
+  // own disclaimer).
+  siteName: text("siteName").notNull().default("playm8z"),
+  tagline: text("tagline"),
+  supportEmail: text("supportEmail"),
+  defaultTheme: text("defaultTheme").notNull().default("dark"),
+  // Moderation & auto-flag -- read by auto-flag-rules.ts (017/018)
+  // instead of its own hardcoded constants (research.md #3).
+  phraseFilterEnabled: boolean("phraseFilterEnabled").notNull().default(true),
+  linkFilterEnabled: boolean("linkFilterEnabled").notNull().default(true),
+  boostFilterEnabled: boolean("boostFilterEnabled").notNull().default(true),
+  newAccountReviewEnabled: boolean("newAccountReviewEnabled").notNull().default(true),
+  bannedPhrases: text("bannedPhrases").array().notNull().default(["free nitro", "cheap boosting", "click here", "dm for rates", "gift-nitro"]),
+  // Gates the computed auto-hide rule (research.md #2) -- never a
+  // stored per-row "hidden" flag; Home's/Browse's/Forum index's own
+  // queries (003/004/009) re-evaluate this live on every read.
+  autoHideEnabled: boolean("autoHideEnabled").notNull().default(false),
+  autoHideThreshold: integer("autoHideThreshold").notNull().default(3),
+  // low|med|high -- read by 017's/018's/019's queue queries for the
+  // computed "needs ban review" display badge (research.md #4). Never
+  // triggers an automated ban.
+  autoEscalateSeverity: text("autoEscalateSeverity").notNull().default("high"),
+  // Feature flags -- only `openSignups` gets real enforcement (001's
+  // sign-up path); the rest are stored but inert (research.md #8),
+  // logged to docs/future-work.md.
+  discordFlag: boolean("discordFlag").notNull().default(false),
+  groupsFlag: boolean("groupsFlag").notNull().default(false),
+  ratingsFlag: boolean("ratingsFlag").notNull().default(false),
+  forumFlag: boolean("forumFlag").notNull().default(true),
+  tabletopFlag: boolean("tabletopFlag").notNull().default(true),
+  openSignups: boolean("openSignups").notNull().default(true),
+  // Safety -- initializes a brand-new user's own `privacyDiscoverable`
+  // (007) at account creation (001); has no further effect until a
+  // future discovery/search feature consults `privacyDiscoverable`
+  // itself.
+  discoverableByDefault: boolean("discoverableByDefault").notNull().default(true),
 });
 
 // Minimal shape -- Home is the first feature to need this table, so it

@@ -22,7 +22,7 @@ export async function getGameFacetCounts(filters: BrowseFilters): Promise<FacetC
     .from(postings)
     .where(eq(postings.status, "open"));
 
-  const conditions = buildFilterConditions(filters, { excludeGames: true });
+  const conditions = await buildFilterConditions(filters, { excludeGames: true });
   const counts = await db
     .select({ game: postings.game, count: sql<number>`count(*)::int` })
     .from(postings)
@@ -37,7 +37,7 @@ export async function getGameFacetCounts(filters: BrowseFilters): Promise<FacetC
 }
 
 export async function getRegionFacetCounts(filters: BrowseFilters): Promise<FacetCount[]> {
-  const conditions = buildFilterConditions(filters, { excludeRegions: true });
+  const conditions = await buildFilterConditions(filters, { excludeRegions: true });
   const counts = await db
     .select({ region: postings.region, count: sql<number>`count(*)::int` })
     .from(postings)

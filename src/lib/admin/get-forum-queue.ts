@@ -2,7 +2,8 @@ import { and, eq, gte, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { auditEntries, forumReplies, forumThreads, reports, users } from "@/db/schema";
 import type { ForumQueueFilter } from "@/lib/validations/admin-forum";
-import { computeSeverity, type Severity } from "@/lib/moderation/reason-severity";
+import { computeSeverity, meetsEscalationThreshold, type Severity } from "@/lib/moderation/reason-severity";
+import { getSettings } from "@/lib/settings/get-settings";
 import { startOfToday } from "./activity-data";
 
 export type ForumQueueReport = { reason: string; reporterHandle: string };
@@ -20,6 +21,7 @@ export type ForumQueueItem = {
   autoFlagReason: string | null;
   reports: ForumQueueReport[];
   severity: Severity;
+  needsBanReview: boolean;
 };
 
 export type ForumQueueStats = {
@@ -40,7 +42,7 @@ export type ForumQueueResult = { stats: ForumQueueStats; rows: ForumQueueItem[] 
 // live product-facing read of `auditEntries` (research.md #5), not a
 // stored counter.
 export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueueResult> {
-  const [threadRows, replyRows, openReportRows, [actionedTodayRow]] = await Promise.all([
+  const [threadRows, replyRows, openReportRows, [actionedTodayRow], moderationSettings] = await Promise.all([
     db
       .select({
         id: forumThreads.id,
@@ -89,6 +91,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
           gte(auditEntries.createdAt, startOfToday()),
         ),
       ),
+    getSettings(),
   ]);
 
   const reportsByTarget = new Map<string, ForumQueueReport[]>();
@@ -102,19 +105,21 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
     const itemReports = reportsByTarget.get(row.id) ?? [];
     const hasOpenReport = itemReports.length > 0;
     const isUnreviewedAutoFlag = row.autoFlagReason !== null && row.moderationReviewedAt === null;
+    const severity = computeSeverity(
+      itemReports.map((r) => r.reason),
+      row.autoFlagReason,
+    );
     return {
       itemReports,
       hasOpenReport,
       isUnreviewedAutoFlag,
-      severity: computeSeverity(
-        itemReports.map((r) => r.reason),
-        row.autoFlagReason,
-      ),
+      severity,
+      needsBanReview: meetsEscalationThreshold(severity, moderationSettings.autoEscalateSeverity),
     };
   }
 
   const threadItems = threadRows.map((row) => {
-    const { itemReports, hasOpenReport, isUnreviewedAutoFlag, severity } = decorate(row);
+    const { itemReports, hasOpenReport, isUnreviewedAutoFlag, severity, needsBanReview } = decorate(row);
     return {
       id: row.id,
       type: "forumThread" as const,
@@ -128,13 +133,14 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       autoFlagReason: row.autoFlagReason,
       reports: itemReports,
       severity,
+      needsBanReview,
       hasOpenReport,
       isUnreviewedAutoFlag,
     };
   });
 
   const replyItems = replyRows.map((row) => {
-    const { itemReports, hasOpenReport, isUnreviewedAutoFlag, severity } = decorate(row);
+    const { itemReports, hasOpenReport, isUnreviewedAutoFlag, severity, needsBanReview } = decorate(row);
     return {
       id: row.id,
       type: "forumReply" as const,
@@ -148,6 +154,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       autoFlagReason: row.autoFlagReason,
       reports: itemReports,
       severity,
+      needsBanReview,
       hasOpenReport,
       isUnreviewedAutoFlag,
     };
@@ -186,6 +193,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       autoFlagReason: item.autoFlagReason,
       reports: item.reports,
       severity: item.severity,
+      needsBanReview: item.needsBanReview,
     })),
   };
 }

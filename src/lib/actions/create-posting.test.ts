@@ -165,7 +165,10 @@ describe("createPosting", () => {
     const result = await createPosting({
       ...validInput,
       title: "Cheap rank boosting, all regions",
-      blurb: "Professional boosting service, DM for rates.",
+      // Avoids "dm for rates" -- one of Admin Settings' (024) own
+      // default banned phrases, which would otherwise correctly win
+      // over this test's own boosting-specific assertion below.
+      blurb: "Professional boosting service for all ranks.",
     });
     expect(result.success).toBe(true);
     if (!result.success) throw new Error("expected success");

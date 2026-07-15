@@ -109,16 +109,20 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <div className="rounded-2xl border border-border bg-surface-2 p-5">
             <div className="mb-4 font-mono text-[10px] tracking-[0.14em] text-pop-text uppercase">Public info</div>
             <div className="flex flex-col gap-3.5">
-              <div>
-                <div className="mb-0.75 font-mono text-[10px] text-text-dim">REGION</div>
-                <div className="text-sm font-semibold text-text">
-                  {REGIONS.find((region) => region.id === profile.region)?.label ?? "—"}
+              {(isOwnProfile || profile.showRegion) && (
+                <div>
+                  <div className="mb-0.75 font-mono text-[10px] text-text-dim">REGION</div>
+                  <div className="text-sm font-semibold text-text">
+                    {REGIONS.find((region) => region.id === profile.region)?.label ?? "—"}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="mb-0.75 font-mono text-[10px] text-text-dim">AGE GROUP</div>
-                <div className="text-sm font-semibold text-text">{profile.ageGroup ? `${profile.ageGroup}+` : "—"}</div>
-              </div>
+              )}
+              {(isOwnProfile || profile.showAgeGroup) && (
+                <div>
+                  <div className="mb-0.75 font-mono text-[10px] text-text-dim">AGE GROUP</div>
+                  <div className="text-sm font-semibold text-text">{profile.ageGroup ? `${profile.ageGroup}+` : "—"}</div>
+                </div>
+              )}
               <div>
                 <div className="mb-1.5 font-mono text-[10px] text-text-dim">PLATFORMS</div>
                 {profile.platforms.length === 0 ? (

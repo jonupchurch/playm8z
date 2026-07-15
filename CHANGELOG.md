@@ -2066,3 +2066,55 @@ may begin on any/all of them per the constitution (v1.0.0).
   Saved-tab surfacing; Keep reading + share buttons; unauthenticated/
   unverified gating). Full suite green (612 unit, 104 e2e), `npm run
   build` confirmed twice.
+
+## [Unreleased] (cont. 30)
+
+### Added
+- Admin Settings (`specs/024-admin-settings/`, branch
+  `024-admin-settings` merged to `main`) — all 43 tasks complete:
+  `/admin/settings`, gated at `admin` specifically. Ships the real
+  `users.role` column (`user`\|`support`\|`viewer`\|`moderator`\|
+  `admin`) `require-role.ts` had been waiting on since Content Page
+  (014) — `requireRole()` now queries it fresh per request instead of
+  a hardcoded rank. Five sections: General (site metadata + Error
+  Pages', 002, real maintenance-mode toggle), Moderation & auto-flag
+  (banned phrases + four filter toggles now drive 017's/018's shared
+  `auto-flag-rules.ts`; a computed auto-hide-after-N-reports rule
+  amending Home's/Browse's/Forum index's, 003/004/009, queries; a
+  computed "needs ban review" badge on 017's/018's/019's queues), Roles
+  & access (team list + role dropdown/remove + invite-by-email, one
+  `assignTeamRole` action for both), Feature flags (only Open Signups
+  gets real enforcement), Safety (Discoverable-profiles-by-default,
+  wired to both sign-up paths). Extends Error Pages' (002) singleton
+  `settings` table with ~19 new fields, exactly as that feature's own
+  data-model.md anticipated. Every settings-save Server Action logs an
+  audit entry (015).
+
+### Fixed
+- `proxy.ts`'s maintenance-mode intercept never checked role at all
+  (no real role existed before this feature) — an authenticated admin
+  was NOT actually unaffected sitewide, only on `/admin/*`. Added a
+  sitewide admin bypass plus a `/login` exemption (without it, an admin
+  without a current session has no way to reach the login form during
+  an active maintenance window).
+- Every settings-save Server Action called `revalidatePath()` but never
+  invalidated `get-settings.ts`'s own separate 5-second TTL cache, so
+  an immediate reload after Save showed stale data. Renamed the
+  test-only `_resetSettingsCacheForTests` to the now-production-
+  purposed `invalidateSettingsCache()` and wired it into the shared
+  `upsertSettings()` helper every save action uses.
+- Public Profile (022) never honored Profile's (007) existing
+  `showRegion`/`showAgeGroup` privacy toggles, unconditionally showing
+  Region/Age group regardless of the owner's preference —
+  `get-public-profile.ts` and the profile sidebar now honor both.
+
+### Verified
+- Full unit/integration coverage including all 7 Server Actions, each
+  proven against a real `admin` session succeeding AND a real
+  `moderator` session being rejected — no mocking of `requireRole`
+  itself, the first admin feature able to do this since the role
+  column is finally real. `e2e/admin-settings.spec.ts` (11 tests, zero-
+  violation axe scan) exercises all three user stories through real
+  sessions with real roles — the first admin/moderation feature in the
+  project needing no local QA bypass of any kind. Full suite green (673
+  unit, 115 e2e), `npm run build` confirmed twice.

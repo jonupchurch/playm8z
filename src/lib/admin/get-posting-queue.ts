@@ -3,7 +3,8 @@ import { db } from "@/db";
 import { postings, reports, users } from "@/db/schema";
 import type { PostingQueueFilter } from "@/lib/validations/admin-postings";
 import { startOfToday } from "./activity-data";
-import { computeSeverity, type Severity } from "@/lib/moderation/reason-severity";
+import { computeSeverity, meetsEscalationThreshold, type Severity } from "@/lib/moderation/reason-severity";
+import { getSettings } from "@/lib/settings/get-settings";
 
 export type QueueReport = { reason: string; reporterHandle: string };
 
@@ -19,6 +20,10 @@ export type QueuePosting = {
   autoFlagReason: string | null;
   reports: QueueReport[];
   severity: Severity;
+  // Admin Settings (024)/research.md #4: severity meets the configured
+  // autoEscalateSeverity threshold -- a display hint only, never an
+  // automated ban.
+  needsBanReview: boolean;
 };
 
 export type PostingQueueStats = {
@@ -38,7 +43,7 @@ export type PostingQueueResult = { stats: PostingQueueStats; rows: QueuePosting[
 // unfiltered queue; "removed today" is separate -- any posting removed
 // today regardless of queue membership (spec.md's own Edge Cases).
 export async function getPostingQueue(filter: PostingQueueFilter): Promise<PostingQueueResult> {
-  const [activePostings, openReportRows, [removedTodayRow]] = await Promise.all([
+  const [activePostings, openReportRows, [removedTodayRow], moderationSettings] = await Promise.all([
     db
       .select({
         id: postings.id,
@@ -65,6 +70,7 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
       .select({ n: sql<number>`count(*)::int` })
       .from(postings)
       .where(gte(postings.removedAt, startOfToday())),
+    getSettings(),
   ]);
 
   const reportsByPosting = new Map<string, QueueReport[]>();
@@ -79,6 +85,10 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
       const postingReports = reportsByPosting.get(posting.id) ?? [];
       const hasOpenReport = postingReports.length > 0;
       const isUnreviewedAutoFlag = posting.autoFlagReason !== null && posting.moderationReviewedAt === null;
+      const severity = computeSeverity(
+        postingReports.map((r) => r.reason),
+        posting.autoFlagReason,
+      );
       return {
         id: posting.id,
         game: posting.game,
@@ -90,10 +100,8 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
         authorAvatarColor: posting.authorAvatarColor,
         autoFlagReason: posting.autoFlagReason,
         reports: postingReports,
-        severity: computeSeverity(
-          postingReports.map((r) => r.reason),
-          posting.autoFlagReason,
-        ),
+        severity,
+        needsBanReview: meetsEscalationThreshold(severity, moderationSettings.autoEscalateSeverity),
         hasOpenReport,
         isUnreviewedAutoFlag,
       };
@@ -127,6 +135,7 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
       autoFlagReason: row.autoFlagReason,
       reports: row.reports,
       severity: row.severity,
+      needsBanReview: row.needsBanReview,
     })),
   };
 }

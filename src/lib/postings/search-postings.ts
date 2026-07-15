@@ -2,6 +2,7 @@ import { and, arrayOverlaps, asc, desc, eq, gte, ilike, inArray, isNull, or, sql
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, users } from "@/db/schema";
+import { getAutoHideCondition } from "@/lib/moderation/auto-hide";
 import type { BrowseFilters } from "@/lib/validations/browse-filters";
 
 export type BrowseResult = {
@@ -30,16 +31,18 @@ const OPEN_SLOTS_MIN: Record<string, number> = { any: 0, "1": 1, "2": 2, "3": 3 
  * option's count reflects every OTHER active facet, per the spec's
  * edge case, so an option can validly show 0 without disappearing).
  */
-export function buildFilterConditions(
+export async function buildFilterConditions(
   filters: BrowseFilters,
   options: { excludeGames?: boolean; excludeRegions?: boolean } = {},
-): SQL[] {
+): Promise<SQL[]> {
   // Excludes a deactivated host's postings (Profile + Account settings
   // 007's FR-013/SC-005) and a moderator-removed posting (Admin Users
   // 016's FR-009) -- both callers of this helper (searchPostings and
   // get-facet-counts.ts) already join `users`, so this applies
   // consistently to results and facet counts alike.
   const conditions: SQL[] = [eq(postings.status, "open"), isNull(users.deactivatedAt), isNull(postings.removedAt)];
+  const autoHideCondition = await getAutoHideCondition("posting", postings.id);
+  if (autoHideCondition) conditions.push(autoHideCondition);
 
   const q = filters.q.trim();
   if (q) {
@@ -80,7 +83,7 @@ export function buildFilterConditions(
 // posting that has one (spec's Edge Cases), falling back to post
 // recency among postings without a date.
 export async function searchPostings(filters: BrowseFilters): Promise<BrowseResult[]> {
-  const conditions = buildFilterConditions(filters);
+  const conditions = await buildFilterConditions(filters);
 
   const orderBy =
     filters.sort === "seats"

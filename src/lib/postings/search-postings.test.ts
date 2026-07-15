@@ -1,9 +1,20 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { postings, users } from "@/db/schema";
+import { postings, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { browseFiltersSchema } from "@/lib/validations/browse-filters";
 import { searchPostings as searchPostingsRaw } from "./search-postings";
+
+async function setAutoHide(enabled: boolean, threshold = 3) {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoHideEnabled: enabled, autoHideThreshold: threshold });
+  } else {
+    await db.update(settings).set({ autoHideEnabled: enabled, autoHideThreshold: threshold }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 function searchPostings(raw: Record<string, unknown>) {
   return searchPostingsRaw(browseFiltersSchema.parse(raw));
@@ -107,6 +118,10 @@ afterAll(async () => {
   await db.delete(users).where(eq(users.email, email));
 });
 
+afterEach(async () => {
+  await setAutoHide(false);
+});
+
 function titles(rows: Awaited<ReturnType<typeof searchPostings>>) {
   return rows.map((row) => row.title);
 }
@@ -175,5 +190,22 @@ describe("searchPostings", () => {
   it("sorts Soonest ascending by scheduledDate, nulls last", async () => {
     const result = await searchPostings({ q: runId, sort: "soon" });
     expect(titles(result)).toEqual(["Ranked grind", "Board game night", tag("Casual dives")]);
+  });
+
+  it("excludes a posting whose open-report count meets the configured auto-hide threshold (024/research.md #2)", async () => {
+    const [reporter] = await db
+      .insert(users)
+      .values({ email: `browse-autohide-${runId}@example.com`, handle: `browseautohide${runId}` })
+      .returning({ id: users.id });
+
+    const [target] = await db.select({ id: postings.id }).from(postings).where(eq(postings.title, "Ranked grind"));
+    await db.insert(reports).values({ reporterId: reporter.id, targetType: "posting", targetId: target.id, status: "open" });
+
+    await setAutoHide(true, 1);
+    const result = await searchPostings({ q: runId });
+    expect(titles(result)).not.toContain("Ranked grind");
+
+    await db.delete(reports).where(eq(reports.targetId, target.id));
+    await db.delete(users).where(eq(users.email, `browse-autohide-${runId}@example.com`));
   });
 });

@@ -2,6 +2,7 @@ import { and, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { forumThreads, users } from "@/db/schema";
+import { getAutoHideCondition } from "@/lib/moderation/auto-hide";
 import type { ForumSearchParams } from "@/lib/validations/forum";
 
 export type ForumThreadRow = {
@@ -35,9 +36,11 @@ export function isHotThread(replyCount: number, createdAt: Date, pinned: boolean
   return replyCount / ageHours >= HOT_REPLIES_PER_HOUR;
 }
 
-function buildConditions(filters: ForumSearchParams): SQL[] {
+async function buildConditions(filters: ForumSearchParams): Promise<SQL[]> {
   // Excludes a moderator-removed thread (Admin Users 016's FR-009).
   const conditions: SQL[] = [isNull(forumThreads.removedAt)];
+  const autoHideCondition = await getAutoHideCondition("forum", forumThreads.id);
+  if (autoHideCondition) conditions.push(autoHideCondition);
 
   if (filters.category !== "all") {
     conditions.push(eq(forumThreads.categoryId, filters.category));
@@ -67,7 +70,7 @@ function buildConditions(filters: ForumSearchParams): SQL[] {
 // server-side, URL-driven, Browse's precedent, since threads
 // accumulate indefinitely unlike Home's small recent slice).
 export async function searchThreads(filters: ForumSearchParams): Promise<ForumThreadRow[]> {
-  const conditions = buildConditions(filters);
+  const conditions = await buildConditions(filters);
   const where = conditions.length > 0 ? and(...conditions) : undefined;
 
   const orderBy =

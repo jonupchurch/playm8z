@@ -1,8 +1,19 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { auditEntries, forumReplies, forumThreads, reports, users } from "@/db/schema";
+import { auditEntries, forumReplies, forumThreads, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { getForumQueue } from "./get-forum-queue";
+
+async function setAutoEscalateSeverity(value: "low" | "med" | "high") {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoEscalateSeverity: value });
+  } else {
+    await db.update(settings).set({ autoEscalateSeverity: value }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 describe("getForumQueue (integration)", () => {
   const runId = crypto.randomUUID().slice(0, 8);
@@ -24,6 +35,7 @@ describe("getForumQueue (integration)", () => {
   });
 
   it("computes accurate queue membership, stats, filters, and severity across threads and replies", async () => {
+    await setAutoEscalateSeverity("high");
     const before = await getForumQueue("all");
 
     const [author] = await db
@@ -101,6 +113,7 @@ describe("getForumQueue (integration)", () => {
     expect(reportedRow.type).toBe("forumThread");
     expect(reportedRow.severity).toBe("high");
     expect(reportedRow.reports).toEqual([{ reason: "harassment", reporterHandle: `forumqueuereporter${runId}` }]);
+    expect(reportedRow.needsBanReview).toBe(true);
 
     const flaggedRow = after.rows.find((r) => r.id === flaggedThread[0].id)!;
     expect(flaggedRow.severity).toBe("high");
@@ -110,5 +123,6 @@ describe("getForumQueue (integration)", () => {
     expect(bothRow.threadTitle).toBe("Reported thread");
     expect(bothRow.categoryId).toBe("general");
     expect(bothRow.severity).toBe("med");
+    expect(bothRow.needsBanReview).toBe(false);
   });
 });

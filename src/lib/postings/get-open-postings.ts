@@ -1,6 +1,7 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, users } from "@/db/schema";
+import { getAutoHideCondition } from "@/lib/moderation/auto-hide";
 
 export type OpenPosting = {
   id: string;
@@ -24,6 +25,10 @@ export type OpenPosting = {
 // postings (Profile + Account settings 007's FR-013/SC-005) and a
 // moderator-removed posting (Admin Users 016's FR-009).
 export async function getOpenPostings(): Promise<OpenPosting[]> {
+  const conditions = [eq(postings.status, "open"), isNull(users.deactivatedAt), isNull(postings.removedAt)];
+  const autoHideCondition = await getAutoHideCondition("posting", postings.id);
+  if (autoHideCondition) conditions.push(autoHideCondition);
+
   const rows = await db
     .select({
       id: postings.id,
@@ -41,7 +46,7 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
     })
     .from(postings)
     .innerJoin(users, eq(postings.hostId, users.id))
-    .where(and(eq(postings.status, "open"), isNull(users.deactivatedAt), isNull(postings.removedAt)))
+    .where(and(...conditions))
     .orderBy(desc(postings.createdAt));
 
   return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));

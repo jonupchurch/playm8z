@@ -9,6 +9,7 @@ import { users } from "@/db/schema";
 import { credentialsSchema } from "@/lib/validations/auth";
 import { reactivateOnSignIn } from "@/lib/auth/reactivate-on-sign-in";
 import { verifyGoogleEmail } from "@/lib/auth/verify-google-email";
+import { initializeDiscoverableDefault } from "@/lib/auth/initialize-discoverable-default";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -16,6 +17,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   // database-session storage, so JWT sessions are required whenever
   // Credentials is one of the providers.
   session: { strategy: "jwt" },
+  events: {
+    // Admin Settings (024)/FR-011: the only point @auth/drizzle-adapter
+    // creates a `user` row itself -- Google OAuth's own sign-up path.
+    // The Credentials sign-up path (register/route.ts) sets this at
+    // insert time instead, since it never goes through the adapter.
+    async createUser({ user }) {
+      if (user.id) await initializeDiscoverableDefault(user.id);
+    },
+  },
   callbacks: {
     // Profile + Account settings (007), research.md #3: a deactivated
     // account (user.deactivatedAt set) reactivates automatically on

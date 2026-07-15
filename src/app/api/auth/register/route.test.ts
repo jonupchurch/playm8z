@@ -1,9 +1,30 @@
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { POST } from "./route";
+
+async function setOpenSignups(value: boolean) {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ openSignups: value });
+  } else {
+    await db.update(settings).set({ openSignups: value }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
+
+async function setDiscoverableByDefault(value: boolean) {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ discoverableByDefault: value });
+  } else {
+    await db.update(settings).set({ discoverableByDefault: value }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 // Real Postgres (local dev / CI's ephemeral container), matching this
 // project's convention for integration tests with real risk of silent
@@ -23,6 +44,11 @@ afterAll(async () => {
   for (const email of testEmails) {
     await db.delete(users).where(eq(users.email, email));
   }
+});
+
+afterEach(async () => {
+  await setOpenSignups(true);
+  await setDiscoverableByDefault(true);
 });
 
 describe("POST /api/auth/register", () => {
@@ -71,5 +97,29 @@ describe("POST /api/auth/register", () => {
     await POST(request({ handle, email: firstEmail, password: "correcthorse" }));
     const res = await POST(request({ handle, email: secondEmail, password: "correcthorse" }));
     expect(res.status).toBe(409);
+  });
+
+  // Admin Settings (024)/FR-009.
+  it("rejects a new sign-up with 403 when Open Signups is off, and creates nothing", async () => {
+    await setOpenSignups(false);
+    const email = `register-${runId}-closed@example.com`;
+
+    const res = await POST(request({ handle: `closedsignup${runId}`, email, password: "correcthorse" }));
+    expect(res.status).toBe(403);
+
+    const rows = await db.select().from(users).where(eq(users.email, email));
+    expect(rows).toHaveLength(0);
+  });
+
+  // Admin Settings (024)/FR-011.
+  it("initializes privacyDiscoverable from the platform's discoverableByDefault setting", async () => {
+    await setDiscoverableByDefault(false);
+    const email = `register-${runId}-discoverable@example.com`;
+    testEmails.push(email);
+
+    await POST(request({ handle: `discdefault${runId}`, email, password: "correcthorse" }));
+
+    const [row] = await db.select({ privacyDiscoverable: users.privacyDiscoverable }).from(users).where(eq(users.email, email));
+    expect(row.privacyDiscoverable).toBe(false);
   });
 });

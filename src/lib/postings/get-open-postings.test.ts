@@ -1,8 +1,22 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { postings, users } from "@/db/schema";
+import { postings, reports, settings, users } from "@/db/schema";
+import { invalidateSettingsCache } from "@/lib/settings/get-settings";
 import { getOpenPostings } from "./get-open-postings";
+
+// Admin Settings (024)/research.md #2: enables/disables the computed
+// auto-hide rule and resets get-settings.ts's own cache so the change
+// is visible immediately, not after its 5s TTL.
+async function setAutoHide(enabled: boolean, threshold = 3) {
+  const [row] = await db.select().from(settings).limit(1);
+  if (!row) {
+    await db.insert(settings).values({ autoHideEnabled: enabled, autoHideThreshold: threshold });
+  } else {
+    await db.update(settings).set({ autoHideEnabled: enabled, autoHideThreshold: threshold }).where(eq(settings.id, row.id));
+  }
+  invalidateSettingsCache();
+}
 
 const runId = crypto.randomUUID().slice(0, 8);
 const email = `home-open-postings-${runId}@example.com`;
@@ -74,6 +88,10 @@ afterAll(async () => {
   await db.delete(users).where(eq(users.email, email));
 });
 
+afterEach(async () => {
+  await setAutoHide(false);
+});
+
 describe("getOpenPostings", () => {
   it("returns only rows with status = 'open', with the real host's handle/avatar", async () => {
     const result = await getOpenPostings();
@@ -93,5 +111,49 @@ describe("getOpenPostings", () => {
   it("excludes an open posting a moderator has removed (Admin Users 016's FR-009)", async () => {
     const result = await getOpenPostings();
     expect(result.map((row) => row.game)).not.toContain(`RemovedGame-${runId}`);
+  });
+
+  it("excludes a posting whose open-report count meets the configured auto-hide threshold, and un-hides it once resolved (024/research.md #2)", async () => {
+    const [reportedPosting] = await db
+      .insert(postings)
+      .values({
+        hostId,
+        game: `AutoHideGame-${runId}`,
+        title: "Auto-hide candidate",
+        blurb: "blurb",
+        genre: "FPS",
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+        micRequired: false,
+        vibe: "fun",
+        region: "na-west",
+        seatsTotal: 4,
+        seatsOpen: 2,
+        status: "open",
+      })
+      .returning({ id: postings.id });
+
+    const [reporterA, reporterB] = await Promise.all([
+      db.insert(users).values({ email: `autohide-a-${runId}@example.com`, handle: `autohidea${runId}` }).returning({ id: users.id }),
+      db.insert(users).values({ email: `autohide-b-${runId}@example.com`, handle: `autohideb${runId}` }).returning({ id: users.id }),
+    ]);
+
+    await db.insert(reports).values([
+      { reporterId: reporterA[0].id, targetType: "posting", targetId: reportedPosting.id, status: "open" },
+      { reporterId: reporterB[0].id, targetType: "posting", targetId: reportedPosting.id, status: "open" },
+    ]);
+
+    await setAutoHide(true, 2);
+    const hidden = await getOpenPostings();
+    expect(hidden.map((row) => row.game)).not.toContain(`AutoHideGame-${runId}`);
+
+    await db.update(reports).set({ status: "resolved" }).where(eq(reports.targetId, reportedPosting.id));
+    const visibleAgain = await getOpenPostings();
+    expect(visibleAgain.map((row) => row.game)).toContain(`AutoHideGame-${runId}`);
+
+    await db.delete(postings).where(eq(postings.id, reportedPosting.id));
+    await db.delete(users).where(eq(users.email, `autohide-a-${runId}@example.com`));
+    await db.delete(users).where(eq(users.email, `autohide-b-${runId}@example.com`));
   });
 });

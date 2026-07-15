@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { users, verificationTokens } from "@/db/schema";
 import { registerSchema } from "@/lib/validations/auth";
 import { sendVerificationEmail } from "@/lib/email/send-verification-email";
+import { getSettings } from "@/lib/settings/get-settings";
 
 const VERIFICATION_TOKEN_TTL_MS = 1000 * 60 * 60 * 24; // 24h
 
@@ -17,6 +18,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: issue?.message ?? "Invalid input.", field: issue?.path[0] },
       { status: 400 },
+    );
+  }
+
+  // Admin Settings (024)/FR-009: rejects a brand-new Credentials sign-up
+  // when Open Signups is off -- existing logins are wholly unaffected
+  // (this route is sign-up only; a Credentials login goes through
+  // auth.ts's own authorize(), never here). Google OAuth's own new-
+  // account creation is NOT gated by this toggle -- @auth/drizzle-
+  // adapter's createUser runs before any app callback can intervene
+  // without leaving a stray row, which would need its own cleanup
+  // infrastructure beyond this feature's bounded scope.
+  const settings = await getSettings();
+  if (!settings.openSignups) {
+    return NextResponse.json(
+      { error: "New sign-ups are temporarily closed. Please check back soon." },
+      { status: 403 },
     );
   }
 
@@ -47,7 +64,7 @@ export async function POST(request: NextRequest) {
   try {
     [user] = await db
       .insert(users)
-      .values({ handle, email, passwordHash })
+      .values({ handle, email, passwordHash, privacyDiscoverable: settings.discoverableByDefault })
       .returning({ id: users.id, email: users.email, name: users.name });
   } catch (err) {
     // Belt-and-suspenders against a race between the SELECT above and this
