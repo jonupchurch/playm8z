@@ -509,6 +509,7 @@ export const contentPages = pgTable("contentPages", {
   title: text("title").notNull(),
   blocks: jsonb("blocks").notNull().default([]).$type<ContentBlock[]>(),
   status: text("status").notNull().default("draft"),
+  system: boolean("system").notNull().default(false),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 

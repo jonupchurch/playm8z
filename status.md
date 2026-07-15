@@ -5,9 +5,9 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, Admin Postings, Admin Forum, Admin Reports, and Admin News
-are done and merged. Admin Content Pages is next.
-**Last updated**: 2026-07-15
+Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News, and
+Admin Content Pages are done and merged. Public profile page is next.
+**Last updated**: 2026-07-14
 
 ## Where things stand
 
@@ -2666,6 +2666,94 @@ labels — a human glancing at the two-pane layout never confuses them
 locator does.
 
 Full suite green (553 unit, 83 e2e), `npm run build` confirmed twice.
+
+## Admin Content Pages implemented (2026-07-14)
+
+`/admin/content-pages`, all 25 tasks complete — a thin management list
+wrapping Content Page's (014) already-existing `ContentPage` table.
+Stats (total/published/drafts/system), a fetch-all-then-filter search
+(title/slug) + status/system filter chips (research.md #5's own
+small-bounded-list precedent, matching Admin News/020, not Admin
+Users'/Browse's SQL-paginated pattern — the number of static pages a
+site has is inherently small), and a row per page (icon, title, 🔒
+System badge, URL, status badge, updated date, actions). URL-driven
+search/filter state, this project's now-standard convention across
+every admin table.
+
+Publish/Unpublish call 014's existing `toggle-page-status.ts` directly
+— no second status-toggle implementation. View and Edit both navigate
+to the page's own public slug (`/pages/[slug]`), where 014's existing
+inline-edit affordance (its own "✎ Edit page" toggle, gated by the
+same role check) already lives — this feature builds no second
+content-editing UI, per its own spec's explicit scope boundary. Delete
+(custom pages only, an inline "Delete? Yes/No" confirm with real focus
+management — Admin Users' own established pattern, Yes-button
+autofocus and No-cancel refocuses the triggering button) is a new,
+thin `delete-content-page.ts`: unconditionally sets `status = 'draft'`
+(ADR 0005, never a row removal, and never a toggle since Delete must
+always land on draft regardless of current status) and rejects
+`system = true` targets server-side as defense in depth beyond the
+UI's own gate (which never renders a delete affordance for system rows
+at all — a 🔒 indicator takes its place). "+ New page"
+(`create-content-page.ts`) generates a unique, human-legible slug
+(`untitled-page`, `untitled-page-2`, …) by checking 014's existing
+unique `slug` constraint and appending an incrementing suffix on
+collision.
+
+Adds `contentPages.system` (new boolean column, default `false`) and
+this feature's own Foundational-phase data seed
+(`scripts/seed-system-pages.ts`, idempotent — skips any slug that
+already exists) inserting About Us, Privacy Policy, and Terms of Use
+as real, published, `system = true` rows. No prior feature ever wrote
+a `ContentPage` row, so without this seed a fresh deployment would
+launch with zero legal/structural pages — unacceptable for a real
+site, not an admin's first manual to-do item.
+
+**Found and fixed a real data-model.md inconsistency before it
+shipped**: the spec's own Seed data table listed the three system
+pages' slugs with a leading slash (`/about`, `/privacy`, `/terms`),
+mirroring the wireframe's cosmetic `playm8z.com{{p.slug}}` display —
+but 014's real `contentPages.slug` convention (its own seed script's
+`community-guidelines`, its e2e spec's bare slugs, `toggle-page-status.ts`'s
+own `revalidatePath` call) stores bare slugs matched directly against
+the `/pages/[slug]` dynamic route segment; a stored leading slash could
+never actually route (Next.js dynamic segments don't accept a literal
+`/`). Corrected to bare slugs (`about`/`privacy`/`terms`) in both the
+seed script and `create-content-page.ts`'s own `untitled-page` slug
+generator, with the leading slash added back only for cosmetic display
+in the admin table's URL column — caught by checking 014's actual
+runtime convention before trusting the spec artifact's literal values,
+the same "verify the code before trusting the doc" discipline this
+project has hit before with research.md claims.
+
+`requireRole("moderator")` gates the route and both new Server Actions
+independently — its ninth real consumer after Content Page (014),
+Admin Dashboard (015), Admin Users (016), Admin Postings (017), Admin
+Forum (018), Admin Reports (019), and Admin News (020) — so the real
+list/action content can't be exercised by a real session yet (no
+`role` column until Admin Settings/024); every query/action is
+unit/integration-tested directly (566 unit tests total after this
+feature), and `e2e/admin-content-pages.spec.ts` covers the real,
+current access-denial behavior.
+
+**Visual QA pass found no product bugs** (fifth consecutive clean
+pass): bypassed the role gate locally across this feature's own
+page/two Server Actions, plus 014's reused `toggle-page-status.ts` and
+`save-content-page.ts`, plus 014's own `/pages/[slug]` page (the
+Edit/View cross-link target) — six files total, fully reverted before
+commit. Exercised stats accuracy, search by title and by slug
+fragment, all four filter chips, the no-match empty state,
+Publish/Unpublish (status badge and stats updating immediately),
+page creation (unique slug confirmed, "Edit" landing on 014's real
+inline-edit surface after its own "✎ Edit page" toggle), and both
+delete-confirm paths (No cancels back to normal row actions, Yes sets
+`status = draft` while the row stays in this feature's own list) —
+all end-to-end in a real browser, plus a zero-violation axe-core scan
+against the live, authenticated table (the real e2e suite's own axe
+scan only covers the 401 access-denied page, since the role gate
+blocks the real content from ever rendering in CI).
+
+Full suite green (566 unit, 85 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

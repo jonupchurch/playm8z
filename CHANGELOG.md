@@ -1910,3 +1910,53 @@ may begin on any/all of them per the constitution (v1.0.0).
   category/filter-chip label and an editor control label), not a
   defect. Full suite green (553 unit, 83 e2e), `npm run build`
   confirmed twice.
+
+## [Unreleased] (cont. 27)
+
+### Added
+- Admin Content Pages (`specs/021-admin-content-pages/`, branch
+  `021-admin-content-pages` merged to `main`) — all 25 tasks complete:
+  `/admin/content-pages`, a thin management list wrapping Content
+  Page's (014) existing `ContentPage` table. Stats (total/published/
+  drafts/system), a fetch-all-then-filter search (title/slug) +
+  status/system filter, and a row per page (icon, title, 🔒 System
+  badge, URL, status, updated date, actions). Publish/Unpublish call
+  014's existing `toggle-page-status.ts` directly; View/Edit both
+  navigate to the page's own public slug, where 014's inline-edit
+  affordance already lives — no second content-editing UI. New
+  `delete-content-page.ts` unconditionally sets `status='draft'` (ADR
+  0005, never a row removal) via an inline "Delete? Yes/No" confirm,
+  offered only for non-system pages. New `create-content-page.ts`
+  generates a unique `untitled-page`/`untitled-page-2`/… slug. Adds
+  `contentPages.system` (new boolean column) and a Foundational-phase
+  seed (`scripts/seed-system-pages.ts`) inserting About Us, Privacy
+  Policy, and Terms of Use as real, published, `system=true` rows —
+  the first `ContentPage` rows any feature has ever written.
+  `requireRole("moderator")` gates the route and both Server Actions —
+  the ninth real consumer after Content Page (014), Admin Dashboard
+  (015), Admin Users (016), Admin Postings (017), Admin Forum (018),
+  Admin Reports (019), and Admin News (020) — so the real list/action
+  content can't be exercised by a real session yet; every query/action
+  is unit-tested directly, and e2e covers the real, current
+  access-denial behavior.
+
+### Fixed
+- Corrected a data-model.md inconsistency before it shipped: the
+  spec's own seed-data table listed system-page slugs with a leading
+  slash (`/about`), but `014`'s real `contentPages.slug` convention
+  stores bare slugs matched against the `/pages/[slug]` dynamic route
+  — a stored leading slash would never route. Seeded and generated
+  slugs bare (`about`/`privacy`/`terms`, `untitled-page`) instead, with
+  the leading slash added back only for cosmetic display.
+
+### Verified
+- Visual QA (temporary local role-gate bypass across this feature's
+  own page/two Server Actions, plus 014's reused
+  `toggle-page-status.ts`/`save-content-page.ts`, plus 014's own
+  `/pages/[slug]` page — the Edit/View cross-link target — fully
+  reverted before commit) exercised stats accuracy, search by title
+  and slug, all four filter chips, the empty state, Publish/Unpublish,
+  page creation, View/Edit navigation into 014's real inline-edit
+  surface, and both delete-confirm paths end-to-end with a
+  zero-violation axe-core scan and no product bugs found. Full suite
+  green (566 unit, 85 e2e), `npm run build` confirmed twice.

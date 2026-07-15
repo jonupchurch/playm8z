@@ -169,6 +169,13 @@
       "when": 1784078146734,
       "tag": "0023_admin_news_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1784079851763,
+      "tag": "0024_admin_content_pages_schema",
+      "breakpoints": true
     }
   ]
 }

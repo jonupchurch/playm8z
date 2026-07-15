@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (`002`) and `src/lib/actions/toggle-page-status.ts` (`014`) exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (`002`) and `src/lib/actions/toggle-page-status.ts` (`014`) exist in the codebase before starting
 
 ---
 
@@ -36,11 +36,11 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add `contentPages.system` (boolean, default `false`) in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 Seed the three system pages (About Us, Privacy Policy, Terms of Use — `system = true`, `status = published`, minimal placeholder content) per data-model.md's Seed data table — depends on T002, T003
-- [ ] T005 [P] Create `src/lib/validations/admin-content-pages.ts` — Zod schemas for search/filter and delete (data-model.md)
-- [ ] T006 Build `src/app/admin/content-pages/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
+- [x] T002 Add `contentPages.system` (boolean, default `false`) in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 Seed the three system pages (About Us, Privacy Policy, Terms of Use — `system = true`, `status = published`, minimal placeholder content) per data-model.md's Seed data table — depends on T002, T003
+- [x] T005 [P] Create `src/lib/validations/admin-content-pages.ts` — Zod schemas for search/filter and delete (data-model.md)
+- [x] T006 Build `src/app/admin/content-pages/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -54,15 +54,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Unit tests for `admin-content-pages.ts`'s schemas in `src/lib/validations/admin-content-pages.test.ts`
-- [ ] T008 [P] [US1] Unit tests for `search-content-pages.ts` (search/filter combination) in `src/lib/admin/search-content-pages.test.ts`
-- [ ] T009 [US1] Playwright e2e covering stats, search, filters, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-content-pages.spec.ts`
+- [x] T007 [P] [US1] Unit tests for `admin-content-pages.ts`'s schemas in `src/lib/validations/admin-content-pages.test.ts`
+- [x] T008 [P] [US1] Unit tests for `search-content-pages.ts` (search/filter combination) in `src/lib/admin/search-content-pages.test.ts`
+- [x] T009 [US1] Playwright e2e covering stats, search, filters, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-content-pages.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Build `src/lib/admin/search-content-pages.ts` (research.md #5 for the fetch-all-then-filter pattern) — depends on T002, T004, T005
-- [ ] T011 [US1] Build `src/components/admin/content-page-table.tsx` (stats cards, search input, filter chips, rows incl. system badge) — depends on T010
-- [ ] T012 [US1] Wire `content-page-table.tsx` into `src/app/admin/content-pages/page.tsx` — depends on T006, T011
+- [x] T010 [US1] Build `src/lib/admin/search-content-pages.ts` (research.md #5 for the fetch-all-then-filter pattern) — depends on T002, T004, T005
+- [x] T011 [US1] Build `src/components/admin/content-page-table.tsx` (stats cards, search input, filter chips, rows incl. system badge) — depends on T010
+- [x] T012 [US1] Wire `content-page-table.tsx` into `src/app/admin/content-pages/page.tsx` — depends on T006, T011
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -76,15 +76,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Unit tests for `create-content-page.ts`'s unique-slug generation, including the collision/suffix case (research.md #4) in `src/lib/actions/create-content-page.test.ts`
-- [ ] T014 [P] [US2] Integration test for `create-content-page.ts` (creates a draft "Untitled page" row with `system = false`; role-gate rejection) — same file as T013
-- [ ] T015 [US2] Add the publish/unpublish, create, and view/edit-navigation scenarios to `e2e/admin-content-pages.spec.ts` — depends on T009 (same file)
+- [x] T013 [P] [US2] Unit tests for `create-content-page.ts`'s unique-slug generation, including the collision/suffix case (research.md #4) in `src/lib/actions/create-content-page.test.ts`
+- [x] T014 [P] [US2] Integration test for `create-content-page.ts` (creates a draft "Untitled page" row with `system = false`; role-gate rejection) — same file as T013
+- [x] T015 [US2] Add the publish/unpublish, create, and view/edit-navigation scenarios to `e2e/admin-content-pages.spec.ts` — depends on T009 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Build `src/lib/actions/create-content-page.ts` (unique-slug generation, `status = draft`, `system = false`) — depends on T005
-- [ ] T017 [US2] Wire Publish/Unpublish buttons (calling `014`'s `toggle-page-status.ts` directly, no new action) and View/Edit links (to the page's public slug) into `content-page-table.tsx` — depends on T011
-- [ ] T018 [US2] Wire "+ New page" into `content-page-table.tsx`/`page.tsx` — depends on T012, T016
+- [x] T016 [US2] Build `src/lib/actions/create-content-page.ts` (unique-slug generation, `status = draft`, `system = false`) — depends on T005
+- [x] T017 [US2] Wire Publish/Unpublish buttons (calling `014`'s `toggle-page-status.ts` directly, no new action) and View/Edit links (to the page's public slug) into `content-page-table.tsx` — depends on T011
+- [x] T018 [US2] Wire "+ New page" into `content-page-table.tsx`/`page.tsx` — depends on T012, T016
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -98,13 +98,13 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T019 [P] [US3] Integration test for `delete-content-page.ts` (sets `status = 'draft'`, never removes the row; rejected/not offered for `system = true` pages; role-gate rejection) in `src/lib/actions/delete-content-page.test.ts`
-- [ ] T020 [US3] Add the inline delete-confirm scenario (incl. Yes/No and the system-page restriction) to `e2e/admin-content-pages.spec.ts` — depends on T015 (same file)
+- [x] T019 [P] [US3] Integration test for `delete-content-page.ts` (sets `status = 'draft'`, never removes the row; rejected/not offered for `system = true` pages; role-gate rejection) in `src/lib/actions/delete-content-page.test.ts`
+- [x] T020 [US3] Add the inline delete-confirm scenario (incl. Yes/No and the system-page restriction) to `e2e/admin-content-pages.spec.ts` — depends on T015 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] Build `src/lib/actions/delete-content-page.ts` (unconditional `status = 'draft'` write; rejects `system = true` targets) — depends on T005
-- [ ] T022 [US3] Wire the inline "Delete? Yes/No" confirm UI (with real focus management, matching Admin Users' established pattern) into `content-page-table.tsx`, hidden entirely for system-page rows — depends on T017, T021
+- [x] T021 [US3] Build `src/lib/actions/delete-content-page.ts` (unconditional `status = 'draft'` write; rejects `system = true` targets) — depends on T005
+- [x] T022 [US3] Wire the inline "Delete? Yes/No" confirm UI (with real focus management, matching Admin Users' established pattern) into `content-page-table.tsx`, hidden entirely for system-page rows — depends on T017, T021
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -112,9 +112,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T023 Confirm `next build` succeeds locally and CI stays green with the new gated route, two Server Actions (plus the reused `014` toggle action), the extended schema, and the system-page seed
-- [ ] T024 Manually run quickstart.md Scenarios 1-8 end to end against local dev and confirm each passes
-- [ ] T025 [P] Update `docs/feature-list.md`, marking Admin Content Pages' spec/plan/tasks as complete
+- [x] T023 Confirm `next build` succeeds locally and CI stays green with the new gated route, two Server Actions (plus the reused `014` toggle action), the extended schema, and the system-page seed
+- [x] T024 Manually run quickstart.md Scenarios 1-8 end to end against local dev and confirm each passes
+- [x] T025 [P] Update `docs/feature-list.md`, marking Admin Content Pages' spec/plan/tasks as complete
 
 ---
 
