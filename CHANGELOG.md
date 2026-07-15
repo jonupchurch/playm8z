@@ -1960,3 +1960,63 @@ may begin on any/all of them per the constitution (v1.0.0).
   surface, and both delete-confirm paths end-to-end with a
   zero-violation axe-core scan and no product bugs found. Full suite
   green (566 unit, 85 e2e), `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 28)
+
+### Added
+- Public profile page (`specs/022-public-profile/`, branch
+  `022-public-profile` merged to `main`) — all 28 tasks complete: the
+  public `/u/:handle` page (no login required to view) — identity/bio,
+  real computed stats (rating+review count, a `sessions` proxy from
+  accepted applications + closed/full hosted postings), the real
+  per-user-editable games list, currently-open hosted postings with an
+  inline "Request" (reusing 006's `applyToPosting`), display-only
+  Player reviews (new `reviews` table, no writer yet — rating
+  submission stays deferred), a public-info sidebar, and — authenticated
+  non-self viewers only — a "You have in common" sidebar (mutual
+  follows + shared games, computed at read time). Drops six wireframe
+  elements (online presence, reliability %, groups, per-game
+  rank/hours, level, pronouns/languages/timezone) against
+  already-established precedent. New Follow (`toggle-follow.ts`, new
+  `follows` table, hard-deleted on unfollow) and a host-initiated
+  "Invite to a party" (`invite-to-party.ts`) reusing 006's
+  `applications` table via a new `initiatedBy` (`applicant`\|`host`)
+  column — requires the invited user's own consent, resolving through
+  the same accept/decline transaction as a normal request.
+
+### Changed
+- Amended Inbox's (011) `accept-request.ts`/`decline-request.ts`/
+  `get-inbox-list.ts`/`get-conversation.ts`: a host-initiated invite
+  (`initiatedBy = 'host'`) is authorized for the INVITED applicant, not
+  the inviting host — reversed from every normal applicant-initiated
+  row. `request-banner.tsx`/`conversation-list.tsx`/the inbox detail
+  page's own display text branches to say "invited you" instead of
+  "wants to join" for that direction.
+- `get-public-profile.ts`/`get-in-common.ts` read games from Profile's
+  (007) `userGames` table, not `users.gamesPlayed` (data-model.md's
+  named field) — the latter is set once at onboarding and never
+  updated afterward, so it would show a stale snapshot.
+
+### Fixed
+- A real, previously-latent bug in `conversation-list.tsx`: the inbox
+  row's preview text was hardcoded to a generic "Wants to join your
+  party" for every request-kind item, silently discarding an
+  applicant's own actual message on every pending-request row (not
+  just this feature's new invite items). Fixed by rendering
+  `item.preview` directly, which `get-inbox-list.ts` already computed
+  correctly for both directions. `e2e/inbox.spec.ts`'s own assertion
+  (previously relying on the bug) updated to match the corrected
+  behavior.
+
+### Verified
+- No `requireRole`-style hardcoded gate blocks this feature
+  (`requireVerifiedEmail`/`requireAuth` check real session state), so
+  it's fully exercised end-to-end through real Playwright sessions with
+  no local bypass needed. `e2e/public-profile.spec.ts` covers all three
+  user stories (public view + not-found + dropped-elements absence with
+  a zero-violation axe scan; Follow/Message/Invite end-to-end across
+  two real sessions with a session-switch to accept from the invited
+  user's own Inbox; the no-eligible-posting state; mutual connections;
+  Report/Block opening the canonical flows; unauthenticated/unverified
+  gating). Full suite green (590 unit, 95 e2e), `npm run build`
+  confirmed twice.

@@ -1,6 +1,9 @@
 import { and, asc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
 import { applications, conversations, messages, postings, users } from "@/db/schema";
+
+const hostUsers = alias(users, "hostUsers");
 
 export type ConversationMessage = {
   id: string;
@@ -31,6 +34,12 @@ export type RequestView = {
   postingGame: string;
   message: string | null;
   createdAt: Date;
+  // Public Profile (022): 'host' means this row is an invite THE
+  // VIEWER (the invited applicant) received, not a normal request
+  // they, as host, need to decide -- request-banner.tsx/page.tsx use
+  // this to show "X invited you" instead of "X wants to join."
+  initiatedBy: "applicant" | "host";
+  hostHandle: string;
 };
 
 // FR-004/FR-007: `/inbox/[id]` addresses either a real conversation or
@@ -93,19 +102,29 @@ export async function getConversationOrRequest(
       status: applications.status,
       message: applications.message,
       createdAt: applications.createdAt,
+      initiatedBy: applications.initiatedBy,
       postingId: postings.id,
       postingHostId: postings.hostId,
       postingTitle: postings.title,
       postingGame: postings.game,
+      applicantId: applications.applicantId,
       applicantHandle: users.handle,
       applicantAvatarColor: users.avatarColor,
+      hostHandle: hostUsers.handle,
     })
     .from(applications)
     .innerJoin(postings, eq(applications.postingId, postings.id))
     .innerJoin(users, eq(applications.applicantId, users.id))
+    .innerJoin(hostUsers, eq(postings.hostId, hostUsers.id))
     .where(eq(applications.id, id));
 
-  if (!request || request.postingHostId !== viewerId || request.status !== "pending") {
+  // Public Profile (022): a host-initiated invite (`initiatedBy =
+  // 'host'`) is authorized for the INVITED applicant instead of the
+  // posting's host -- the same reversal accept-request.ts/
+  // decline-request.ts's own ownership check already applies.
+  const authorized =
+    request?.initiatedBy === "host" ? request.applicantId === viewerId : request?.postingHostId === viewerId;
+  if (!request || !authorized || request.status !== "pending") {
     return null;
   }
 
@@ -119,6 +138,8 @@ export async function getConversationOrRequest(
     postingGame: request.postingGame,
     message: request.message,
     createdAt: request.createdAt,
+    initiatedBy: request.initiatedBy === "host" ? "host" : "applicant",
+    hostHandle: request.hostHandle ?? "player",
   };
 }
 

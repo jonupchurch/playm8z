@@ -204,7 +204,11 @@ test.describe("Inbox / messaging (quickstart.md Scenarios 1-3)", () => {
     const directRowWithC = page.locator("nav a").filter({ hasText: `@${cHandle}` }).filter({ hasNotText: dHandle });
 
     await expect(page.getByText(`@${bHandle}`)).toBeVisible();
-    await expect(page.getByText("Wants to join your party").first()).toBeVisible();
+    // Public Profile (022) fixed a real bug here: the list row's
+    // preview text was hardcoded to a generic "Wants to join your
+    // party" for every request-kind item, silently discarding the
+    // applicant's own message. It now shows the real message.
+    await expect(page.getByText(applicationMessage).first()).toBeVisible();
     await expect(directRowWithC).toBeVisible();
 
     const a11yScan = await new AxeBuilder({ page }).analyze();
@@ -317,7 +321,10 @@ test.describe("Inbox / messaging (quickstart.md Scenarios 1-3)", () => {
     await page.goto(`/inbox/${applicationId}`);
 
     await expect(page.getByText("wants to join your party").first()).toBeVisible();
-    await expect(page.getByText(applicationMessage)).toBeVisible();
+    // The real message now shows in both the list row's own preview
+    // (022's fix) and the detail pane's message bubble -- scope to the
+    // bubble, the last of the two matches in DOM order.
+    await expect(page.getByText(applicationMessage).last()).toBeVisible();
 
     const a11yScan = await new AxeBuilder({ page }).analyze();
     expect(a11yScan.violations).toEqual([]);

@@ -166,6 +166,13 @@ export const applications = pgTable("applications", {
   // ended it and why (ADR 0005, research.md #5).
   status: text("status").notNull().default("pending"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Public Profile (022) -- `applicant` (default, every existing/normal
+  // row) | `host` (a host-initiated "Invite to a party" row via
+  // invite-to-party.ts). `applicantId` always means "who joins the
+  // roster" regardless of who initiated the row; this field only
+  // determines which party is authorized to accept/decline it
+  // (accept-request.ts/decline-request.ts's amended ownership check).
+  initiatedBy: text("initiatedBy").notNull().default("applicant"),
 });
 
 // Listing detail (006) -- a listing's public Q&A thread. One reply per
@@ -567,6 +574,49 @@ export const warnings = pgTable("warnings", {
   targetType: text("targetType"),
   targetId: uuid("targetId"),
   reason: text("reason"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// Public Profile (022) -- a simple, asymmetric social relation, hard-
+// deleted on unfollow (research.md #4 -- the same "no trust/safety
+// history value" exception already applied to `SavedListing`/`Likes`/
+// `ThreadSubscription`, not `Blocks`' soft-preserved pattern; a follow
+// carries no moderation significance the way a block does).
+// Re-following after an unfollow creates a new row.
+export const follows = pgTable(
+  "follows",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    followerId: uuid("followerId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    followeeId: uuid("followeeId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (follow) => [unique().on(follow.followerId, follow.followeeId)],
+);
+
+// Public Profile (022) -- ships the read-only entity and its own
+// display (rating average, review count, review list) with NO writer
+// yet, the same "ship the entity/display now, adopt the write
+// mechanism later" pattern already used for `Notification`/
+// `AuditEntry` (research.md #6). The post-session rating-submission
+// flow that would write here remains deferred platform-wide
+// (docs/future-work.md).
+export const reviews = pgTable("reviews", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  revieweeId: uuid("revieweeId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  reviewerId: uuid("reviewerId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  rating: integer("rating").notNull(),
+  text: text("text"),
+  // Free text, matching this project's game-as-keyword approach (ADR 0001).
+  game: text("game"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 

@@ -13,11 +13,14 @@ export type DeclineRequestResult = { success: true } | { success: false; error: 
 // seatsOpen and no Conversation created -- the applicant's own
 // message remains the only record of the request (ADR 0005, no hard
 // delete). Only the posting's own host may decline, re-checked
-// server-side via a join, not trusted from client state.
+// server-side via a join, not trusted from client state. Public
+// Profile (022) amends this: for a host-initiated invite
+// (`initiatedBy = 'host'`), the authorized actor is the INVITED
+// applicant instead, mirroring accept-request.ts's own reversal.
 export async function declineRequest(input: { applicationId: string }): Promise<DeclineRequestResult> {
-  let host: { id: string };
+  let actingUser: { id: string };
   try {
-    host = await requireVerifiedEmail();
+    actingUser = await requireVerifiedEmail();
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Not authenticated." };
   }
@@ -28,7 +31,13 @@ export async function declineRequest(input: { applicationId: string }): Promise<
   }
 
   const [application] = await db
-    .select({ id: applications.id, postingId: applications.postingId, status: applications.status })
+    .select({
+      id: applications.id,
+      postingId: applications.postingId,
+      applicantId: applications.applicantId,
+      status: applications.status,
+      initiatedBy: applications.initiatedBy,
+    })
     .from(applications)
     .where(eq(applications.id, parsed.data.applicationId));
 
@@ -41,7 +50,9 @@ export async function declineRequest(input: { applicationId: string }): Promise<
     .from(postings)
     .where(eq(postings.id, application.postingId));
 
-  if (!posting || posting.hostId !== host.id) {
+  const authorized =
+    application.initiatedBy === "host" ? application.applicantId === actingUser.id : posting?.hostId === actingUser.id;
+  if (!posting || !authorized) {
     return { success: false, error: "You can't decline this request." };
   }
 

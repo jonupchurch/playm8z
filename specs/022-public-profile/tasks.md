@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-verified-email.ts` (`001`), `006`'s apply action, `008`'s block action, `011`'s `accept-request.ts`/`decline-request.ts`/`get-inbox-list.ts`, and `012`'s report flow exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-verified-email.ts` (`001`), `006`'s apply action, `008`'s block action, `011`'s `accept-request.ts`/`decline-request.ts`/`get-inbox-list.ts`, and `012`'s report flow exist in the codebase before starting
 
 ---
 
@@ -36,10 +36,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add `follows` and `reviews` tables; extend `applications` (`006`) with `initiatedBy` in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create `src/lib/validations/public-profile.ts` — Zod schemas for follow/invite (data-model.md)
-- [ ] T005 Build `src/app/u/[handle]/page.tsx` shell (public route, no auth gate to view) — depends on T002
+- [x] T002 Add `follows` and `reviews` tables; extend `applications` (`006`) with `initiatedBy` in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create `src/lib/validations/public-profile.ts` — Zod schemas for follow/invite (data-model.md)
+- [x] T005 Build `src/app/u/[handle]/page.tsx` shell (public route, no auth gate to view) — depends on T002
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -53,14 +53,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T006 [P] [US1] Unit tests for `get-public-profile.ts` (computed `sessions` stat per research.md #2; confirms no dropped-element data is even fetched) in `src/lib/profile/get-public-profile.test.ts`
-- [ ] T007 [US1] Playwright e2e covering the public view (logged out and in), not-found handle, and absence of all six dropped elements, including an axe-core scan — creates `e2e/public-profile.spec.ts`
+- [x] T006 [P] [US1] Unit tests for `get-public-profile.ts` (computed `sessions` stat per research.md #2; confirms no dropped-element data is even fetched) in `src/lib/profile/get-public-profile.test.ts`
+- [x] T007 [US1] Playwright e2e covering the public view (logged out and in), not-found handle, and absence of all six dropped elements, including an axe-core scan — creates `e2e/public-profile.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Build `src/lib/profile/get-public-profile.ts` (identity, stats incl. computed `sessions`, games, open postings, reviews) — depends on T002
-- [ ] T009 [US1] Build `src/components/profile/profile-header.tsx`, `profile-games.tsx`, `profile-open-parties.tsx` (reusing `006`'s Apply action via "Request"), and `profile-reviews.tsx` (display-only, empty-state aware) — depends on T008
-- [ ] T010 [US1] Wire all four components into `src/app/u/[handle]/page.tsx`, including a not-found response (`002`) for an unmatched handle — depends on T005, T009
+- [x] T008 [US1] Build `src/lib/profile/get-public-profile.ts` (identity, stats incl. computed `sessions`, games, open postings, reviews) — depends on T002
+- [x] T009 [US1] Build `src/components/profile/profile-header.tsx`, `profile-games.tsx`, `profile-open-parties.tsx` (reusing `006`'s Apply action via "Request"), and `profile-reviews.tsx` (display-only, empty-state aware) — depends on T008
+- [x] T010 [US1] Wire all four components into `src/app/u/[handle]/page.tsx`, including a not-found response (`002`) for an unmatched handle — depends on T005, T009
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -74,19 +74,19 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T011 [P] [US2] Integration test for `toggle-follow.ts` (create/delete, self-follow rejection, unauthenticated/unverified rejection) in `src/lib/actions/toggle-follow.test.ts`
-- [ ] T012 [P] [US2] Integration test for `invite-to-party.ts` (eligibility validation — host of an open posting with an available seat; correct `initiatedBy`/`applicantId`/`postingId`; unauthenticated/unverified rejection) in `src/lib/actions/invite-to-party.test.ts`
-- [ ] T013 [P] [US2] Integration test for `011`'s amended `accept-request.ts`/`decline-request.ts` (authorized-actor branch for both `initiatedBy` values — the wrong party's attempt is rejected in either direction) — extends `011`'s existing test files
-- [ ] T014 [P] [US2] Integration test for `011`'s amended `get-inbox-list.ts` (surfaces a pending host-initiated invite in the invited user's own inbox) — extends `011`'s existing test file
-- [ ] T015 [US2] Add the Follow/Message/Invite scenario to `e2e/public-profile.spec.ts` — depends on T007 (same file)
+- [x] T011 [P] [US2] Integration test for `toggle-follow.ts` (create/delete, self-follow rejection, unauthenticated/unverified rejection) in `src/lib/actions/toggle-follow.test.ts`
+- [x] T012 [P] [US2] Integration test for `invite-to-party.ts` (eligibility validation — host of an open posting with an available seat; correct `initiatedBy`/`applicantId`/`postingId`; unauthenticated/unverified rejection) in `src/lib/actions/invite-to-party.test.ts`
+- [x] T013 [P] [US2] Integration test for `011`'s amended `accept-request.ts`/`decline-request.ts` (authorized-actor branch for both `initiatedBy` values — the wrong party's attempt is rejected in either direction) — extends `011`'s existing test files
+- [x] T014 [P] [US2] Integration test for `011`'s amended `get-inbox-list.ts` (surfaces a pending host-initiated invite in the invited user's own inbox) — extends `011`'s existing test file
+- [x] T015 [US2] Add the Follow/Message/Invite scenario to `e2e/public-profile.spec.ts` — depends on T007 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Build `src/lib/actions/toggle-follow.ts` — depends on T004
-- [ ] T017 [US2] Build `src/lib/actions/invite-to-party.ts` (research.md #3) — depends on T004
-- [ ] T018 [US2] Amend `011`'s `accept-request.ts` and `decline-request.ts`: authorized actor is the invited applicant when `initiatedBy = 'host'`, unchanged (host) otherwise — depends on T002
-- [ ] T019 [US2] Amend `011`'s `get-inbox-list.ts`: also surface a pending host-initiated invite in the invited applicant's own inbox — depends on T002
-- [ ] T020 [US2] Wire Follow/Message/Invite controls (incl. a posting picker when the host has more than one eligible open posting) into `profile-header.tsx` — depends on T009, T016, T017
+- [x] T016 [US2] Build `src/lib/actions/toggle-follow.ts` — depends on T004
+- [x] T017 [US2] Build `src/lib/actions/invite-to-party.ts` (research.md #3) — depends on T004
+- [x] T018 [US2] Amend `011`'s `accept-request.ts` and `decline-request.ts`: authorized actor is the invited applicant when `initiatedBy = 'host'`, unchanged (host) otherwise — depends on T002
+- [x] T019 [US2] Amend `011`'s `get-inbox-list.ts`: also surface a pending host-initiated invite in the invited applicant's own inbox — depends on T002
+- [x] T020 [US2] Wire Follow/Message/Invite controls (incl. a posting picker when the host has more than one eligible open posting) into `profile-header.tsx` — depends on T009, T016, T017
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -100,14 +100,14 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T021 [P] [US3] Unit tests for `get-in-common.ts` (mutual-follow intersection, shared-games intersection, absence for a logged-out/self viewer) in `src/lib/profile/get-in-common.test.ts`
-- [ ] T022 [US3] Add the "You have in common" and Report/Block scenarios to `e2e/public-profile.spec.ts` — depends on T015 (same file)
+- [x] T021 [P] [US3] Unit tests for `get-in-common.ts` (mutual-follow intersection, shared-games intersection, absence for a logged-out/self viewer) in `src/lib/profile/get-in-common.test.ts`
+- [x] T022 [US3] Add the "You have in common" and Report/Block scenarios to `e2e/public-profile.spec.ts` — depends on T015 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Build `src/lib/profile/get-in-common.ts` (research.md #5) — depends on T002
-- [ ] T024 [US3] Build `src/components/profile/profile-in-common.tsx` — depends on T023
-- [ ] T025 [US3] Wire the "..." menu (Share profile — client-only; Report user — opens `012`'s canonical modal; Block user — calls `008`'s existing block action) and `profile-in-common.tsx` into `profile-header.tsx`/`page.tsx` — depends on T010, T020, T024
+- [x] T023 [US3] Build `src/lib/profile/get-in-common.ts` (research.md #5) — depends on T002
+- [x] T024 [US3] Build `src/components/profile/profile-in-common.tsx` — depends on T023
+- [x] T025 [US3] Wire the "..." menu (Share profile — client-only; Report user — opens `012`'s canonical modal; Block user — calls `008`'s existing block action) and `profile-in-common.tsx` into `profile-header.tsx`/`page.tsx` — depends on T010, T020, T024
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -115,9 +115,9 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T026 Confirm `next build` succeeds locally and CI stays green with the new public route, three Server Actions (plus reused `006`/`008`/`012` flows), the extended schema, and the amended `011` files
-- [ ] T027 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
-- [ ] T028 [P] Update `docs/feature-list.md`, marking Public Profile's spec/plan/tasks as complete
+- [x] T026 Confirm `next build` succeeds locally and CI stays green with the new public route, three Server Actions (plus reused `006`/`008`/`012` flows), the extended schema, and the amended `011` files
+- [x] T027 Manually run quickstart.md Scenarios 1-10 end to end against local dev and confirm each passes
+- [x] T028 [P] Update `docs/feature-list.md`, marking Public Profile's spec/plan/tasks as complete
 
 ---
 

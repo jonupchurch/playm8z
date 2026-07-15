@@ -177,4 +177,44 @@ describe("acceptRequest (integration)", () => {
     const [posting] = await db.select().from(postings).where(eq(postings.id, seeded.postingId));
     expect(posting.seatsOpen).toBe(0);
   });
+
+  // Public Profile (022): a host-initiated invite reverses who's
+  // authorized -- the INVITED applicant, not the inviting host.
+  it("for a host-initiated invite, the invited applicant (not the host) may accept", async () => {
+    const [posting] = await db
+      .insert(postings)
+      .values({
+        hostId,
+        game: `Game ${runId}`,
+        title: `Invite posting ${runId}`,
+        blurb: "blurb",
+        vibe: "casual",
+        region: "na-east",
+        seatsTotal: 4,
+        seatsOpen: 1,
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+      })
+      .returning({ id: postings.id });
+    const [invite] = await db
+      .insert(applications)
+      .values({ postingId: posting.id, applicantId, status: "pending", initiatedBy: "host" })
+      .returning({ id: applications.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    const hostAttempt = await acceptRequest({ applicationId: invite.id });
+    expect(hostAttempt).toEqual({ success: false, error: "You can't accept this request." });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(applicantEmail));
+    const invitedAttempt = await acceptRequest({ applicationId: invite.id });
+    expect(invitedAttempt.success).toBe(true);
+    if (invitedAttempt.success) createdConversationIds.push(invitedAttempt.conversationId);
+
+    const [application] = await db.select().from(applications).where(eq(applications.id, invite.id));
+    expect(application.status).toBe("accepted");
+
+    const [updatedPosting] = await db.select().from(postings).where(eq(postings.id, posting.id));
+    expect(updatedPosting.seatsOpen).toBe(0);
+  });
 });

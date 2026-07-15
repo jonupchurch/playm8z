@@ -5,8 +5,9 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News, and
-Admin Content Pages are done and merged. Public profile page is next.
+Admin Users, Admin Postings, Admin Forum, Admin Reports, Admin News,
+Admin Content Pages, and Public profile page are done and merged. News
+article detail is next.
 **Last updated**: 2026-07-14
 
 ## Where things stand
@@ -2754,6 +2755,108 @@ scan only covers the 401 access-denied page, since the role gate
 blocks the real content from ever rendering in CI).
 
 Full suite green (566 unit, 85 e2e), `npm run build` confirmed twice.
+
+## Public profile page implemented (2026-07-14)
+
+The public `/u/:handle` page, all 28 tasks complete — no login required
+to view. Identity/bio, real (non-decorative) stats — a rating+review-
+count pair and a computed `sessions` proxy (accepted applications as
+applicant + closed/full hosted postings, no new tracking) — the games
+this user actually plays, their currently-open hosted postings with an
+inline "Request" (reusing 006's `applyToPosting` directly, no message
+step — a lighter entry point than Listing detail's own full apply
+form), display-only Player reviews (new `reviews` table, no writer yet
+— rating submission stays deferred platform-wide, `docs/future-work.md`,
+the same "ship the entity/display now, adopt the writer later" pattern
+as `Notification`/`AuditEntry`), a public-info sidebar (region/age
+group/platforms), and — authenticated, non-self viewers only — a "You
+have in common" sidebar (mutual follows + shared games, both computed
+at read time, never stored). Drops six wireframe elements (online
+presence, reliability %, groups, per-game rank/hours, level, pronouns/
+languages/timezone) against already-established precedent from five-
+plus prior features.
+
+New Follow (`toggle-follow.ts`, a new `follows` table, hard-deleted on
+unfollow — no trust/safety history value, the same exception already
+applied to `SavedListing`/`Likes`/`ThreadSubscription`, not `Blocks`'
+own soft-preserved pattern) and a host-initiated "Invite to a party"
+(`invite-to-party.ts`) that reuses 006's existing `applications` table
+via a new `initiatedBy` (`applicant`\|`host`) column rather than a
+parallel invite system — an invite still needs the INVITED person's
+own consent, so it resolves through the exact same accept/decline
+transaction (seat decrement, posting-fill, conversation creation) a
+normal applicant-initiated request does, guaranteeing identical
+behavior regardless of entry point. This required small, bounded
+authorization reversals across four of Inbox's (011) already-merged
+files: `accept-request.ts`/`decline-request.ts` (the invited applicant,
+not the inviting host, is authorized to decide a host-initiated row),
+`get-inbox-list.ts` (surfaces the pending invite in the invited
+applicant's own inbox instead of the host's), and `get-conversation.ts`
+(same authorization reversal for viewing the request detail page) —
+with `request-banner.tsx`/`conversation-list.tsx`/the inbox detail
+page's own display text branching to say "@host invited you to their
+party" instead of "@applicant wants to join your party" for that
+direction.
+
+**Found and fixed a real, previously-latent bug while wiring this up**:
+`conversation-list.tsx`'s inbox row preview text was hardcoded to a
+generic "Wants to join your party" for EVERY request-kind item,
+regardless of `item.preview`'s real value — silently discarding an
+applicant's own actual application message on every pending-request
+row in the inbox LIST view, not just this feature's new invite items
+(the message itself was still shown correctly on the request's own
+detail page, so this bug was invisible unless you compared the list
+row against the detail page side by side). Fixed by rendering
+`item.preview` directly — `get-inbox-list.ts` already computed the
+correct value for both directions (`request.message?.trim() ||
+"Wants to join your party."` for a normal request, "Invited you to
+join their party." for an invite) — the bug was purely in the display
+layer ignoring it. `e2e/inbox.spec.ts`'s own pre-existing assertion
+(which had been silently relying on the bug — asserting the generic
+hardcoded string rather than the seeded applicant's real message) was
+corrected to match the now-genuinely-correct behavior.
+
+**Also corrected a data-model.md field claim before it shipped**: the
+spec named `users.gamesPlayed` (onboarding's flat array, set once at
+signup) as this feature's games source, but that field is never
+updated afterward by any later feature — Profile's (007) own
+`userGames` table (kept current via `addUserGame`/`removeUserGame`) is
+the real, currently-maintained "games this user plays" list.
+`get-public-profile.ts` and `get-in-common.ts` both read from
+`userGames` instead, confirmed via a dedicated integration-test
+assertion that a stale `gamesPlayed` entry never leaks through while a
+real `userGames` entry does.
+
+Unlike every admin/moderation feature this session, this feature has
+**no `requireRole`-style hardcoded gate** — `requireVerifiedEmail`/
+`requireAuth` check real session state (a real `emailVerified` column,
+not a hardcoded rank) — so it needed no local bypass at all for
+verification. `e2e/public-profile.spec.ts` exercises all three user
+stories fully through real, independently-verified Playwright sessions:
+the public view (logged out) with a zero-violation axe-core scan and
+confirmation that none of the six dropped elements ever appear;
+Follow/Unfollow; Message; Invite end-to-end across two real sessions
+(the inviting viewer, then a session-switch to the invited profile
+owner accepting from their own real Inbox, confirmed via direct DB
+checks that the application accepts and the posting's seat count
+decrements); the no-eligible-posting disabled state; the "You have in
+common" sidebar's accuracy (and its absence for both a self-view and a
+genuinely separate logged-out browser context, Listing detail's own
+established anti-flake pattern); Report/Block opening the canonical
+`012`/`008` flows; and unauthenticated/unverified gating. Two of the
+e2e failures hit along the way were real QA-script issues, not product
+bugs, worth remembering: (1) a Playwright `waitForURL()` regex matching
+a generic UUID path pattern resolves immediately if the CURRENT url
+already satisfies it — after clicking "Accept" from `/inbox/
+{applicationId}` (itself already UUID-shaped), the wait needs to
+target navigation AWAY from that specific id, not just "any /inbox/
+UUID url," or DB assertions race ahead of the action actually
+completing; (2) once both the fixed inbox-list preview AND the
+request-detail message bubble correctly show the same real applicant
+message, a bare text locator matches both — needs disambiguating
+(`.last()`, or a more specific role-scoped locator) once, not a defect.
+
+Full suite green (590 unit, 95 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

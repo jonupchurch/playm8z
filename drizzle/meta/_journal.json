@@ -176,6 +176,13 @@
       "when": 1784079851763,
       "tag": "0024_admin_content_pages_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1784081676517,
+      "tag": "0025_public_profile_schema",
+      "breakpoints": true
     }
   ]
 }

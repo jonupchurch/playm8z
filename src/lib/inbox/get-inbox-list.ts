@@ -21,7 +21,11 @@ export type InboxItem = {
 // conversations/messages row yet (research.md #1), so their "unread"
 // state is simplified to "always needs attention while pending" --
 // there's no per-request read cursor to track, unlike a real
-// conversation's `lastReadAt` map.
+// conversation's `lastReadAt` map. Public Profile (022): a host-
+// initiated invite (`initiatedBy = 'host'`, invite-to-party.ts) is
+// EXCLUDED from the host-facing "pending requests" query below (the
+// inviting host isn't the one deciding it) and instead surfaced as its
+// own pending-invite item in the INVITED applicant's own inbox.
 export async function getInboxList(userId: string): Promise<InboxItem[]> {
   const userConversations = await db
     .select()
@@ -90,7 +94,9 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     .from(applications)
     .innerJoin(postings, eq(applications.postingId, postings.id))
     .innerJoin(users, eq(applications.applicantId, users.id))
-    .where(and(eq(postings.hostId, userId), eq(applications.status, "pending")));
+    .where(
+      and(eq(postings.hostId, userId), eq(applications.status, "pending"), eq(applications.initiatedBy, "applicant")),
+    );
 
   const requestItems: InboxItem[] = pendingRequests.map((request) => ({
     kind: "request" as const,
@@ -105,7 +111,40 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     postingId: request.postingId,
   }));
 
-  return [...conversationItems, ...requestItems].sort(
+  // Public Profile (022): the flip side -- a pending, host-initiated
+  // invite surfaces in the INVITED applicant's own inbox instead,
+  // named after the inviting host.
+  const pendingInvites = await db
+    .select({
+      applicationId: applications.id,
+      createdAt: applications.createdAt,
+      postingId: postings.id,
+      postingTitle: postings.title,
+      postingGame: postings.game,
+      hostHandle: users.handle,
+      hostAvatarColor: users.avatarColor,
+    })
+    .from(applications)
+    .innerJoin(postings, eq(applications.postingId, postings.id))
+    .innerJoin(users, eq(postings.hostId, users.id))
+    .where(
+      and(eq(applications.applicantId, userId), eq(applications.status, "pending"), eq(applications.initiatedBy, "host")),
+    );
+
+  const inviteItems: InboxItem[] = pendingInvites.map((invite) => ({
+    kind: "request" as const,
+    id: invite.applicationId,
+    isGroup: false,
+    name: `@${invite.hostHandle ?? "player"}`,
+    context: `${invite.postingGame} · ${invite.postingTitle}`,
+    preview: "Invited you to join their party.",
+    lastActivityAt: invite.createdAt,
+    unreadCount: 1,
+    avatarColor: invite.hostAvatarColor,
+    postingId: invite.postingId,
+  }));
+
+  return [...conversationItems, ...requestItems, ...inviteItems].sort(
     (a, b) => b.lastActivityAt.getTime() - a.lastActivityAt.getTime(),
   );
 }

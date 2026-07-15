@@ -162,4 +162,36 @@ describe("getInboxList (integration)", () => {
     const list = await getInboxList("00000000-0000-0000-0000-000000000000");
     expect(list).toEqual([]);
   });
+
+  // Public Profile (022): a host-initiated invite surfaces in the
+  // INVITED applicant's own inbox, not the inviting host's.
+  describe("host-initiated invites (022)", () => {
+    let inviteId: string;
+
+    beforeAll(async () => {
+      const [invite] = await db
+        .insert(applications)
+        .values({ postingId, applicantId: userCId, status: "pending", initiatedBy: "host" })
+        .returning({ id: applications.id });
+      inviteId = invite.id;
+    });
+
+    afterAll(async () => {
+      await db.delete(applications).where(eq(applications.id, inviteId));
+    });
+
+    it("surfaces the invite as a request item in the invited applicant's inbox, named after the host", async () => {
+      const list = await getInboxList(userCId);
+      const invite = list.find((item) => item.id === inviteId);
+      expect(invite).toBeDefined();
+      expect(invite!.kind).toBe("request");
+      expect(invite!.name).toBe(`@inboxa${runId}`);
+      expect(invite!.preview).toBe("Invited you to join their party.");
+    });
+
+    it("does NOT surface the invite as a request item in the inviting host's own inbox", async () => {
+      const list = await getInboxList(userAId);
+      expect(list.some((item) => item.id === inviteId)).toBe(false);
+    });
+  });
 });

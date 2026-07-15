@@ -102,7 +102,7 @@ export function ConversationList({ items }: { items: InboxItem[] }) {
                   <span
                     className={`truncate text-xs ${hasUnread ? "text-text" : "text-text-dim"}`}
                   >
-                    {item.kind === "request" ? "Wants to join your party" : item.preview}
+                    {item.preview}
                   </span>
                   {hasUnread && (
                     <span className="ml-auto flex h-4.5 min-w-4.5 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(120deg,var(--color-accent),var(--color-accent-2))] px-1 font-mono text-[10px] font-bold text-on-accent">

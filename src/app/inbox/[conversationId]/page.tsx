@@ -37,10 +37,15 @@ export default async function InboxConversationPage({ params }: { params: Promis
   }
 
   if (view.kind === "request") {
+    // Public Profile (022): a host-initiated invite shows the HOST as
+    // the "other party" from the invited applicant's own point of view
+    // -- reversed from a normal applicant-initiated request, where the
+    // applicant is who the host is looking at.
+    const otherPartyHandle = view.initiatedBy === "host" ? view.hostHandle : view.applicantHandle;
     return (
       <>
         <div className="shrink-0 border-b border-border p-4.5">
-          <div className="text-base font-bold text-text">@{view.applicantHandle}</div>
+          <div className="text-base font-bold text-text">@{otherPartyHandle}</div>
           <div className="font-mono text-[11px] text-text-dim">
             re: {view.postingGame} · {view.postingTitle}
           </div>
@@ -48,13 +53,15 @@ export default async function InboxConversationPage({ params }: { params: Promis
         <RequestBanner
           applicationId={view.applicationId}
           applicantHandle={view.applicantHandle}
+          hostHandle={view.hostHandle}
+          initiatedBy={view.initiatedBy}
           context={`${view.postingGame} · ${view.postingTitle}`}
         />
         <div className="flex-1 overflow-y-auto p-6">
           <div className="max-w-[72%]">
-            <div className="mb-0.5 ml-1 font-mono text-[10px] text-accent">@{view.applicantHandle}</div>
+            <div className="mb-0.5 ml-1 font-mono text-[10px] text-accent">@{otherPartyHandle}</div>
             <div className="rounded-2xl rounded-bl-md border border-border bg-surface px-3.5 py-2.5 text-sm leading-relaxed text-text">
-              {view.message ?? "Wants to join your party."}
+              {view.initiatedBy === "host" ? "Invited you to join their party." : (view.message ?? "Wants to join your party.")}
             </div>
           </div>
         </div>

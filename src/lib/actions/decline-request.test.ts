@@ -110,4 +110,40 @@ describe("declineRequest (integration)", () => {
     const result = await declineRequest({ applicationId: seeded.applicationId });
     expect(result).toEqual({ success: false, error: "This request is no longer pending." });
   });
+
+  // Public Profile (022): a host-initiated invite reverses who's
+  // authorized -- the INVITED applicant, not the inviting host.
+  it("for a host-initiated invite, the invited applicant (not the host) may decline", async () => {
+    const [posting] = await db
+      .insert(postings)
+      .values({
+        hostId,
+        game: `Game ${runId}`,
+        title: `Invite posting ${runId}`,
+        blurb: "blurb",
+        vibe: "casual",
+        region: "na-east",
+        seatsTotal: 4,
+        seatsOpen: 2,
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+      })
+      .returning({ id: postings.id });
+    const [invite] = await db
+      .insert(applications)
+      .values({ postingId: posting.id, applicantId, status: "pending", initiatedBy: "host" })
+      .returning({ id: applications.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    const hostAttempt = await declineRequest({ applicationId: invite.id });
+    expect(hostAttempt).toEqual({ success: false, error: "You can't decline this request." });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(applicantEmail));
+    const invitedAttempt = await declineRequest({ applicationId: invite.id });
+    expect(invitedAttempt).toEqual({ success: true });
+
+    const [application] = await db.select().from(applications).where(eq(applications.id, invite.id));
+    expect(application.status).toBe("declined");
+  });
 });

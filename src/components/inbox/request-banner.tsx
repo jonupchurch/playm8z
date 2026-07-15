@@ -14,10 +14,14 @@ import { declineRequest } from "@/lib/actions/decline-request";
 export function RequestBanner({
   applicationId,
   applicantHandle,
+  hostHandle,
+  initiatedBy,
   context,
 }: {
   applicationId: string;
   applicantHandle: string;
+  hostHandle: string;
+  initiatedBy: "applicant" | "host";
   context: string;
 }) {
   const router = useRouter();
@@ -51,7 +55,9 @@ export function RequestBanner({
   return (
     <div className="m-4.5 mb-0 flex flex-wrap items-center gap-3.5 rounded-2xl border border-accent/35 bg-accent/10 p-4">
       <div className="flex-1">
-        <div className="text-sm font-bold text-text">@{applicantHandle} wants to join your party</div>
+        <div className="text-sm font-bold text-text">
+          {initiatedBy === "host" ? `@${hostHandle} invited you to their party` : `@${applicantHandle} wants to join your party`}
+        </div>
         <div className="font-mono text-[11px] text-text-muted">{context}</div>
         {error && (
           <p role="alert" className="mt-1.5 text-xs text-pop-text">

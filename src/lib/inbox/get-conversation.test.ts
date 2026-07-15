@@ -137,4 +137,36 @@ describe("getConversationOrRequest (integration)", () => {
     const [conversation] = await db.select().from(conversations).where(eq(conversations.id, directConversationId));
     expect(conversation.lastReadAt[userAId]).toBeDefined();
   });
+
+  // Public Profile (022): a host-initiated invite reverses who's
+  // authorized to view the request -- the INVITED applicant, not the
+  // inviting host.
+  describe("host-initiated invites (022)", () => {
+    let inviteId: string;
+
+    beforeAll(async () => {
+      const [invite] = await db
+        .insert(applications)
+        .values({ postingId, applicantId: userBId, status: "pending", initiatedBy: "host" })
+        .returning({ id: applications.id });
+      inviteId = invite.id;
+    });
+
+    afterAll(async () => {
+      await db.delete(applications).where(eq(applications.id, inviteId));
+    });
+
+    it("returns a request view for the invited applicant, naming the host", async () => {
+      const result = await getConversationOrRequest(inviteId, userBId);
+      expect(result?.kind).toBe("request");
+      if (result?.kind !== "request") return;
+      expect(result.initiatedBy).toBe("host");
+      expect(result.hostHandle).toBe(`getconvoa${runId}`);
+    });
+
+    it("returns null for the inviting host (not the authorized party for their own invite)", async () => {
+      const result = await getConversationOrRequest(inviteId, userAId);
+      expect(result).toBeNull();
+    });
+  });
 });
