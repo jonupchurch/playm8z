@@ -51,7 +51,7 @@ export async function SiteHeader() {
   }
 
   const [user] = await db
-    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor })
+    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, role: users.role })
     .from(users)
     .where(eq(users.email, session.user.email));
   if (!user) {
@@ -76,7 +76,7 @@ export async function SiteHeader() {
   return (
     <SiteHeaderFrame>
       <Logo />
-      <NavLinks />
+      <NavLinks role={user.role} />
       <div className="ml-auto flex items-center gap-3">
         <Link
           href="/post"

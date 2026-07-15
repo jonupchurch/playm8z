@@ -13,12 +13,16 @@ const LINKS = [
 // yet, product vision defers it) even though sitemap.md's nav line
 // still lists it -- same "encode the decision, not the stale doc"
 // precedent as the age-policy/hard-deletes ADRs.
-export function NavLinks() {
+export function NavLinks({ role }: { role?: string | null }) {
   const pathname = usePathname();
+  // Admin-only (not moderator+) -- every other /admin/* page still
+  // gates itself independently via require-role.ts, this just controls
+  // whether the link is discoverable in the nav.
+  const links = role === "admin" ? [...LINKS, { href: "/admin", label: "Admin" }] : LINKS;
 
   return (
     <div className="ml-4 hidden items-center gap-1 sm:flex">
-      {LINKS.map((link) => {
+      {links.map((link) => {
         const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
         return (
           <Link
