@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (`002`), `src/lib/actions/toggle-user-ban.ts` (`016`), and `017`'s `get-posting-queue.ts`/`create-posting.ts`/`resolve-posting-report.ts` exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (`002`), `src/lib/actions/toggle-user-ban.ts` (`016`), and `017`'s `get-posting-queue.ts`/`create-posting.ts`/`resolve-posting-report.ts` exist in the codebase before starting
 
 ---
 
@@ -36,12 +36,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Extend `forumThreads` (`autoFlagReason`, `moderationReviewedAt`, `lockedAt`) and `forumReplies` (`autoFlagReason`, `moderationReviewedAt`, `removedAt`); generalize `017`'s `warnings` table (`targetType`/`targetId` replacing `postingId`) in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Create shared `src/lib/moderation/reason-severity.ts` (research.md #2 — canonical `reports.reason` taxonomy, corrected from `017`'s inline mismatch)
-- [ ] T005 [P] Create shared `src/lib/moderation/auto-flag-rules.ts` (research.md #3, extracted from `017`'s inline ruleset)
-- [ ] T006 [P] Create `src/lib/validations/admin-forum.ts` — Zod schemas for the filter and the resolve/ban actions (data-model.md)
-- [ ] T007 Build `src/app/admin/forum/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
+- [x] T002 Extend `forumThreads` (`autoFlagReason`, `moderationReviewedAt`, `lockedAt`) and `forumReplies` (`autoFlagReason`, `moderationReviewedAt`, `removedAt`); generalize `017`'s `warnings` table (`targetType`/`targetId` replacing `postingId`) in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Create shared `src/lib/moderation/reason-severity.ts` (research.md #2 — canonical `reports.reason` taxonomy, corrected from `017`'s inline mismatch)
+- [x] T005 [P] Create shared `src/lib/moderation/auto-flag-rules.ts` (research.md #3, extracted from `017`'s inline ruleset)
+- [x] T006 [P] Create `src/lib/validations/admin-forum.ts` — Zod schemas for the filter and the resolve/ban actions (data-model.md)
+- [x] T007 Build `src/app/admin/forum/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -55,17 +55,17 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T008 [P] [US1] Unit tests for `reason-severity.ts` in `src/lib/moderation/reason-severity.test.ts`
-- [ ] T009 [P] [US1] Unit tests for `auto-flag-rules.ts` in `src/lib/moderation/auto-flag-rules.test.ts`
-- [ ] T010 [P] [US1] Unit tests for `admin-forum.ts`'s schemas in `src/lib/validations/admin-forum.test.ts`
-- [ ] T011 [P] [US1] Unit tests for `get-forum-queue.ts` (report-target classification, queue-membership, computed severity, filter narrowing) in `src/lib/admin/get-forum-queue.test.ts`
-- [ ] T012 [US1] Playwright e2e covering stats, filters, computed severity/reason labels, empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-forum.spec.ts`
+- [x] T008 [P] [US1] Unit tests for `reason-severity.ts` in `src/lib/moderation/reason-severity.test.ts`
+- [x] T009 [P] [US1] Unit tests for `auto-flag-rules.ts` in `src/lib/moderation/auto-flag-rules.test.ts`
+- [x] T010 [P] [US1] Unit tests for `admin-forum.ts`'s schemas in `src/lib/validations/admin-forum.test.ts`
+- [x] T011 [P] [US1] Unit tests for `get-forum-queue.ts` (report-target classification, queue-membership, computed severity, filter narrowing) in `src/lib/admin/get-forum-queue.test.ts`
+- [x] T012 [US1] Playwright e2e covering stats, filters, computed severity/reason labels, empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-forum.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Build `src/lib/admin/get-forum-queue.ts` (research.md #1 for target classification, #7 for the filter/query pattern) — depends on T002, T004, T005, T006
-- [ ] T014 [US1] Build `src/components/admin/forum-queue.tsx` (stats cards, filter chips, queue cards incl. type badge, reason chips, AUTO-FLAG banner) — depends on T013
-- [ ] T015 [US1] Wire `forum-queue.tsx` into `src/app/admin/forum/page.tsx` — depends on T007, T014
+- [x] T013 [US1] Build `src/lib/admin/get-forum-queue.ts` (research.md #1 for target classification, #7 for the filter/query pattern) — depends on T002, T004, T005, T006
+- [x] T014 [US1] Build `src/components/admin/forum-queue.tsx` (stats cards, filter chips, queue cards incl. type badge, reason chips, AUTO-FLAG banner) — depends on T013
+- [x] T015 [US1] Wire `forum-queue.tsx` into `src/app/admin/forum/page.tsx` — depends on T007, T014
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -79,16 +79,16 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T016 [P] [US2] Integration test for `resolve-forum-report.ts`'s approve/remove resolutions (report resolution, `moderationReviewedAt`/`removedAt` effects on the correct table, audit-log write, role-gate rejection) in `src/lib/actions/resolve-forum-report.test.ts`
-- [ ] T017 [P] [US2] Unit/integration test for `get-forum-review.ts` (preceding-context resolution, "why it's here," author card) in `src/lib/admin/get-forum-review.test.ts`
-- [ ] T018 [US2] Add the drawer/approve/remove scenario to `e2e/admin-forum.spec.ts` — depends on T012 (same file)
+- [x] T016 [P] [US2] Integration test for `resolve-forum-report.ts`'s approve/remove resolutions (report resolution, `moderationReviewedAt`/`removedAt` effects on the correct table, audit-log write, role-gate rejection) in `src/lib/actions/resolve-forum-report.test.ts`
+- [x] T017 [P] [US2] Unit/integration test for `get-forum-review.ts` (preceding-context resolution, "why it's here," author card) in `src/lib/admin/get-forum-review.test.ts`
+- [x] T018 [US2] Add the drawer/approve/remove scenario to `e2e/admin-forum.spec.ts` — depends on T012 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Build `src/lib/admin/get-forum-review.ts` (content, immediately-preceding message for a reply, reports with reporters, auto-flag reason, author's prior-warnings/forum-posts counts) — depends on T002
-- [ ] T020 [US2] Build `src/lib/actions/resolve-forum-report.ts` supporting `approve`/`remove` (resolves open reports, sets `moderationReviewedAt` or the correct table's `removedAt`, calls `logAuditEntry()`) — depends on T006
-- [ ] T021 [US2] Build `src/components/admin/forum-review-drawer.tsx` (dialog/panel, focus trap, dimmed preceding-context block, "why it's here," author card, Approve/Remove buttons) — depends on T019, T020
-- [ ] T022 [US2] Wire `forum-review-drawer.tsx` into `src/app/admin/forum/page.tsx`, opened via each card's Review action — depends on T015, T021
+- [x] T019 [US2] Build `src/lib/admin/get-forum-review.ts` (content, immediately-preceding message for a reply, reports with reporters, auto-flag reason, author's prior-warnings/forum-posts counts) — depends on T002
+- [x] T020 [US2] Build `src/lib/actions/resolve-forum-report.ts` supporting `approve`/`remove` (resolves open reports, sets `moderationReviewedAt` or the correct table's `removedAt`, calls `logAuditEntry()`) — depends on T006
+- [x] T021 [US2] Build `src/components/admin/forum-review-drawer.tsx` (dialog/panel, focus trap, dimmed preceding-context block, "why it's here," author card, Approve/Remove buttons) — depends on T019, T020
+- [x] T022 [US2] Wire `forum-review-drawer.tsx` into `src/app/admin/forum/page.tsx`, opened via each card's Review action — depends on T015, T021
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -102,17 +102,17 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T023 [P] [US3] Integration test for `resolve-forum-report.ts`'s `lock` resolution (sets `lockedAt`; a subsequent `post-reply.ts` call against that thread is rejected) — extends `src/lib/actions/resolve-forum-report.test.ts` (same file as T016)
-- [ ] T024 [P] [US3] Integration test for `resolve-forum-report.ts`'s `warn` resolution (creates a `warnings` row with the generalized `targetType`/`targetId`; same report-resolution/`moderationReviewedAt` effect as approve) — same file as T016/T023
-- [ ] T025 [P] [US3] Integration test for `ban-forum-author.ts` (delegates to `016`'s `toggle-user-ban.ts`; removes the thread/reply under review; role-gate rejection) in `src/lib/actions/ban-forum-author.test.ts`
-- [ ] T026 [US3] Add the lock/warn/ban scenario to `e2e/admin-forum.spec.ts` — depends on T018 (same file)
+- [x] T023 [P] [US3] Integration test for `resolve-forum-report.ts`'s `lock` resolution (sets `lockedAt`; a subsequent `post-reply.ts` call against that thread is rejected) — extends `src/lib/actions/resolve-forum-report.test.ts` (same file as T016)
+- [x] T024 [P] [US3] Integration test for `resolve-forum-report.ts`'s `warn` resolution (creates a `warnings` row with the generalized `targetType`/`targetId`; same report-resolution/`moderationReviewedAt` effect as approve) — same file as T016/T023
+- [x] T025 [P] [US3] Integration test for `ban-forum-author.ts` (delegates to `016`'s `toggle-user-ban.ts`; removes the thread/reply under review; role-gate rejection) in `src/lib/actions/ban-forum-author.test.ts`
+- [x] T026 [US3] Add the lock/warn/ban scenario to `e2e/admin-forum.spec.ts` — depends on T018 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Extend `resolve-forum-report.ts` to support the `lock` resolution (threads only; sets `lockedAt`; audit-log write) — depends on T020
-- [ ] T028 [US3] Extend `resolve-forum-report.ts` to support the `warn` resolution (inserts a `warnings` row with `targetType`/`targetId`) — depends on T020
-- [ ] T029 [US3] Build `src/lib/actions/ban-forum-author.ts` (calls `016`'s `toggle-user-ban.ts`, then removes the thread/reply via the same path as `remove`) — depends on T020
-- [ ] T030 [US3] Wire Lock/Warn/Ban buttons into `forum-review-drawer.tsx` (Lock shown only for thread-type items) — depends on T021, T027, T028, T029
+- [x] T027 [US3] Extend `resolve-forum-report.ts` to support the `lock` resolution (threads only; sets `lockedAt`; audit-log write) — depends on T020
+- [x] T028 [US3] Extend `resolve-forum-report.ts` to support the `warn` resolution (inserts a `warnings` row with `targetType`/`targetId`) — depends on T020
+- [x] T029 [US3] Build `src/lib/actions/ban-forum-author.ts` (calls `016`'s `toggle-user-ban.ts`, then removes the thread/reply via the same path as `remove`) — depends on T020
+- [x] T030 [US3] Wire Lock/Warn/Ban buttons into `forum-review-drawer.tsx` (Lock shown only for thread-type items) — depends on T021, T027, T028, T029
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -122,10 +122,10 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: Small, single-purpose additions to `009`'s and `010`'s already-merged files. Independent of Phases 3-5 (only needs T002/T005 from Foundational).
 
-- [ ] T031 [P] Amend `src/lib/actions/create-thread.ts` (`009-forum-index`): apply the shared `auto-flag-rules.ts` ruleset at creation, setting `autoFlagReason` — depends on T002, T005
-- [ ] T032 [P] Amend `src/lib/actions/post-reply.ts` (`010-forum-thread`): apply the shared `auto-flag-rules.ts` ruleset at creation, AND reject replying to a thread where `lockedAt` is set (research.md #6) — depends on T002, T005
-- [ ] T033 [P] Amend `src/lib/admin/get-thread.ts` (`010-forum-thread`): add `AND removedAt IS NULL` to its reply-listing query — depends on T002
-- [ ] T034 [P] Extend `src/lib/actions/create-thread.test.ts` (`009`) and `src/lib/actions/post-reply.test.ts` (`010`) to cover T031-T033's new behavior — depends on T031, T032, T033
+- [x] T031 [P] Amend `src/lib/actions/create-thread.ts` (`009-forum-index`): apply the shared `auto-flag-rules.ts` ruleset at creation, setting `autoFlagReason` — depends on T002, T005
+- [x] T032 [P] Amend `src/lib/actions/post-reply.ts` (`010-forum-thread`): apply the shared `auto-flag-rules.ts` ruleset at creation, AND reject replying to a thread where `lockedAt` is set (research.md #6) — depends on T002, T005
+- [x] T033 [P] Amend `src/lib/admin/get-thread.ts` (`010-forum-thread`): add `AND removedAt IS NULL` to its reply-listing query — depends on T002
+- [x] T034 [P] Extend `src/lib/actions/create-thread.test.ts` (`009`) and `src/lib/actions/post-reply.test.ts` (`010`) to cover T031-T033's new behavior — depends on T031, T032, T033
 
 ---
 
@@ -133,18 +133,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: Small, single-purpose fixes to `017`'s already-merged files, closing the gaps this feature's own design work surfaced. Independent of Phases 3-6 (only needs T004/T005/T002 from Foundational).
 
-- [ ] T035 [P] Amend `src/lib/admin/get-posting-queue.ts` (`017-admin-postings`): import the shared `reason-severity.ts` instead of its own inline (and not-quite-correct) mapping — depends on T004
-- [ ] T036 [P] Amend `src/lib/actions/create-posting.ts` (`017-admin-postings`): import the shared `auto-flag-rules.ts` instead of its own inline copy — depends on T005
-- [ ] T037 [P] Amend `src/lib/actions/resolve-posting-report.ts` (`017-admin-postings`)'s `warn` path: write `warnings.targetType = 'posting'`, `targetId = <posting id>` instead of the old `postingId` column — depends on T002
-- [ ] T038 [P] Extend `017`'s `src/lib/admin/get-posting-queue.test.ts`, `src/lib/actions/create-posting.test.ts`, and `src/lib/actions/resolve-posting-report.test.ts` to cover T035-T037's new behavior — depends on T035, T036, T037
+- [x] T035 [P] Amend `src/lib/admin/get-posting-queue.ts` (`017-admin-postings`): import the shared `reason-severity.ts` instead of its own inline (and not-quite-correct) mapping — depends on T004
+- [x] T036 [P] Amend `src/lib/actions/create-posting.ts` (`017-admin-postings`): import the shared `auto-flag-rules.ts` instead of its own inline copy — depends on T005
+- [x] T037 [P] Amend `src/lib/actions/resolve-posting-report.ts` (`017-admin-postings`)'s `warn` path: write `warnings.targetType = 'posting'`, `targetId = <posting id>` instead of the old `postingId` column — depends on T002
+- [x] T038 [P] Extend `017`'s `src/lib/admin/get-posting-queue.test.ts`, `src/lib/actions/create-posting.test.ts`, and `src/lib/actions/resolve-posting-report.test.ts` to cover T035-T037's new behavior — depends on T035, T036, T037
 
 ---
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T039 Confirm `next build` succeeds locally and CI stays green with the new gated route, five Server Actions (plus the reused `016` ban action), the extended schema (incl. `017`'s generalized `warnings`), and all amended files
-- [ ] T040 Manually run quickstart.md Scenarios 1-12 end to end against local dev and confirm each passes
-- [ ] T041 [P] Update `docs/feature-list.md`, marking Admin Forum's spec/plan/tasks as complete
+- [x] T039 Confirm `next build` succeeds locally and CI stays green with the new gated route, five Server Actions (plus the reused `016` ban action), the extended schema (incl. `017`'s generalized `warnings`), and all amended files
+- [x] T040 Manually run quickstart.md Scenarios 1-12 end to end against local dev and confirm each passes
+- [x] T041 [P] Update `docs/feature-list.md`, marking Admin Forum's spec/plan/tasks as complete
 
 ---
 

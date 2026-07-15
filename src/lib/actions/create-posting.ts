@@ -4,7 +4,7 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, users } from "@/db/schema";
 import { requireVerifiedEmail, UnverifiedEmailError } from "@/lib/auth/require-verified-email";
-import { computeAutoFlagReason } from "@/lib/postings/auto-flag";
+import { computeAutoFlagReason } from "@/lib/moderation/auto-flag-rules";
 import { postingSchema, type PostingInput } from "@/lib/validations/posting";
 
 export type CreatePostingResult =

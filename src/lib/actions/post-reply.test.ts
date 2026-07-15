@@ -83,4 +83,51 @@ describe("postReply", () => {
     const rows = await db.select().from(forumReplies).where(eq(forumReplies.body, "Should not be created"));
     expect(rows).toHaveLength(0);
   });
+
+  it("flags a scam-pattern reply (Admin Forum, 018)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(verifiedEmail));
+    const result = await postReply({ threadId, body: "Click here to claim now" });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const [row] = await db.select({ autoFlagReason: forumReplies.autoFlagReason }).from(forumReplies).where(eq(forumReplies.id, result.id));
+    expect(row.autoFlagReason).toBe("phishing_or_scam");
+  });
+
+  it("flags a brand-new account's first-ever reply", async () => {
+    const newAuthorEmail = `reply-newauthor-${runId}@example.com`;
+    const [newAuthor] = await db
+      .insert(users)
+      .values({ email: newAuthorEmail, handle: `replynewauthor${runId}`, emailVerified: new Date() })
+      .returning({ id: users.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(newAuthorEmail));
+    const result = await postReply({ threadId, body: "Hi, just found this thread!" });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const [row] = await db.select({ autoFlagReason: forumReplies.autoFlagReason }).from(forumReplies).where(eq(forumReplies.id, result.id));
+    expect(row.autoFlagReason).toBe("new_account_first_post");
+
+    await db.delete(forumReplies).where(eq(forumReplies.id, result.id));
+    await db.delete(users).where(eq(users.id, newAuthor.id));
+  });
+
+  it("rejects a reply to a locked thread (Admin Forum, 018 research.md #6)", async () => {
+    const [lockedThread] = await db
+      .insert(forumThreads)
+      .values({ authorId, categoryId: "general", title: `Locked thread ${runId}`, body: "body", locked: true })
+      .returning({ id: forumThreads.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(verifiedEmail));
+    const result = await postReply({ threadId: lockedThread.id, body: "Should be rejected" });
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toMatch(/locked/i);
+
+    const rows = await db.select().from(forumReplies).where(eq(forumReplies.threadId, lockedThread.id));
+    expect(rows).toHaveLength(0);
+
+    await db.delete(forumThreads).where(eq(forumThreads.id, lockedThread.id));
+  });
 });

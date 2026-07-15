@@ -1744,3 +1744,61 @@ may begin on any/all of them per the constitution (v1.0.0).
   removed posting disappears from Browse, and Ban both bans the account
   and removes the posting under review. Full suite green (474 unit, 77
   e2e), `npm run build` confirmed twice.
+
+## [Unreleased] (cont. 24)
+
+### Added
+- Admin Forum (`specs/018-admin-forum/`, branch `018-admin-forum`
+  merged to `main`) — all 41 tasks complete: `/admin/forum`'s stats (in
+  queue/user-reported/auto-flagged/actioned today — the last a live
+  read of `auditEntries`, not a stored counter), a queue spanning
+  threads AND replies under the same queue-membership formula as Admin
+  Postings (017), filterable All/Threads/Replies/Auto-flagged, and a
+  review drawer showing the flagged content in context (a reply's
+  immediately-preceding message dimmed above it, falling back to the
+  thread's own OP when it's the thread's first reply) with
+  Approve/Remove/Lock (threads only)/Warn/Ban. Reuses Forum Thread's
+  (010) existing `reports` usage and Admin Users' (016)
+  `toggleUserBan`/`forumThreads.removedAt` directly. Adds a new
+  `forumReplies.removedAt` and `autoFlagReason`/`moderationReviewedAt`
+  on both `forumThreads` and `forumReplies`; "Lock thread" reuses
+  `forumThreads`' existing `locked` boolean rather than adding a
+  redundant `lockedAt` column. Small bounded amendments wire the shared
+  auto-flag ruleset into `create-thread.ts`/`post-reply.ts` (which also
+  now rejects replying to a locked thread, re-verified server-side) and
+  exclude removed replies from `get-thread.ts`'s reply list.
+  `requireRole("moderator")` gates the route and all three new/reused
+  Server Actions independently — the fifth real consumer after Content
+  Page (014), Admin Dashboard (015), Admin Users (016), and Admin
+  Postings (017) — so the real queue/drawer/resolution content can't be
+  exercised by a real session yet (no `role` column until Admin
+  Settings/024); every query/action is unit-tested directly, and e2e
+  covers the real, current access-denial behavior.
+
+### Changed
+- Extracted `src/lib/moderation/reason-severity.ts` and
+  `auto-flag-rules.ts` as shared helpers out of Admin Postings' (017)
+  own inline copies — the "generalize once a second real consumer
+  exists" trigger 017's own research.md anticipated.
+- Generalized 017's posting-specific `warnings.postingId` column to a
+  polymorphic `targetType`/`targetId` pair (the "generalize if a third
+  distinct source appears" trigger 017's research.md separately
+  anticipated) — every pre-existing warning implicitly becomes
+  `targetType = 'posting'`. "Prior warnings" now correctly combines
+  across postings/threads/replies in one count.
+
+### Verified
+- Visual QA (temporary local role-gate bypass across `page.tsx`,
+  `resolve-forum-report.ts`, `ban-forum-author.ts`, and — transitively,
+  since `banForumAuthor` calls it — `toggle-user-ban.ts`, fully reverted
+  before commit) exercised all five resolution actions end-to-end with
+  no new bugs found. Confirmed via direct DB checks and the real Forum
+  index/Forum Thread pages: reports resolve, `warnings`/`auditEntries`
+  rows land correctly with the generalized shape, a removed thread
+  disappears from Forum index while a removed reply disappears from
+  just its own thread's reply list, Ban both bans the account and
+  removes the content under review, and a locked thread's real reply
+  form still renders but a genuine submission attempt is rejected with
+  a visible error (confirmed by actually submitting the form as a
+  regular user). Full suite green (504 unit, 79 e2e), `npm run build`
+  confirmed twice.

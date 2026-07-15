@@ -268,11 +268,18 @@ export const reports = pgTable("reports", {
 
 // Forum index (009) -- this feature's first writer. `categoryId` is
 // one of the six hardcoded keys in src/lib/forum/categories.ts, not a
-// foreign key (categories aren't a table). `pinned`/`locked` are
-// moderator-controlled -- this feature only ever inserts `false` and
-// never changes either afterward (the future Admin Forum feature owns
-// setting them). `replyCount`/`viewCount`/`likes` all start at 0 and
-// are maintained by the future Forum Thread feature, not this one.
+// foreign key (categories aren't a table). `pinned` is moderator-
+// controlled -- this feature only ever inserts `false` and never
+// changes it afterward (no feature currently sets it). `locked` is
+// also moderator-controlled and inserted `false` here; Admin Forum
+// (018) is its first real writer ("🔒 Lock thread") -- reused as-is
+// rather than adding a redundant `lockedAt` timestamp column (018's own
+// data-model.md sketched one before checking this boolean already
+// existed for exactly this purpose; a plain boolean already satisfies
+// every real requirement -- rejecting new replies -- with nothing
+// anywhere needing to know *when* a thread was locked). `replyCount`/
+// `viewCount`/`likes` all start at 0 and are maintained by the future
+// Forum Thread feature, not this one.
 export const forumThreads = pgTable("forumThreads", {
   id: uuid("id").defaultRandom().primaryKey(),
   categoryId: text("categoryId").notNull(),
@@ -292,6 +299,12 @@ export const forumThreads = pgTable("forumThreads", {
   // postings.removedAt; Forum index's own thread query excludes rows
   // where this is set (research.md #2). Never cleared once set.
   removedAt: timestamp("removedAt", { mode: "date" }),
+  // Admin Forum (018) -- set once at creation by create-thread.ts's
+  // shared auto-flag ruleset; never changed by this feature directly.
+  autoFlagReason: text("autoFlagReason"),
+  // Admin Forum (018) -- set by Approve/Warn (queue-exit without
+  // removal). Never cleared once set.
+  moderationReviewedAt: timestamp("moderationReviewedAt", { mode: "date" }),
 });
 
 // Forum Thread (010) -- this feature's only writer. `likes` is
@@ -311,6 +324,17 @@ export const forumReplies = pgTable("forumReplies", {
   quotedReplyId: uuid("quotedReplyId").references((): AnyPgColumn => forumReplies.id),
   likes: integer("likes").notNull().default(0),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Admin Forum (018) -- forumThreads got a moderation-hide `removedAt`
+  // from Admin Users (016), but this table never did (016 only
+  // extended forumThreads). Set by "Remove reply"; Forum Thread's own
+  // get-thread.ts excludes rows where this is set from a thread's reply
+  // list. Never cleared once set.
+  removedAt: timestamp("removedAt", { mode: "date" }),
+  // Admin Forum (018) -- same taxonomy/pattern as forumThreads' own
+  // fields above, set at creation by post-reply.ts's shared auto-flag
+  // ruleset.
+  autoFlagReason: text("autoFlagReason"),
+  moderationReviewedAt: timestamp("moderationReviewedAt", { mode: "date" }),
 });
 
 // Forum Thread (010) -- a real per-user relationship, not a bare
@@ -499,14 +523,19 @@ export const auditEntries = pgTable("auditEntries", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-// Admin Postings (017) -- this feature's only writer (Warn author),
-// the "first feature that needs a shared entity defines its minimal
-// shape" pattern already used for Notification/AuditEntry
-// (research.md #3). `postingId` is nullable, not a polymorphic
-// target -- Admin Forum (018)/Admin Reports (019) will very likely
-// need their own Warn action against this same table, but neither is
-// spec'd yet, so this stays exactly what this feature needs. Append-
-// only -- never updated or deleted (ADR 0005).
+// Admin Postings (017) -- introduced with a posting-specific `postingId`
+// column ("first feature that needs a shared entity defines its minimal
+// shape," the same pattern used for Notification/AuditEntry). Admin
+// Forum (018) is the third distinct source (after postings and now
+// threads/replies) -- exactly the trigger 017's own research.md #3
+// anticipated ("generalize if a third distinct source appears") -- so
+// `postingId` is generalized here to a polymorphic `targetType`/
+// `targetId` pair, matching `reports`/`likes`'s existing shape rather
+// than adding more mutually-exclusive nullable FK columns. `targetId`
+// has no FK constraint (it names a row in whichever table `targetType`
+// says), same reasoning as `reports.targetId`. Every pre-existing row
+// implicitly becomes `targetType = 'posting'`. Append-only -- never
+// updated or deleted (ADR 0005).
 export const warnings = pgTable("warnings", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("userId")
@@ -515,7 +544,8 @@ export const warnings = pgTable("warnings", {
   moderatorId: uuid("moderatorId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  postingId: uuid("postingId").references(() => postings.id, { onDelete: "set null" }),
+  targetType: text("targetType"),
+  targetId: uuid("targetId"),
   reason: text("reason"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });

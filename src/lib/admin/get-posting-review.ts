@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, reports, users, warnings } from "@/db/schema";
-import { computeSeverity, type Severity } from "./posting-severity";
+import { computeSeverity, type Severity } from "@/lib/moderation/reason-severity";
 
 export type ReviewReport = { reason: string; reporterHandle: string };
 

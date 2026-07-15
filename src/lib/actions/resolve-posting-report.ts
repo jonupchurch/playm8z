@@ -58,7 +58,8 @@ export async function resolvePostingReport(input: ResolvePostingReportInput): Pr
       await tx.insert(warnings).values({
         userId: row.hostId,
         moderatorId: moderator.id,
-        postingId: row.id,
+        targetType: "posting",
+        targetId: row.id,
         reason: warningReason,
       });
     }

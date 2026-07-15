@@ -169,7 +169,7 @@ describe("resolvePostingReport", () => {
     expect(postingRow.removedAt).toBeNull();
     expect(postingRow.moderationReviewedAt).not.toBeNull();
 
-    const [warningRow] = await db.select().from(warnings).where(eq(warnings.postingId, postingId));
+    const [warningRow] = await db.select().from(warnings).where(and(eq(warnings.targetType, "posting"), eq(warnings.targetId, postingId)));
     expect(warningRow.userId).toBe(authorId);
     expect(warningRow.moderatorId).toBe(moderatorId);
     expect(warningRow.reason).toBe("second offense");

@@ -3,12 +3,13 @@
 import { useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { relativeAge } from "@/components/listings/listing-card";
-import { resolvePostingReport } from "@/lib/actions/resolve-posting-report";
+import { categoryLabel } from "@/lib/forum/categories";
+import { resolveForumReport } from "@/lib/actions/resolve-forum-report";
 import { AUTO_FLAG_LABELS, type AutoFlagReason } from "@/lib/moderation/auto-flag-rules";
+import { reasonLabel, reportReasonSeverity, severityBadgeClass, severityLabel, type Severity } from "@/lib/moderation/reason-severity";
 import { AVATAR_COLORS } from "@/lib/validations/onboarding";
-import type { PostingQueueFilter } from "@/lib/validations/admin-postings";
-import type { PostingQueueStats, QueuePosting } from "@/lib/admin/get-posting-queue";
-import { severityBadgeClass, severityLabel, type Severity } from "@/lib/moderation/reason-severity";
+import type { ForumQueueFilter } from "@/lib/validations/admin-forum";
+import type { ForumQueueItem, ForumQueueStats } from "@/lib/admin/get-forum-queue";
 
 function avatarGradient(color: string | null) {
   return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
@@ -20,28 +21,44 @@ function cardEdgeClass(severity: Severity) {
   return "border-border";
 }
 
-const FILTERS: { key: PostingQueueFilter; label: string }[] = [
+function typeBadgeClass(type: "forumThread" | "forumReply") {
+  return type === "forumThread"
+    ? "text-[#ffd08a] bg-[rgba(255,176,0,0.14)] border-[rgba(255,176,0,0.4)]"
+    : "text-text-muted bg-surface border-border";
+}
+
+// Distinct from severityBadgeClass's own "low" color -- the wireframe's
+// per-reason reason chips use a muted tan for low severity, not the
+// cyan its severity BADGE uses at the same tier.
+function reasonChipClass(reason: string) {
+  const sev = reportReasonSeverity(reason);
+  if (sev === "high") return "text-pop-text bg-[rgba(255,59,107,0.12)] border-[rgba(255,59,107,0.4)]";
+  if (sev === "med") return "text-[#e6c74e] bg-[rgba(230,199,78,0.12)] border-[rgba(230,199,78,0.4)]";
+  return "text-text-muted bg-[rgba(180,156,106,0.12)] border-[rgba(180,156,106,0.32)]";
+}
+
+const FILTERS: { key: ForumQueueFilter; label: string }[] = [
   { key: "all", label: "All" },
-  { key: "reported", label: "User-reported" },
+  { key: "threads", label: "Threads" },
+  { key: "replies", label: "Replies" },
   { key: "flagged", label: "Auto-flagged" },
 ];
 
-// FR-002/FR-003/FR-004/FR-005: stats, filter chips (state lives in the
-// URL, Browse's/Admin Users' precedent), and queue cards with a
-// computed severity badge, reason chips per open report, and an
-// AUTO-FLAG banner when applicable. Review opens the drawer via the
-// same `?postingId=` URL-param pattern Admin Users' own drawer uses;
-// Approve/Remove act immediately (spec.md's own acceptance criteria
-// doesn't call for a confirm step here, unlike Admin Users' Ban).
-export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: QueuePosting[] }) {
+// FR-002/FR-003/FR-004/FR-005: stats (incl. audit-log-derived "actioned
+// today"), URL-driven filter chips, and queue cards spanning threads
+// and replies with a computed severity badge, a THREAD/REPLY type
+// badge, canonical reason chips, and an AUTO-FLAG banner. Review opens
+// the drawer via `?targetType=&targetId=` (two params, unlike Admin
+// Postings' single `postingId`, since this queue spans two tables).
+export function ForumQueue({ stats, rows }: { stats: ForumQueueStats; rows: ForumQueueItem[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [pending, startTransition] = useTransition();
 
-  const currentFilter = (searchParams.get("filter") as PostingQueueFilter | null) ?? "all";
+  const currentFilter = (searchParams.get("filter") as ForumQueueFilter | null) ?? "all";
 
-  function setFilter(filter: PostingQueueFilter) {
+  function setFilter(filter: ForumQueueFilter) {
     const params = new URLSearchParams(searchParams.toString());
     if (filter === "all") params.delete("filter");
     else params.set("filter", filter);
@@ -49,15 +66,16 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
     router.push(next ? `${pathname}?${next}` : pathname);
   }
 
-  function openReview(postingId: string) {
+  function openReview(item: ForumQueueItem) {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("postingId", postingId);
+    params.set("targetType", item.type);
+    params.set("targetId", item.id);
     router.push(`${pathname}?${params.toString()}`);
   }
 
-  function resolve(postingId: string, resolution: "approve" | "remove") {
+  function resolve(item: ForumQueueItem, resolution: "approve" | "remove") {
     startTransition(async () => {
-      await resolvePostingReport({ postingId, resolution });
+      await resolveForumReport({ targetType: item.type, targetId: item.id, resolution });
       router.refresh();
     });
   }
@@ -78,8 +96,8 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
           <div className="font-mono text-[11px] text-text-dim">auto-flagged</div>
         </div>
         <div className="rounded-2xl border border-border bg-surface-2 p-4">
-          <div className="text-2xl font-bold text-[#8fe0a3]">{stats.removedToday}</div>
-          <div className="font-mono text-[11px] text-text-dim">removed today</div>
+          <div className="text-2xl font-bold text-[#8fe0a3]">{stats.actionedToday}</div>
+          <div className="font-mono text-[11px] text-text-dim">actioned today</div>
         </div>
       </div>
 
@@ -106,7 +124,7 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
             ✓
           </div>
           <div className="mb-1.5 text-lg font-bold text-text">Queue clear!</div>
-          <p className="text-sm text-text-muted">Nothing to review in this filter. Nice work.</p>
+          <p className="text-sm text-text-muted">Nothing to review in this filter.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3.5">
@@ -118,11 +136,16 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                     <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] font-bold ${severityBadgeClass(row.severity)}`}>
                       {severityLabel(row.severity)}
                     </span>
-                    <span className="font-mono text-[10px] tracking-wider text-accent-2 uppercase">{row.game}</span>
+                    <span className={`rounded-md border px-2 py-1 font-mono text-[9px] font-bold tracking-wide ${typeBadgeClass(row.type)}`}>
+                      {row.type === "forumThread" ? "THREAD" : "REPLY"}
+                    </span>
+                    <span className="font-mono text-[10px] tracking-wider text-accent-2 uppercase">{categoryLabel(row.categoryId)}</span>
                     <span className="font-mono text-[10px] text-text-dim">· {relativeAge(row.createdAt)}</span>
                   </div>
-                  <div className="mb-1.5 text-base font-bold text-text">{row.title}</div>
-                  <p className="mb-3 text-[13px] leading-relaxed text-text-muted">{row.blurb}</p>
+                  <div className="mb-1.5 font-mono text-[11px] text-text-dim">
+                    {row.type === "forumThread" ? "Thread" : `Reply in "${row.threadTitle}"`}
+                  </div>
+                  <p className="mb-3 text-[13px] leading-relaxed text-text-muted">{row.content}</p>
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="flex items-center gap-2">
                       <div
@@ -137,9 +160,9 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                     {row.reports.map((report, index) => (
                       <span
                         key={`${report.reason}-${index}`}
-                        className="rounded-full border border-border bg-surface px-2.5 py-1 font-mono text-[10px] font-bold text-text-muted"
+                        className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold ${reasonChipClass(report.reason)}`}
                       >
-                        {report.reason}
+                        {reasonLabel(report.reason)}
                       </span>
                     ))}
                   </div>
@@ -153,7 +176,7 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                 <div className="flex w-32.5 shrink-0 flex-col gap-2">
                   <button
                     type="button"
-                    onClick={() => openReview(row.id)}
+                    onClick={() => openReview(row)}
                     className="rounded-lg border border-border bg-surface px-3 py-2 text-[13px] font-semibold text-text"
                   >
                     Review
@@ -161,7 +184,7 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                   <button
                     type="button"
                     disabled={pending}
-                    onClick={() => resolve(row.id, "approve")}
+                    onClick={() => resolve(row, "approve")}
                     className="rounded-lg border border-[rgba(78,201,106,0.4)] bg-[rgba(78,201,106,0.12)] px-3 py-2 text-[13px] font-bold text-[#8fe0a3] disabled:opacity-60"
                   >
                     Approve
@@ -169,7 +192,7 @@ export function PostingQueue({ stats, rows }: { stats: PostingQueueStats; rows: 
                   <button
                     type="button"
                     disabled={pending}
-                    onClick={() => resolve(row.id, "remove")}
+                    onClick={() => resolve(row, "remove")}
                     className="rounded-lg bg-pop px-3 py-2 text-[13px] font-bold text-on-accent disabled:opacity-60"
                   >
                     Remove

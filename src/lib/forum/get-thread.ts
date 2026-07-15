@@ -1,4 +1,4 @@
-import { and, arrayOverlaps, asc, desc, eq, inArray, ne, or } from "drizzle-orm";
+import { and, arrayOverlaps, asc, desc, eq, inArray, isNull, ne, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
 import { forumReplies, forumThreads, likes, threadSubscriptions, users } from "@/db/schema";
@@ -107,7 +107,7 @@ export async function getThread(threadId: string, sort: ReplySort, viewerId?: st
     .innerJoin(users, eq(forumReplies.authorId, users.id))
     .leftJoin(quoted, eq(forumReplies.quotedReplyId, quoted.id))
     .leftJoin(quotedAuthor, eq(quoted.authorId, quotedAuthor.id))
-    .where(eq(forumReplies.threadId, threadId))
+    .where(and(eq(forumReplies.threadId, threadId), isNull(forumReplies.removedAt)))
     .orderBy(...orderForSort(sort));
 
   const likedTargetIds = new Set<string>();

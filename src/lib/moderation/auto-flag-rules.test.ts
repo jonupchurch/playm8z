@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeAutoFlagReason } from "./auto-flag";
+import { computeAutoFlagReason } from "./auto-flag-rules";
 
 describe("computeAutoFlagReason", () => {
   it("flags a scam/phishing pattern", () => {

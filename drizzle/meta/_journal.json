@@ -141,6 +141,20 @@
       "when": 1784066783345,
       "tag": "0019_furry_tinkerer",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1784070227646,
+      "tag": "0020_admin_forum_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1784070397914,
+      "tag": "0021_warnings_drop_posting_id",
+      "breakpoints": true
     }
   ]
 }

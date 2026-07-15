@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { postings, reports, users } from "@/db/schema";
 import type { PostingQueueFilter } from "@/lib/validations/admin-postings";
 import { startOfToday } from "./activity-data";
-import { computeSeverity, type Severity } from "./posting-severity";
+import { computeSeverity, type Severity } from "@/lib/moderation/reason-severity";
 
 export type QueueReport = { reason: string; reporterHandle: string };
 

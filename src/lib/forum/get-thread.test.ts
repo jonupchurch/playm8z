@@ -164,6 +164,18 @@ describe("getThread (integration)", () => {
     expect(thread!.relatedThreads.some((r) => r.id === otherThreadId)).toBe(true);
   });
 
+  it("excludes a removed reply from the thread's reply list (Admin Forum, 018)", async () => {
+    const [removedReply] = await db
+      .insert(forumReplies)
+      .values({ threadId, authorId, body: "This should be hidden", removedAt: new Date() })
+      .returning({ id: forumReplies.id });
+
+    const thread = await getThread(threadId, "top");
+    expect(thread!.replies.some((r) => r.id === removedReply.id)).toBe(false);
+
+    await db.delete(forumReplies).where(eq(forumReplies.id, removedReply.id));
+  });
+
   it("doesn't throw for a thread posted with no tags (arrayOverlaps requires a non-empty array)", async () => {
     const [untaggedThread] = await db
       .insert(forumThreads)

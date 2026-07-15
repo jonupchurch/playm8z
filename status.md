@@ -5,9 +5,9 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, and Admin Postings are done and merged. Admin Forum is
-next.
-**Last updated**: 2026-07-14
+Admin Users, Admin Postings, and Admin Forum are done and merged.
+Admin Reports is next.
+**Last updated**: 2026-07-15
 
 ## Where things stand
 
@@ -2404,6 +2404,86 @@ a naive "is this title still visible" check matched the drawer's own
 stale header text, not a lingering queue card.)
 
 Full suite green (474 unit, 77 e2e), `npm run build` confirmed twice.
+
+## Admin Forum implemented (2026-07-15)
+
+`/admin/forum`'s main content area, all 41 tasks complete — the second
+moderation-queue feature, most of its infrastructure reused/extended
+from Admin Postings (017) rather than reinvented. Stats (in queue/
+user-reported/auto-flagged/actioned today — the last a live read of
+`auditEntries`, this project's first product-facing use of that table
+for a stat rather than just Admin Dashboard's own activity feed), a
+queue spanning threads AND replies under the same queue-membership
+formula 017 established, filterable All/Threads/Replies/Auto-flagged,
+and a review drawer showing the flagged content in context (a reply's
+immediately-preceding message dimmed above it, falling back to the
+thread's own OP when the reply is the thread's first) with
+Approve/Remove/Lock (threads only)/Warn/Ban.
+
+Extracted two shared helpers out of 017's own inline copies:
+`src/lib/moderation/reason-severity.ts` and `auto-flag-rules.ts` — the
+exact "generalize once a second real consumer exists" trigger 017's own
+research.md anticipated. Also generalized 017's posting-specific
+`warnings.postingId` column to a polymorphic `targetType`/`targetId`
+pair (the "generalize if a third distinct source appears" trigger 017's
+research.md separately named) — done as two sequential, unambiguous
+schema pushes (add the new columns, backfill, then drop the old one)
+rather than one combined change, since `drizzle-kit generate` prompts
+interactively when it can't tell an add+drop apart from a rename, and
+this shell has no TTY to answer that prompt. "Prior warnings" now
+correctly combines across postings/threads/replies in one count,
+verified cross-feature during QA (a warning seeded against
+`targetType='posting'` correctly counted toward a forum-reply author's
+own prior-warnings total).
+
+Reuses Forum Thread's (010) existing `reports` usage (`targetType=
+'forum'`, classified against `forumThreads` then `forumReplies` since
+that table never added a discriminator column) and Admin Users' (016)
+`toggleUserBan`/`forumThreads.removedAt` directly. Adds a new
+`forumReplies.removedAt` (016 never extended that table) and
+`autoFlagReason`/`moderationReviewedAt` on both tables. "Lock thread"
+reuses `forumThreads`' existing `locked` boolean instead of adding a
+redundant `lockedAt` timestamp — this feature's own data-model.md had
+sketched a new timestamp column before checking that Forum index's
+(009) own schema comment had already reserved the existing boolean
+specifically for "the future Admin Forum feature," and nothing needs to
+know *when* a thread was locked, only whether it is.
+
+Small bounded amendments wire the shared auto-flag ruleset into Forum
+index's `create-thread.ts` and Forum Thread's `post-reply.ts` (which
+also now rejects replying to a locked thread, re-verified server-side
+per Principle II) and exclude removed replies from `get-thread.ts`'s
+reply list.
+
+`requireRole("moderator")` gates the route and all three new/reused
+Server Actions independently — its fifth real consumer after Content
+Page (014), Admin Dashboard (015), Admin Users (016), and Admin
+Postings (017) — so the real queue/drawer/resolution content can't be
+exercised by a real session yet (no `role` column until Admin
+Settings/024); every query/action is unit/integration-tested directly
+(504 unit tests total after this feature), and `e2e/admin-forum.spec.ts`
+covers the real, current access-denial behavior.
+
+**Visual QA pass found no new bugs** (matching Admin Postings' own
+clean pass, unlike Admin Dashboard's and Admin Users' each catching
+one): bypassed the role gate locally in `page.tsx`, `resolve-forum-
+report.ts`, `ban-forum-author.ts`, and (transitively, since
+`banForumAuthor` calls it) `toggle-user-ban.ts`; seeded threads/replies
+covering every severity/queue-membership/context combination; and
+exercised all five resolution actions end-to-end in a real browser.
+Confirmed via direct DB checks and the real Forum index/Forum Thread
+pages: reports resolve, `warnings`/`auditEntries` rows land correctly
+with the generalized shape, a removed thread disappears from Forum
+index while a removed reply disappears from just its own thread's reply
+list (an untouched sibling reply still shows), Ban both bans the
+account and removes the content under review, and — most notably — a
+locked thread's real reply form still renders (matching the "don't hide
+the control, reject server-side" principle) but a genuine submission
+attempt is rejected with a visible error, confirmed by actually
+submitting the form as a regular user rather than only asserting the
+`locked` column value.
+
+Full suite green (504 unit, 79 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

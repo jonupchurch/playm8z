@@ -51,6 +51,29 @@ describe("createThread", () => {
     expect(row.replyCount).toBe(0);
     expect(row.viewCount).toBe(0);
     expect(row.likes).toBe(0);
+    // Admin Forum (018): this fixture account is brand-new and this is
+    // its first-ever forum content, so it correctly gets auto-flagged.
+    expect(row.autoFlagReason).toBe("new_account_first_post");
+  });
+
+  it("flags a scam-pattern thread regardless of account age or post count", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(verifiedEmail));
+    const result = await createThread({ ...validInput, title: `${validInput.title}-scam`, body: "Click here to claim now" });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const [row] = await db.select({ autoFlagReason: forumThreads.autoFlagReason }).from(forumThreads).where(eq(forumThreads.id, result.id));
+    expect(row.autoFlagReason).toBe("phishing_or_scam");
+  });
+
+  it("does not flag a second, unremarkable thread from the same (still-new) account", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(verifiedEmail));
+    const result = await createThread({ ...validInput, title: `${validInput.title}-second` });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const [row] = await db.select({ autoFlagReason: forumThreads.autoFlagReason }).from(forumThreads).where(eq(forumThreads.id, result.id));
+    expect(row.autoFlagReason).toBeNull();
   });
 
   it("rejects an invalid category", async () => {

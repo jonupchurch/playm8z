@@ -1,15 +1,17 @@
 import type { ReportReason } from "@/lib/validations/notifications";
-import type { AutoFlagReason } from "@/lib/postings/auto-flag";
+import type { AutoFlagReason } from "./auto-flag-rules";
 
 export type Severity = "high" | "med" | "low";
 
-// research.md #1: the exact reason-keyword mapping already established
-// for report-reason chips (the source wireframe's own reasonSev()) --
-// scam/harassment/underage/safety -> high, spam/inappropriate -> med,
-// else low. Our real reportReasonEnum has no distinct "scam" value;
-// impersonation (the closest trust/safety concern to "scam") is
-// treated as med, matching the wireframe's own catchall for anything
-// not explicitly named high.
+// Shared across every moderation-queue feature (Admin Postings/017,
+// Admin Forum/018) -- extracted from 017's own inline copy the moment
+// a second real consumer (this feature) needed the identical mapping
+// (research.md #2). The canonical `reports.reason` taxonomy (012):
+// underage/harassment -> high, impersonation/inappropriate/spam -> med,
+// other -> low (a catch-all with no inherent severity signal). Neither
+// moderation wireframe's flavor-text reason labels ("Scam / phishing,"
+// "Off-topic") correspond to a real taxonomy value -- this feature
+// never stores or displays those exact strings.
 const REPORT_REASON_SEVERITY: Record<ReportReason, Severity> = {
   harassment: "high",
   underage: "high",
@@ -18,6 +20,21 @@ const REPORT_REASON_SEVERITY: Record<ReportReason, Severity> = {
   impersonation: "med",
   other: "low",
 };
+
+// Canonical display labels for reason chips -- never the raw free-text
+// a reporter entered, and never a wireframe's non-canonical flavor text.
+export const REASON_LABELS: Record<ReportReason, string> = {
+  spam: "Spam",
+  harassment: "Harassment",
+  inappropriate: "Inappropriate",
+  underage: "Underage & safety",
+  impersonation: "Impersonation",
+  other: "Other",
+};
+
+export function reasonLabel(reason: string): string {
+  return REASON_LABELS[reason as ReportReason] ?? "Other";
+}
 
 const AUTO_FLAG_SEVERITY: Record<AutoFlagReason, Severity> = {
   phishing_or_scam: "high",
@@ -31,9 +48,9 @@ export function reportReasonSeverity(reason: string): Severity {
   return REPORT_REASON_SEVERITY[reason as ReportReason] ?? "low";
 }
 
-// FR-005/SC-002: the worse of every open report's reason-implied
-// severity and the auto-flag reason's own fixed severity -- never a
-// separately stored value.
+// The worse of every open report's reason-implied severity and the
+// auto-flag reason's own fixed severity -- never a separately stored
+// value.
 export function computeSeverity(reportReasons: string[], autoFlagReason: string | null): Severity {
   const severities: Severity[] = reportReasons.map(reportReasonSeverity);
   if (autoFlagReason) {
@@ -42,12 +59,8 @@ export function computeSeverity(reportReasons: string[], autoFlagReason: string 
   return severities.reduce<Severity>((worst, current) => (SEVERITY_RANK[current] > SEVERITY_RANK[worst] ? current : worst), "low");
 }
 
-// Shared display helpers -- both posting-queue.tsx's cards and
-// posting-review-drawer.tsx's own badge need the exact same severity
-// styling, so they're defined once here rather than risking drift
-// between two per-component copies (unlike e.g. avatarGradient, which
-// this codebase does duplicate per component, this is the same
-// feature's own two views of the identical value).
+// Shared display helpers -- every moderation queue's own cards/drawer
+// need the exact same severity styling.
 export function severityBadgeClass(severity: Severity): string {
   if (severity === "high") return "text-pop-text bg-[rgba(255,59,107,0.13)] border-[rgba(255,59,107,0.45)]";
   if (severity === "med") return "text-[#e6c74e] bg-[rgba(230,199,78,0.12)] border-[rgba(230,199,78,0.4)]";
