@@ -25,7 +25,10 @@ const ACTION_LABEL: Record<"approve" | "remove" | "warn", string> = {
 // precedent for multi-row moderation state); the audit-log write
 // (this feature's first real call to logAuditEntry(), 015) happens
 // right after -- a supplementary log, not core state, so it doesn't
-// need to share the same transaction.
+// need to share the same transaction. `reports.resolvedAt` (Admin
+// Reports/019, retroactive) is set alongside `status` so 019's own
+// "resolved today"/"avg response" stats see this resolution too,
+// regardless of which feature's UI triggered it.
 export async function resolvePostingReport(input: ResolvePostingReportInput): Promise<ResolvePostingReportResult> {
   await requireRole("moderator");
   const moderator = await requireAuth();
@@ -45,7 +48,7 @@ export async function resolvePostingReport(input: ResolvePostingReportInput): Pr
 
     await tx
       .update(reports)
-      .set({ status: "resolved" })
+      .set({ status: "resolved", resolvedAt: new Date() })
       .where(and(eq(reports.targetType, "posting"), eq(reports.targetId, postingId), eq(reports.status, "open")));
 
     if (resolution === "remove") {

@@ -88,6 +88,20 @@ describe("getConversationOrRequest (integration)", () => {
     expect(result.messages[0].body).toBe("Hi there");
   });
 
+  it("excludes a message removed via Admin Reports (019) from the conversation view", async () => {
+    const [removedMessage] = await db
+      .insert(messages)
+      .values({ conversationId: directConversationId, senderId: userBId, body: "spam dm", removedAt: new Date() })
+      .returning({ id: messages.id });
+
+    const result = await getConversationOrRequest(directConversationId, userAId);
+    if (result?.kind !== "conversation") throw new Error("expected a conversation view");
+    expect(result.messages.map((m) => m.id)).not.toContain(removedMessage.id);
+    expect(result.messages).toHaveLength(1); // the untouched earlier message still shows
+
+    await db.delete(messages).where(eq(messages.id, removedMessage.id));
+  });
+
   it("returns null for a conversation the viewer isn't a member of", async () => {
     const result = await getConversationOrRequest(directConversationId, outsiderId);
     expect(result).toBeNull();

@@ -5,8 +5,8 @@ features one at a time, in order: Auth & Onboarding, Error Pages, Home,
 Browse, Post a Game, Listing detail, Profile + Account settings,
 Blocked Users, Forum index, Forum Thread, Inbox/messaging,
 Notifications + Report modal, News feed, Content Page, Admin Dashboard,
-Admin Users, Admin Postings, and Admin Forum are done and merged.
-Admin Reports is next.
+Admin Users, Admin Postings, Admin Forum, and Admin Reports are done and
+merged. Admin News is next.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -2484,6 +2484,105 @@ submitting the form as a regular user rather than only asserting the
 `locked` column value.
 
 Full suite green (504 unit, 79 e2e), `npm run build` confirmed twice.
+
+## Admin Reports implemented (2026-07-15)
+
+`/admin/reports`'s main content area, all 37 tasks complete — the
+third moderation-queue feature, sitting above Admin Postings (017) and
+Admin Forum (018) as their unified triage aggregator. Stats (open
+reports/high priority/resolved today/avg response — the last two the
+first live read of a new `reports.resolvedAt`), a queue grouped by
+reported TARGET (`targetType`+`targetId`) rather than one row per
+report — a deliberate breadth-over-depth simplification versus 017's/
+018's own per-report drawers, since this feature's whole point is
+triage-at-a-glance across four different content kinds. Filterable
+All/Postings/Forum/Profiles/Messages, and a review drawer (one
+representative reporter's note + "+N others reported this," the
+reported content in context, a working "Open in [module] moderation
+→" cross-link to 017's/018's/016's own dedicated queues where one
+exists — never for messages, which have none) with Dismiss/Remove/
+Warn/Ban.
+
+For postings and forum targets, Remove/Warn/Ban all DELEGATE to 017's/
+018's existing resolution actions (via a new shared
+`classify-forum-target.ts` for the thread-vs-reply split, since a bare
+`targetType='forum'` report row doesn't say which table it belongs
+to) rather than reimplementing — guaranteeing a posting/thread/reply
+acted on from this feature behaves identically to acting from its own
+dedicated queue. Dismiss is a new, generic, any-target-type action
+this feature introduces (resolves every open report on a target
+without touching content or `moderationReviewedAt` — distinct from
+Approve, which neither 017 nor 018 has an equivalent to).
+
+Profiles and messages have no prior dedicated queue, so this feature
+is their first real mover: a new `messages.removedAt` (with a bounded
+amendment to Inbox's 011 conversation-view query excluding it) and
+Warn/Ban write directly to the generalized `warnings` table with
+`targetType='message'` or `null` (a profile report carries no separate
+content id beyond the account itself — "Remove content" is never
+offered for one, same ADR-0005-consistent Ban-only precedent as Admin
+Users/016). "Total reports" (the drawer's owner card) is a computed,
+all-time, cross-source aggregate — direct profile reports plus every
+report against any posting/thread/reply/message the user authored —
+never a maintained counter, computed via parallel COUNT queries rather
+than one nested SQL subquery (matching this codebase's established
+style).
+
+Two small, bounded, single-place retroactive fixes ripple to every
+moderation feature at once: 017's and 018's resolve actions now also
+set `reports.resolvedAt` alongside `status` (one extra field in an
+already-existing UPDATE, no logic change), and the shared
+`reason-severity.ts`'s `impersonation` mapping corrected from medium
+to high — this feature's own wireframe seed data treats a
+phishing-adjacent impersonation case as a real security risk, not a
+routine one. Both changes are immediately visible on 017's/018's own
+queues too, without touching either feature's files beyond that one
+line — exactly the payoff of having extracted the helper in the first
+place. `classify-forum-target.ts` was planned as an extraction from
+018's own inline thread-vs-reply classification (per its own
+research.md), but on inspection 018's `get-forum-queue.ts` never
+actually had one written as a standalone function — it sidesteps the
+need entirely by scanning threads and replies as two independent
+queries. Built fresh instead, used for real by `resolve-report-action.ts`
+and `ban-reported-user.ts`; the planned "refactor 018 to use it" task
+was a no-op given the code as it actually exists, not a deviation
+worth forcing.
+
+`requireRole("moderator")` gates the route and all three new Server
+Actions (dismiss/resolve/ban) independently — its seventh real
+consumer after Content Page (014), Admin Dashboard (015), Admin Users
+(016), Admin Postings (017), and Admin Forum (018) — so the real
+queue/drawer/resolution content can't be exercised by a real session
+yet (no `role` column until Admin Settings/024); every query/action is
+unit/integration-tested directly (534 unit tests total after this
+feature), and `e2e/admin-reports.spec.ts` covers the real, current
+access-denial behavior.
+
+**Visual QA pass found no product bugs** (matching Admin Postings' and
+Admin Forum's own clean passes): bypassed the role gate locally in
+`page.tsx`, `dismiss-report.ts`, `resolve-report-action.ts`,
+`ban-reported-user.ts`, and — since the cross-link navigates for real
+into them — Admin Forum's/Admin Postings'/Admin Users' own page gates
+too, plus the full transitive chain into `resolve-posting-report.ts`/
+`resolve-forum-report.ts`/`toggle-user-ban.ts`. Seeded reports across
+all four target types (including a multi-reported thread) and
+exercised grouping, the corrected severity mapping, filtering, the
+drawer's cross-link (clicked through to Admin Forum's own queue and
+confirmed the same content), and Dismiss/Remove/Warn/Ban end-to-end in
+a real browser. Two QA-script-only false alarms, not product bugs: a
+posting/thread's own title is deliberately never rendered on its queue
+card (matching Admin Forum's own established precedent), so the
+script's own locators needed to key off owner handles/snippets
+instead; and reusing one seed user as both a card's owner and a second
+report's reporter produced an ambiguous text-match, not a real
+duplicate-rendering bug. Confirmed via direct DB checks and the real
+Inbox page: removing a posting/message sets its `removedAt` and drops
+it from the queue, a removed message disappears from its real Inbox
+conversation while an untouched sibling message still shows, warning a
+profile writes a `null`-targeted `warnings` row, and banning from a
+message report both bans the account and removes that message.
+
+Full suite green (534 unit, 81 e2e), `npm run build` confirmed twice.
 
 ## Blockers
 

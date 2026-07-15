@@ -26,6 +26,9 @@ function actionLabel(resolution: "approve" | "remove" | "lock" | "warn", isThrea
 // title, only threads can be locked). Reports/content/warnings changes
 // happen in one transaction; the audit-log write happens right after --
 // a supplementary log, not core state (017's own precedent).
+// `reports.resolvedAt` (Admin Reports/019, retroactive) is set
+// alongside `status` in both branches so 019's own stats see this
+// resolution too, regardless of which feature's UI triggered it.
 export async function resolveForumReport(input: ResolveForumReportInput): Promise<ResolveForumReportResult> {
   await requireRole("moderator");
   const moderator = await requireAuth();
@@ -52,7 +55,7 @@ export async function resolveForumReport(input: ResolveForumReportInput): Promis
 
       await tx
         .update(reports)
-        .set({ status: "resolved" })
+        .set({ status: "resolved", resolvedAt: new Date() })
         .where(and(eq(reports.targetType, "forum"), eq(reports.targetId, targetId), eq(reports.status, "open")));
 
       if (resolution === "remove") {
@@ -84,7 +87,7 @@ export async function resolveForumReport(input: ResolveForumReportInput): Promis
 
     await tx
       .update(reports)
-      .set({ status: "resolved" })
+      .set({ status: "resolved", resolvedAt: new Date() })
       .where(and(eq(reports.targetType, "forum"), eq(reports.targetId, targetId), eq(reports.status, "open")));
 
     if (resolution === "remove") {

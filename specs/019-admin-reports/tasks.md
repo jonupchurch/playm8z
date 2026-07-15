@@ -26,7 +26,7 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm `src/lib/auth/require-role.ts` (`002`), `src/lib/actions/toggle-user-ban.ts` (`016`), `src/lib/actions/resolve-posting-report.ts` (`017`), `src/lib/actions/resolve-forum-report.ts` (`018`), and `src/lib/moderation/reason-severity.ts` (`018`) exist in the codebase before starting
+- [x] T001 Confirm `src/lib/auth/require-role.ts` (`002`), `src/lib/actions/toggle-user-ban.ts` (`016`), `src/lib/actions/resolve-posting-report.ts` (`017`), `src/lib/actions/resolve-forum-report.ts` (`018`), and `src/lib/moderation/reason-severity.ts` (`018`) exist in the codebase before starting
 
 ---
 
@@ -36,12 +36,12 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Add `reports.resolvedAt` and `messages.removedAt` in `src/db/schema.ts` (data-model.md)
-- [ ] T003 Generate and run the Drizzle migration for T002 — depends on T002
-- [ ] T004 [P] Extract shared `src/lib/moderation/classify-forum-target.ts` from `018`'s inline thread-vs-reply classification (research.md #7)
-- [ ] T005 [P] Correct `src/lib/moderation/reason-severity.ts` (`018`): `impersonation` → high severity (research.md #6)
-- [ ] T006 [P] Create `src/lib/validations/admin-reports.ts` — Zod schemas for the filter and the resolve/ban actions (data-model.md)
-- [ ] T007 Build `src/app/admin/reports/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
+- [x] T002 Add `reports.resolvedAt` and `messages.removedAt` in `src/db/schema.ts` (data-model.md)
+- [x] T003 Generate and run the Drizzle migration for T002 — depends on T002
+- [x] T004 [P] Extract shared `src/lib/moderation/classify-forum-target.ts` from `018`'s inline thread-vs-reply classification (research.md #7)
+- [x] T005 [P] Correct `src/lib/moderation/reason-severity.ts` (`018`): `impersonation` → high severity (research.md #6)
+- [x] T006 [P] Create `src/lib/validations/admin-reports.ts` — Zod schemas for the filter and the resolve/ban actions (data-model.md)
+- [x] T007 Build `src/app/admin/reports/page.tsx` shell, gated by `require-role.ts` (moderator minimum) — depends on T001
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -55,15 +55,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 1
 
-- [ ] T008 [P] [US1] Unit tests for `get-reports-queue.ts` (grouping by target, severity via the corrected shared helper, target-type filter) in `src/lib/admin/get-reports-queue.test.ts`
-- [ ] T009 [P] [US1] Unit tests for `admin-reports.ts`'s schemas in `src/lib/validations/admin-reports.test.ts`
-- [ ] T010 [US1] Playwright e2e covering stats, grouping, filters, computed severity, empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-reports.spec.ts`
+- [x] T008 [P] [US1] Unit tests for `get-reports-queue.ts` (grouping by target, severity via the corrected shared helper, target-type filter) in `src/lib/admin/get-reports-queue.test.ts`
+- [x] T009 [P] [US1] Unit tests for `admin-reports.ts`'s schemas in `src/lib/validations/admin-reports.test.ts`
+- [x] T010 [US1] Playwright e2e covering stats, grouping, filters, computed severity, empty state, and access-denial for a non-moderator, including an axe-core scan — creates `e2e/admin-reports.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Build `src/lib/admin/get-reports-queue.ts` (research.md #1 for grouping, #7 for forum classification, #8 for the filter/query pattern) — depends on T002, T004, T005, T006
-- [ ] T012 [US1] Build `src/components/admin/reports-queue.tsx` (stats cards, filter chips, grouped queue cards incl. target-type badge and "N reports" count) — depends on T011
-- [ ] T013 [US1] Wire `reports-queue.tsx` into `src/app/admin/reports/page.tsx` — depends on T007, T012
+- [x] T011 [US1] Build `src/lib/admin/get-reports-queue.ts` (research.md #1 for grouping, #7 for forum classification, #8 for the filter/query pattern) — depends on T002, T004, T005, T006
+- [x] T012 [US1] Build `src/components/admin/reports-queue.tsx` (stats cards, filter chips, grouped queue cards incl. target-type badge and "N reports" count) — depends on T011
+- [x] T013 [US1] Wire `reports-queue.tsx` into `src/app/admin/reports/page.tsx` — depends on T007, T012
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
@@ -77,18 +77,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Integration test for `dismiss-report.ts` (resolves every open report on a target, any target type, without touching content) in `src/lib/actions/dismiss-report.test.ts`
-- [ ] T015 [P] [US2] Integration test for `resolve-report-action.ts`'s `remove` path (delegates into `017`'s/`018`'s actions for posting/forum, producing an identical effect; sets `messages.removedAt` for a message target; not offered/rejected for a profile target; role-gate rejection) in `src/lib/actions/resolve-report-action.test.ts`
-- [ ] T016 [P] [US2] Unit/integration test for `get-report-review.ts` (representative reporter/"+N others," reported content, cross-source `getTotalReportsForUser` aggregate) in `src/lib/admin/get-report-review.test.ts`
-- [ ] T017 [US2] Add the drawer/dismiss/remove scenario to `e2e/admin-reports.spec.ts` — depends on T010 (same file)
+- [x] T014 [P] [US2] Integration test for `dismiss-report.ts` (resolves every open report on a target, any target type, without touching content) in `src/lib/actions/dismiss-report.test.ts`
+- [x] T015 [P] [US2] Integration test for `resolve-report-action.ts`'s `remove` path (delegates into `017`'s/`018`'s actions for posting/forum, producing an identical effect; sets `messages.removedAt` for a message target; not offered/rejected for a profile target; role-gate rejection) in `src/lib/actions/resolve-report-action.test.ts`
+- [x] T016 [P] [US2] Unit/integration test for `get-report-review.ts` (representative reporter/"+N others," reported content, cross-source `getTotalReportsForUser` aggregate) in `src/lib/admin/get-report-review.test.ts`
+- [x] T017 [US2] Add the drawer/dismiss/remove scenario to `e2e/admin-reports.spec.ts` — depends on T010 (same file)
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Build `src/lib/admin/get-report-review.ts` (representative reporter, reported content, owner's join info/prior-warnings, cross-source total-reports aggregate — research.md #3) — depends on T002
-- [ ] T019 [US2] Build `src/lib/actions/dismiss-report.ts` (generic, any target type) — depends on T006
-- [ ] T020 [US2] Build `src/lib/actions/resolve-report-action.ts`'s `remove` path (delegates to `017`/`018` via `classify-forum-target.ts` for posting/forum; sets `messages.removedAt` directly for message; rejects for user/profile) — depends on T002, T004, T006
-- [ ] T021 [US2] Build `src/components/admin/report-review-drawer.tsx` (dialog/panel, focus trap, representative-reporter block, reported content, "Open in [module] moderation →" link, owner card, Dismiss/Remove buttons) — depends on T018, T019, T020
-- [ ] T022 [US2] Wire `report-review-drawer.tsx` into `src/app/admin/reports/page.tsx`, opened via each card's Review action — depends on T013, T021
+- [x] T018 [US2] Build `src/lib/admin/get-report-review.ts` (representative reporter, reported content, owner's join info/prior-warnings, cross-source total-reports aggregate — research.md #3) — depends on T002
+- [x] T019 [US2] Build `src/lib/actions/dismiss-report.ts` (generic, any target type) — depends on T006
+- [x] T020 [US2] Build `src/lib/actions/resolve-report-action.ts`'s `remove` path (delegates to `017`/`018` via `classify-forum-target.ts` for posting/forum; sets `messages.removedAt` directly for message; rejects for user/profile) — depends on T002, T004, T006
+- [x] T021 [US2] Build `src/components/admin/report-review-drawer.tsx` (dialog/panel, focus trap, representative-reporter block, reported content, "Open in [module] moderation →" link, owner card, Dismiss/Remove buttons) — depends on T018, T019, T020
+- [x] T022 [US2] Wire `report-review-drawer.tsx` into `src/app/admin/reports/page.tsx`, opened via each card's Review action — depends on T013, T021
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -102,15 +102,15 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 ### Tests for User Story 3
 
-- [ ] T023 [P] [US3] Integration test for `resolve-report-action.ts`'s `warn` path (delegates into `017`/`018` for posting/forum; writes a `warnings` row directly for message/profile with the correct `targetType`) — extends `src/lib/actions/resolve-report-action.test.ts` (same file as T015)
-- [ ] T024 [P] [US3] Integration test for `ban-reported-user.ts` (delegates to `016`'s `toggle-user-ban.ts`; conditionally removes content for posting/forum/message targets; account-only for profile targets; role-gate rejection) in `src/lib/actions/ban-reported-user.test.ts`
-- [ ] T025 [US3] Add the warn/ban scenario to `e2e/admin-reports.spec.ts` — depends on T017 (same file)
+- [x] T023 [P] [US3] Integration test for `resolve-report-action.ts`'s `warn` path (delegates into `017`/`018` for posting/forum; writes a `warnings` row directly for message/profile with the correct `targetType`) — extends `src/lib/actions/resolve-report-action.test.ts` (same file as T015)
+- [x] T024 [P] [US3] Integration test for `ban-reported-user.ts` (delegates to `016`'s `toggle-user-ban.ts`; conditionally removes content for posting/forum/message targets; account-only for profile targets; role-gate rejection) in `src/lib/actions/ban-reported-user.test.ts`
+- [x] T025 [US3] Add the warn/ban scenario to `e2e/admin-reports.spec.ts` — depends on T017 (same file)
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Extend `resolve-report-action.ts` to support the `warn` path — depends on T020
-- [ ] T027 [US3] Build `src/lib/actions/ban-reported-user.ts` (calls `016`'s `toggle-user-ban.ts`; removes content via the same delegation as `remove` when the target isn't a profile) — depends on T020
-- [ ] T028 [US3] Wire Warn/Ban buttons into `report-review-drawer.tsx` — depends on T021, T026, T027
+- [x] T026 [US3] Extend `resolve-report-action.ts` to support the `warn` path — depends on T020
+- [x] T027 [US3] Build `src/lib/actions/ban-reported-user.ts` (calls `016`'s `toggle-user-ban.ts`; removes content via the same delegation as `remove` when the target isn't a profile) — depends on T020
+- [x] T028 [US3] Wire Warn/Ban buttons into `report-review-drawer.tsx` — depends on T021, T026, T027
 
 **Checkpoint**: All three user stories independently functional.
 
@@ -120,8 +120,8 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: A small, single-purpose addition to `011`'s already-merged conversation view. Independent of Phases 3-5 (only needs T002 from Foundational).
 
-- [ ] T029 [P] Amend `src/app/inbox/[conversationId]/page.tsx` (`011-inbox-messaging`): add `AND removedAt IS NULL` to its inline messages query — depends on T002
-- [ ] T030 [P] Extend `011`'s conversation-view test to cover T029's new behavior — depends on T029
+- [x] T029 [P] Amend `src/app/inbox/[conversationId]/page.tsx` (`011-inbox-messaging`): add `AND removedAt IS NULL` to its inline messages query — depends on T002
+- [x] T030 [P] Extend `011`'s conversation-view test to cover T029's new behavior — depends on T029
 
 ---
 
@@ -129,18 +129,18 @@ Single Next.js project — `src/`, `e2e/` at repository root, per plan.md's Proj
 
 **Purpose**: Small, single-purpose fixes to `017`'s and `018`'s already-merged files. Independent of Phases 3-6 (only needs T002/T004/T005 from Foundational).
 
-- [ ] T031 [P] Amend `src/lib/actions/resolve-posting-report.ts` (`017`): set `resolvedAt = now()` alongside its existing `status = 'resolved'` write — depends on T002
-- [ ] T032 [P] Amend `src/lib/actions/resolve-forum-report.ts` (`018`): same `resolvedAt` addition — depends on T002
-- [ ] T033 [P] Amend `src/lib/admin/get-forum-queue.ts` (`018`): import the shared `classify-forum-target.ts` instead of its own inline classification — depends on T004
-- [ ] T034 [P] Extend `017`'s `resolve-posting-report.test.ts`, `018`'s `resolve-forum-report.test.ts` and `get-forum-queue.test.ts`, and `018`'s `reason-severity.test.ts` to cover T031-T033 and T005's new behavior — depends on T031, T032, T033, T005
+- [x] T031 [P] Amend `src/lib/actions/resolve-posting-report.ts` (`017`): set `resolvedAt = now()` alongside its existing `status = 'resolved'` write — depends on T002
+- [x] T032 [P] Amend `src/lib/actions/resolve-forum-report.ts` (`018`): same `resolvedAt` addition — depends on T002
+- [x] T033 [P] Amend `src/lib/admin/get-forum-queue.ts` (`018`): import the shared `classify-forum-target.ts` instead of its own inline classification — depends on T004
+- [x] T034 [P] Extend `017`'s `resolve-posting-report.test.ts`, `018`'s `resolve-forum-report.test.ts` and `get-forum-queue.test.ts`, and `018`'s `reason-severity.test.ts` to cover T031-T033 and T005's new behavior — depends on T031, T032, T033, T005
 
 ---
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T035 Confirm `next build` succeeds locally and CI stays green with the new gated route, four Server Actions (dismiss/remove/warn/ban, the latter three delegating across features), the extended schema, and all amended files
-- [ ] T036 Manually run quickstart.md Scenarios 1-12 end to end against local dev and confirm each passes
-- [ ] T037 [P] Update `docs/feature-list.md`, marking Admin Reports' spec/plan/tasks as complete
+- [x] T035 Confirm `next build` succeeds locally and CI stays green with the new gated route, four Server Actions (dismiss/remove/warn/ban, the latter three delegating across features), the extended schema, and all amended files
+- [x] T036 Manually run quickstart.md Scenarios 1-12 end to end against local dev and confirm each passes
+- [x] T037 [P] Update `docs/feature-list.md`, marking Admin Reports' spec/plan/tasks as complete
 
 ---
 

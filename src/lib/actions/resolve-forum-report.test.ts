@@ -100,8 +100,10 @@ describe("resolveForumReport", () => {
     const result = await resolveForumReport({ targetType: "forumThread", targetId: threadId, resolution: "approve" });
     expect(result).toEqual({ success: true });
 
-    const [reportRow] = await db.select({ status: reports.status }).from(reports).where(eq(reports.targetId, threadId));
+    const [reportRow] = await db.select({ status: reports.status, resolvedAt: reports.resolvedAt }).from(reports).where(eq(reports.targetId, threadId));
     expect(reportRow.status).toBe("resolved");
+    // Admin Reports (019, retroactive) -- set alongside status.
+    expect(reportRow.resolvedAt).not.toBeNull();
 
     const [threadRow] = await db
       .select({ removedAt: forumThreads.removedAt, moderationReviewedAt: forumThreads.moderationReviewedAt })
@@ -128,8 +130,11 @@ describe("resolveForumReport", () => {
     const result = await resolveForumReport({ targetType: "forumReply", targetId: replyId, resolution: "remove" });
     expect(result).toEqual({ success: true });
 
-    const [reportRow] = await db.select({ status: reports.status }).from(reports).where(eq(reports.targetId, replyId));
+    const [reportRow] = await db.select({ status: reports.status, resolvedAt: reports.resolvedAt }).from(reports).where(eq(reports.targetId, replyId));
     expect(reportRow.status).toBe("resolved");
+    // Admin Reports (019, retroactive) -- the reply branch's own
+    // separate UPDATE statement also gets it.
+    expect(reportRow.resolvedAt).not.toBeNull();
 
     const [replyRow] = await db
       .select({ removedAt: forumReplies.removedAt, moderationReviewedAt: forumReplies.moderationReviewedAt })

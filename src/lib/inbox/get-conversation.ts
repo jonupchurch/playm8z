@@ -1,4 +1,4 @@
-import { asc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, conversations, messages, postings, users } from "@/db/schema";
 
@@ -70,7 +70,11 @@ export async function getConversationOrRequest(
       })
       .from(messages)
       .leftJoin(users, eq(messages.senderId, users.id))
-      .where(eq(messages.conversationId, conversation.id))
+      // Admin Reports (019) -- excludes messages removed via that
+      // feature's "Remove content" (research.md #4), same soft-hide
+      // exclusion pattern as postings'/forumThreads'/forumReplies' own
+      // removedAt-filtered queries. Never un-removed.
+      .where(and(eq(messages.conversationId, conversation.id), isNull(messages.removedAt)))
       .orderBy(asc(messages.createdAt));
 
     return {

@@ -2,15 +2,19 @@ import { describe, expect, it } from "vitest";
 import { computeSeverity, reasonLabel, reportReasonSeverity } from "./reason-severity";
 
 describe("reportReasonSeverity", () => {
-  it("ranks harassment and underage as high", () => {
+  it("ranks harassment, underage, and impersonation as high", () => {
     expect(reportReasonSeverity("harassment")).toBe("high");
     expect(reportReasonSeverity("underage")).toBe("high");
+    // Admin Reports (019, research.md #6): corrected from 018's original
+    // medium -- a fake-staff-member phishing scenario is a real security
+    // risk, and this single-place fix flows to 017/018's own severity
+    // display too.
+    expect(reportReasonSeverity("impersonation")).toBe("high");
   });
 
-  it("ranks spam, inappropriate, and impersonation as med", () => {
+  it("ranks spam and inappropriate as med", () => {
     expect(reportReasonSeverity("spam")).toBe("med");
     expect(reportReasonSeverity("inappropriate")).toBe("med");
-    expect(reportReasonSeverity("impersonation")).toBe("med");
   });
 
   it("ranks other as low", () => {

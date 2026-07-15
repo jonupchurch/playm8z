@@ -4,20 +4,26 @@ import type { AutoFlagReason } from "./auto-flag-rules";
 export type Severity = "high" | "med" | "low";
 
 // Shared across every moderation-queue feature (Admin Postings/017,
-// Admin Forum/018) -- extracted from 017's own inline copy the moment
-// a second real consumer (this feature) needed the identical mapping
-// (research.md #2). The canonical `reports.reason` taxonomy (012):
-// underage/harassment -> high, impersonation/inappropriate/spam -> med,
-// other -> low (a catch-all with no inherent severity signal). Neither
+// Admin Forum/018, Admin Reports/019) -- extracted from 017's own
+// inline copy the moment a second real consumer (018) needed the
+// identical mapping (research.md #2). The canonical `reports.reason`
+// taxonomy (012): underage/harassment/impersonation -> high,
+// inappropriate/spam -> med, other -> low (a catch-all with no
+// inherent severity signal). `impersonation` was originally assigned
+// medium by 018; Admin Reports (019, research.md #6) corrects it to
+// high here -- a fake-staff-member phishing-for-passwords scenario is
+// a real security risk, not a routine flavor-text case -- a single,
+// bounded fix that immediately and correctly changes severity display
+// in 017/018 too, without touching either feature's own files. Neither
 // moderation wireframe's flavor-text reason labels ("Scam / phishing,"
 // "Off-topic") correspond to a real taxonomy value -- this feature
 // never stores or displays those exact strings.
 const REPORT_REASON_SEVERITY: Record<ReportReason, Severity> = {
   harassment: "high",
   underage: "high",
+  impersonation: "high",
   spam: "med",
   inappropriate: "med",
-  impersonation: "med",
   other: "low",
 };
 

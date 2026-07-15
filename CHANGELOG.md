@@ -1802,3 +1802,63 @@ may begin on any/all of them per the constitution (v1.0.0).
   a visible error (confirmed by actually submitting the form as a
   regular user). Full suite green (504 unit, 79 e2e), `npm run build`
   confirmed twice.
+
+## [Unreleased] (cont. 25)
+
+### Added
+- Admin Reports (`specs/019-admin-reports/`, branch `019-admin-reports`
+  merged to `main`) — all 37 tasks complete: `/admin/reports`'s unified
+  triage queue across postings, forum, profiles, and messages. Stats
+  (open reports/high priority/resolved today/avg response — the last
+  two the first live read of a new `reports.resolvedAt`), a queue
+  grouped by reported target (not one row per report, unlike Admin
+  Postings'/Admin Forum's own queues), filterable All/Postings/Forum/
+  Profiles/Messages, and a review drawer (representative reporter +
+  "+N others reported this," reported content in context, an "Open in
+  [module] moderation →" cross-link where a dedicated queue exists)
+  with Dismiss (new, generic, any target type)/Remove/Warn/Ban.
+  Remove/Warn/Ban for postings and forum targets DELEGATE to `017`'s/
+  `018`'s existing resolution actions (via a new shared
+  `classify-forum-target.ts`) rather than reimplementing. Profiles and
+  messages are this feature's first real mover: new `messages.removedAt`
+  (with a bounded amendment to Inbox's `011` conversation-view query)
+  and direct `warnings` writes with `targetType='message'` or `null`.
+  "Total reports" (owner card) is a computed, all-time, cross-source
+  aggregate, never a maintained counter. `requireRole("moderator")`
+  gates the route and all three new Server Actions independently — the
+  seventh real consumer after Content Page (014), Admin Dashboard
+  (015), Admin Users (016), Admin Postings (017), and Admin Forum
+  (018) — so the real queue/drawer/resolution content can't be
+  exercised by a real session yet (no `role` column until Admin
+  Settings/024); every query/action is unit-tested directly, and e2e
+  covers the real, current access-denial behavior.
+
+### Changed
+- Retroactively added `reports.resolvedAt`, set by `017`'s
+  `resolve-posting-report.ts` and `018`'s `resolve-forum-report.ts`
+  alongside their existing `status = 'resolved'` write — a one-line
+  addition to an already-correct UPDATE, needed for this feature's own
+  "resolved today"/"avg response" stats.
+- Corrected the shared `reason-severity.ts`'s `impersonation` mapping
+  from medium (018's original assignment) to high — a
+  phishing-adjacent impersonation case is a real security risk, per
+  this feature's own wireframe seed data. Immediately and correctly
+  changes severity display on `017`'s/`018`'s own queues too.
+
+### Verified
+- Visual QA (temporary local role-gate bypass across `page.tsx`,
+  `dismiss-report.ts`, `resolve-report-action.ts`,
+  `ban-reported-user.ts`, and — since the cross-link navigates for
+  real into them — Admin Forum's/Admin Postings'/Admin Users' own page
+  gates too, plus the full transitive chain into
+  `resolve-posting-report.ts`/`resolve-forum-report.ts`/
+  `toggle-user-ban.ts`, fully reverted before commit) exercised
+  grouping, the corrected severity mapping, filtering, the drawer's
+  cross-link, and Dismiss/Remove/Warn/Ban end-to-end with no product
+  bugs found. Confirmed via direct DB checks and the real Inbox page:
+  removing a posting/message sets its `removedAt` and drops it from
+  the queue, a removed message disappears from its real Inbox
+  conversation while an untouched sibling message still shows, and
+  banning from a message report both bans the account and removes that
+  message. Full suite green (534 unit, 81 e2e), `npm run build`
+  confirmed twice.

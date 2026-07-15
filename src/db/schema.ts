@@ -264,6 +264,12 @@ export const reports = pgTable("reports", {
   details: text("details"),
   status: text("status").notNull().default("open"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Admin Reports (019) -- retroactively added so its "resolved
+  // today"/"avg response" stats have a real timestamp to read; 017's
+  // and 018's own resolve actions gain a one-line `resolvedAt: now()`
+  // alongside their existing `status = 'resolved'` write (research.md
+  // #5). Never cleared once set.
+  resolvedAt: timestamp("resolvedAt", { mode: "date" }),
 });
 
 // Forum index (009) -- this feature's first writer. `categoryId` is
@@ -419,6 +425,12 @@ export const messages = pgTable("messages", {
   type: text("type").notNull().default("text"),
   body: text("body").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  // Admin Reports (019) -- this feature's own moderation-hide capability
+  // (research.md #4); no prior feature needed message moderation.
+  // Inbox's own conversation-view query excludes rows where this is
+  // set (same ADR-0005-consistent pattern as postings/forumThreads/
+  // forumReplies' own `removedAt`). Never cleared once set.
+  removedAt: timestamp("removedAt", { mode: "date" }),
 });
 
 // Notifications + Report modal (012) -- this feature's only writer.

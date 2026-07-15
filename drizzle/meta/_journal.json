@@ -155,6 +155,13 @@
       "when": 1784070397914,
       "tag": "0021_warnings_drop_posting_id",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1784075272447,
+      "tag": "0022_admin_reports_schema",
+      "breakpoints": true
     }
   ]
 }

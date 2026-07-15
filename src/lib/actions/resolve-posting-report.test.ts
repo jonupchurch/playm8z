@@ -106,8 +106,10 @@ describe("resolvePostingReport", () => {
     const result = await resolvePostingReport({ postingId, resolution: "approve" });
     expect(result).toEqual({ success: true });
 
-    const [reportRow] = await db.select({ status: reports.status }).from(reports).where(eq(reports.targetId, postingId));
+    const [reportRow] = await db.select({ status: reports.status, resolvedAt: reports.resolvedAt }).from(reports).where(eq(reports.targetId, postingId));
     expect(reportRow.status).toBe("resolved");
+    // Admin Reports (019, retroactive) -- set alongside status.
+    expect(reportRow.resolvedAt).not.toBeNull();
 
     const [postingRow] = await db
       .select({ removedAt: postings.removedAt, moderationReviewedAt: postings.moderationReviewedAt })
