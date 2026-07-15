@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import type { NewsPostFilter } from "@/lib/validations/admin-news";
 import type { AdminNewsPost } from "@/lib/admin/get-news-posts";
 
@@ -110,7 +111,7 @@ export function NewsPostList({ posts }: { posts: AdminNewsPost[] }) {
             >
               <div
                 className="relative h-11 w-11 shrink-0 rounded-[11px]"
-                style={{ background: post.cover ?? `linear-gradient(135deg, ${newsCategoryColor(post.category)}, var(--color-accent-2))` }}
+                style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${newsCategoryColor(post.category)}, var(--color-accent-2))`)}
               >
                 {post.featured && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-surface bg-[#ffb000] text-[8px]">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import type { NewsPostRow } from "@/lib/news/search-news";
 
 function formatDate(date: Date) {
@@ -21,7 +22,7 @@ export function FeaturedPost({ post }: { post: NewsPostRow }) {
     >
       <div
         className="relative min-h-60"
-        style={{ background: post.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
+        style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
       >
         <span className="absolute top-4 left-4 rounded-md bg-white/90 px-2.5 py-1 font-mono text-[10px] font-bold text-bg">
           📌 Featured

@@ -15,7 +15,9 @@ full profile in a new tab) shipped as exactly that kind of iteration,
 a small enhancement to already-shipped feature 016. Feature 28
 (Admin-only AI writing assist) is this project's first genuinely new
 top-level feature since the original 26 — this project's first
-external-AI-provider integration.
+external-AI-provider integration. Feature 29 (real image upload for
+News covers) is this project's first user-uploaded-file capability,
+via Vercel Blob.
 **Last updated**: 2026-07-15
 
 ## Where things stand
@@ -3433,6 +3435,75 @@ confirming the actual wiring works beyond what the mocks alone prove.
 
 Full suite green (updated unit count reflecting the new tests, full
 142+ e2e), typecheck and lint clean.
+
+## Real image upload for News post covers implemented (2026-07-15) — 29th feature, first user-uploaded-file capability
+
+The user pointed at a screenshot of the Admin News editor's Cover
+section: four gradient color swatches, no way to pick a real image.
+Checked before building: feature 020's own spec explicitly scoped this
+out ("Replace image" stays decorative, "no real imagery yet") — this
+feature deliberately reverses that decision for just this one field,
+per the user's ask.
+
+Went through the full spec/plan/tasks cycle
+(`specs/029-news-cover-image-upload/`, branch
+`029-news-cover-image-upload`), all 17 tasks complete. **ADR 0008**
+records the storage choice: Vercel Blob (`access: "public"`) over
+storing bytes in Postgres, reusing the existing `newsPosts.cover` text
+column as-is — no migration. A new shared `newsCoverStyle()` helper
+distinguishes a gradient CSS string from a real image URL by shape
+alone (a value starting with `http` is an image) and was adopted by
+all 6 real consumers that show a News post's cover: the feed cards,
+the featured post, the article's own page, related-article lists,
+Profile's Saved tab, and the admin list thumbnail — a real DRY
+consolidation of six previously-duplicated inline styles. Gated at
+`moderator` (matching the rest of the Admin News editor, not
+admin-only like feature 028's AI assist, since this is a normal
+editing action). `upload-news-cover-image.ts` validates file type
+(JPEG/PNG/WebP) and a 5MB size cap with plain checks (not a Zod-on-File
+pattern) before ever calling Blob, leaving the existing draft
+completely untouched on any rejection.
+
+**A real Setup-phase gap, found and closed**: no Vercel Blob store
+existed on this project yet (`vercel blob list` confirmed
+`BLOB_STORE_ID` unset). Provisioned one via `vercel blob create-store
+playm8z-news-covers --access public --yes`, which — again — triggered
+a full local `env pull` as a side effect, wiping `AUTH_SECRET`/
+`AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET`/`AI_GATEWAY_API_KEY` from
+`.env.local` and replacing `DATABASE_URL` with Neon's, the identical
+risk already documented from the earlier Neon Marketplace `env pull`
+incident — just triggered by a completely different-sounding command
+this time (`create-store`, not `integration add` or `env pull`
+themselves). Restored immediately since the correct local values were
+still in this session's own context; no real secret was lost, but this
+confirms the risk is generic to `--yes`/non-interactive Vercel CLI
+flags broadly, not specific to any one subcommand. `BLOB_READ_WRITE_TOKEN`
+itself was a welcome side effect of the same command — already synced
+to Production/Preview/Development on Vercel with no extra step needed
+this time (unlike `AI_GATEWAY_API_KEY`, which needed a manual
+`vercel env add` per environment).
+
+Same e2e philosophy as feature 028: `e2e/admin-news.spec.ts` proves
+only that a real seeded moderator sees the upload control (and a
+non-moderator doesn't, via the page's existing gate) — never a real
+upload triggered in CI, since Playwright can't intercept the
+server-side Blob write any more than it could intercept the AI Gateway
+call, and this project isn't adding a new secret to
+`.github/workflows/ci.yml` for what this feature needs to prove.
+Unlike an LLM call, a real Blob write is cheap/free-tier/deterministic,
+so the real end-to-end round trip (upload a real PNG → get back a
+public URL → fetch it and confirm `image/png` content-type) was
+verified once, live, outside the test suite, then cleaned up
+(`del()`). The Foundational render-helper adoption was checkpointed by
+running the full 150-test e2e suite *before* the upload capability
+itself was built, to prove zero visual regression for already-
+published gradient-only posts.
+
+Full Vitest coverage of `upload-news-cover-image.ts` (moderator gate
+via a real seeded role, file-type/size rejection before any Blob call,
+`put()` called with `access: "public"`) and `newsCoverStyle()`'s three
+branches (gradient/image/null-fallback), `@vercel/blob` mocked
+throughout. Full suite green, typecheck and lint clean.
 
 ## Blockers
 

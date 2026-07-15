@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import type { NewsPostRow } from "@/lib/news/search-news";
 
 function formatDate(date: Date) {
@@ -19,7 +20,7 @@ export function NewsPostCard({ post }: { post: NewsPostRow }) {
     >
       <div
         className="relative h-32.5"
-        style={{ background: post.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
+        style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
       >
         {post.upcoming && (
           <span className="absolute top-3 left-3 rounded-md bg-info px-2.5 py-1 font-mono text-[10px] font-bold text-bg">

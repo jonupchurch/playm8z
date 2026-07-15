@@ -106,3 +106,32 @@ test.describe("AI writing assist -- admin-only gate (028, quickstart.md)", () =>
     await expect(page.getByRole("button", { name: "Improve / rewrite", exact: true })).not.toBeVisible();
   });
 });
+
+test.describe("Cover image upload (029, quickstart.md)", () => {
+  const modEmail = `e2e-admin-news-cover-mod-${runId}@example.com`;
+
+  test.beforeAll(async () => {
+    const passwordHash = await hash(password, 10);
+    await db.insert(users).values({
+      email: modEmail,
+      passwordHash,
+      handle: `e2eadminnewscover${runId}`,
+      emailVerified: new Date(),
+      role: "moderator",
+    });
+  });
+
+  test.afterAll(async () => {
+    await db.delete(users).where(eq(users.email, modEmail));
+  });
+
+  test("a moderator sees the 'Upload image' control in the Cover section, alongside the gradient swatches", async ({
+    page,
+  }) => {
+    await login(page, modEmail);
+    await page.goto("/admin/news");
+
+    await expect(page.getByText("Upload image", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Use cover color/ }).first()).toBeVisible();
+  });
+});

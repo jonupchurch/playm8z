@@ -5,6 +5,7 @@ import { newsPosts, postings, savedListings, savedNewsPosts, users } from "@/db/
 import { requireAuth } from "@/lib/auth/require-auth";
 import { AVATAR_COLORS } from "@/lib/validations/onboarding";
 import { newsCategoryColor } from "@/lib/validations/news";
+import { newsCoverStyle } from "@/lib/news/cover-style";
 import { UnsaveButton } from "@/components/profile/unsave-button";
 import { UnsaveNewsPostButton } from "@/components/profile/unsave-news-post-button";
 
@@ -135,7 +136,7 @@ export default async function SavedListingsPage() {
               <div key={article.newsPostId} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface">
                 <div
                   className="h-24"
-                  style={{ background: article.cover ?? `linear-gradient(135deg, ${color}, var(--color-accent-2))` }}
+                  style={newsCoverStyle(article.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
                 />
                 <div className="flex flex-1 flex-col p-4.5">
                   <div className="mb-2 flex items-center justify-between gap-2">
