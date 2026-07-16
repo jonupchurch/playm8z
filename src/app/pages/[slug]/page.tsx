@@ -37,6 +37,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             initialTitle={page.title}
             initialBlocks={page.blocks}
             initialStatus={page.status}
+            system={page.system}
             updatedAt={page.updatedAt.toISOString()}
             isAdmin={role === "admin"}
           />

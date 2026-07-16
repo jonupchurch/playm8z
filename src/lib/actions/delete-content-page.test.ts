@@ -21,9 +21,11 @@ function fakeSession(email: string) {
 
 const runId = crypto.randomUUID().slice(0, 8);
 const customSlug = `delete-cp-custom-${runId}`;
+const draftSlug = `delete-cp-draft-${runId}`;
 const systemSlug = `delete-cp-system-${runId}`;
 const moderatorEmail = `delete-content-page-mod-${runId}@example.com`;
 let customId: string;
+let draftId: string;
 let systemId: string;
 let moderatorId: string;
 
@@ -33,6 +35,12 @@ beforeAll(async () => {
     .values({ slug: customSlug, title: "Custom page", status: "published", system: false })
     .returning({ id: contentPages.id });
   customId = custom.id;
+
+  const [draft] = await db
+    .insert(contentPages)
+    .values({ slug: draftSlug, title: "Draft page", status: "draft", system: false })
+    .returning({ id: contentPages.id });
+  draftId = draft.id;
 
   const [system] = await db
     .insert(contentPages)
@@ -50,6 +58,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await db.delete(contentPages).where(eq(contentPages.slug, customSlug));
+  await db.delete(contentPages).where(eq(contentPages.slug, draftSlug));
   await db.delete(contentPages).where(eq(contentPages.slug, systemSlug));
   await db.delete(auditEntries).where(eq(auditEntries.actorId, moderatorId));
   await db.delete(users).where(eq(users.id, moderatorId));
@@ -66,30 +75,45 @@ describe("deleteContentPage", () => {
     expect(row.status).toBe("published");
   });
 
-  it("sets status to draft for a custom page, never removing the row", async () => {
+  it("removes the row outright for a custom page (ADR 0005's 2026-07-16 amendment)", async () => {
     mockedRequireRole.mockResolvedValueOnce(undefined);
     const result = await deleteContentPage({ pageId: customId });
     expect(result).toEqual({ success: true });
 
-    const [row] = await db.select().from(contentPages).where(eq(contentPages.id, customId));
-    expect(row).toBeDefined();
-    expect(row.status).toBe("draft");
+    const rows = await db.select().from(contentPages).where(eq(contentPages.id, customId));
+    expect(rows).toHaveLength(0);
 
-    // FR-007 (025's own gap fix, research.md #2): this feature never
-    // logged before -- now every delete logs a content-category entry.
+    // The amendment's core claim: auditEntries denormalises targetLabel
+    // rather than holding a foreign key, so the record of the deletion
+    // outlives the page it describes. If this ever regressed to a real
+    // FK, the delete above would throw instead.
     const [entry] = await db.select().from(auditEntries).where(eq(auditEntries.targetId, customId));
     expect(entry.actorId).toBe(moderatorId);
     expect(entry.action).toBe("deleted a content page");
     expect(entry.category).toBe("content");
+    expect(entry.targetLabel).toBe("Custom page");
   });
 
-  it("rejects a system page target, leaving its status unchanged", async () => {
+  // The reported bug: Delete used to set status='draft', so on a page
+  // that was already a draft it changed nothing at all and reported
+  // success -- junk drafts could never be cleared.
+  it("removes an already-draft page rather than silently no-opping", async () => {
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const result = await deleteContentPage({ pageId: draftId });
+    expect(result).toEqual({ success: true });
+
+    const rows = await db.select().from(contentPages).where(eq(contentPages.id, draftId));
+    expect(rows).toHaveLength(0);
+  });
+
+  it("rejects a system page target, leaving the row intact", async () => {
     mockedRequireRole.mockResolvedValueOnce(undefined);
     const result = await deleteContentPage({ pageId: systemId });
     expect(result.success).toBe(false);
 
-    const [row] = await db.select().from(contentPages).where(eq(contentPages.id, systemId));
-    expect(row.status).toBe("published");
+    const rows = await db.select().from(contentPages).where(eq(contentPages.id, systemId));
+    expect(rows).toHaveLength(1);
+    expect(rows[0].status).toBe("published");
   });
 
   it("rejects an invalid pageId", async () => {

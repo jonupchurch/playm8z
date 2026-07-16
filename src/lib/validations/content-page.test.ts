@@ -31,31 +31,47 @@ describe("blockSchema", () => {
 });
 
 describe("saveContentPageSchema", () => {
-  it("accepts a valid title + blocks array", () => {
+  it("accepts a valid title + slug + blocks array", () => {
     const result = saveContentPageSchema.parse({
       title: "Community Guidelines",
+      slug: "community-guidelines",
       blocks: [{ type: "p", text: "Hello" }],
     });
     expect(result.title).toBe("Community Guidelines");
+    expect(result.slug).toBe("community-guidelines");
     expect(result.blocks).toHaveLength(1);
   });
 
   it("accepts an empty blocks array", () => {
-    expect(saveContentPageSchema.parse({ title: "Empty page", blocks: [] }).blocks).toEqual([]);
+    expect(saveContentPageSchema.parse({ title: "Empty page", slug: "empty-page", blocks: [] }).blocks).toEqual([]);
   });
 
   it("rejects an empty title", () => {
-    expect(() => saveContentPageSchema.parse({ title: "", blocks: [] })).toThrow();
+    expect(() => saveContentPageSchema.parse({ title: "", slug: "x", blocks: [] })).toThrow();
   });
 
+  it("normalises a slug's case and surrounding whitespace", () => {
+    expect(saveContentPageSchema.parse({ title: "T", slug: "  House-Rules  ", blocks: [] }).slug).toBe("house-rules");
+  });
+
+  it.each([["/leading-slash"], ["has spaces"], ["path/separator"], ["trailing-"], ["-leading"], ["double--hyphen"], [""]])(
+    "rejects the slug %j",
+    (badSlug) => {
+      expect(() => saveContentPageSchema.parse({ title: "T", slug: badSlug, blocks: [] })).toThrow();
+    },
+  );
+
+  // These two carry a valid slug on purpose: without one they'd throw
+  // for the missing field rather than the block violation they name, and
+  // pass for the wrong reason.
   it("rejects more than 100 blocks", () => {
     const blocks = Array.from({ length: 101 }, () => ({ type: "divider" as const }));
-    expect(() => saveContentPageSchema.parse({ title: "Too many blocks", blocks })).toThrow();
+    expect(() => saveContentPageSchema.parse({ title: "Too many blocks", slug: "too-many", blocks })).toThrow();
   });
 
   it("rejects a malformed block within the array", () => {
     expect(() =>
-      saveContentPageSchema.parse({ title: "Bad block", blocks: [{ type: "p", text: "" }] }),
+      saveContentPageSchema.parse({ title: "Bad block", slug: "bad-block", blocks: [{ type: "p", text: "" }] }),
     ).toThrow();
   });
 });

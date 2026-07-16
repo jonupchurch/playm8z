@@ -1,6 +1,7 @@
 # 0005. Never hard-delete — disable/soft-delete only
 
-**Status**: Accepted (2026-07-12)
+**Status**: Accepted (2026-07-12), amended (2026-07-16) — see
+[Amendment: ContentPage is exempt](#amendment-2026-07-16--contentpage-is-exempt)
 
 ## Context
 
@@ -41,3 +42,52 @@ applies platform-wide, not just to `User`.
   data supports moderation review, audit, and data-integrity (no orphaned
   foreign keys), at the cost of needing disable-aware queries everywhere
   and data that never actually shrinks.
+
+## Amendment (2026-07-16) — `ContentPage` is exempt
+
+**`ContentPage` rows are hard-deleted.** Admin → Content pages' Delete
+action removes the row outright. This overrides the Decision above for
+this one table; every other table listed there is unchanged.
+
+### Why
+
+The original soft-delete reading was implemented as "Delete sets
+`status = 'draft'`", which in practice meant:
+
+- Delete was indistinguishable from the **Unpublish** button rendered
+  directly beside it — the same state change, under two names.
+- Delete on an **already-draft** page was a silent no-op. The admin
+  clicked it, the confirm resolved, and nothing happened. Junk drafts
+  (`untitled-page`, `untitled-page-2`, …) accumulated with no way to
+  clear them.
+
+A page's "disabled" state already exists and is already reachable:
+`status = 'draft'` unpublishes it. So the soft-delete slot was taken,
+leaving Delete with no meaning of its own.
+
+### Why the ADR's stated concerns don't apply here
+
+The Consequences above give two reasons for the rule; neither binds for
+this table:
+
+- *"nothing should silently 404 due to a foreign key pointing at a
+  hard-deleted row"* — nothing holds a foreign key to `contentPages`.
+  Verified against `schema.ts`: no `.references(() => contentPages)`
+  exists.
+- *"retained data supports moderation review, audit"* — `auditLog`
+  denormalises `targetType`/`targetId`/`targetLabel` as plain columns
+  rather than a foreign key, so the "deleted a content page" entry (with
+  the page's title) survives the row's removal. The audit trail is intact.
+
+A content page is also authored admin content, not user-generated
+content: there's no user history, moderation queue, or cross-table
+reference hanging off it that retention would protect.
+
+### Consequences
+
+- A deleted page's slug is freed and can be reused immediately.
+- Deletion is irreversible — there's no restore. Unpublish remains the
+  reversible option, and is what the UI steers toward for anything
+  intended to come back.
+- System pages (`system = true`) are still never deletable, enforced both
+  in the UI and in `deleteContentPage` itself.
