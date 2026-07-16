@@ -26,7 +26,7 @@ export default async function NewsPage({
   const isEmpty = posts.length === 0 && !featured;
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div
         className="border-b border-border"
         style={{ backgroundImage: "radial-gradient(circle at 25% -40%, rgba(255,107,26,0.1), transparent 60%)" }}

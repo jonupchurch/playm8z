@@ -22,7 +22,7 @@ export default async function AdminAuditLogPage({
   const { groups, actors, hasMore } = await getAuditLog(filters);
 
   return (
-    <main className="min-h-screen bg-bg px-8 py-9 text-text">
+    <main className="grow bg-bg px-8 py-9 text-text">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>

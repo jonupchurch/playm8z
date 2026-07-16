@@ -24,7 +24,7 @@ export default async function NotificationsPage() {
   const items = await getNotifications(user.id);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <NotificationsList items={items} />
     </main>
   );

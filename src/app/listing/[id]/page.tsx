@@ -150,7 +150,7 @@ export default async function ListingDetailPage({
     AVATAR_COLORS[0].gradient;
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div className="mx-auto max-w-300 px-8 py-6">
         <nav className="mb-4.5 font-mono text-[11px] text-text-dim" aria-label="Breadcrumb">
           <Link href="/browse" className="text-text-muted">

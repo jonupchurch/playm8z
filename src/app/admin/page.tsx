@@ -28,7 +28,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-bg px-8 py-9 text-text">
+    <main className="grow bg-bg px-8 py-9 text-text">
       <div className="mx-auto max-w-7xl">
         <h1 className="mb-6 text-2xl font-bold tracking-tight text-text">Dashboard</h1>
 

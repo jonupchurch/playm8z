@@ -45,7 +45,7 @@ export default async function ForumThreadPage({ params }: { params: Promise<{ id
       : null;
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div className="mx-auto max-w-285 px-8 py-6">
         <nav className="mb-4.5 font-mono text-[11px] text-text-dim" aria-label="Breadcrumb">
           <Link href="/forum" className="text-text-muted underline underline-offset-2">

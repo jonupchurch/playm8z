@@ -36,7 +36,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   const initial = (user.handle?.trim()[0] || "P").toUpperCase();
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div
         className="border-b border-border"
         style={{

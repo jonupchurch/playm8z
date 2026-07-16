@@ -79,7 +79,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   }
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <ProfileHeader
         profileOwnerId={profile.id}
         handle={profile.handle}

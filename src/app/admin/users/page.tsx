@@ -27,7 +27,7 @@ export default async function AdminUsersPage({
   ]);
 
   return (
-    <main className="min-h-screen bg-bg px-8 py-9 text-text">
+    <main className="grow bg-bg px-8 py-9 text-text">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <h1 className="mb-1 text-2xl font-bold tracking-tight text-text">User management</h1>

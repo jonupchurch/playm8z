@@ -40,7 +40,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
   const color = newsCategoryColor(article.category);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <ReadingProgress />
 
       <ArticleHeader

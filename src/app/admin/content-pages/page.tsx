@@ -22,7 +22,7 @@ export default async function AdminContentPagesPage({
   const { stats, rows } = await searchContentPages(filters);
 
   return (
-    <main className="min-h-screen bg-bg px-8 py-9 text-text">
+    <main className="grow bg-bg px-8 py-9 text-text">
       <div className="mx-auto max-w-7xl">
         <ContentPageTable stats={stats} rows={rows} />
       </div>

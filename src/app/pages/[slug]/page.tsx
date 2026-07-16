@@ -29,7 +29,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div className="mx-auto max-w-190 px-8 py-12">
         {canEdit ? (
           <PageEditor

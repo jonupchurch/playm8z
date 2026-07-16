@@ -33,7 +33,7 @@ export default async function ForumPage({
   const isEmpty = threads.length === 0;
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div
         className="border-b border-border"
         style={{

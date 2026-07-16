@@ -26,7 +26,7 @@ export default async function BrowsePage({
   ]);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div
         className="border-b border-border"
         style={{

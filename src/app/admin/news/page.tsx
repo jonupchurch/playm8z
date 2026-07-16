@@ -28,7 +28,7 @@ export default async function AdminNewsPage({
   const selectedPost = postId ? (posts.find((post) => post.id === postId) ?? null) : null;
 
   return (
-    <main className="grid min-h-screen grid-cols-[308px_1fr] bg-bg text-text">
+    <main className="grid grow grid-cols-[308px_1fr] bg-bg text-text">
       <NewsPostList posts={posts} />
       <NewsPostEditor key={selectedPost?.id ?? "new"} post={selectedPost} isAdmin={role === "admin"} />
     </main>

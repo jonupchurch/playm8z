@@ -13,7 +13,7 @@ export default async function AdminSettingsPage() {
   const [settings, team] = await Promise.all([getSettings(), getTeam()]);
 
   return (
-    <main className="min-h-screen bg-bg px-8 py-9 text-text">
+    <main className="grow bg-bg px-8 py-9 text-text">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6">
           <h1 className="mb-1 text-[26px] font-bold tracking-tight text-text">Settings</h1>

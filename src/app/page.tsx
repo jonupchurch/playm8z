@@ -24,7 +24,7 @@ export default async function Home() {
   if (!session?.user) {
     const stats = await getLandingStats();
     return (
-      <main className="min-h-screen bg-bg text-text">
+      <main className="grow bg-bg text-text">
         <LandingHero openPartiesNow={stats.openPartiesNow} totalPlayers={stats.totalPlayers} heroPostings={stats.heroPostings} />
         <LandingTrustBar
           totalPlayers={stats.totalPlayers}
@@ -44,7 +44,7 @@ export default async function Home() {
   const [postings, trending] = await Promise.all([getOpenPostings(), getTrending()]);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div
         className="mx-auto max-w-[920px] px-8 pt-16 pb-11 text-center"
         style={{

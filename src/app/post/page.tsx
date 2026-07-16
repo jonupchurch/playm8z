@@ -26,7 +26,7 @@ export default async function PostGamePage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
+    <main className="grow bg-bg text-text">
       <div className="mx-auto max-w-330 px-8 pt-8 pb-16">
         <div className="mb-6.5">
           <h1 className="mb-1 text-3xl font-bold tracking-tight">Post a game</h1>
