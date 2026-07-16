@@ -13,11 +13,26 @@ export const blockSchema = z.discriminatedUnion("type", [
 ]);
 export type Block = z.infer<typeof blockSchema>;
 
-// FR-006: the whole title+blocks array saves atomically, so this is
-// the single trust-boundary schema save-content-page.ts validates
+// A page's URL. Bare (no leading slash) and lowercase, matching the
+// real `/pages/[slug]` route convention -- see seed-system-pages.ts's
+// own note on why data-model.md's leading-slash spelling could never
+// route. Hyphen-separated alphanumeric segments only, so a stored slug
+// is always URL-safe without escaping and can't smuggle in a path
+// separator, a query string, or a leading/trailing hyphen.
+export const contentPageSlugSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(1, "URL is required.")
+  .max(80, "URL must be 80 characters or fewer.")
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens (e.g. house-rules).");
+
+// FR-006: the whole title+slug+blocks payload saves atomically, so this
+// is the single trust-boundary schema save-content-page.ts validates
 // against (Principle II) -- there's no partial-block-update path.
 export const saveContentPageSchema = z.object({
   title: z.string().trim().min(1).max(150),
+  slug: contentPageSlugSchema,
   blocks: z.array(blockSchema).max(100),
 });
 export type SaveContentPageInput = z.infer<typeof saveContentPageSchema>;

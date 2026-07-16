@@ -8,6 +8,7 @@ export type ContentPageRow = {
   title: string;
   blocks: ContentBlock[];
   status: "published" | "draft";
+  system: boolean;
   updatedAt: Date;
 };
 
@@ -20,6 +21,7 @@ export async function getContentPageBySlug(slug: string): Promise<ContentPageRow
     title: row.title,
     blocks: row.blocks,
     status: row.status === "published" ? "published" : "draft",
+    system: row.system,
     updatedAt: row.updatedAt,
   };
 }

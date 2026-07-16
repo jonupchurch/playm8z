@@ -69,6 +69,7 @@ export function PageEditor({
   initialTitle,
   initialBlocks,
   initialStatus,
+  system,
   updatedAt,
   isAdmin,
 }: {
@@ -76,14 +77,20 @@ export function PageEditor({
   initialTitle: string;
   initialBlocks: ContentBlock[];
   initialStatus: "published" | "draft";
+  system: boolean;
   updatedAt: string;
   isAdmin: boolean;
 }) {
   const router = useRouter();
   const titleId = useId();
+  const slugId = useId();
   const nextLocalId = useRef(0);
 
   const [savedTitle, setSavedTitle] = useState(initialTitle);
+  // Tracked separately from the `slug` prop: after a rename this is the
+  // page's real slug immediately, while the prop only catches up once
+  // the router lands on the new URL.
+  const [savedSlug, setSavedSlug] = useState(slug);
   const [savedBlocks, setSavedBlocks] = useState(initialBlocks);
   const [status, setStatus] = useState(initialStatus);
   const [editing, setEditing] = useState(false);
@@ -92,6 +99,7 @@ export function PageEditor({
   const [error, setError] = useState<string | null>(null);
 
   const [draftTitle, setDraftTitle] = useState(initialTitle);
+  const [draftSlug, setDraftSlug] = useState(slug);
   const [draftBlocks, setDraftBlocks] = useState<DraftBlock[]>([]);
 
   const [aiTopic, setAiTopic] = useState("");
@@ -144,6 +152,7 @@ export function PageEditor({
 
   function startEdit() {
     setDraftTitle(savedTitle);
+    setDraftSlug(savedSlug);
     setDraftBlocks(savedBlocks.map((block) => ({ localId: makeLocalId(), block })));
     setError(null);
     setEditing(true);
@@ -193,24 +202,31 @@ export function PageEditor({
       }
       return block;
     });
-    const result = await saveContentPage(slug, { title: draftTitle, blocks });
+    const result = await saveContentPage(savedSlug, { title: draftTitle, slug: draftSlug, blocks });
     setSubmitting(false);
     if (!result.success) {
       setError(result.error);
       return;
     }
+    const renamed = result.slug !== savedSlug;
     setSavedTitle(draftTitle);
+    setSavedSlug(result.slug);
     setSavedBlocks(blocks);
     setEditing(false);
     setSaved(true);
-    router.refresh();
+    // A rename moved the page out from under this URL: the old one now
+    // 404s, so stay on the page by following it rather than refreshing
+    // in place. replace(), not push() -- the old URL is gone and should
+    // not be a back-button destination.
+    if (renamed) router.replace(`/pages/${result.slug}`);
+    else router.refresh();
   }
 
   async function handleTogglePublish() {
     setSubmitting(true);
     setError(null);
     const nextStatus = status === "published" ? "draft" : "published";
-    const result = await togglePageStatus({ slug, status: nextStatus });
+    const result = await togglePageStatus({ slug: savedSlug, status: nextStatus });
     setSubmitting(false);
     if (!result.success) {
       setError(result.error);
@@ -290,8 +306,28 @@ export function PageEditor({
             id={titleId}
             value={draftTitle}
             onChange={(event) => setDraftTitle(event.target.value)}
-            className="mb-8 w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-[28px] font-bold tracking-tight text-text outline-none"
+            className="mb-5 w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-[28px] font-bold tracking-tight text-text outline-none"
           />
+
+          <label htmlFor={slugId} className="mb-1.5 block text-[13px] font-bold text-text">
+            Page URL
+          </label>
+          <div className="mb-1.5 flex items-center gap-0 rounded-xl border border-border bg-surface px-4 focus-within:border-accent/60">
+            <span className="shrink-0 font-mono text-sm text-text-dim">/pages/</span>
+            <input
+              id={slugId}
+              value={draftSlug}
+              disabled={system}
+              onChange={(event) => setDraftSlug(event.target.value)}
+              aria-describedby={`${slugId}-hint`}
+              className="w-full bg-transparent py-3 font-mono text-sm text-text outline-none disabled:cursor-not-allowed disabled:text-text-dim"
+            />
+          </div>
+          <p id={`${slugId}-hint`} className="mb-8 text-xs text-text-muted">
+            {system
+              ? "System pages keep a fixed URL — the site nav and footer link straight to it."
+              : "Lowercase letters, numbers and hyphens. Changing this moves the page; the old URL stops working."}
+          </p>
 
           {isAdmin && (
             <div className="mb-8 rounded-2xl border border-border bg-surface-2 p-4.5">
