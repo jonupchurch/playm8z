@@ -39,6 +39,15 @@ async function main() {
       title: "Terms of Use",
       blocks: [{ type: "p" as const, text: "This page is a starting point -- edit it to lay out the rules for using playm8z." }],
     },
+    // Added alongside the sitewide footer, which links this one plus
+    // Privacy/Terms. Existing deployments already ran this script for
+    // the first three pages; the skip-if-exists loop below means a
+    // re-run seeds only this new page.
+    {
+      slug: "cookies",
+      title: "Cookies",
+      blocks: [{ type: "p" as const, text: "This page is a starting point -- edit it to explain which cookies playm8z sets and why." }],
+    },
   ];
 
   for (const page of systemPages) {

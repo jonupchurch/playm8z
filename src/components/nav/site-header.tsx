@@ -12,6 +12,7 @@ import { NotificationBell, type BellPreviewItem } from "@/components/nav/notific
 import { NavLinks } from "@/components/nav/nav-links";
 import { ProfileMenu } from "@/components/nav/profile-menu";
 import { SiteHeaderFrame } from "@/components/nav/site-header-frame";
+import { getNavPages } from "@/lib/content-page/get-nav-pages";
 import { getSettings } from "@/lib/settings/get-settings";
 
 // The real global nav, finally built directly (Design System
@@ -31,13 +32,14 @@ export async function SiteHeader() {
     return null;
   }
 
-  const session = await auth();
+  const [session, pages] = await Promise.all([auth(), getNavPages()]);
+  const navPages = pages.map((page) => ({ href: `/pages/${page.slug}`, label: page.title }));
 
   if (!session?.user?.email) {
     return (
       <SiteHeaderFrame>
         <Logo />
-        <NavLinks />
+        <NavLinks pages={navPages} />
         <div className="ml-auto flex items-center gap-3">
           <Link href="/login" className="text-sm font-semibold text-accent-2">
             Log in
@@ -76,7 +78,7 @@ export async function SiteHeader() {
   return (
     <SiteHeaderFrame>
       <Logo />
-      <NavLinks role={user.role} />
+      <NavLinks role={user.role} pages={navPages} />
       <div className="ml-auto flex items-center gap-3">
         <Link
           href="/post"

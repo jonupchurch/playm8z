@@ -51,6 +51,15 @@ jobs:
       - name: Push Drizzle schema to the CI database
         run: npx drizzle-kit push --force
 
+      # `drizzle-kit push` creates the schema but no rows, so without
+      # this the CI database has none of the four `system` ContentPages
+      # a real deployment has -- and the sitewide footer's Terms/Privacy/
+      # Cookies links and the nav's About item would all point at 404s
+      # that no test could catch. Idempotent, and every stats assertion
+      # over contentPages is delta-based, so these rows disturb nothing.
+      - name: Seed the system content pages
+        run: npx tsx scripts/seed-system-pages.ts
+
       - name: Unit/integration tests (Vitest)
         run: npm test
 

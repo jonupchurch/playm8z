@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, Space_Mono } from "next/font/google";
+import { SiteFooter } from "@/components/nav/site-footer";
 import { SiteHeader } from "@/components/nav/site-header";
 import "./globals.css";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <SiteHeader />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
