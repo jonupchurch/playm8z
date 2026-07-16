@@ -1,6 +1,18 @@
 # 0002. Platform minimum age is 18+; drop the 13+ tier
 
-**Status**: Accepted (2026-07-12)
+**Status**: Accepted (2026-07-12) — **partially superseded (2026-07-16)** by
+[ADR 0009](./0009-posting-age-group-is-a-demographic-range.md)
+
+> **Read this first.** ADR 0009 supersedes the `Posting.ageGroup` half of the Decision below.
+> A posting's age group is now a demographic range (`any | 18-29 | 30-49 | 50plus`), not a minimum
+> age, and the 21+ option no longer exists for postings.
+>
+> **Everything else here still stands**, and 0009 depends on it: playm8z is 18+ only with no 13-17
+> tier; age is a label and a filter, never an access control; age is self-attested, not verified; and
+> **`User.ageGroup` is still `18 | 21`**.
+>
+> The two vocabularies now differ on purpose. If you are about to make `User.ageGroup` and
+> `Posting.ageGroup` agree again, read ADR 0009 first — that divergence is the decision, not a bug.
 
 ## Context
 
@@ -28,6 +40,8 @@ alcohol-adjacent tabletop meetups) — it is not a platform-wide minimum.
 
 - `resources/guidelines.md` §5's `ageGroup(13|18|21)` is superseded —
   it's `18|21` wherever `ageGroup` appears (User and Posting).
+  *(Since ADR 0009: this remains true for User only. Posting uses the
+  demographic range vocabulary.)*
 - The Auth & Onboarding wireframe's age-related step and the Browse/Post a
   Game age-group segmented controls (`13+/18+/21+`) are superseded to the
   extent they offer a 13+ option — treat them as needing a small revision
