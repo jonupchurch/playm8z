@@ -157,8 +157,16 @@ test.describe("Sitewide footer", () => {
 
   test("is hidden on the logged-out landing, which has its own richer footer", async ({ page }) => {
     await page.goto("/");
+    // "Cookies" is unique to the sitewide footer, so its absence is the
+    // direct proof this one stood down. (The contentinfo check backs it
+    // up but is subtler than it looks: the landing's own <footer> is
+    // nested inside <main>, which per the HTML-to-ARIA mapping means it
+    // is NOT a contentinfo landmark -- so zero contentinfo here does not
+    // mean zero footers.)
+    await expect(page.getByRole("link", { name: "Cookies" })).toHaveCount(0);
     await expect(page.getByRole("contentinfo")).toHaveCount(0);
-    // The landing's own footer is still there.
+    // The landing's own footer is still there, and is the only one.
+    await expect(page.locator("footer")).toHaveCount(1);
     await expect(page.getByText("Made for gamers, by gamers")).toBeVisible();
   });
 

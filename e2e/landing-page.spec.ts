@@ -238,12 +238,18 @@ test.describe("User Story 2 - CTAs navigate correctly (Scenario 8)", () => {
 test.describe("Footer links (FR-010, Scenario 9)", () => {
   test("About/Privacy/Terms link to the three real seeded system pages", async ({ page }) => {
     await page.goto("/");
+    // Scoped to this footer: the site nav now carries an "About" link of
+    // its own, so an unscoped exact-name lookup matches two elements and
+    // trips strict mode. The sitewide footer stands down on the
+    // logged-out landing, so this is the page's only <footer>.
+    const footer = page.locator("footer");
+    await expect(footer).toHaveCount(1);
     for (const [label, path] of [
       ["About", "/pages/about"],
       ["Privacy", "/pages/privacy"],
       ["Terms", "/pages/terms"],
     ] as const) {
-      const href = await page.getByRole("link", { name: label, exact: true }).getAttribute("href");
+      const href = await footer.getByRole("link", { name: label, exact: true }).getAttribute("href");
       expect(href).toBe(path);
     }
   });

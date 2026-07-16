@@ -10,7 +10,7 @@ import { Wordmark } from "@/components/brand/wordmark";
 // behavior, same as any other not-yet-created custom page.
 export function LandingFooter() {
   return (
-    <div className="border-t border-border bg-bg">
+    <footer className="border-t border-border bg-bg">
       <div className="mx-auto grid max-w-275 gap-8 px-6 py-11 sm:px-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div>
           <div className="mb-3 flex items-center gap-2.5">
@@ -71,6 +71,6 @@ export function LandingFooter() {
           <span>Made for gamers, by gamers</span>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
