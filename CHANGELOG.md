@@ -19,6 +19,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   within 30 days; nothing is rewritten.
 
 ### Added
+- **Messages in the top nav with an unread badge** (feature 037). The
+  inbox (feature 011) was fully built but buried two clicks deep in the
+  account dropdown with no unread indicator, so messaging *felt* absent.
+  Signed-in members now get a first-class **Messages** entry beside the
+  notification bell, with an unread-count badge (same `99+` cap and
+  accessible, count-bearing label as the bell). The badge counts unread
+  direct/group **messages only** — pending party requests and invites
+  stay in the bell, so the same event is never double-counted across two
+  icons ([spec FR-003](specs/037-inbox-nav-badge/spec.md)). The count is
+  a single small query per render, defined identically to the inbox
+  page's own unread rule so the two can never disagree. The now-redundant
+  Inbox link was removed from the account dropdown, leaving one primary
+  way in. No new tables; no messaging behavior changed.
 - **Admin-editable suggested games** (feature 031). The games offered to
   new players while they create their account are now edited from the
   same **Lists** tab in Admin → Settings, instead of being hardcoded in
