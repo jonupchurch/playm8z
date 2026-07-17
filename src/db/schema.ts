@@ -10,6 +10,7 @@ import {
   jsonb,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import type { AdapterAccountType } from "next-auth/adapters";
 
 export const users = pgTable("user", {
@@ -142,6 +143,24 @@ export const settings = pgTable("settings", {
   // text with no FK to this, deliberately: retiring a genre here must
   // never touch a posting that already uses it (030 FR-007).
   genres: text("genres").array().notNull().default(["FPS", "RPG", "Co-op PvE", "Party", "MOBA", "Sandbox", "TTRPG", "Tabletop"]),
+  // Lists (031) -- the games offered at onboarding's games step. A
+  // SUGGESTION list, never a catalog: a player's own games are free text
+  // (ADR 0001) and are never validated against this. Removing one here
+  // has no effect on any player's profile.
+  //
+  // The default is an explicit `sql` literal rather than a JS array
+  // because drizzle-kit does NOT escape apostrophes when it generates an
+  // array default: `.default([... "Baldur's Gate 3" ...])` emits invalid
+  // DDL and the push dies with `syntax error at or near "s"`, leaving
+  // the column simply absent. Postgres escapes a quote by doubling it,
+  // hence `Baldur''s`. `genres` above dodges this only because none of
+  // its values contain an apostrophe.
+  suggestedGames: text("suggestedGames")
+    .array()
+    .notNull()
+    .default(
+      sql`ARRAY['Valorant','Helldivers 2','Baldur''s Gate 3','CS2','Deep Rock Galactic','Lethal Company','Sea of Thieves','League of Legends','Overwatch 2','Minecraft','Elden Ring','D&D 5e','Catan','Magic: The Gathering']::text[]`,
+    ),
 });
 
 // Minimal shape -- Home is the first feature to need this table, so it

@@ -6,6 +6,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- **Admin-editable suggested games** (feature 031). The games offered to
+  new players while they create their account are now edited from the
+  same **Lists** tab in Admin → Settings, instead of being hardcoded in
+  the onboarding wizard. It stays a *suggestion* list, never a catalog:
+  a player's games are free text (ADR 0001) and are not validated
+  against it, so removing a game never touches anybody's profile and
+  players can still add anything they like. An empty list is refused,
+  because the games step has no free-text entry and would otherwise be a
+  dead end.
 - **Admin-editable genres** (feature 030). The genres offered on Post a
   Game and Browse — and counted on the landing page — are now edited
   from a **Lists** tab in Admin → Settings instead of being hardcoded,
