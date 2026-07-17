@@ -137,11 +137,15 @@ function Stepper({
 export function PostGameForm({
   hostHandle,
   hostAvatarColor,
+  hostAvatarImage,
+  hostImage,
   gameSuggestions = GAME_SUGGESTIONS_FALLBACK,
   genres,
 }: {
   hostHandle: string;
   hostAvatarColor: string | null;
+  hostAvatarImage: string | null;
+  hostImage: string | null;
   gameSuggestions?: string[];
   // Admin-editable (030). Arrives as a prop from /post rather than being
   // imported: a client component importing a runtime value from a module
@@ -241,6 +245,8 @@ export function PostGameForm({
     id: "preview",
     hostHandle,
     hostAvatarColor,
+    hostAvatarImage,
+    hostImage,
     game: game || "Your game",
     genre: genre || undefined,
     title: title || "Your listing title",

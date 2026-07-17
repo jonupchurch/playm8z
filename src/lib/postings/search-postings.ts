@@ -9,6 +9,8 @@ export type BrowseResult = {
   id: string;
   hostHandle: string;
   hostAvatarColor: string | null;
+  hostAvatarImage: string | null;
+  hostImage: string | null;
   game: string;
   genre: string | null;
   title: string;
@@ -97,6 +99,8 @@ export async function searchPostings(filters: BrowseFilters): Promise<BrowseResu
       id: postings.id,
       hostHandle: users.handle,
       hostAvatarColor: users.avatarColor,
+      hostAvatarImage: users.avatarImage,
+      hostImage: users.image,
       game: postings.game,
       genre: postings.genre,
       title: postings.title,

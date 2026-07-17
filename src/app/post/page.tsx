@@ -20,7 +20,12 @@ export default async function PostGamePage() {
 
   const [[user], gameSuggestions, { genres }] = await Promise.all([
     db
-      .select({ handle: users.handle, avatarColor: users.avatarColor })
+      .select({
+        handle: users.handle,
+        avatarColor: users.avatarColor,
+        avatarImage: users.avatarImage,
+        image: users.image,
+      })
       .from(users)
       .where(eq(users.email, session.user.email)),
     getGameSuggestions(),
@@ -41,6 +46,8 @@ export default async function PostGamePage() {
         <PostGameForm
           hostHandle={user?.handle ?? "player"}
           hostAvatarColor={user?.avatarColor ?? null}
+          hostAvatarImage={user?.avatarImage ?? null}
+          hostImage={user?.image ?? null}
           gameSuggestions={gameSuggestions}
           genres={genres}
         />

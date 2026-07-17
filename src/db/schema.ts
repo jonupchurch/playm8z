@@ -19,7 +19,19 @@ export const users = pgTable("user", {
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
+  // The Google profile photo, populated by the Auth.js adapter on Google
+  // sign-in (auth.ts's profile() -> profile.picture). Adapter-owned: it is
+  // read/written during sign-in, so Profile images (034) MUST NOT store an
+  // uploaded avatar here -- a later Google sign-in would clobber it. Kept
+  // as the SECOND choice in the avatar precedence (avatarImage ?? image ??
+  // gradient block).
   image: text("image"),
+  // Profile images (034)/FR-005/FR-006: the user's UPLOADED avatar (a Blob
+  // URL), distinct from `image` (Google, adapter-owned) so removing an
+  // upload reveals the Google photo rather than losing it. NULL = no upload;
+  // the avatar then falls through to `image`, then to the `avatarColor`
+  // gradient block. Resolved by the shared Avatar component, never per-site.
+  avatarImage: text("avatarImage"),
   // Only set for accounts created via the Credentials (native) provider;
   // null for accounts that only ever signed in through Google. This null
   // is load-bearing, not incidental: auth.ts's `if (!user?.passwordHash)
