@@ -1,6 +1,12 @@
 import { appUrl } from "@/lib/email/app-url";
 import { sendEmail, type SendEmailResult } from "@/lib/email/send-email";
 import { escapeHtml } from "@/lib/email/escape-html";
+import {
+  emailButton,
+  emailLayout,
+  emailParagraph,
+  emailUrlFallback,
+} from "@/lib/email/email-layout";
 
 interface VerificationUser {
   email: string;
@@ -41,22 +47,15 @@ Confirm your email address to finish setting up your playm8z account:
 ${verifyUrl}
 
 This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore this email.`,
-    html: `<!doctype html>
-<html lang="en">
-  <body style="margin:0;padding:24px;background:#0f1115;color:#e8eaed;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
-    <div style="max-width:480px;margin:0 auto;">
-      <h1 style="font-size:20px;margin:0 0 16px;">Verify your email</h1>
-      <p style="margin:0 0 16px;line-height:1.5;">${escapeHtml(greeting)}</p>
-      <p style="margin:0 0 24px;line-height:1.5;">Confirm your email address to finish setting up your playm8z account.</p>
-      <p style="margin:0 0 24px;">
-        <a href="${escapeHtml(verifyUrl)}" style="display:inline-block;background:#7c5cff;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;">Verify email</a>
-      </p>
-      <p style="margin:0 0 8px;line-height:1.5;font-size:13px;color:#9aa0a6;">Or paste this into your browser:</p>
-      <p style="margin:0 0 24px;line-height:1.5;font-size:13px;word-break:break-all;"><a href="${escapeHtml(verifyUrl)}" style="color:#a48bff;">${escapeHtml(verifyUrl)}</a></p>
-      <p style="margin:0;line-height:1.5;font-size:13px;color:#9aa0a6;">This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore this email.</p>
-    </div>
-  </body>
-</html>`,
+    html: emailLayout({
+      title: "Verify your email for playm8z",
+      contentHtml: `<h1 style="font-size:20px;margin:0 0 16px;color:#e8eaed;">Verify your email</h1>
+${emailParagraph(escapeHtml(greeting))}
+${emailParagraph("Confirm your email address to finish setting up your playm8z account.")}
+${emailButton(verifyUrl, "Verify your playm8z email address")}
+${emailUrlFallback(verifyUrl)}
+<p style="margin:0;font-size:13px;color:#9aa0a6;">This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore this email.</p>`,
+    }),
   });
 
   if (!result.sent && result.reason !== "not-configured") {

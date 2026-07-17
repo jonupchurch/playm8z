@@ -1,6 +1,12 @@
 import { appUrl } from "@/lib/email/app-url";
 import { sendEmail, type SendEmailResult } from "@/lib/email/send-email";
 import { escapeHtml } from "@/lib/email/escape-html";
+import {
+  emailButton,
+  emailLayout,
+  emailParagraph,
+  emailUrlFallback,
+} from "@/lib/email/email-layout";
 
 interface ResetUser {
   email: string;
@@ -40,22 +46,15 @@ ${resetUrl}
 This link expires in 1 hour and can only be used once.
 
 If this wasn't you, you can ignore this email -- your password won't change until someone uses the link above.`,
-    html: `<!doctype html>
-<html lang="en">
-  <body style="margin:0;padding:24px;background:#0f1115;color:#e8eaed;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
-    <div style="max-width:480px;margin:0 auto;">
-      <h1 style="font-size:20px;margin:0 0 16px;">Reset your password</h1>
-      <p style="margin:0 0 16px;line-height:1.5;">${escapeHtml(greeting)}</p>
-      <p style="margin:0 0 24px;line-height:1.5;">Someone asked to reset the password for your playm8z account. Choose a new one:</p>
-      <p style="margin:0 0 24px;">
-        <a href="${escapeHtml(resetUrl)}" style="display:inline-block;background:#7c5cff;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;">Choose a new password</a>
-      </p>
-      <p style="margin:0 0 8px;line-height:1.5;font-size:13px;color:#9aa0a6;">Or paste this into your browser:</p>
-      <p style="margin:0 0 24px;line-height:1.5;font-size:13px;word-break:break-all;"><a href="${escapeHtml(resetUrl)}" style="color:#a48bff;">${escapeHtml(resetUrl)}</a></p>
-      <p style="margin:0;line-height:1.5;font-size:13px;color:#9aa0a6;">This link expires in 1 hour and can only be used once. If this wasn't you, you can ignore this email &mdash; your password won't change until someone uses the link.</p>
-    </div>
-  </body>
-</html>`,
+    html: emailLayout({
+      title: "Reset your playm8z password",
+      contentHtml: `<h1 style="font-size:20px;margin:0 0 16px;color:#e8eaed;">Reset your password</h1>
+${emailParagraph(escapeHtml(greeting))}
+${emailParagraph("Someone asked to reset the password for your playm8z account. Choose a new one:")}
+${emailButton(resetUrl, "Choose a new password")}
+${emailUrlFallback(resetUrl)}
+<p style="margin:0;font-size:13px;color:#9aa0a6;">This link expires in 1 hour and can only be used once. If this wasn't you, you can ignore this email &mdash; your password won't change until someone uses the link.</p>`,
+    }),
   });
 
   if (!result.sent && result.reason !== "not-configured") {
