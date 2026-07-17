@@ -9,6 +9,7 @@ import { SettingsModeration } from "@/components/admin/settings-moderation";
 import { SettingsRoles } from "@/components/admin/settings-roles";
 import { SettingsFeatures } from "@/components/admin/settings-features";
 import { SettingsSafety } from "@/components/admin/settings-safety";
+import { SettingsLists } from "@/components/admin/settings-lists";
 
 const SECTIONS: { key: SettingsSection; label: string; icon: string }[] = [
   { key: "general", label: "General", icon: "⚙️" },
@@ -16,6 +17,7 @@ const SECTIONS: { key: SettingsSection; label: string; icon: string }[] = [
   { key: "roles", label: "Roles & access", icon: "👥" },
   { key: "features", label: "Features", icon: "🚩" },
   { key: "safety", label: "Safety", icon: "🔒" },
+  { key: "lists", label: "Lists", icon: "🏷️" },
 ];
 
 // Principle III: a real, keyboard-navigable tablist -- section state is
@@ -54,6 +56,7 @@ export function SettingsShell({ settings, team }: { settings: Settings; team: Te
         {section === "roles" && <SettingsRoles team={team} />}
         {section === "features" && <SettingsFeatures settings={settings} />}
         {section === "safety" && <SettingsSafety settings={settings} />}
+        {section === "lists" && <SettingsLists settings={settings} />}
       </div>
     </div>
   );

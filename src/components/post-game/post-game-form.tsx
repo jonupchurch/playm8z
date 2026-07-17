@@ -3,12 +3,10 @@
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPosting } from "@/lib/actions/create-posting";
-import { GENRES, TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { TIME_SLOTS } from "@/lib/validations/browse-filters";
 import { ListingCard, type ListingCardPosting } from "@/components/listings/listing-card";
 
 type TimeSlot = (typeof TIME_SLOTS)[number];
-
-const GENRE_OPTIONS = GENRES;
 
 const PLATFORM_OPTIONS = [
   { id: "pc", label: "PC" },
@@ -139,10 +137,15 @@ export function PostGameForm({
   hostHandle,
   hostAvatarColor,
   gameSuggestions = GAME_SUGGESTIONS_FALLBACK,
+  genres,
 }: {
   hostHandle: string;
   hostAvatarColor: string | null;
   gameSuggestions?: string[];
+  // Admin-editable (030). Arrives as a prop from /post rather than being
+  // imported: a client component importing a runtime value from a module
+  // that reaches @/db crashes the page.
+  genres: string[];
 }) {
   const router = useRouter();
   const gameId = useId();
@@ -154,7 +157,7 @@ export function PostGameForm({
   const voiceLinkId = useId();
 
   const [game, setGame] = useState("");
-  const [genre, setGenre] = useState<(typeof GENRE_OPTIONS)[number] | "">("");
+  const [genre, setGenre] = useState<string>("");
   const [title, setTitle] = useState("");
   const [blurb, setBlurb] = useState("");
   const [tags, setTags] = useState("");
@@ -286,7 +289,7 @@ export function PostGameForm({
 
           <div className="mt-4.5 mb-2.5 text-[13px] font-bold text-text">Genre</div>
           <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Genre">
-            {GENRE_OPTIONS.map((option) => (
+            {genres.map((option) => (
               <Segment
                 key={option}
                 name="genre"

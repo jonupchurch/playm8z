@@ -2,10 +2,12 @@ import { and, eq, gte, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, postings, users } from "@/db/schema";
 import { getAutoHideCondition } from "@/lib/moderation/auto-hide";
-import { GENRES } from "@/lib/validations/browse-filters";
+import { getSettings } from "@/lib/settings/get-settings";
 import type { ListingCardPosting } from "@/components/listings/listing-card";
 
-export type GenreCount = { genre: (typeof GENRES)[number]; count: number };
+// 030 FR-006: the genre is whatever the admin's list currently holds,
+// so this is a plain string rather than a union of a compile-time const.
+export type GenreCount = { genre: string; count: number };
 
 export type LandingStats = {
   openPartiesNow: number;
@@ -84,8 +86,13 @@ export async function getLandingStats(): Promise<LandingStats> {
       .groupBy(postings.genre),
   ]);
 
+  // FR-006: counts are reported over the admin's current list, not a
+  // hardcoded one. A posting whose genre has since been retired simply
+  // isn't counted here -- it keeps its genre and still displays (FR-007),
+  // it just has no row on a landing page that only shows offered genres.
+  const { genres } = await getSettings();
   const countsByGenre = new Map(genreRows.map((row) => [row.genre, row.n]));
-  const genreCounts: GenreCount[] = GENRES.map((genre) => ({ genre, count: countsByGenre.get(genre) ?? 0 }));
+  const genreCounts: GenreCount[] = genres.map((genre) => ({ genre, count: countsByGenre.get(genre) ?? 0 }));
 
   return {
     openPartiesNow: openPartiesRow.n,

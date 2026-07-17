@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-export const GENRES = [
+// Admin-editable since 030: the live list is `settings.genres`, read at
+// request time. This array is ONLY the column default/seed -- nothing
+// reads it to decide what to offer or accept. Keeping a second runtime
+// source would recreate exactly the drift 030 exists to prevent (one
+// screen on the const, one on the row), so if you are reaching for this
+// at request time, read settings instead (research.md #2).
+export const DEFAULT_GENRES = [
   "FPS",
   "RPG",
   "Co-op PvE",
@@ -32,7 +38,13 @@ export const browseFiltersSchema = z.object({
   q: z.string().max(200).optional().default(""),
   vibe: z.enum(["any", "fun", "serious"]).catch("any"),
   games: z.preprocess(toArray, z.array(z.string().max(100)).max(20)).catch([]),
-  genres: z.preprocess(toArray, z.array(z.enum(GENRES)).max(8)).catch([]),
+  // Shape only -- membership can't be a static enum now the list is
+  // admin-editable (030, research.md #3). The Browse page intersects
+  // these against the stored list before querying, so a retired genre
+  // in an old bookmark is dropped rather than passed to the WHERE
+  // clause (where it would match nothing and show an empty Browse,
+  // reading as "nothing here" instead of "filter ignored").
+  genres: z.preprocess(toArray, z.array(z.string().max(50)).max(8)).catch([]),
   regions: z.preprocess(toArray, z.array(z.enum(REGIONS)).max(6)).catch([]),
   timeSlots: z.preprocess(toArray, z.array(z.enum(TIME_SLOTS)).max(5)).catch([]),
   ageGroup: z.enum(["any", "18", "21"]).catch("any"),
