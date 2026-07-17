@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 
 export const REGION_LABELS: Record<string, string> = {
   "na-east": "NA-East",
@@ -35,6 +35,8 @@ export type ListingCardPosting = {
   id: string;
   hostHandle: string;
   hostAvatarColor: string | null;
+  hostAvatarImage: string | null;
+  hostImage: string | null;
   game: string;
   genre?: string | null;
   title: string;
@@ -52,10 +54,6 @@ export type ListingCardPosting = {
 // system -- every card shown here is already status='open'). The host's
 // handle is shown, never their display name (ADR 0006).
 export function ListingCard({ posting }: { posting: ListingCardPosting }) {
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === posting.hostAvatarColor)?.gradient ??
-    AVATAR_COLORS[0].gradient;
-  const initial = (posting.hostHandle.trim()[0] || "P").toUpperCase();
   const isSerious = posting.vibe === "serious";
   const firstSlotLabel = posting.timeSlots?.[0] ? TIME_SLOT_LABELS[posting.timeSlots[0]] : undefined;
 
@@ -65,12 +63,13 @@ export function ListingCard({ posting }: { posting: ListingCardPosting }) {
       className="flex flex-col rounded-2xl border border-border bg-surface p-4.5 transition-colors hover:border-accent-2/50"
     >
       <div className="mb-3.5 flex items-center gap-2.5">
-        <div
-          style={{ background: avatarGradient }}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-        >
-          {initial}
-        </div>
+        <Avatar
+          avatarImage={posting.hostAvatarImage}
+          googleImage={posting.hostImage}
+          avatarColor={posting.hostAvatarColor}
+          handle={posting.hostHandle}
+          className="h-10 w-10 shrink-0 rounded-xl text-base"
+        />
         <div className="min-w-0 flex-1">
           <div className="text-[15px] font-bold text-text">@{posting.hostHandle}</div>
           <div className="font-mono text-[10px] text-text-muted">

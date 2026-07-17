@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Avatar } from "@/components/ui/avatar";
 import { updateProfile } from "@/lib/actions/update-profile";
 import { changePassword } from "@/lib/actions/change-password";
 import { updateEmail } from "@/lib/actions/update-email";
+import { removeAvatar, uploadAvatar } from "@/lib/actions/update-avatar";
 
 const REGION_OPTIONS = [
   { id: "na-east", label: "NA-East" },
@@ -21,6 +23,9 @@ export function AccountForms({
   region,
   bio,
   email,
+  avatarColor,
+  avatarImage,
+  image,
   hasPassword,
 }: {
   handle: string;
@@ -28,14 +33,144 @@ export function AccountForms({
   region: string;
   bio: string;
   email: string;
+  avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   hasPassword: boolean;
 }) {
   return (
     <div className="flex flex-col gap-4.5">
+      <AvatarForm
+        handle={handle}
+        avatarColor={avatarColor}
+        avatarImage={avatarImage}
+        image={image}
+      />
       <PersonalInfoForm handle={handle} initialName={name} initialRegion={region} initialBio={bio} />
       {hasPassword && <PasswordForm />}
       <EmailForm initialEmail={email} />
     </div>
+  );
+}
+
+function AvatarForm({
+  handle,
+  avatarColor,
+  avatarImage,
+  image,
+}: {
+  handle: string;
+  avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
+}) {
+  const router = useRouter();
+  // Local echo of the uploaded avatar so the preview updates without a full
+  // reload; the Server Action revalidates the real surfaces (034/FR-001).
+  const [uploaded, setUploaded] = useState<string | null>(avatarImage);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    // Reset the input so choosing the same file twice still fires onChange.
+    event.target.value = "";
+    if (!file) return;
+
+    setError(null);
+    setPending(true);
+    try {
+      const formData = new FormData();
+      formData.set("file", file);
+      // try/catch matters: 029's original bug was a thrown action crashing
+      // the editor. A returned {success:false} is handled below; a thrown
+      // one is caught here.
+      const result = await uploadAvatar(formData);
+      if (result.success) {
+        setUploaded(result.url);
+        router.refresh();
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError("Couldn't upload this image right now. Please try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function handleRemove() {
+    setError(null);
+    setPending(true);
+    try {
+      const result = await removeAvatar();
+      if (result.success) {
+        setUploaded(null);
+        router.refresh();
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError("Couldn't remove your photo right now. Please try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <section className="rounded-2xl border border-border bg-surface-2 p-6">
+      <h2 className="mb-1 text-lg font-bold text-text">Profile photo</h2>
+      <p className="mb-4 text-[13px] text-text-dim">
+        Upload a photo, or leave it and we&apos;ll use your initial.
+      </p>
+
+      <div className="flex items-center gap-5">
+        <Avatar
+          avatarImage={uploaded}
+          googleImage={image}
+          avatarColor={avatarColor}
+          handle={handle}
+          className="h-20 w-20 shrink-0 rounded-[20px] text-3xl"
+        />
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={pending}
+              className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-bold text-text disabled:opacity-60"
+            >
+              {pending ? "Working…" : uploaded ? "Replace photo" : "Upload photo"}
+            </button>
+            {uploaded && (
+              <button
+                type="button"
+                onClick={handleRemove}
+                disabled={pending}
+                className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-bold text-pop-text disabled:opacity-60"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <p className="font-mono text-[11px] text-text-dim">JPEG, PNG, or WebP · up to 5MB</p>
+          {error && (
+            <p role="alert" className="text-[13px] text-pop-text">
+              {error}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+    </section>
   );
 }
 

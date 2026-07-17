@@ -17,6 +17,8 @@ export type PostingReview = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   authorJoinedAt: Date;
   priorWarnings: number;
   totalPosts: number;
@@ -42,7 +44,14 @@ export async function getPostingReview(postingId: string): Promise<PostingReview
 
   const [[author], reportRows, [warningsRow], [postsRow]] = await Promise.all([
     db
-      .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, createdAt: users.createdAt })
+      .select({
+        id: users.id,
+        handle: users.handle,
+        avatarColor: users.avatarColor,
+        avatarImage: users.avatarImage,
+        image: users.image,
+        createdAt: users.createdAt,
+      })
       .from(users)
       .where(eq(users.id, posting.hostId)),
     db
@@ -74,6 +83,8 @@ export async function getPostingReview(postingId: string): Promise<PostingReview
     authorId: author.id,
     authorHandle: author.handle ?? "player",
     authorAvatarColor: author.avatarColor,
+    authorAvatarImage: author.avatarImage,
+    authorImage: author.image,
     authorJoinedAt: author.createdAt,
     priorWarnings: warningsRow.n,
     totalPosts: postsRow.n,

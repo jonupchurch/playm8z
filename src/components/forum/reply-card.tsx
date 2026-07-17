@@ -1,4 +1,4 @@
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { relativeAge } from "@/components/listings/listing-card";
 import { LikeButton } from "@/components/forum/like-button";
 import { ReportButton } from "@/components/forum/report-button";
@@ -17,19 +17,16 @@ export function ReplyCard({
   onQuote: (reply: { id: string; authorHandle: string; body: string }) => void;
   isLoggedIn: boolean;
 }) {
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === reply.authorAvatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
-  const initial = (reply.authorHandle.trim()[0] || "P").toUpperCase();
-
   return (
     <div className="rounded-2xl border border-border bg-surface-2 p-4.5">
       <div className="mb-3 flex items-center gap-2.5">
-        <div
-          style={{ background: avatarGradient }}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-on-accent"
-        >
-          {initial}
-        </div>
+        <Avatar
+          avatarImage={reply.authorAvatarImage}
+          googleImage={reply.authorImage}
+          avatarColor={reply.authorAvatarColor}
+          handle={reply.authorHandle}
+          className="h-9 w-9 shrink-0 rounded-lg text-sm"
+        />
         <div className="flex-1">
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-bold text-text">@{reply.authorHandle}</span>

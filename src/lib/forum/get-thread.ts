@@ -12,6 +12,8 @@ export type ReplyDetail = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   body: string;
   quotedReplyId: string | null;
   quotedAuthorHandle: string | null;
@@ -35,6 +37,8 @@ export type ThreadDetail = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   authorRegion: string | null;
   title: string;
   body: string;
@@ -70,6 +74,8 @@ export async function getThread(threadId: string, sort: ReplySort, viewerId?: st
       authorId: forumThreads.authorId,
       authorHandle: users.handle,
       authorAvatarColor: users.avatarColor,
+      authorAvatarImage: users.avatarImage,
+      authorImage: users.image,
       authorRegion: users.region,
       title: forumThreads.title,
       body: forumThreads.body,
@@ -96,6 +102,8 @@ export async function getThread(threadId: string, sort: ReplySort, viewerId?: st
       authorId: forumReplies.authorId,
       authorHandle: users.handle,
       authorAvatarColor: users.avatarColor,
+      authorAvatarImage: users.avatarImage,
+      authorImage: users.image,
       body: forumReplies.body,
       quotedReplyId: forumReplies.quotedReplyId,
       quotedBody: quoted.body,

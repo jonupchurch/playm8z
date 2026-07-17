@@ -6,6 +6,8 @@ const basePosting: ListingCardPosting = {
   id: "11111111-1111-1111-1111-111111111111",
   hostHandle: "mara",
   hostAvatarColor: "amber-orange",
+  hostAvatarImage: null,
+  hostImage: null,
   game: "Helldivers 2",
   title: "Casual Dives — all welcome",
   blurb: "Here to blow stuff up and laugh.",

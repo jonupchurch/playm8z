@@ -6,13 +6,9 @@ import { relativeAge } from "@/components/listings/listing-card";
 import { dismissReport } from "@/lib/actions/dismiss-report";
 import { resolveReportAction } from "@/lib/actions/resolve-report-action";
 import { reasonLabel, severityBadgeClass, severityLabel, type Severity } from "@/lib/moderation/reason-severity";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { ReportsQueueFilter, ReportTargetType } from "@/lib/validations/admin-reports";
 import type { ReportsQueueItem, ReportsQueueStats } from "@/lib/admin/get-reports-queue";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function cardEdgeClass(severity: Severity) {
   if (severity === "high") return "border-[rgba(255,59,107,0.3)]";
@@ -172,12 +168,13 @@ export function ReportsQueue({ stats, rows }: { stats: ReportsQueueStats; rows: 
                   </div>
 
                   <div className="mb-2.5 flex gap-2">
-                    <div
-                      style={{ background: avatarGradient(row.reporterAvatarColor) }}
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[10px] font-bold text-on-accent"
-                    >
-                      {row.reporterHandle.trim()[0]?.toUpperCase() || "P"}
-                    </div>
+                    <Avatar
+                      avatarImage={row.reporterAvatarImage}
+                      googleImage={row.reporterImage}
+                      avatarColor={row.reporterAvatarColor}
+                      handle={row.reporterHandle}
+                      className="h-6 w-6 shrink-0 rounded-md text-[10px]"
+                    />
                     <div className="min-w-0 text-[13px] leading-snug">
                       <span className="font-mono text-[10px] text-text-dim">@{row.reporterHandle} reported:</span>{" "}
                       <span className="text-text-muted">&ldquo;{row.note}&rdquo;</span>
@@ -185,12 +182,13 @@ export function ReportsQueue({ stats, rows }: { stats: ReportsQueueStats; rows: 
                   </div>
 
                   <div className="flex gap-2.5 rounded-[11px] border border-border bg-surface p-3">
-                    <div
-                      style={{ background: avatarGradient(row.ownerAvatarColor) }}
-                      className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-on-accent"
-                    >
-                      {row.ownerHandle.trim()[0]?.toUpperCase() || "P"}
-                    </div>
+                    <Avatar
+                      avatarImage={row.ownerAvatarImage}
+                      googleImage={row.ownerImage}
+                      avatarColor={row.ownerAvatarColor}
+                      handle={row.ownerHandle}
+                      className="h-6.5 w-6.5 shrink-0 rounded-lg text-[11px]"
+                    />
                     <div className="min-w-0">
                       <div className="mb-0.5 font-mono text-[10px] text-accent-2">
                         @{row.ownerHandle} · {row.context}

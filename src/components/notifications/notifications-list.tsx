@@ -12,7 +12,7 @@ import {
   type NotificationItem,
 } from "@/lib/notifications/filter-notifications";
 import { relativeAge } from "@/components/listings/listing-card";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 
 const TYPE_ICON: Record<string, { icon: string; bg: string }> = {
   join: { icon: "👥", bg: "#ffb000" },
@@ -32,10 +32,6 @@ const FILTERS: { key: NotificationFilter; label: string }[] = [
   { key: "forum", label: "Forum" },
   { key: "system", label: "System" },
 ];
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-005/research.md #2: Accept/Decline call Inbox's (011) existing
 // Server Actions directly -- no duplicated accept/decline logic. On
@@ -78,12 +74,13 @@ function RequestRow({ item }: { item: Extract<NotificationItem, { kind: "request
       className="flex gap-3 border-b border-border/60 px-4 py-3.5 last:border-b-0"
     >
       <div className="relative shrink-0">
-        <div
-          style={{ background: avatarGradient(item.actorAvatarColor) }}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-on-accent"
-        >
-          {item.actorHandle.trim()[0]?.toUpperCase() || "P"}
-        </div>
+        <Avatar
+          avatarImage={item.actorAvatarImage}
+          googleImage={item.actorImage}
+          avatarColor={item.actorAvatarColor}
+          handle={item.actorHandle}
+          className="h-10 w-10 rounded-xl text-sm"
+        />
         <span
           aria-hidden="true"
           style={{ background: TYPE_ICON.join.bg }}
@@ -162,12 +159,13 @@ function PlainRow({ item }: { item: Extract<NotificationItem, { kind: "notificat
       className="flex w-full gap-3 border-b border-border/60 px-4 py-3.5 text-left last:border-b-0 hover:bg-surface"
     >
       <div className="relative shrink-0">
-        <div
-          style={{ background: avatarGradient(item.actorAvatarColor) }}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-on-accent"
-        >
-          {(item.actorHandle?.trim()[0] || "P").toUpperCase()}
-        </div>
+        <Avatar
+          avatarImage={item.actorAvatarImage}
+          googleImage={item.actorImage}
+          avatarColor={item.actorAvatarColor}
+          handle={item.actorHandle}
+          className="h-10 w-10 rounded-xl text-sm"
+        />
         <span
           aria-hidden="true"
           style={{ background: meta.bg }}

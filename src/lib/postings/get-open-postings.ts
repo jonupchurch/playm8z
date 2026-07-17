@@ -8,6 +8,8 @@ export type OpenPosting = {
   hostId: string;
   hostHandle: string;
   hostAvatarColor: string | null;
+  hostAvatarImage: string | null;
+  hostImage: string | null;
   game: string;
   title: string;
   blurb: string;
@@ -35,6 +37,8 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
       hostId: postings.hostId,
       hostHandle: users.handle,
       hostAvatarColor: users.avatarColor,
+      hostAvatarImage: users.avatarImage,
+      hostImage: users.image,
       game: postings.game,
       title: postings.title,
       blurb: postings.blurb,

@@ -4,13 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { relativeAge } from "@/components/listings/listing-card";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { ComposeModal } from "@/components/inbox/compose-modal";
 import type { InboxItem } from "@/lib/inbox/get-inbox-list";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-002/FR-003: the list is scoped to a single user's own inbox (a
 // bounded, single-parent list, not one that grows indefinitely across
@@ -80,14 +76,19 @@ export function ConversationList({ items }: { items: InboxItem[] }) {
                 isActive ? "border-border bg-surface-2" : "border-transparent hover:bg-surface-2"
               }`}
             >
-              <div
-                style={{ background: item.avatarColor ? avatarGradient(item.avatarColor) : undefined }}
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent ${
-                  item.avatarColor ? "" : "bg-[linear-gradient(120deg,var(--color-accent),var(--color-accent-2))]"
-                }`}
-              >
-                {initial}
-              </div>
+              {item.isGroup ? (
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(120deg,var(--color-accent),var(--color-accent-2))] text-base font-bold text-on-accent">
+                  {initial}
+                </div>
+              ) : (
+                <Avatar
+                  avatarImage={item.avatarImage}
+                  googleImage={item.image}
+                  avatarColor={item.avatarColor}
+                  handle={item.name.replace("@", "")}
+                  className="h-11 w-11 shrink-0 rounded-xl text-base"
+                />
+              )}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <span className={`truncate text-sm ${hasUnread ? "font-bold text-text" : "font-semibold text-text"}`}>

@@ -10,6 +10,8 @@ export type ContactCandidate = {
   id: string;
   handle: string;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
 };
 
 const CONTACT_LIMIT = 20;
@@ -52,7 +54,13 @@ export async function searchContacts(query: string): Promise<ContactCandidate[]>
   }
 
   const rows = await db
-    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor })
+    .select({
+      id: users.id,
+      handle: users.handle,
+      avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
+    })
     .from(users)
     .where(and(...conditions))
     .limit(CONTACT_LIMIT);

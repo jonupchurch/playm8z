@@ -13,6 +13,8 @@ export type ReportReview = {
   reportCount: number;
   reporterHandle: string;
   reporterAvatarColor: string | null;
+  reporterAvatarImage: string | null;
+  reporterImage: string | null;
   note: string;
   othersCount: number;
   createdAt: Date;
@@ -23,6 +25,8 @@ export type ReportReview = {
   ownerId: string;
   ownerHandle: string;
   ownerAvatarColor: string | null;
+  ownerAvatarImage: string | null;
+  ownerImage: string | null;
   ownerJoinedAt: Date;
   priorWarnings: number;
   totalReports: number;
@@ -84,6 +88,8 @@ async function loadOpenReports(targetType: ReportTargetType, targetId: string) {
       createdAt: reports.createdAt,
       reporterHandle: users.handle,
       reporterAvatarColor: users.avatarColor,
+      reporterAvatarImage: users.avatarImage,
+      reporterImage: users.image,
     })
     .from(reports)
     .innerJoin(users, eq(reports.reporterId, users.id))
@@ -93,7 +99,17 @@ async function loadOpenReports(targetType: ReportTargetType, targetId: string) {
 
 async function loadOwnerCard(ownerId: string) {
   const [[owner], [warningsRow], totalReports] = await Promise.all([
-    db.select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, createdAt: users.createdAt }).from(users).where(eq(users.id, ownerId)),
+    db
+      .select({
+        id: users.id,
+        handle: users.handle,
+        avatarColor: users.avatarColor,
+        avatarImage: users.avatarImage,
+        image: users.image,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.id, ownerId)),
     db.select({ n: sql<number>`count(*)::int` }).from(warnings).where(eq(warnings.userId, ownerId)),
     getTotalReportsForUser(ownerId),
   ]);
@@ -124,6 +140,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
     reportCount: openReports.length,
     reporterHandle: representative.reporterHandle ?? "player",
     reporterAvatarColor: representative.reporterAvatarColor,
+    reporterAvatarImage: representative.reporterAvatarImage,
+    reporterImage: representative.reporterImage,
     note: representative.details ?? reasonLabel(representativeReason),
     othersCount: openReports.length - 1,
     createdAt: representative.createdAt,
@@ -148,6 +166,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       ownerId: owner.id,
       ownerHandle: owner.handle ?? "player",
       ownerAvatarColor: owner.avatarColor,
+      ownerAvatarImage: owner.avatarImage,
+      ownerImage: owner.image,
       ownerJoinedAt: owner.createdAt,
       priorWarnings,
       totalReports,
@@ -177,6 +197,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
         ownerId: owner.id,
         ownerHandle: owner.handle ?? "player",
         ownerAvatarColor: owner.avatarColor,
+        ownerAvatarImage: owner.avatarImage,
+        ownerImage: owner.image,
         ownerJoinedAt: owner.createdAt,
         priorWarnings,
         totalReports,
@@ -205,6 +227,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       ownerId: owner.id,
       ownerHandle: owner.handle ?? "player",
       ownerAvatarColor: owner.avatarColor,
+      ownerAvatarImage: owner.avatarImage,
+      ownerImage: owner.image,
       ownerJoinedAt: owner.createdAt,
       priorWarnings,
       totalReports,
@@ -236,6 +260,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       ownerId: owner.id,
       ownerHandle: owner.handle ?? "player",
       ownerAvatarColor: owner.avatarColor,
+      ownerAvatarImage: owner.avatarImage,
+      ownerImage: owner.image,
       ownerJoinedAt: owner.createdAt,
       priorWarnings,
       totalReports,
@@ -256,6 +282,8 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
     ownerId: owner.id,
     ownerHandle: owner.handle ?? "player",
     ownerAvatarColor: owner.avatarColor,
+    ownerAvatarImage: owner.avatarImage,
+    ownerImage: owner.image,
     ownerJoinedAt: owner.createdAt,
     priorWarnings,
     totalReports,

@@ -1,9 +1,14 @@
+import { Avatar } from "@/components/ui/avatar";
 import type { PublicProfileReview } from "@/lib/profile/get-public-profile";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
 
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
+// Each reviewer avatar renders through the shared <Avatar>, so a review
+// must carry the reviewer's uploaded/Google image alongside the gradient
+// colour (034/FR-008). The feeder query (get-public-profile.ts) selects
+// `reviewerAvatarImage`/`reviewerImage` next to `reviewerAvatarColor`.
+type ReviewWithAvatar = PublicProfileReview & {
+  reviewerAvatarImage: string | null;
+  reviewerImage: string | null;
+};
 
 // FR-001/research.md #6: display-only -- no rating-submission writer
 // exists yet (deferred platform-wide, docs/future-work.md), so a fresh
@@ -14,7 +19,7 @@ export function ProfileReviews({
   avgRating,
   reviewCount,
 }: {
-  reviews: PublicProfileReview[];
+  reviews: ReviewWithAvatar[];
   avgRating: number | null;
   reviewCount: number;
 }) {
@@ -34,12 +39,13 @@ export function ProfileReviews({
         <div className="flex flex-col gap-4">
           {reviews.map((review) => (
             <div key={review.id} className="flex gap-3">
-              <div
-                style={{ background: avatarGradient(review.reviewerAvatarColor) }}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-sm font-bold text-on-accent"
-              >
-                {review.reviewerHandle.slice(0, 1).toUpperCase()}
-              </div>
+              <Avatar
+                avatarImage={review.reviewerAvatarImage}
+                googleImage={review.reviewerImage}
+                avatarColor={review.reviewerAvatarColor}
+                handle={review.reviewerHandle}
+                className="h-9 w-9 shrink-0 rounded-[10px] text-sm"
+              />
               <div className="min-w-0 flex-1">
                 <div className="mb-0.5 flex items-center gap-2">
                   <span className="text-sm font-semibold text-text">@{review.reviewerHandle}</span>

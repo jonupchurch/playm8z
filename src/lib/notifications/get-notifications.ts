@@ -24,6 +24,8 @@ export async function getNotifications(userId: string): Promise<NotificationItem
       type: notifications.type,
       actorHandle: users.handle,
       actorAvatarColor: users.avatarColor,
+      actorAvatarImage: users.avatarImage,
+      actorImage: users.image,
       text: notifications.text,
       targetRef: notifications.targetRef,
       read: notifications.read,
@@ -39,6 +41,8 @@ export async function getNotifications(userId: string): Promise<NotificationItem
     type: row.type as NotificationType,
     actorHandle: row.actorHandle,
     actorAvatarColor: row.actorAvatarColor,
+    actorAvatarImage: row.actorAvatarImage,
+    actorImage: row.actorImage,
     text: row.text,
     targetRef: row.targetRef,
     unread: !row.read,
@@ -55,6 +59,8 @@ export async function getNotifications(userId: string): Promise<NotificationItem
       postingGame: postings.game,
       applicantHandle: users.handle,
       applicantAvatarColor: users.avatarColor,
+      applicantAvatarImage: users.avatarImage,
+      applicantImage: users.image,
     })
     .from(applications)
     .innerJoin(postings, eq(applications.postingId, postings.id))
@@ -70,6 +76,8 @@ export async function getNotifications(userId: string): Promise<NotificationItem
       status,
       actorHandle,
       actorAvatarColor: row.applicantAvatarColor,
+      actorAvatarImage: row.applicantAvatarImage,
+      actorImage: row.applicantImage,
       context: `${row.postingGame} · ${row.postingTitle}`,
       resolvedText:
         status === "accepted"

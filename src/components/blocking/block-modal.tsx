@@ -4,12 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { blockUser } from "@/lib/actions/block-user";
 import { searchBlockCandidates } from "@/lib/actions/search-block-candidates";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { UserCandidate } from "@/lib/users/search-users";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-005: reusable, two-step (pick candidate -> confirm) dialog. When
 // a target is pre-selected (a future caller invoking this directly
@@ -140,12 +136,13 @@ export function BlockModal({
                 onClick={() => handlePick(candidate)}
                 className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left hover:bg-surface"
               >
-                <div
-                  style={{ background: avatarGradient(candidate.avatarColor) }}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-sm font-bold text-on-accent"
-                >
-                  {candidate.handle.trim()[0]?.toUpperCase() || "P"}
-                </div>
+                <Avatar
+                  avatarImage={candidate.avatarImage}
+                  googleImage={candidate.image}
+                  avatarColor={candidate.avatarColor}
+                  handle={candidate.handle}
+                  className="h-9 w-9 shrink-0 rounded-[11px] text-sm"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold text-text">@{candidate.handle}</div>
                 </div>
@@ -162,12 +159,13 @@ export function BlockModal({
       {step === "confirm" && selected && (
         <div className="flex-1 overflow-y-auto p-5">
           <div className="mb-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-3.5">
-            <div
-              style={{ background: avatarGradient(selected.avatarColor) }}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-            >
-              {selected.handle.trim()[0]?.toUpperCase() || "P"}
-            </div>
+            <Avatar
+              avatarImage={selected.avatarImage}
+              googleImage={selected.image}
+              avatarColor={selected.avatarColor}
+              handle={selected.handle}
+              className="h-11 w-11 shrink-0 rounded-xl text-base"
+            />
             <div className="text-sm font-bold text-text">@{selected.handle}</div>
           </div>
           <p className="mb-3.5 text-sm leading-relaxed text-text-muted">

@@ -25,6 +25,8 @@ export type UserDetail = {
   handle: string;
   email: string;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   region: string | null;
   createdAt: Date;
   bannedAt: Date | null;
@@ -45,6 +47,8 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
       handle: users.handle,
       email: users.email,
       avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       region: users.region,
       createdAt: users.createdAt,
       bannedAt: users.bannedAt,

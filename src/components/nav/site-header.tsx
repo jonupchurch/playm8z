@@ -53,7 +53,7 @@ export async function SiteHeader() {
   }
 
   const [user] = await db
-    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, role: users.role })
+    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, avatarImage: users.avatarImage, image: users.image, role: users.role })
     .from(users)
     .where(eq(users.email, session.user.email));
   if (!user) {
@@ -87,7 +87,12 @@ export async function SiteHeader() {
           Post a game
         </Link>
         <NotificationBell unreadCount={unreadCount} preview={preview} />
-        <ProfileMenu handle={user.handle ?? "player"} avatarColor={user.avatarColor} />
+        <ProfileMenu
+          handle={user.handle ?? "player"}
+          avatarColor={user.avatarColor}
+          avatarImage={user.avatarImage}
+          image={user.image}
+        />
       </div>
     </SiteHeaderFrame>
   );

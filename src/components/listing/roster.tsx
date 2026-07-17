@@ -1,4 +1,4 @@
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { Roster as RosterData } from "@/lib/postings/get-roster";
 
 // FR-004: host + accepted members + dashed open rows -- no role/class
@@ -35,8 +35,6 @@ export function Roster({ roster, seatsTotal }: { roster: RosterData; seatsTotal:
             );
           }
 
-          const avatarGradient =
-            AVATAR_COLORS.find((swatch) => swatch.id === row.avatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
           const isHost = row.kind === "host";
 
           return (
@@ -44,12 +42,13 @@ export function Roster({ roster, seatsTotal }: { roster: RosterData; seatsTotal:
               key={`${row.kind}-${row.handle}-${index}`}
               className="flex items-center gap-3 rounded-xl border border-border bg-surface px-3.5 py-2.5"
             >
-              <div
-                style={{ background: avatarGradient }}
-                className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-on-accent"
-              >
-                {(row.handle.trim()[0] || "P").toUpperCase()}
-              </div>
+              <Avatar
+                avatarImage={row.avatarImage}
+                googleImage={row.image}
+                avatarColor={row.avatarColor}
+                handle={row.handle}
+                className="h-9.5 w-9.5 shrink-0 rounded-lg text-sm"
+              />
               <div className="flex-1 text-[14px] font-bold text-text">@{row.handle}</div>
               <span
                 className={

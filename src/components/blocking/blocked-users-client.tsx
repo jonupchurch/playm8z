@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { UnblockModal, type UnblockTarget } from "./unblock-modal";
 import { BlockModal } from "./block-modal";
 
@@ -9,13 +9,11 @@ export type BlockedUserRow = {
   blockId: string;
   handle: string;
   avatarColor: string | null;
+  avatarImage?: string | null;
+  image?: string | null;
   blockedAt: string;
   hasReport: boolean;
 };
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function formatBlockedDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
@@ -92,12 +90,13 @@ export function BlockedUsersClient({ initialBlocked }: { initialBlocked: Blocked
         <div className="overflow-hidden rounded-2xl border border-border bg-surface-2">
           {filtered.map((row) => (
             <div key={row.blockId} className="flex items-center gap-3.5 border-b border-border p-4 last:border-b-0">
-              <div
-                style={{ background: avatarGradient(row.avatarColor) }}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent opacity-85 grayscale-[0.35]"
-              >
-                {row.handle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={row.avatarImage}
+                googleImage={row.image}
+                avatarColor={row.avatarColor}
+                handle={row.handle}
+                className="h-11 w-11 shrink-0 rounded-xl text-base opacity-85 grayscale-[0.35]"
+              />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[15px] font-bold text-text">@{row.handle}</span>
@@ -114,7 +113,13 @@ export function BlockedUsersClient({ initialBlocked }: { initialBlocked: Blocked
               <button
                 type="button"
                 onClick={() =>
-                  setUnblockTarget({ blockId: row.blockId, handle: row.handle, avatarColor: row.avatarColor })
+                  setUnblockTarget({
+                    blockId: row.blockId,
+                    handle: row.handle,
+                    avatarColor: row.avatarColor,
+                    avatarImage: row.avatarImage,
+                    image: row.image,
+                  })
                 }
                 className="shrink-0 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text"
               >

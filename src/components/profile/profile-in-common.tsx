@@ -1,15 +1,20 @@
-import type { InCommon } from "@/lib/profile/get-in-common";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
+import type { InCommon, MutualFollow } from "@/lib/profile/get-in-common";
 
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
+// The mutual-follow avatars render through the shared <Avatar>, so each
+// follow must carry the uploaded/Google image alongside its gradient
+// colour (034/FR-008). The feeder query (get-in-common.ts) selects
+// `avatarImage`/`image` next to `avatarColor`.
+type InCommonProps = {
+  mutualFollows: (MutualFollow & { avatarImage: string | null; image: string | null })[];
+  sharedGames: InCommon["sharedGames"];
+};
 
 // FR-008: mutual follows + shared games, authenticated non-self
 // viewers only -- the caller (page.tsx) never renders this for a
 // logged-out or self view, so there's no separate prop guarding that
 // here.
-export function ProfileInCommon({ mutualFollows, sharedGames }: InCommon) {
+export function ProfileInCommon({ mutualFollows, sharedGames }: InCommonProps) {
   const isEmpty = mutualFollows.length === 0 && sharedGames.length === 0;
 
   return (
@@ -23,13 +28,14 @@ export function ProfileInCommon({ mutualFollows, sharedGames }: InCommon) {
             <div className="mb-3.5 flex items-center gap-2.5">
               <div className="flex">
                 {mutualFollows.slice(0, 3).map((follow, index) => (
-                  <div
+                  <Avatar
                     key={follow.id}
-                    style={{ background: avatarGradient(follow.avatarColor), marginLeft: index > 0 ? "-8px" : 0 }}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg border-2 border-surface-2 text-[11px] font-bold text-on-accent"
-                  >
-                    {follow.handle.slice(0, 1).toUpperCase()}
-                  </div>
+                    avatarImage={follow.avatarImage}
+                    googleImage={follow.image}
+                    avatarColor={follow.avatarColor}
+                    handle={follow.handle}
+                    className={`h-7 w-7 rounded-lg border-2 border-surface-2 text-[11px] ${index > 0 ? "-ml-2" : ""}`}
+                  />
                 ))}
               </div>
               <span className="text-[13px] text-text-muted">
