@@ -1,23 +1,79 @@
+import { appUrl } from "@/lib/email/app-url";
+import { sendEmail, type SendEmailResult } from "@/lib/email/send-email";
+
 interface VerificationUser {
   email: string;
   name?: string | null;
 }
 
 /**
- * Sends the sign-up verification email. Resend (research.md #1) can't be
- * provisioned yet -- its Vercel Marketplace install requires a domain,
- * which this project doesn't own yet -- so this logs the verification
- * link to the server console instead of sending a real email. Swapping in
- * the real Resend client once a domain exists is a one-line change behind
- * this same function signature.
+ * Sends the sign-up verification email (001/FR-013).
+ *
+ * Until 2026-07-16 this only console.log'd the link: Resend was chosen in
+ * 001's research.md #1, but its install needs a domain you own and the
+ * project had none. `playm8z.net` now exists and Resend is provisioned on
+ * `send.playm8z.net`, so this sends for real.
+ *
+ * Returns rather than throws, and the callers rely on that -- see
+ * send-email.ts. Both `register/route.ts` and `update-email.ts` have
+ * already committed a user row and a token row by the time they call
+ * this; a throw would fail a request whose real work is done.
  */
 export async function sendVerificationEmail(
   user: VerificationUser,
   token: string,
-): Promise<void> {
-  const verifyUrl = `${process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/api/auth/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(user.email)}`;
+): Promise<SendEmailResult> {
+  const verifyUrl = `${appUrl()}/api/auth/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(user.email)}`;
+  const greeting = user.name ? `Hi ${user.name},` : "Hi,";
 
-  console.log(
-    `[send-verification-email] Verification link for ${user.email}:\n${verifyUrl}`,
-  );
+  const result = await sendEmail({
+    to: user.email,
+    subject: "Verify your email for playm8z",
+    // Keyed on the token, not the user: a re-send issues a *new* token and
+    // must actually go out, whereas a retry of this same send carries the
+    // same token and should not double-deliver.
+    idempotencyKey: `verify-email/${token}`,
+    text: `${greeting}
+
+Confirm your email address to finish setting up your playm8z account:
+
+${verifyUrl}
+
+This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore this email.`,
+    html: `<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:24px;background:#0f1115;color:#e8eaed;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+    <div style="max-width:480px;margin:0 auto;">
+      <h1 style="font-size:20px;margin:0 0 16px;">Verify your email</h1>
+      <p style="margin:0 0 16px;line-height:1.5;">${escapeHtml(greeting)}</p>
+      <p style="margin:0 0 24px;line-height:1.5;">Confirm your email address to finish setting up your playm8z account.</p>
+      <p style="margin:0 0 24px;">
+        <a href="${escapeHtml(verifyUrl)}" style="display:inline-block;background:#7c5cff;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;">Verify email</a>
+      </p>
+      <p style="margin:0 0 8px;line-height:1.5;font-size:13px;color:#9aa0a6;">Or paste this into your browser:</p>
+      <p style="margin:0 0 24px;line-height:1.5;font-size:13px;word-break:break-all;"><a href="${escapeHtml(verifyUrl)}" style="color:#a48bff;">${escapeHtml(verifyUrl)}</a></p>
+      <p style="margin:0;line-height:1.5;font-size:13px;color:#9aa0a6;">This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore this email.</p>
+    </div>
+  </body>
+</html>`,
+  });
+
+  if (!result.sent && result.reason !== "not-configured") {
+    // The account and its token already exist -- the user simply has no
+    // way in. Loud, addressable, and greppable in Vercel's logs.
+    console.error(`[send-verification-email] Could not send to ${user.email}: ${result.reason}`);
+  }
+
+  return result;
+}
+
+// The name is user-supplied and lands in an HTML document. The URL is
+// ours, but its token/email are url-encoded, not html-encoded, so `&`
+// between the query params would otherwise be an unterminated entity.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

@@ -11,13 +11,28 @@ the top discover result when a need isn't in the preferred-provider table.
 provisioning, unified billing), a Next.js-friendly SDK, and a free tier
 sufficient for early-stage volume.
 
-**Status: provisioning blocked on domain ownership.** Resend's Vercel
-Marketplace install requires a `domain` metadata value ("you must own a
-domain to be able to send" — there is no sandbox/testing sender available
-through this install path). The user does not yet own a domain (the
-custom domain question was separately deferred — see `status.md`). This
-is an external prerequisite outside this feature's control, not a design
-gap.
+**Status: RESOLVED 2026-07-16 — provisioned and sending.** See feature
+`033-transactional-email`. Kept below for the record.
+
+> ~~**Status: provisioning blocked on domain ownership.**~~ Resend's Vercel
+> Marketplace install requires a `domain` metadata value ("you must own a
+> domain to be able to send" — there is no sandbox/testing sender available
+> through this install path). The user does not yet own a domain (the
+> custom domain question was separately deferred — see `status.md`). This
+> is an external prerequisite outside this feature's control, not a design
+> gap.
+
+The blocker cleared when `playm8z.net` was registered (2026-07-14, for the
+production deploy — not for this). Nothing connected the two, so the
+console.log fallback stayed live in production for two days, meaning
+**FR-013 was not actually met**: every Credentials sign-up was emailed
+nothing, stayed unverified, and was therefore blocked by FR-014 from
+posting, applying, or messaging. Google sign-ups were unaffected (they're
+auto-verified), which is why nobody noticed.
+
+Resend is now installed on `send.playm8z.net` (free plan, `us-east-1`),
+verified, and sending. A subdomain rather than the apex, so the root's
+single permitted SPF record stays free for a future mailbox.
 
 **Fallback for implementation before a domain exists**: build the
 verification-email step behind a small abstraction (e.g. a
@@ -29,6 +44,35 @@ becomes a one-line swap to the real Resend client once a domain exists
 and the integration is provisioned. Tasks.md should include an explicit
 "wire up Resend once a domain is available" task rather than assuming it
 happens automatically.
+
+**Retrospective on the two claims above (2026-07-16).** Both were wrong,
+and worth recording because the shape recurs:
+
+1. *"Tasks.md should include an explicit task..."* — it never got one. The
+   sentence naming the risk was written; the task guarding against it
+   wasn't. The safeguard against forgetting was itself forgotten, and this
+   sat until the user asked after it. A follow-up recorded only in prose,
+   in the research doc of a feature that then shipped, is not a follow-up.
+2. *"...becomes a one-line swap"* — it didn't. It was three, and two were
+   invisible until the swap was attempted:
+   - Resend's SDK does not throw on API errors, it returns `{data, error}`.
+     A `Promise<void>` wrapper swallows that and reports success by
+     silence — the same invisible failure the stub had.
+   - The link was built from `process.env.NEXTAUTH_URL ?? localhost`, and
+     `NEXTAUTH_URL` was set **nowhere in the repo**. Always undefined,
+     always localhost. The stub hid it perfectly: locally the fallback is
+     correct, and in production nobody reads a console.log. Turning on real
+     sending without fixing it would have delivered a working email
+     containing a dead link. Now `src/lib/email/app-url.ts`, with the
+     regression test that would have caught it.
+   - The sender must sit on the *verified* domain exactly or Resend 403s,
+     so it's derived from `RESEND_EMAIL_DOMAIN` rather than hand-set.
+
+   The general lesson: a stub that "keeps the feature fully testable" tests
+   the code around the seam, not the seam. Everything on the far side of it
+   — env vars only production sets, an SDK's error contract — is exactly
+   what no test was covering, and stays unexercised for as long as the stub
+   is in place.
 
 **Alternatives considered**: none — Resend was the only discover result
 for `messaging`, and no other provider was named by the user.
