@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { categoryDot, categoryLabel } from "@/lib/forum/categories";
 import { relativeAge } from "@/components/listings/listing-card";
 import type { ForumThreadRow } from "@/lib/forum/search-threads";
@@ -22,9 +22,6 @@ function formatCount(n: number): string {
 // never both, never neither unless it qualifies for neither. Author
 // identity is always @handle, never display name (ADR 0006).
 export function ThreadRow({ thread }: { thread: ForumThreadRow }) {
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === thread.authorAvatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
-  const initial = (thread.authorHandle.trim()[0] || "P").toUpperCase();
   const badge = thread.pinned ? { label: "PINNED", className: "bg-accent text-on-accent" } : thread.hot ? { label: "HOT", className: "bg-pop text-on-accent" } : null;
 
   return (
@@ -32,12 +29,13 @@ export function ThreadRow({ thread }: { thread: ForumThreadRow }) {
       href={`/forum/thread/${thread.id}`}
       className="flex gap-3.5 border-b border-border p-4.5 transition-colors last:border-b-0 hover:bg-surface"
     >
-      <div
-        style={{ background: avatarGradient }}
-        className="flex h-10.5 w-10.5 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-      >
-        {initial}
-      </div>
+      <Avatar
+        avatarImage={thread.authorAvatarImage}
+        googleImage={thread.authorImage}
+        avatarColor={thread.authorAvatarColor}
+        handle={thread.authorHandle}
+        className="h-10.5 w-10.5 shrink-0 rounded-xl text-base"
+      />
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex flex-wrap items-center gap-2">
           {badge && (

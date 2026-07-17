@@ -3,12 +3,8 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toggleUserBan } from "@/lib/actions/toggle-user-ban";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { AdminUserRow, AdminUsersStats } from "@/lib/admin/search-admin-users";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function statusBadgeClass(status: AdminUserRow["status"]) {
   if (status === "active") {
@@ -180,12 +176,13 @@ export function UserTable({ stats, rows }: { stats: AdminUsersStats; rows: Admin
             className="grid grid-cols-[2.2fr_1.6fr_1fr_1.1fr_1fr_2fr] items-center gap-3 border-b border-border/60 px-4.5 py-3.5 last:border-b-0"
           >
             <button type="button" onClick={() => openDrawer(row.id)} className="flex min-w-0 items-center gap-2.5 text-left">
-              <div
-                style={{ background: avatarGradient(row.avatarColor) }}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-sm font-bold text-on-accent"
-              >
-                {row.handle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={row.avatarImage}
+                googleImage={row.image}
+                avatarColor={row.avatarColor}
+                handle={row.handle}
+                className="h-9 w-9 shrink-0 rounded-[11px] text-sm"
+              />
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-text">@{row.handle}</div>
                 <div className="font-mono text-[10px] text-text-dim">

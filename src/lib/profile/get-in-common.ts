@@ -2,7 +2,7 @@ import { eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { follows, userGames, users } from "@/db/schema";
 
-export type MutualFollow = { id: string; handle: string; avatarColor: string | null };
+export type MutualFollow = { id: string; handle: string; avatarColor: string | null; avatarImage: string | null; image: string | null };
 
 export type InCommon = {
   mutualFollows: MutualFollow[];
@@ -30,7 +30,7 @@ export async function getInCommon(viewerId: string, profileOwnerId: string): Pro
   const mutualIds = viewerFollows.map((row) => row.followeeId).filter((id) => ownerFolloweeIds.has(id));
 
   const mutualFollows = mutualIds.length
-    ? await db.select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor }).from(users).where(inArray(users.id, mutualIds))
+    ? await db.select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, avatarImage: users.avatarImage, image: users.image }).from(users).where(inArray(users.id, mutualIds))
     : [];
 
   const ownerGameSet = new Set(ownerGames.map((row) => row.game));

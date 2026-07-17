@@ -3,7 +3,7 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { newsPosts, postings, savedListings, savedNewsPosts, users } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { newsCategoryColor } from "@/lib/validations/news";
 import { newsCoverStyle } from "@/lib/news/cover-style";
 import { UnsaveButton } from "@/components/profile/unsave-button";
@@ -37,6 +37,8 @@ export default async function SavedListingsPage() {
         region: postings.region,
         hostHandle: users.handle,
         hostAvatarColor: users.avatarColor,
+        hostAvatarImage: users.avatarImage,
+        hostImage: users.image,
         savedAt: savedListings.createdAt,
       })
       .from(savedListings)
@@ -77,21 +79,19 @@ export default async function SavedListingsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {saved.map((listing) => {
-            const avatarGradient =
-              AVATAR_COLORS.find((swatch) => swatch.id === listing.hostAvatarColor)?.gradient ??
-              AVATAR_COLORS[0].gradient;
             return (
               <div
                 key={listing.postingId}
                 className="flex flex-col rounded-2xl border border-border bg-surface p-4.5"
               >
                 <div className="mb-3.5 flex items-center gap-2.5">
-                  <div
-                    style={{ background: avatarGradient }}
-                    className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-on-accent"
-                  >
-                    {(listing.hostHandle?.trim()[0] || "P").toUpperCase()}
-                  </div>
+                  <Avatar
+                    avatarImage={listing.hostAvatarImage}
+                    googleImage={listing.hostImage}
+                    avatarColor={listing.hostAvatarColor}
+                    handle={listing.hostHandle}
+                    className="h-9.5 w-9.5 shrink-0 rounded-lg text-sm"
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-bold text-text">@{listing.hostHandle}</div>
                     <div className="font-mono text-[10px] text-text-muted">

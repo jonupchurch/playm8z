@@ -16,6 +16,8 @@ export type RequestNotificationItem = {
   status: "pending" | "accepted" | "declined";
   actorHandle: string;
   actorAvatarColor: string | null;
+  actorAvatarImage: string | null;
+  actorImage: string | null;
   context: string;
   resolvedText: string | null;
   targetRef: string;
@@ -29,6 +31,8 @@ export type PlainNotificationItem = {
   type: NotificationType;
   actorHandle: string | null;
   actorAvatarColor: string | null;
+  actorAvatarImage: string | null;
+  actorImage: string | null;
   text: string;
   targetRef: string;
   unread: boolean;

@@ -8,12 +8,8 @@ import { resolveForumReport } from "@/lib/actions/resolve-forum-report";
 import { banForumAuthor } from "@/lib/actions/ban-forum-author";
 import { AUTO_FLAG_LABELS, type AutoFlagReason } from "@/lib/moderation/auto-flag-rules";
 import { reasonLabel, reportReasonSeverity, severityBadgeClass, severityLabel } from "@/lib/moderation/reason-severity";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { ForumReview } from "@/lib/admin/get-forum-review";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function typeBadgeClass(type: "forumThread" | "forumReply") {
   return type === "forumThread"
@@ -139,12 +135,13 @@ export function ForumReviewDrawer({ review }: { review: ForumReview | null }) {
               </div>
             )}
             <div className="flex gap-2.5 rounded-[11px] border border-[rgba(255,59,107,0.3)] bg-[rgba(255,59,107,0.06)] p-3">
-              <div
-                style={{ background: avatarGradient(review.authorAvatarColor) }}
-                className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-on-accent"
-              >
-                {review.authorHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.authorAvatarImage}
+                googleImage={review.authorImage}
+                avatarColor={review.authorAvatarColor}
+                handle={review.authorHandle}
+                className="h-7.5 w-7.5 shrink-0 rounded-lg text-xs"
+              />
               <div>
                 <div className="mb-0.5 font-mono text-[10px] text-accent-2">@{review.authorHandle} · reported</div>
                 <p className="text-sm leading-relaxed text-text">{review.content}</p>
@@ -182,12 +179,13 @@ export function ForumReviewDrawer({ review }: { review: ForumReview | null }) {
           <div className="border-b border-border p-5.5">
             <div className="mb-3.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">Author</div>
             <div className="mb-3.5 flex items-center gap-3">
-              <div
-                style={{ background: avatarGradient(review.authorAvatarColor) }}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-              >
-                {review.authorHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.authorAvatarImage}
+                googleImage={review.authorImage}
+                avatarColor={review.authorAvatarColor}
+                handle={review.authorHandle}
+                className="h-11 w-11 rounded-xl text-base"
+              />
               <div>
                 <div className="text-sm font-bold text-text">@{review.authorHandle}</div>
                 <div className="font-mono text-[11px] text-text-muted">

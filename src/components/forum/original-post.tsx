@@ -1,4 +1,4 @@
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { relativeAge } from "@/components/listings/listing-card";
 import { LikeButton } from "@/components/forum/like-button";
 import { ReportButton } from "@/components/forum/report-button";
@@ -16,19 +16,16 @@ const REGION_LABELS: Record<string, string> = {
 // FR-002: renders distinctly from replies via the OP badge. Author
 // identity is always @handle, never display name (ADR 0006).
 export function OriginalPost({ thread, isLoggedIn }: { thread: ThreadDetail; isLoggedIn: boolean }) {
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === thread.authorAvatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
-  const initial = (thread.authorHandle.trim()[0] || "P").toUpperCase();
-
   return (
     <div className="rounded-2xl border border-accent-2/25 bg-surface p-5">
       <div className="mb-3.5 flex items-center gap-2.5">
-        <div
-          style={{ background: avatarGradient }}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-        >
-          {initial}
-        </div>
+        <Avatar
+          avatarImage={thread.authorAvatarImage}
+          googleImage={thread.authorImage}
+          avatarColor={thread.authorAvatarColor}
+          handle={thread.authorHandle}
+          className="h-10 w-10 shrink-0 rounded-xl text-base"
+        />
         <div className="flex-1">
           <div className="flex items-center gap-1.5">
             <span className="text-[15px] font-bold text-text">@{thread.authorHandle}</span>

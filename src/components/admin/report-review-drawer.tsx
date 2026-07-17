@@ -7,13 +7,9 @@ import { dismissReport } from "@/lib/actions/dismiss-report";
 import { resolveReportAction } from "@/lib/actions/resolve-report-action";
 import { banReportedUser } from "@/lib/actions/ban-reported-user";
 import { reasonLabel, severityBadgeClass, severityLabel } from "@/lib/moderation/reason-severity";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { targetTypeBadgeClass, targetTypeLabel } from "@/components/admin/reports-queue";
 import type { ReportReview } from "@/lib/admin/get-report-review";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-005/FR-006/FR-007/FR-008/FR-009: the drawer -- the representative
 // reporter's note (+ "+N others reported this" when applicable), the
@@ -113,12 +109,13 @@ export function ReportReviewDrawer({ review }: { review: ReportReview | null }) 
               {review.reportCount > 1 ? "Top reporter" : "Reporter"}
             </div>
             <div className="flex gap-2.5 rounded-[11px] border border-border bg-surface p-3">
-              <div
-                style={{ background: avatarGradient(review.reporterAvatarColor) }}
-                className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-on-accent"
-              >
-                {review.reporterHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.reporterAvatarImage}
+                googleImage={review.reporterImage}
+                avatarColor={review.reporterAvatarColor}
+                handle={review.reporterHandle}
+                className="h-7.5 w-7.5 shrink-0 rounded-lg text-xs"
+              />
               <div>
                 <div className="mb-0.5 text-[13px] font-semibold text-text">@{review.reporterHandle}</div>
                 <p className="text-[13px] leading-relaxed text-text-muted">&ldquo;{review.note}&rdquo;</p>
@@ -134,12 +131,13 @@ export function ReportReviewDrawer({ review }: { review: ReportReview | null }) 
           <div className="border-b border-border p-5.5">
             <div className="mb-3.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">Reported content</div>
             <div className="flex gap-2.5 rounded-[11px] border border-[rgba(255,59,107,0.3)] bg-[rgba(255,59,107,0.06)] p-3">
-              <div
-                style={{ background: avatarGradient(review.ownerAvatarColor) }}
-                className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-on-accent"
-              >
-                {review.ownerHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.ownerAvatarImage}
+                googleImage={review.ownerImage}
+                avatarColor={review.ownerAvatarColor}
+                handle={review.ownerHandle}
+                className="h-7.5 w-7.5 shrink-0 rounded-lg text-xs"
+              />
               <div>
                 <div className="mb-0.5 font-mono text-[10px] text-accent-2">
                   @{review.ownerHandle} · {review.context}
@@ -157,12 +155,13 @@ export function ReportReviewDrawer({ review }: { review: ReportReview | null }) 
           <div className="border-b border-border p-5.5">
             <div className="mb-3.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">Reported user</div>
             <div className="mb-3.5 flex items-center gap-3">
-              <div
-                style={{ background: avatarGradient(review.ownerAvatarColor) }}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-              >
-                {review.ownerHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.ownerAvatarImage}
+                googleImage={review.ownerImage}
+                avatarColor={review.ownerAvatarColor}
+                handle={review.ownerHandle}
+                className="h-11 w-11 rounded-xl text-base"
+              />
               <div>
                 <div className="text-sm font-bold text-text">@{review.ownerHandle}</div>
                 <div className="font-mono text-[11px] text-text-muted">

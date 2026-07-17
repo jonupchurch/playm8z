@@ -21,6 +21,8 @@ export type ForumReview = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   authorJoinedAt: Date;
   priorWarnings: number;
   forumPosts: number;
@@ -43,7 +45,14 @@ async function loadReports(targetId: string): Promise<ForumReviewReport[]> {
 async function loadAuthorCard(authorId: string) {
   const [[author], [warningsRow], [threadCountRow], [replyCountRow]] = await Promise.all([
     db
-      .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, createdAt: users.createdAt })
+      .select({
+        id: users.id,
+        handle: users.handle,
+        avatarColor: users.avatarColor,
+        avatarImage: users.avatarImage,
+        image: users.image,
+        createdAt: users.createdAt,
+      })
       .from(users)
       .where(eq(users.id, authorId)),
     db.select({ n: sql<number>`count(*)::int` }).from(warnings).where(eq(warnings.userId, authorId)),
@@ -95,6 +104,8 @@ export async function getForumReview(targetType: ForumTargetType, targetId: stri
       authorId: author.id,
       authorHandle: author.handle ?? "player",
       authorAvatarColor: author.avatarColor,
+      authorAvatarImage: author.avatarImage,
+      authorImage: author.image,
       authorJoinedAt: author.createdAt,
       priorWarnings,
       forumPosts,
@@ -159,6 +170,8 @@ export async function getForumReview(targetType: ForumTargetType, targetId: stri
     authorId: author.id,
     authorHandle: author.handle ?? "player",
     authorAvatarColor: author.avatarColor,
+    authorAvatarImage: author.avatarImage,
+    authorImage: author.image,
     authorJoinedAt: author.createdAt,
     priorWarnings,
     forumPosts,

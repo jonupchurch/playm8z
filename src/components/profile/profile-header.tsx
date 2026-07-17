@@ -8,11 +8,7 @@ import { inviteToParty } from "@/lib/actions/invite-to-party";
 import { startConversation } from "@/lib/actions/start-conversation";
 import { ReportModal, type ReportTarget } from "@/components/reports/report-modal";
 import { BlockModal } from "@/components/blocking/block-modal";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
+import { Avatar } from "@/components/ui/avatar";
 
 export type EligiblePosting = { id: string; game: string; title: string };
 
@@ -31,6 +27,8 @@ export function ProfileHeader({
   handle,
   bio,
   avatarColor,
+  avatarImage,
+  image,
   createdAt,
   stats,
   isOwnProfile,
@@ -42,6 +40,8 @@ export function ProfileHeader({
   handle: string;
   bio: string | null;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   createdAt: Date;
   stats: { sessions: number; avgRating: number | null; reviewCount: number };
   isOwnProfile: boolean;
@@ -149,12 +149,13 @@ export function ProfileHeader({
     <div className="border-b border-border bg-[radial-gradient(circle_at_20%_-60%,rgba(255,107,26,0.12),transparent_55%)]">
       <div className="mx-auto max-w-250 px-8 pt-8.5 pb-6.5">
         <div className="flex flex-wrap items-start gap-5.5">
-          <div
-            style={{ background: avatarGradient(avatarColor) }}
-            className="flex h-23 w-23 shrink-0 items-center justify-center rounded-[24px] text-4xl font-bold text-on-accent shadow-[0_12px_30px_-12px_rgba(255,107,26,0.7)]"
-          >
-            {handle.slice(0, 1).toUpperCase()}
-          </div>
+          <Avatar
+            avatarImage={avatarImage}
+            googleImage={image}
+            avatarColor={avatarColor}
+            handle={handle}
+            className="h-23 w-23 shrink-0 rounded-[24px] text-4xl shadow-[0_12px_30px_-12px_rgba(255,107,26,0.7)]"
+          />
 
           <div className="min-w-65 flex-1">
             <h1 className="text-[28px] font-bold tracking-tight text-text">@{handle}</h1>

@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 
 // FR-015: every /profile page requires authentication -- this is the
@@ -21,6 +21,8 @@ export default async function ProfileLayout({ children }: { children: React.Reac
       handle: users.handle,
       name: users.name,
       avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       bio: users.bio,
       createdAt: users.createdAt,
     })
@@ -30,10 +32,6 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   if (!user) {
     redirect("/login");
   }
-
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === user.avatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
-  const initial = (user.handle?.trim()[0] || "P").toUpperCase();
 
   return (
     <main className="grow bg-bg text-text">
@@ -45,12 +43,13 @@ export default async function ProfileLayout({ children }: { children: React.Reac
       >
         <div className="mx-auto max-w-270 px-8 pt-8">
           <div className="flex flex-wrap items-start gap-5.5">
-            <div
-              style={{ background: avatarGradient }}
-              className="flex h-22 w-22 shrink-0 items-center justify-center rounded-2xl text-4xl font-bold text-on-accent"
-            >
-              {initial}
-            </div>
+            <Avatar
+              avatarImage={user.avatarImage}
+              googleImage={user.image}
+              avatarColor={user.avatarColor}
+              handle={user.handle}
+              className="h-22 w-22 shrink-0 rounded-2xl text-4xl"
+            />
             <div className="min-w-65 flex-1">
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-[28px] font-bold tracking-tight">{user.name ?? `@${user.handle}`}</h1>

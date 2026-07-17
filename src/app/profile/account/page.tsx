@@ -16,6 +16,9 @@ export default async function AccountPage() {
       region: users.region,
       bio: users.bio,
       email: users.email,
+      avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       passwordHash: users.passwordHash,
       privacyShowAge: users.privacyShowAge,
       privacyShowRegion: users.privacyShowRegion,
@@ -33,6 +36,9 @@ export default async function AccountPage() {
         region={user.region ?? "na-east"}
         bio={user.bio ?? ""}
         email={user.email}
+        avatarColor={user.avatarColor}
+        avatarImage={user.avatarImage}
+        image={user.image}
         hasPassword={!!user.passwordHash}
       />
       <PrivacyToggles

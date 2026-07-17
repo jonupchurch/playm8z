@@ -15,11 +15,15 @@ export type ReportsQueueItem = {
   reportCount: number;
   reporterHandle: string;
   reporterAvatarColor: string | null;
+  reporterAvatarImage: string | null;
+  reporterImage: string | null;
   note: string;
   createdAt: Date;
   ownerId: string;
   ownerHandle: string;
   ownerAvatarColor: string | null;
+  ownerAvatarImage: string | null;
+  ownerImage: string | null;
   context: string;
   snippet: string;
   // Only present for targetType === "forum" -- which of 018's two
@@ -41,7 +45,15 @@ type ReportGroup = {
   targetId: string;
   reasons: string[];
   reportCount: number;
-  representative: { reason: string; details: string | null; createdAt: Date; reporterHandle: string; reporterAvatarColor: string | null };
+  representative: {
+    reason: string;
+    details: string | null;
+    createdAt: Date;
+    reporterHandle: string;
+    reporterAvatarColor: string | null;
+    reporterAvatarImage: string | null;
+    reporterImage: string | null;
+  };
 };
 
 // FR-002/FR-003/FR-004/research.md #1/#8: groups every open report by
@@ -65,6 +77,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         createdAt: reports.createdAt,
         reporterHandle: users.handle,
         reporterAvatarColor: users.avatarColor,
+        reporterAvatarImage: users.avatarImage,
+        reporterImage: users.image,
       })
       .from(reports)
       .innerJoin(users, eq(reports.reporterId, users.id))
@@ -101,6 +115,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
           createdAt: row.createdAt,
           reporterHandle: row.reporterHandle ?? "player",
           reporterAvatarColor: row.reporterAvatarColor,
+          reporterAvatarImage: row.reporterAvatarImage,
+          reporterImage: row.reporterImage,
         },
       });
     }
@@ -122,6 +138,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
             hostId: postings.hostId,
             hostHandle: users.handle,
             hostAvatarColor: users.avatarColor,
+            hostAvatarImage: users.avatarImage,
+            hostImage: users.image,
           })
           .from(postings)
           .innerJoin(users, eq(postings.hostId, users.id))
@@ -135,6 +153,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
             authorId: forumThreads.authorId,
             authorHandle: users.handle,
             authorAvatarColor: users.avatarColor,
+            authorAvatarImage: users.avatarImage,
+            authorImage: users.image,
           })
           .from(forumThreads)
           .innerJoin(users, eq(forumThreads.authorId, users.id))
@@ -148,6 +168,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
             authorId: forumReplies.authorId,
             authorHandle: users.handle,
             authorAvatarColor: users.avatarColor,
+            authorAvatarImage: users.avatarImage,
+            authorImage: users.image,
             threadTitle: forumThreads.title,
           })
           .from(forumReplies)
@@ -163,6 +185,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
             senderId: messages.senderId,
             senderHandle: users.handle,
             senderAvatarColor: users.avatarColor,
+            senderAvatarImage: users.avatarImage,
+            senderImage: users.image,
             isGroup: conversations.isGroup,
           })
           .from(messages)
@@ -172,7 +196,14 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       : Promise.resolve([]),
     userIds.length
       ? db
-          .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor, bio: users.bio })
+          .select({
+            id: users.id,
+            handle: users.handle,
+            avatarColor: users.avatarColor,
+            avatarImage: users.avatarImage,
+            image: users.image,
+            bio: users.bio,
+          })
           .from(users)
           .where(inArray(users.id, userIds))
       : Promise.resolve([]),
@@ -196,6 +227,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       reportCount: group.reportCount,
       reporterHandle: group.representative.reporterHandle,
       reporterAvatarColor: group.representative.reporterAvatarColor,
+      reporterAvatarImage: group.representative.reporterAvatarImage,
+      reporterImage: group.representative.reporterImage,
       note: group.representative.details ?? reasonLabel(group.representative.reason),
       createdAt: group.representative.createdAt,
     };
@@ -212,6 +245,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         ownerId: posting.hostId,
         ownerHandle: posting.hostHandle ?? "player",
         ownerAvatarColor: posting.hostAvatarColor,
+        ownerAvatarImage: posting.hostAvatarImage,
+        ownerImage: posting.hostImage,
         context: `${posting.game} posting`,
         snippet: posting.blurb,
       });
@@ -223,6 +258,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
           ownerId: thread.authorId,
           ownerHandle: thread.authorHandle ?? "player",
           ownerAvatarColor: thread.authorAvatarColor,
+          ownerAvatarImage: thread.authorAvatarImage,
+          ownerImage: thread.authorImage,
           context: "Thread",
           snippet: thread.body,
           forumTargetType: "forumThread",
@@ -236,6 +273,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         ownerId: reply.authorId,
         ownerHandle: reply.authorHandle ?? "player",
         ownerAvatarColor: reply.authorAvatarColor,
+        ownerAvatarImage: reply.authorAvatarImage,
+        ownerImage: reply.authorImage,
         context: `Reply in "${reply.threadTitle}"`,
         snippet: reply.body,
         forumTargetType: "forumReply",
@@ -250,6 +289,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         ownerId: message.senderId,
         ownerHandle: message.senderHandle ?? "player",
         ownerAvatarColor: message.senderAvatarColor,
+        ownerAvatarImage: message.senderAvatarImage,
+        ownerImage: message.senderImage,
         context: message.isGroup ? "Group message" : "Direct message",
         snippet: message.body,
       });
@@ -261,6 +302,8 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         ownerId: user.id,
         ownerHandle: user.handle ?? "player",
         ownerAvatarColor: user.avatarColor,
+        ownerAvatarImage: user.avatarImage,
+        ownerImage: user.image,
         context: "Profile",
         snippet: user.bio ?? "(No bio)",
       });

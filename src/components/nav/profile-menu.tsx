@@ -3,16 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
+import { Avatar } from "@/components/ui/avatar";
 
 // Same disclosure-widget pattern as notification-bell.tsx (click-outside
 // + Escape both dismiss, aria-haspopup/aria-expanded) -- this is this
 // app's first place a signed-in user can actually log out from.
-export function ProfileMenu({ handle, avatarColor }: { handle: string; avatarColor: string | null }) {
+export function ProfileMenu({
+  handle,
+  avatarColor,
+  avatarImage,
+  image,
+}: {
+  handle: string;
+  avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
+}) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -42,10 +48,15 @@ export function ProfileMenu({ handle, avatarColor }: { handle: string; avatarCol
         aria-haspopup="true"
         aria-expanded={open}
         aria-label={`Account menu for @${handle}`}
-        style={{ background: avatarGradient(avatarColor) }}
-        className="flex h-8.5 w-8.5 items-center justify-center rounded-lg text-sm font-bold text-on-accent"
+        className="block h-8.5 w-8.5 overflow-hidden rounded-lg"
       >
-        {handle.slice(0, 1).toUpperCase()}
+        <Avatar
+          avatarImage={avatarImage}
+          googleImage={image}
+          avatarColor={avatarColor}
+          handle={handle}
+          className="h-full w-full rounded-lg text-sm"
+        />
       </button>
 
       {open && (

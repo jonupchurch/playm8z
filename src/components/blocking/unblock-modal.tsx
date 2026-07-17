@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { unblockUser } from "@/lib/actions/unblock-user";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 
 export type UnblockTarget = {
   blockId: string;
   handle: string;
   avatarColor: string | null;
+  avatarImage?: string | null;
+  image?: string | null;
 };
 
 // This project's first modal-dialog UI (research.md #2) -- built on
@@ -58,9 +60,6 @@ export function UnblockModal({
     router.refresh();
   }
 
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === target?.avatarColor)?.gradient ?? AVATAR_COLORS[0].gradient;
-
   return (
     <dialog
       ref={dialogRef}
@@ -72,12 +71,13 @@ export function UnblockModal({
         <>
           <div className="p-5.5 pb-2">
             <div className="mb-4 flex items-center gap-3">
-              <div
-                style={{ background: avatarGradient }}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-              >
-                {(target.handle.trim()[0] || "P").toUpperCase()}
-              </div>
+              <Avatar
+                avatarImage={target.avatarImage}
+                googleImage={target.image}
+                avatarColor={target.avatarColor}
+                handle={target.handle}
+                className="h-11 w-11 shrink-0 rounded-xl text-base"
+              />
               <div>
                 <h2 id="unblock-modal-heading" className="text-base font-bold text-text">
                   Unblock @{target.handle}?

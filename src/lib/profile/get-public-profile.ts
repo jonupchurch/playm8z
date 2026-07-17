@@ -15,6 +15,8 @@ export type PublicProfileReview = {
   id: string;
   reviewerHandle: string;
   reviewerAvatarColor: string | null;
+  reviewerAvatarImage: string | null;
+  reviewerImage: string | null;
   rating: number;
   text: string | null;
   game: string | null;
@@ -26,6 +28,8 @@ export type PublicProfile = {
   handle: string;
   bio: string | null;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   region: string | null;
   ageGroup: string | null;
   platforms: string[];
@@ -59,6 +63,8 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
       handle: users.handle,
       bio: users.bio,
       avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       region: users.region,
       ageGroup: users.ageGroup,
       platforms: users.platforms,
@@ -92,6 +98,8 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
           id: reviews.id,
           reviewerHandle: users.handle,
           reviewerAvatarColor: users.avatarColor,
+          reviewerAvatarImage: users.avatarImage,
+          reviewerImage: users.image,
           rating: reviews.rating,
           text: reviews.text,
           game: reviews.game,
@@ -122,6 +130,8 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
     handle: user.handle ?? "player",
     bio: user.bio,
     avatarColor: user.avatarColor,
+    avatarImage: user.avatarImage,
+    image: user.image,
     region: user.region,
     ageGroup: user.ageGroup,
     platforms: user.platforms ?? [],
