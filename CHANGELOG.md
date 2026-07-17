@@ -23,10 +23,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   Post a Game typeahead now suggests ~46 multiplayer/co-op games drawn
   from Steam's most-played chart (single-player titles and non-game
   utilities filtered out), each with a short-form alias where obvious
-  (CS2, GTA V, R6, Civ VI…) and ready for a headline image. Postings stay
-  free text (ADR 0001) — this only populates the suggestion/curation
-  layer, it never restricts what can be posted. Applied via the idempotent,
-  skip-if-exists `scripts/seed-popular-games.ts`.
+  (CS2, GTA V, R6, Civ VI…) and a **local copy of its official Steam
+  header image** stored in Vercel Blob so nothing depends on Steam at
+  runtime; the few titles with no Steam page (e.g. FiveM) keep their
+  generated visual. Postings stay free text (ADR 0001) — this only
+  populates the suggestion/curation layer, it never restricts what can be
+  posted. Applied via the idempotent, skip-if-exists
+  `scripts/seed-popular-games.ts` and `scripts/set-game-images.ts`.
 - **Messages in the top nav with an unread badge** (feature 037). The
   inbox (feature 011) was fully built but buried two clicks deep in the
   account dropdown with no unread indicator, so messaging *felt* absent.
