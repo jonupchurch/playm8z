@@ -17,8 +17,13 @@ a small enhancement to already-shipped feature 016. Feature 28
 top-level feature since the original 26 — this project's first
 external-AI-provider integration. Feature 29 (real image upload for
 News covers) is this project's first user-uploaded-file capability,
-via Vercel Blob.
-**Last updated**: 2026-07-15
+via Vercel Blob. Features 30-36 continued the iteration line (admin
+genres, admin suggested games, posting age ranges, password reset,
+profile images, game images, game typeahead). Feature 37 (Messages in
+the top nav with an unread badge) surfaces the already-built inbox
+(011) as a first-class nav entry beside the notification bell —
+closing a discoverability gap, not adding a messaging capability.
+**Last updated**: 2026-07-17
 
 ## Where things stand
 

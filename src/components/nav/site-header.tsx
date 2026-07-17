@@ -9,8 +9,10 @@ import { relativeAge } from "@/components/listings/listing-card";
 import { PawMark } from "@/components/brand/paw-mark";
 import { Wordmark } from "@/components/brand/wordmark";
 import { NotificationBell, type BellPreviewItem } from "@/components/nav/notification-bell";
+import { MessagesLink } from "@/components/nav/messages-link";
 import { NavLinks } from "@/components/nav/nav-links";
 import { ProfileMenu } from "@/components/nav/profile-menu";
+import { getUnreadMessageCount } from "@/lib/inbox/get-unread-message-count";
 import { SiteHeaderFrame } from "@/components/nav/site-header-frame";
 import { getNavPages } from "@/lib/content-page/get-nav-pages";
 import { getSettings } from "@/lib/settings/get-settings";
@@ -60,7 +62,7 @@ export async function SiteHeader() {
     return null;
   }
 
-  const items = await getNotifications(user.id);
+  const [items, unreadMessages] = await Promise.all([getNotifications(user.id), getUnreadMessageCount(user.id)]);
   const unreadCount = items.filter((item) => item.unread).length;
   const unreadGroups = filterAndGroupNotifications(items, "unread");
   const preview: BellPreviewItem[] = unreadGroups
@@ -86,6 +88,7 @@ export async function SiteHeader() {
         >
           Post a game
         </Link>
+        <MessagesLink unreadCount={unreadMessages} />
         <NotificationBell unreadCount={unreadCount} preview={preview} />
         <ProfileMenu
           handle={user.handle ?? "player"}
