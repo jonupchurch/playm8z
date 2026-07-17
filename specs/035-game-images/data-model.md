@@ -16,9 +16,18 @@ game
 ```
 
 - **`normalizedName` UNIQUE** enforces FR-012 (no two games claim one name)
-  and is the lookup key. It is `lower(trim(name))` — and that expression MUST
-  be the same one Trending groups by (research.md #3), or image lookup and
-  Trending grouping disagree about game identity.
+  and is the lookup key. It is `lower(trim(name))`.
+
+  **Correction (verified during implementation, 2026-07-17):** research.md #3
+  and an earlier draft here said this MUST equal how Trending groups, citing
+  ADR 0001's "case-insensitive, trimmed" prose. The *code* groups Trending by
+  the **raw** `postings.game` (see `get-trending.ts`), so "D&D 5e" and
+  "d&d 5e" are two separate trending rows. That needs no change: the resolver
+  normalises each raw trending string independently to look up an image, so
+  both rows resolve to the same game's image (spec Edge Cases allow this).
+  The rule that actually matters is that the *resolver* normalises
+  consistently at write and read time — which is why there is one
+  `normalizeGame()` helper — not that it match Trending's grouping.
 - **`imageUrl` nullable** — a game can exist for aliasing/naming without an
   image; it then resolves to the generated visual. So "has a row" ≠ "has an
   image."

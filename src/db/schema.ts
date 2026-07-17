@@ -824,3 +824,57 @@ export const passwordResetTokens = pgTable(
   },
   (table) => [index("passwordResetToken_userId_idx").on(table.userId)],
 );
+
+// Game headline images (035), ADR 0011. A LIGHTWEIGHT layer over free-text
+// games -- NOT the curated catalog ADR 0001 rejected. `postings.game` stays
+// free text and references nothing here; a game name absent from this table
+// still posts, browses, and trends -- it just gets a generated visual
+// instead of a curated image. This table only attaches an optional image
+// (and aliases) to a name. See docs/adr/0011-game-image-alias-layer.md.
+export const games = pgTable("game", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  // The canonical display name ("D&D 5e").
+  name: text("name").notNull(),
+  // lower(trim(name)) -- the match key, and it MUST equal how get-trending
+  // groups game names, or image lookup and Trending grouping disagree about
+  // what "the same game" is (research.md #3). Unique: no two games claim one
+  // name (FR-012).
+  normalizedName: text("normalizedName").notNull().unique(),
+  // The admin headline image (a Blob URL). NULL = no curated image; the name
+  // resolves to a deterministic generated visual instead. So "has a row" is
+  // NOT "has an image".
+  imageUrl: text("imageUrl"),
+  // Soft-disable (ADR 0005) -- non-null excludes the game from resolution
+  // (its name falls back to the generated visual); its postings, which never
+  // referenced it, are unaffected. Never hard-deleted.
+  disabledAt: timestamp("disabledAt", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// A normalized spelling variant mapping to exactly one game (FR-015). Used
+// ONLY for image resolution -- never to merge Trending counts (that would
+// change ADR 0001's grouping and is out of scope). Alias-vs-alias
+// uniqueness is this unique index; alias-vs-name (an alias must not equal
+// any game's own name) is an application check at write time, following the
+// handle-uniqueness precedent.
+export const gameAliases = pgTable(
+  "gameAlias",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    gameId: uuid("gameId")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    normalizedAlias: text("normalizedAlias").notNull().unique(),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [index("gameAlias_gameId_idx").on(table.gameId)],
+);
+
+// An unmatched game string the admin reviewed and chose NOT to alias. Keeps
+// rejected AI suggestions from reappearing on the next run (US4 scenario 3).
+// Not user-facing; consulted only by the suggestion query to exclude it.
+export const gameAliasDismissals = pgTable("gameAliasDismissal", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  normalizedName: text("normalizedName").notNull().unique(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
