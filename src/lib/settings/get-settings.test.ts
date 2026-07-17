@@ -30,6 +30,7 @@ const FULL_ROW = {
   openSignups: true,
   discoverableByDefault: true,
   genres: ["FPS", "RPG"],
+  suggestedGames: ["Valorant", "Catan"],
 };
 
 const DEFAULTS = {
@@ -55,6 +56,22 @@ const DEFAULTS = {
   openSignups: true,
   discoverableByDefault: true,
   genres: ["FPS", "RPG", "Co-op PvE", "Party", "MOBA", "Sandbox", "TTRPG", "Tabletop"],
+  suggestedGames: [
+    "Valorant",
+    "Helldivers 2",
+    "Baldur's Gate 3",
+    "CS2",
+    "Deep Rock Galactic",
+    "Lethal Company",
+    "Sea of Thieves",
+    "League of Legends",
+    "Overwatch 2",
+    "Minecraft",
+    "Elden Ring",
+    "D&D 5e",
+    "Catan",
+    "Magic: The Gathering",
+  ],
 };
 
 function mockRow(row: unknown) {

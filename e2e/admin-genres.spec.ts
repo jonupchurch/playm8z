@@ -86,7 +86,7 @@ test.describe("Admin-editable genres (quickstart Scenarios 1-2)", () => {
     await page.getByRole("tab", { name: "Lists" }).click();
 
     await page.getByLabel("Add a genre").fill(NEW_GENRE);
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add genre" }).click();
     await page.getByRole("button", { name: "Save changes" }).click();
     // Wait for an observable success signal before reading anything else
     // -- .click() only awaits the event dispatch, not the Server Action.
@@ -112,7 +112,7 @@ test.describe("Admin-editable genres (quickstart Scenarios 1-2)", () => {
     // real -- and so the list is never seeded by a direct write the
     // server can't see for 5s (see beforeAll).
     await page.getByLabel("Add a genre").fill(DOOMED_GENRE);
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add genre" }).click();
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByRole("status")).toHaveText("Saved.");
 

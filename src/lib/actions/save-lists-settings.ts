@@ -9,9 +9,13 @@ import { saveListsSettingsSchema, type SaveListsSettingsInput } from "@/lib/vali
 
 export type SaveListsSettingsResult = { success: true } | { success: false; error: string };
 
-// FR-004/FR-005: real effect on Post a Game, Browse, and the landing
-// page's genre counts -- all read the list fresh per request, so
-// nothing here touches those files.
+// Carries BOTH of the Lists tab's arrays -- genres (030) and suggested
+// games (031). One tab, one save, one audit entry per save, rather than
+// a second action for the same form.
+//
+// Real effect on Post a Game, Browse, the landing page's genre counts,
+// and onboarding's games step -- all read the lists fresh per request,
+// so nothing here touches those files.
 //
 // Goes through upsertSettings() rather than writing the table directly,
 // because that is what calls invalidateSettingsCache(). revalidatePath()
@@ -31,7 +35,7 @@ export async function saveListsSettings(input: SaveListsSettingsInput): Promise<
 
   await logAuditEntry({
     actorId: admin.id,
-    action: "updated the genre list",
+    action: "updated the genre & suggested-game lists",
     category: "content",
   });
 
