@@ -2,6 +2,15 @@
 
 **Status**: Accepted (2026-07-12)
 
+> **Amended by [ADR 0011](0011-game-image-alias-layer.md) (2026-07-17).**
+> Feature 035 adds an *optional* game-image + alias lookup layer beside this
+> decision — the "lightweight alias table to layer on top" the Consequences
+> below explicitly permit. `game` stays free text, postings still reference
+> no catalog, and there's still no per-game hub page: 0011 attaches images to
+> names, it does not make `game` a foreign key. If you're reading "no
+> catalog" and about to treat 035's `games` table as a contradiction to fix,
+> read 0011 first — it isn't one.
+
 ## Context
 
 `resources/guidelines.md` §5 suggested a first-class `Game` entity
