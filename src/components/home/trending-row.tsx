@@ -1,4 +1,9 @@
-export type TrendingGame = { game: string; count: number };
+import { GameImage } from "@/components/games/game-image";
+import type { ResolvedGameImage } from "@/lib/games/resolve-game-image";
+
+// Game images (035): the resolved image travels with each trending entry,
+// computed server-side in page.tsx so this client component just paints it.
+export type TrendingGame = { game: string; count: number; image: ResolvedGameImage };
 
 // FR-007/FR-008: top games by current open-posting count, recalculated
 // per page load. Selecting one narrows the Live LFG feed via the same
@@ -26,7 +31,7 @@ export function TrendingRow({
             onClick={() => onSelect(entry.game)}
             className="overflow-hidden rounded-2xl border border-border bg-surface text-left transition-colors hover:border-accent-2/50"
           >
-            <div className="h-16 bg-[linear-gradient(135deg,var(--color-accent),var(--color-accent-2))]" />
+            <GameImage image={entry.image} name={entry.game} className="h-16 w-full text-lg" />
             <div className="p-3">
               <div className="mb-2 text-sm leading-tight font-bold text-text">{entry.game}</div>
               <div className="flex items-center gap-1.5">

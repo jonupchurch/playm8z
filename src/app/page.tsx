@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import { getOpenPostings } from "@/lib/postings/get-open-postings";
 import { getTrending } from "@/lib/postings/get-trending";
+import { resolveGameImages } from "@/lib/games/resolve-game-image";
+import { normalizeGame } from "@/lib/games/normalize-game";
+import { generatedVisual } from "@/lib/games/generated-visual";
 import { LiveFeed } from "@/components/home/live-feed";
 import { getLandingStats } from "@/lib/landing/get-landing-stats";
 import { LandingHero } from "@/components/landing/landing-hero";
@@ -41,7 +44,16 @@ export default async function Home() {
     );
   }
 
-  const [postings, trending] = await Promise.all([getOpenPostings(), getTrending()]);
+  const [postings, trendingGames] = await Promise.all([getOpenPostings(), getTrending()]);
+
+  // Resolve each trending game to its image (admin or generated) server-side,
+  // in ONE batched query, so the client TrendingRow just paints the result
+  // (035/FR-005). resolveGameImages guarantees an entry for every name.
+  const images = await resolveGameImages(trendingGames.map((t) => t.game));
+  const trending = trendingGames.map((t) => ({
+    ...t,
+    image: images.get(normalizeGame(t.game)) ?? { kind: "generated" as const, visual: generatedVisual(t.game) },
+  }));
 
   return (
     <main className="grow bg-bg text-text">
