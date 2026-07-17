@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { getGameSuggestions } from "@/lib/postings/get-game-suggestions";
+import { getRatifiedGames } from "@/lib/games/get-ratified-games";
 import { getSettings } from "@/lib/settings/get-settings";
 import { PostGameForm } from "@/components/post-game/post-game-form";
 
@@ -18,7 +19,7 @@ export default async function PostGamePage() {
     redirect("/login");
   }
 
-  const [[user], gameSuggestions, { genres }] = await Promise.all([
+  const [[user], gameSuggestions, ratifiedGames, { genres }] = await Promise.all([
     db
       .select({
         handle: users.handle,
@@ -29,6 +30,7 @@ export default async function PostGamePage() {
       .from(users)
       .where(eq(users.email, session.user.email)),
     getGameSuggestions(),
+    getRatifiedGames(),
     getSettings(),
   ]);
 
@@ -49,6 +51,7 @@ export default async function PostGamePage() {
           hostAvatarImage={user?.avatarImage ?? null}
           hostImage={user?.image ?? null}
           gameSuggestions={gameSuggestions}
+          ratifiedGames={ratifiedGames}
           genres={genres}
         />
       </div>

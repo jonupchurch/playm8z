@@ -112,8 +112,15 @@ it replaces the field.
   single "Did you mean <name>?" prompt for the closest existing game, which
   sets the field to that name on click.
 - **FR-005**: The "Did you mean?" prompt MUST NOT appear when the typed name
-  already **exactly matches** an existing game or alias (normalised), and
-  MUST NOT appear when nothing is sufficiently close (no false nudges).
+  already **exactly matches an existing game's canonical name** (normalised)
+  — there is nothing to correct — and MUST NOT appear when nothing is
+  sufficiently close (no false nudges). **Correction (during
+  implementation):** this originally read "game or alias". That contradicted
+  the Edge Case below, which says an alias match should point at its
+  canonical. The Edge Case wins: an exact **alias** match is the *strongest*
+  reason to nudge (a human already confirmed that variant), so it suggests
+  the canonical rather than staying silent. Only an exact **canonical** match
+  is "nothing to correct".
 - **FR-006**: All matching (typeahead and "did you mean?") MUST be
   **deterministic and local** — no AI, no per-keystroke server call. The
   set of existing names is provided once when the form loads.
