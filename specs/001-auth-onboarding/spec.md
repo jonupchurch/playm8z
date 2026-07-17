@@ -84,7 +84,7 @@ A newly-signed-up user chooses "Skip for now" partway through the wizard and sti
 - **FR-012**: System MUST let the user skip onboarding at any step ("Skip for now"), preserving whatever fields were already entered and proceeding straight to the completion screen without requiring the remaining steps.
 - **FR-013**: System MUST send a verification email to a Credentials-signup user's address after account creation, and MUST track whether that address has been verified. Google-authenticated accounts are considered verified automatically, since Google has already verified the address.
 - **FR-014**: System MUST allow an unverified user to browse and read public content, but MUST block them from posting, applying to a listing, or sending a message until their email is verified, with a clear message directing them to verify.
-- **FR-015**: System MUST present a "Forgot password?" entry point on the login form; the reset flow it leads to is a separate feature and is not implemented as part of this one.
+- **FR-015**: System MUST present a "Forgot password?" entry point on the login form; the reset flow it leads to is a separate feature and is not implemented as part of this one. **Fulfilled 2026-07-16 by `specs/033-password-reset/`** — until then this requirement's literal effect was a link to a 404 in production, which was intended but is the kind of intent worth being able to look up rather than rediscover.
 - **FR-016**: System MUST NOT offer Steam or Discord as sign-in options — both are explicitly future-state, not part of this feature.
 
 ### Key Entities

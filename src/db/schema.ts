@@ -3,6 +3,7 @@ import {
   pgTable,
   text,
   primaryKey,
+  index,
   integer,
   uuid,
   boolean,
@@ -20,8 +21,19 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   // Only set for accounts created via the Credentials (native) provider;
-  // null for accounts that only ever signed in through Google.
+  // null for accounts that only ever signed in through Google. This null
+  // is load-bearing, not incidental: auth.ts's `if (!user?.passwordHash)
+  // return null` is what stops a Google account being logged into with a
+  // guessed password, and Password reset (033) reads it as the definition
+  // of "this account uses Google" (FR-005).
   passwordHash: text("passwordHash"),
+  // Password reset (033)/FR-013, ADR 0010: every JWT issued before this
+  // instant is refused. Sessions are JWTs (auth.ts), so there are no
+  // session rows to delete -- revocation can only work by dating them.
+  //
+  // NULL means "never revoked" and MUST stay the default: backfilling
+  // now() would sign out every user on the site at deploy.
+  sessionsValidAfter: timestamp("sessionsValidAfter", { mode: "date" }),
   // Unique, immutable once set (FR-003). Nullable at the DB level even
   // though it's conceptually required: a Google sign-up's account row is
   // created by the Auth.js adapter before onboarding ever runs, so there's
@@ -756,4 +768,47 @@ export const verificationTokens = pgTable(
       columns: [verificationToken.identifier, verificationToken.token],
     }),
   ],
+);
+
+// Password reset (033). Deliberately NOT stored in `verificationToken`
+// above, and the reason is a security one rather than tidiness: that table
+// is (identifier, token, expires) with no purpose column, and
+// /api/auth/verify-email matches a row on identifier+token alone. Sharing
+// it would make the two token kinds interchangeable -- a *verification*
+// token could be posted to the reset endpoint to set a password, i.e.
+// account takeover using a token minted for a weaker purpose. It would
+// also collide with update-email.ts, which writes a verification token
+// keyed on the new address (research.md #1).
+export const passwordResetTokens = pgTable(
+  "passwordResetToken",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    // Keyed on the ACCOUNT, not the address (verificationToken keys on the
+    // address). An email can change; a link issued beforehand must still
+    // resolve to the account it was issued for rather than dangling or
+    // silently retargeting.
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    // SHA-256 of the raw token. The raw value exists ONLY in the emailed
+    // link and is never stored: a live reset token is a credential to take
+    // over the account, so a leaked/queried row must be inert (FR-012).
+    // Unique because lookup is by hash alone -- possession of the token is
+    // the entire proof, there is no identifier to pair it with.
+    //
+    // SHA-256 rather than bcrypt on purpose: bcrypt is slow to defend
+    // LOW-entropy human passwords. A 32-byte random token has nothing to
+    // brute-force, so a slow hash would buy nothing and cost latency.
+    tokenHash: text("tokenHash").notNull().unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    // Marked, never deleted (ADR 0005). Also keeps "already used"
+    // distinguishable from "never existed" server-side for audit, while
+    // both stay identical to the user (FR-018).
+    usedAt: timestamp("usedAt", { mode: "date" }),
+    // Carries FR-020's throttle as well as ordering -- which is why this
+    // feature needs no rate-limiting infrastructure: the row we must
+    // already consult for FR-009's supersede is the rate limiter.
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [index("passwordResetToken_userId_idx").on(table.userId)],
 );
