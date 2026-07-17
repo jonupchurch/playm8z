@@ -76,14 +76,6 @@ export function ProfileMenu({
           >
             Profile
           </Link>
-          <Link
-            href="/inbox"
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm text-text-muted hover:bg-surface"
-          >
-            Inbox
-          </Link>
           <button
             type="button"
             role="menuitem"
