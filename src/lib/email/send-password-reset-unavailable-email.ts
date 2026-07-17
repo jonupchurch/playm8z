@@ -1,6 +1,7 @@
 import { appUrl } from "@/lib/email/app-url";
 import { sendEmail, type SendEmailResult } from "@/lib/email/send-email";
 import { escapeHtml } from "@/lib/email/escape-html";
+import { emailButton, emailLayout, emailParagraph } from "@/lib/email/email-layout";
 
 interface ResetUser {
   email: string;
@@ -42,21 +43,15 @@ That account signs in with Google, so it doesn't have a password to reset. To ge
 ${loginUrl}
 
 If this wasn't you, you can safely ignore this email. Nothing about your account has changed.`,
-    html: `<!doctype html>
-<html lang="en">
-  <body style="margin:0;padding:24px;background:#0f1115;color:#e8eaed;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
-    <div style="max-width:480px;margin:0 auto;">
-      <h1 style="font-size:20px;margin:0 0 16px;">This account uses Google sign-in</h1>
-      <p style="margin:0 0 16px;line-height:1.5;">${escapeHtml(greeting)}</p>
-      <p style="margin:0 0 16px;line-height:1.5;">Someone asked to reset the password for the playm8z account registered to this address.</p>
-      <p style="margin:0 0 24px;line-height:1.5;">That account signs in with Google, so there's no password to reset. To get in, use <strong>Continue with Google</strong> on the login page.</p>
-      <p style="margin:0 0 24px;">
-        <a href="${escapeHtml(loginUrl)}" style="display:inline-block;background:#7c5cff;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;">Go to login</a>
-      </p>
-      <p style="margin:0;line-height:1.5;font-size:13px;color:#9aa0a6;">If this wasn't you, you can safely ignore this email. Nothing about your account has changed.</p>
-    </div>
-  </body>
-</html>`,
+    html: emailLayout({
+      title: "About your playm8z account",
+      contentHtml: `<h1 style="font-size:20px;margin:0 0 16px;color:#e8eaed;">This account uses Google sign-in</h1>
+${emailParagraph(escapeHtml(greeting))}
+${emailParagraph("Someone asked to reset the password for the playm8z account registered to this address.")}
+${emailParagraph("That account signs in with Google, so there's no password to reset. To get in, use <strong>Continue with Google</strong> on the login page.")}
+${emailButton(loginUrl, "Go to the playm8z login page")}
+<p style="margin:0;font-size:13px;color:#9aa0a6;">If this wasn't you, you can safely ignore this email. Nothing about your account has changed.</p>`,
+    }),
   });
 
   if (!result.sent && result.reason !== "not-configured") {
