@@ -34,6 +34,32 @@ export const AGE_GROUPS = [
   { id: "21", label: "21+" },
 ] as const;
 
+// Admin-editable since 031: the live list is `settings.suggestedGames`,
+// read at request time and passed into the wizard as a prop. This array
+// is ONLY the column default/seed -- nothing reads it to decide what to
+// offer, or the wizard and the stored list could disagree.
+//
+// It is a SUGGESTION list, not a catalog: `gamesPlayedSchema` below
+// deliberately does NOT validate against it (ADR 0001 -- games are
+// free-text keywords). Tightening that would look like better
+// validation and would in fact build the catalog that ADR rejects.
+export const DEFAULT_SUGGESTED_GAMES = [
+  "Valorant",
+  "Helldivers 2",
+  "Baldur's Gate 3",
+  "CS2",
+  "Deep Rock Galactic",
+  "Lethal Company",
+  "Sea of Thieves",
+  "League of Legends",
+  "Overwatch 2",
+  "Minecraft",
+  "Elden Ring",
+  "D&D 5e",
+  "Catan",
+  "Magic: The Gathering",
+] as const;
+
 export const VIBES = [
   { id: "fun", label: "Casual" },
   { id: "serious", label: "Serious" },

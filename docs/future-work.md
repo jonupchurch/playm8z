@@ -261,3 +261,27 @@ control to attach to today. Confirmed with the user: dropped from that
 feature's scope rather than also building a net-new "edit a flagged
 reply before republishing" surface as a side effect. Revisit if Admin
 Forum ever grows a real admin-authored-text surface.
+
+## A player's games are stored in two different places (future state)
+
+Surfaced while building Admin-editable Suggested Games (031, 2026-07-16)
+and deliberately **not** fixed there.
+
+Account creation writes a new player's games to `users.gamesPlayed`
+(`text[]`, via `POST /api/onboarding`). The profile flow afterwards
+maintains an entirely separate `userGames` table (via
+`manage-games.ts`). Two stores for what reads like one concept, with
+`users.gamesPlayed` effectively onboarding-only and never updated again
+once a player edits their games from their profile.
+
+Nothing is visibly broken today, which is why it has survived: each
+surface reads whichever store it writes. The risk is a future feature
+that asks "what games does this player play?" and picks the wrong one —
+`users.gamesPlayed` would answer with whatever they clicked during
+signup and has been stale ever since.
+
+Left alone in 031 under Principle IV: an admin editing a suggestion list
+cannot see this, the feature has no need to touch either store, and
+reconciling them is a data migration with its own decisions (which store
+wins? what happens to a player whose two lists disagree?). It wants its
+own feature, not a side effect of one.

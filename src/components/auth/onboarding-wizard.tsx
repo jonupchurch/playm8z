@@ -12,25 +12,7 @@ import {
 } from "@/lib/validations/onboarding";
 import { useHandleAvailability } from "@/lib/hooks/use-handle-availability";
 
-// A fixed suggested list to pick from -- not a claim of trending/live
-// data (games remain free text platform-wide per ADR 0001), just a
-// practical starting set spanning video games and tabletop/TTRPG (FR-009).
-const SUGGESTED_GAMES = [
-  "Valorant",
-  "Helldivers 2",
-  "Baldur's Gate 3",
-  "CS2",
-  "Deep Rock Galactic",
-  "Lethal Company",
-  "Sea of Thieves",
-  "League of Legends",
-  "Overwatch 2",
-  "Minecraft",
-  "Elden Ring",
-  "D&D 5e",
-  "Catan",
-  "Magic: The Gathering",
-];
+
 
 const STEP_COUNT = 4;
 
@@ -92,9 +74,19 @@ function buildSummary(profile: Profile) {
 export function OnboardingWizard({
   needsHandle,
   initialProfile,
+  suggestedGames,
 }: {
   needsHandle: boolean;
   initialProfile: Profile;
+  // Admin-editable (031). A suggested starting set spanning video games
+  // and tabletop/TTRPG -- not a claim of trending/live data, and NOT a
+  // catalog: games remain free text platform-wide (ADR 0001), so a
+  // player can add anything they like from their profile afterwards.
+  //
+  // Arrives as a prop rather than being imported: a client component
+  // importing a runtime value from a module that reaches @/db crashes
+  // the page.
+  suggestedGames: string[];
 }) {
   const router = useRouter();
   const [screen, setScreen] = useState<"wizard" | "done">("wizard");
@@ -333,7 +325,7 @@ export function OnboardingWizard({
               selected)
             </p>
             <div className="flex flex-wrap gap-2.5">
-              {SUGGESTED_GAMES.map((game) => (
+              {suggestedGames.map((game) => (
                 <button
                   key={game}
                   type="button"

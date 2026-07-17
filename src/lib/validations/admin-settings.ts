@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const settingsSectionSchema = z.enum(["general", "mod", "roles", "features", "safety"]);
+export const settingsSectionSchema = z.enum(["general", "mod", "roles", "features", "safety", "lists"]);
 export type SettingsSection = z.infer<typeof settingsSectionSchema>;
 
 // The section-nav's own URL param (`?section=`) -- an invalid/missing
@@ -36,6 +36,36 @@ export const saveModerationSettingsSchema = z.object({
   autoEscalateSeverity: autoEscalateSeveritySchema,
 });
 export type SaveModerationSettingsInput = z.infer<typeof saveModerationSettingsSchema>;
+
+// Lists (030 genres, 031 suggested games) -- one tab, one save.
+//
+// `.trim()` runs before `.min(1)`, so a whitespace-only entry is
+// rejected rather than stored as "" (030 FR-011 / 031 FR-010). Casing
+// and punctuation are preserved exactly as typed (030 FR-014 / 031
+// FR-013: "Co-op PvE", "Baldur's Gate 3" and "Magic: The Gathering" are
+// real entries) -- only the duplicate COMPARISON lowercases, never the
+// stored value.
+const uniqueIgnoringCase = (list: string[]) =>
+  new Set(list.map((item) => item.trim().toLowerCase())).size === list.length;
+
+export const saveListsSettingsSchema = z.object({
+  genres: z
+    .array(z.string().trim().min(1).max(50))
+    // 030 FR-010: an empty list would leave Post a Game with nothing to
+    // offer, so it's refused rather than stored.
+    .min(1, "Keep at least one genre — Post a game needs something to offer.")
+    .max(50)
+    .refine(uniqueIgnoringCase, { message: "That genre is already in the list." }),
+  suggestedGames: z
+    .array(z.string().trim().min(1).max(80))
+    // 031 FR-009: load-bearing in a way the genre rule isn't -- the
+    // games step of account creation has NO free-text entry, so an empty
+    // list leaves a newcomer facing a step with nothing to click.
+    .min(1, "Keep at least one game — new players have nothing else to pick from.")
+    .max(100)
+    .refine(uniqueIgnoringCase, { message: "That game is already in the list." }),
+});
+export type SaveListsSettingsInput = z.infer<typeof saveListsSettingsSchema>;
 
 // Roles & access -- both below `moderator` for every existing
 // require-role.ts('moderator') gate (research.md #5).

@@ -1,6 +1,6 @@
 "use client";
 
-import { GENRES, PLATFORMS, TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { PLATFORMS, TIME_SLOTS } from "@/lib/validations/browse-filters";
 import { useBrowseUrlParams } from "@/lib/hooks/use-browse-url-params";
 import type { FacetCount } from "@/lib/postings/get-facet-counts";
 
@@ -119,9 +119,14 @@ function CheckRow({
 export function FilterSidebar({
   gameFacets,
   regionFacets,
+  genres,
 }: {
   gameFacets: FacetCount[];
   regionFacets: FacetCount[];
+  // Admin-editable (030). Arrives as a prop from the Browse page rather
+  // than being imported: a client component importing a runtime value
+  // from a module that reaches @/db crashes the page.
+  genres: string[];
 }) {
   const { searchParams, setSingle, toggleMulti, clearAll } = useBrowseUrlParams();
 
@@ -175,7 +180,7 @@ export function FilterSidebar({
       <div className="mb-4.5 border-t border-border pt-4">
         <SectionLabel>Genre</SectionLabel>
         <div className="flex flex-wrap gap-1.5">
-          {GENRES.map((genre) => (
+          {genres.map((genre) => (
             <Chip
               key={genre}
               label={genre}

@@ -3,11 +3,17 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { getSettings } from "@/lib/settings/get-settings";
 import { OnboardingWizard } from "@/components/auth/onboarding-wizard";
 
 export default async function OnboardingPage() {
   const session = await auth();
   if (!session?.user?.email) redirect("/login");
+
+  // 031: the suggested games are admin-editable, so they're read here and
+  // passed down. The wizard is a client component -- importing a runtime
+  // value from a module that reaches @/db would crash the page.
+  const { suggestedGames } = await getSettings();
 
   const [user] = await db
     .select({
@@ -29,6 +35,7 @@ export default async function OnboardingPage() {
   return (
     <OnboardingWizard
       needsHandle={!user.handle}
+      suggestedGames={suggestedGames}
       initialProfile={{
         name: user.name ?? "",
         avatarColor: user.avatarColor ?? "amber-orange",
