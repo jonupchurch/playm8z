@@ -37,11 +37,20 @@ it would make a verification token redeemable to set a password.
   research.md #2). **UNIQUE** because lookup is by hash alone — there is no
   identifier to pair it with, since the whole point is that the holder
   proves possession of the token and nothing else.
-- **`usedAt`, not deleting the row.** Redemption sets `usedAt` rather than
-  removing the row, so "already used" is distinguishable from "never
-  existed" *server-side* (for audit and debugging) while both are
-  identical *to the user* (FR-018). Deleting would also make FR-009's
-  supersede semantics indistinguishable from redemption in the audit trail.
+- **`usedAt`, not deleting the row.** Set when the token stops being
+  usable — by redemption **or** by being superseded (FR-009). So "already
+  used" stays distinguishable from "never existed" *server-side* while both
+  are identical *to the user* (FR-018), and ADR 0005 is honoured.
+
+  **Correction (made during implementation).** This entry first claimed
+  `usedAt` would also keep *superseded* distinguishable from *redeemed*. It
+  doesn't — both set the same column, so the distinction is lost the moment
+  supersede is implemented as a write. Rather than add a column to make a
+  doc true, the claim is withdrawn: the token table only needs to answer
+  "is this usable?", and `auditEntries` (FR-017) is where the *why* lives —
+  a redemption logs a completed reset, a supersede logs nothing but the new
+  request. Anyone needing to tell them apart should read the audit trail,
+  which is what it's for.
 - **`createdAt`** carries FR-020's throttle (research.md #4) as well as
   ordering. It is the reason no rate-limiting infrastructure is needed.
 
@@ -79,10 +88,15 @@ of it living on `users` rather than inside this feature.
 
 **Comparison is against the JWT's `iat`** (issued-at), which Auth.js sets
 in seconds. `sessionsValidAfter` is a `timestamp` with sub-second
-precision, so the comparison must be done at a consistent granularity or a
-token issued in the same second as a reset could survive by rounding.
-Truncate/floor both to the second, and treat "equal" as **invalid** (fail
-closed) rather than valid.
+precision, so both sides are floored to the second.
+
+**A tie is NOT revoked.** This entry originally said the opposite ("treat
+equal as invalid, fail closed") and that instruction was **wrong** — it
+shipped a lockout that e2e caught: a reset at `t=100.7` floors to `100`,
+and the user's own new login at `t=100.9` also has `iat` `100`, so `<=`
+revoked the session they'd just created. A token issued in the same second
+as a reset is, in practice, the person who just reset; the attacker version
+needs the old password *and* sub-second timing. Full reasoning in ADR 0010.
 
 ## Untouched, and deliberately so
 

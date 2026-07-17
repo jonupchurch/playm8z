@@ -1,5 +1,6 @@
 import { appUrl } from "@/lib/email/app-url";
 import { sendEmail, type SendEmailResult } from "@/lib/email/send-email";
+import { escapeHtml } from "@/lib/email/escape-html";
 
 interface VerificationUser {
   email: string;
@@ -67,13 +68,3 @@ This link expires in 24 hours. If you didn't sign up for playm8z, you can ignore
   return result;
 }
 
-// The name is user-supplied and lands in an HTML document. The URL is
-// ours, but its token/email are url-encoded, not html-encoded, so `&`
-// between the query params would otherwise be an unterminated entity.
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}

@@ -31,7 +31,11 @@ No wireframe exists yet for any of these — a design pass is needed before
 they can be spec'd/built:
 
 - Groups/Clans (browse/detail/create) — see above, the one already known.
-- Password reset (`/reset`).
+- ~~Password reset (`/reset`)~~ — **shipped 2026-07-16** as feature
+  `033-password-reset`, at `/forgot-password` (not `/reset`; the route name
+  matches the link 001 had already shipped on the login form). It was
+  waiting on transactional email, which landed the same day. Note the entry
+  under "Email verification" below is also now resolved.
 - Post-session rating/review **submission** flow — confirmed by the user
   (2026-07-12) as an explicit future-state feature, not just undesigned.
   Clarified by the Public Profile wireframe (added later 2026-07-12):
@@ -132,19 +136,26 @@ Confirmed by the user (2026-07-12) alongside the handle format rules (see
 `status.md`): handles cannot be changed once registered for now. Allowing
 a later change is a possible future state, not committed.
 
-## Email verification — design/implementation delegated
+## ~~Email verification — design/implementation delegated~~ — resolved 2026-07-16
 
-The user asked me to design/implement the email-verification flow "as I
-see fit" (2026-07-12) rather than specifying it themselves. The DB already
-has Auth.js's `verificationToken` table migrated in, so the mechanism is
-half-built; this still needs: an actual transactional-email provider
-(none chosen yet — a Vercel Marketplace integration is the natural fit
-when this is picked up), the UX around what's gated on verification
-(e.g. does an unverified user get full access with a nag, or is posting/
-messaging blocked until verified?), and where in Auth & Onboarding the
-verify-your-email step lives. Not designed by a wireframe; to be designed
-at implementation time, likely alongside a `/speckit-plan` for the Auth
-feature.
+~~The user asked me to design/implement the email-verification flow "as I
+see fit" (2026-07-12)... this still needs: an actual transactional-email
+provider (none chosen yet — a Vercel Marketplace integration is the natural
+fit when this is picked up)...~~
+
+**Resolved.** The provider question is answered and live: Resend, via the
+Vercel Marketplace, on `send.playm8z.net` (2026-07-16). The gating question
+was answered by 001 itself (FR-014: unverified users read freely but can't
+post, apply, or message) and is enforced by `requireVerifiedEmail()`.
+
+Worth recording what this entry hid. Because the provider was never
+provisioned, `sendVerificationEmail()` only ever `console.log`'d the link —
+so in production **every Credentials sign-up was emailed nothing**, stayed
+unverified, and was therefore blocked from every write action on the site.
+Google sign-ups are auto-verified, which is why it went unnoticed. 001's
+FR-013 ("MUST send a verification email") was simply unmet in production for
+two days. See `specs/001-auth-onboarding/research.md` #1 for the full
+retrospective, including why the promised "one-line swap" was three things.
 
 ## Posting drafts (future state)
 

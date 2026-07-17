@@ -40,9 +40,40 @@ reject any JWT whose `iat` (issued-at) precedes it.
 `NULL` means "never revoked" and is the default for every existing row.
 
 Comparison is floored to whole seconds on both sides, because `iat` is in
-seconds and the column is sub-second; a tie is treated as **invalid**
-(fail closed), so a token minted in the same second as a reset does not
-survive on a rounding accident.
+seconds and the column is sub-second. **A tie is NOT revoked**, and that
+is deliberate — see below.
+
+### The tie goes to the token (corrected during implementation)
+
+This ADR first specified the opposite: a tie was to be treated as invalid,
+"fail closed", on the reasoning that ambiguity should resolve toward
+safety. That was **wrong, and shipped a real lockout** before the e2e
+caught it:
+
+- reset lands at `t=100.7` → `sessionsValidAfter` floors to `100`
+- the user logs in with their new password at `t=100.9` → that token's
+  `iat` is also `100`
+- `iat <= 100` → the **brand-new session is revoked**, and they're bounced
+  back to `/login`
+
+Reset your password, log in, get thrown straight out. The unit test asserted
+"tie = revoked" and passed cheerfully, because it encoded the same wrong
+assumption as the code; only `e2e/password-reset.spec.ts` — which actually
+logs in afterwards — exposed it.
+
+The question worth asking is *whose* token is issued in the same second as
+a reset. In practice, essentially always the person who just reset. The
+adversarial reading requires an attacker to log in **with the old password,
+in the same second the reset lands** — using the very credential the reset
+is in the middle of changing. Trading a guaranteed lockout of every real
+user against that is a bad deal.
+
+So ties go to the token: a window of at most one second, available only to
+someone who already had the password.
+
+"Fail closed" is a good instinct that was load-bearing in the wrong
+direction here. The lesson generalises: *which* side an ambiguous case
+actually falls on matters more than which side sounds safer.
 
 ## Consequences
 
