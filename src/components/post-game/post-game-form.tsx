@@ -1,11 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPosting } from "@/lib/actions/create-posting";
 import { TIME_SLOTS } from "@/lib/validations/browse-filters";
 import { POSTING_AGE_GROUPS, postingAgeLabel, type PostingAgeGroup } from "@/lib/postings/age-label";
 import { ListingCard, type ListingCardPosting } from "@/components/listings/listing-card";
+import { didYouMean, typeaheadMatches, type GameEntry } from "@/lib/games/match-game-name";
 
 type TimeSlot = (typeof TIME_SLOTS)[number];
 
@@ -140,6 +141,7 @@ export function PostGameForm({
   hostAvatarImage,
   hostImage,
   gameSuggestions = GAME_SUGGESTIONS_FALLBACK,
+  ratifiedGames = [],
   genres,
 }: {
   hostHandle: string;
@@ -147,6 +149,10 @@ export function PostGameForm({
   hostAvatarImage: string | null;
   hostImage: string | null;
   gameSuggestions?: string[];
+  // Curated games + aliases (036), for the game typeahead + "did you mean?".
+  // Plain serialisable data, passed from /post like gameSuggestions/genres so
+  // no @/db-touching module is imported into this client component.
+  ratifiedGames?: GameEntry[];
   // Admin-editable (030). Arrives as a prop from /post rather than being
   // imported: a client component importing a runtime value from a module
   // that reaches @/db crashes the page.
@@ -162,6 +168,23 @@ export function PostGameForm({
   const voiceLinkId = useId();
 
   const [game, setGame] = useState("");
+  // 036 typeahead + "did you mean?". All matching is local and deterministic
+  // (no AI, no per-keystroke server call) over the games list handed in.
+  const [gameFocused, setGameFocused] = useState(false);
+  const [highlight, setHighlight] = useState(-1);
+  const ratifiedNames = useMemo(() => ratifiedGames.map((g) => g.canonical), [ratifiedGames]);
+  const typeahead = useMemo(
+    () => (gameFocused ? typeaheadMatches(game, ratifiedNames) : []),
+    [gameFocused, game, ratifiedNames],
+  );
+  const didYouMeanGame = useMemo(() => didYouMean(game, ratifiedGames), [game, ratifiedGames]);
+
+  function pickGame(name: string) {
+    setGame(name);
+    setGameFocused(false);
+    setHighlight(-1);
+  }
+
   const [genre, setGenre] = useState<string>("");
   const [title, setTitle] = useState("");
   const [blurb, setBlurb] = useState("");
@@ -274,13 +297,86 @@ export function PostGameForm({
           <label htmlFor={gameId} className="mb-1.5 block text-[13px] font-bold text-text">
             Game
           </label>
-          <input
-            id={gameId}
-            value={game}
-            onChange={(event) => setGame(event.target.value)}
-            placeholder="e.g. Valorant, D&D 5e, Catan…"
-            className="w-full rounded-lg border border-border bg-bg px-3.5 py-3 text-sm text-text outline-none"
-          />
+          <div className="relative">
+            <input
+              id={gameId}
+              value={game}
+              onChange={(event) => {
+                setGame(event.target.value);
+                setGameFocused(true);
+                setHighlight(-1);
+              }}
+              onFocus={() => setGameFocused(true)}
+              // Delay so a click on a suggestion registers before the list closes.
+              onBlur={() => setTimeout(() => setGameFocused(false), 120)}
+              onKeyDown={(event) => {
+                if (typeahead.length === 0) return;
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  setHighlight((h) => Math.min(h + 1, typeahead.length - 1));
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  setHighlight((h) => Math.max(h - 1, 0));
+                } else if (event.key === "Enter" && highlight >= 0) {
+                  // Only intercept Enter when a suggestion is highlighted;
+                  // otherwise Enter submits the form as normal (FR-009).
+                  event.preventDefault();
+                  pickGame(typeahead[highlight]);
+                } else if (event.key === "Escape") {
+                  setGameFocused(false);
+                  setHighlight(-1);
+                }
+              }}
+              role="combobox"
+              aria-expanded={typeahead.length > 0}
+              aria-autocomplete="list"
+              aria-controls="game-typeahead"
+              placeholder="e.g. Valorant, D&D 5e, Catan…"
+              className="w-full rounded-lg border border-border bg-bg px-3.5 py-3 text-sm text-text outline-none focus:border-accent-2"
+            />
+            {typeahead.length > 0 && (
+              <ul
+                id="game-typeahead"
+                role="listbox"
+                className="absolute top-full right-0 left-0 z-20 mt-1 overflow-hidden rounded-lg border border-border bg-surface-2 shadow-lg"
+              >
+                {typeahead.map((name, i) => (
+                  <li key={name} role="option" aria-selected={i === highlight}>
+                    <button
+                      type="button"
+                      // onMouseDown (not onClick) so it fires before the
+                      // input's onBlur closes the list.
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        pickGame(name);
+                      }}
+                      onMouseEnter={() => setHighlight(i)}
+                      className={`block w-full px-3.5 py-2 text-left text-sm ${i === highlight ? "bg-surface text-text" : "text-text-muted"}`}
+                    >
+                      {name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* "Did you mean?" -- only when the typed value isn't an exact
+              canonical match but is close to a known game (036/FR-004). */}
+          {didYouMeanGame && (
+            <p className="mt-2 text-[13px] text-text-muted">
+              Did you mean{" "}
+              <button
+                type="button"
+                onClick={() => pickGame(didYouMeanGame)}
+                className="font-bold text-accent-2 underline hover:text-accent"
+              >
+                {didYouMeanGame}
+              </button>
+              ?
+            </p>
+          )}
+
           {gameSuggestions.length > 0 && (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {gameSuggestions.map((suggestion) => (
