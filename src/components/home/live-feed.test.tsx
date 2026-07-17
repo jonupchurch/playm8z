@@ -98,7 +98,16 @@ describe("LiveFeed — sort", () => {
 describe("LiveFeed — trending selection", () => {
   it("selecting a trending game sets it as the search query", () => {
     render(
-      <LiveFeed postings={sample} trending={[{ game: "Helldivers 2", count: 1 }]} />,
+      <LiveFeed
+        postings={sample}
+        trending={[
+          {
+            game: "Helldivers 2",
+            count: 1,
+            image: { kind: "generated", visual: { background: "linear-gradient(135deg,#f00,#0f0)", initials: "H2" } },
+          },
+        ]}
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /Helldivers 2/ }));
     expect(cardTitles()).toEqual(["Casual dives"]);

@@ -31,6 +31,7 @@ const ADMIN_LINKS: NavItem[] = [
   { href: "/admin/forum", label: "Forum" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/news", label: "News" },
+  { href: "/admin/games", label: "Games" },
   { href: "/admin/content-pages", label: "Content pages" },
   { href: "/admin/audit-log", label: "Audit log" },
   { href: "/admin/settings", label: "Settings" },
