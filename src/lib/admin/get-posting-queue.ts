@@ -17,6 +17,8 @@ export type QueuePosting = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   autoFlagReason: string | null;
   reports: QueueReport[];
   severity: Severity;
@@ -54,6 +56,8 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
         authorId: postings.hostId,
         authorHandle: users.handle,
         authorAvatarColor: users.avatarColor,
+        authorAvatarImage: users.avatarImage,
+        authorImage: users.image,
         autoFlagReason: postings.autoFlagReason,
         moderationReviewedAt: postings.moderationReviewedAt,
       })
@@ -98,6 +102,8 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
         authorId: posting.authorId,
         authorHandle: posting.authorHandle ?? "player",
         authorAvatarColor: posting.authorAvatarColor,
+        authorAvatarImage: posting.authorAvatarImage,
+        authorImage: posting.authorImage,
         autoFlagReason: posting.autoFlagReason,
         reports: postingReports,
         severity,
@@ -132,6 +138,8 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
       authorId: row.authorId,
       authorHandle: row.authorHandle,
       authorAvatarColor: row.authorAvatarColor,
+      authorAvatarImage: row.authorAvatarImage,
+      authorImage: row.authorImage,
       autoFlagReason: row.autoFlagReason,
       reports: row.reports,
       severity: row.severity,

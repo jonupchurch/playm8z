@@ -4,12 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toggleUserBan } from "@/lib/actions/toggle-user-ban";
 import { removeUserContent } from "@/lib/actions/remove-user-content";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { UserDetail } from "@/lib/admin/get-user-detail";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function status(detail: UserDetail): "active" | "flagged" | "banned" {
   if (detail.bannedAt) return "banned";
@@ -87,12 +83,13 @@ export function UserDrawer({ detail }: { detail: UserDetail | null }) {
           <div className="border-b border-border p-5.5">
             <div className="mb-4 flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div
-                  style={{ background: avatarGradient(detail.avatarColor) }}
-                  className="flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl text-lg font-bold text-on-accent"
-                >
-                  {detail.handle.trim()[0]?.toUpperCase() || "P"}
-                </div>
+                <Avatar
+                  avatarImage={detail.avatarImage}
+                  googleImage={detail.image}
+                  avatarColor={detail.avatarColor}
+                  handle={detail.handle}
+                  className="h-13 w-13 shrink-0 rounded-2xl text-lg"
+                />
                 <div>
                   <div className="flex items-center gap-2">
                     <span id="user-drawer-heading" className="text-lg font-bold text-text">

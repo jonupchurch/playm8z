@@ -10,6 +10,8 @@ export type ConversationMessage = {
   senderId: string | null;
   senderHandle: string | null;
   senderAvatarColor: string | null;
+  senderAvatarImage: string | null;
+  senderImage: string | null;
   type: string;
   body: string;
   createdAt: Date;
@@ -30,6 +32,8 @@ export type RequestView = {
   postingId: string;
   applicantHandle: string;
   applicantAvatarColor: string | null;
+  applicantAvatarImage: string | null;
+  applicantImage: string | null;
   postingTitle: string;
   postingGame: string;
   message: string | null;
@@ -73,6 +77,8 @@ export async function getConversationOrRequest(
         senderId: messages.senderId,
         senderHandle: users.handle,
         senderAvatarColor: users.avatarColor,
+        senderAvatarImage: users.avatarImage,
+        senderImage: users.image,
         type: messages.type,
         body: messages.body,
         createdAt: messages.createdAt,
@@ -110,6 +116,8 @@ export async function getConversationOrRequest(
       applicantId: applications.applicantId,
       applicantHandle: users.handle,
       applicantAvatarColor: users.avatarColor,
+      applicantAvatarImage: users.avatarImage,
+      applicantImage: users.image,
       hostHandle: hostUsers.handle,
     })
     .from(applications)
@@ -134,6 +142,8 @@ export async function getConversationOrRequest(
     postingId: request.postingId,
     applicantHandle: request.applicantHandle ?? "player",
     applicantAvatarColor: request.applicantAvatarColor,
+    applicantAvatarImage: request.applicantAvatarImage,
+    applicantImage: request.applicantImage,
     postingTitle: request.postingTitle,
     postingGame: request.postingGame,
     message: request.message,

@@ -8,6 +8,8 @@ export type TeamMember = {
   handle: string;
   email: string;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   role: AssignableRole;
   createdAt: Date;
 };
@@ -24,6 +26,8 @@ export async function getTeam(): Promise<TeamMember[]> {
       handle: users.handle,
       email: users.email,
       avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       role: users.role,
       createdAt: users.createdAt,
     })

@@ -7,7 +7,7 @@ import { applications, postings, questions, savedListings, users } from "@/db/sc
 import { getRoster } from "@/lib/postings/get-roster";
 import { postingAgeLabel } from "@/lib/postings/age-label";
 import { relativeAge } from "@/components/listings/listing-card";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { Roster } from "@/components/listing/roster";
 import { ApplyPanel } from "@/components/listing/apply-panel";
 import { QaThread } from "@/components/listing/qa-thread";
@@ -53,6 +53,8 @@ export default async function ListingDetailPage({
       hostId: postings.hostId,
       hostHandle: users.handle,
       hostAvatarColor: users.avatarColor,
+      hostAvatarImage: users.avatarImage,
+      hostImage: users.image,
       game: postings.game,
       genre: postings.genre,
       title: postings.title,
@@ -95,6 +97,8 @@ export default async function ListingDetailPage({
         askerId: questions.askerId,
         askerHandle: users.handle,
         askerAvatarColor: users.avatarColor,
+        askerAvatarImage: users.avatarImage,
+        askerImage: users.image,
         text: questions.text,
         reply: questions.reply,
         createdAt: questions.createdAt,
@@ -146,10 +150,6 @@ export default async function ListingDetailPage({
       })
     : null;
 
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === posting.hostAvatarColor)?.gradient ??
-    AVATAR_COLORS[0].gradient;
-
   return (
     <main className="grow bg-bg text-text">
       <div className="mx-auto max-w-300 px-8 py-6">
@@ -189,12 +189,13 @@ export default async function ListingDetailPage({
               </div>
               <h1 className="mb-4 text-[28px] leading-tight font-bold tracking-tight">{posting.title}</h1>
               <div className="flex items-center gap-3">
-                <div
-                  style={{ background: avatarGradient }}
-                  className="flex h-11.5 w-11.5 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-on-accent"
-                >
-                  {(posting.hostHandle?.trim()[0] || "P").toUpperCase()}
-                </div>
+                <Avatar
+                  avatarImage={posting.hostAvatarImage}
+                  googleImage={posting.hostImage}
+                  avatarColor={posting.hostAvatarColor}
+                  handle={posting.hostHandle}
+                  className="h-11.5 w-11.5 shrink-0 rounded-xl text-lg"
+                />
                 <div>
                   <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? "player"}</div>
                   <div className="font-mono text-[11px] text-text-muted">
@@ -305,12 +306,13 @@ export default async function ListingDetailPage({
 
             <div className="rounded-2xl border border-border bg-surface-2 p-5">
               <div className="mb-4 flex items-center gap-3">
-                <div
-                  style={{ background: avatarGradient }}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-on-accent"
-                >
-                  {(posting.hostHandle?.trim()[0] || "P").toUpperCase()}
-                </div>
+                <Avatar
+                  avatarImage={posting.hostAvatarImage}
+                  googleImage={posting.hostImage}
+                  avatarColor={posting.hostAvatarColor}
+                  handle={posting.hostHandle}
+                  className="h-12 w-12 shrink-0 rounded-xl text-lg"
+                />
                 <div>
                   <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? "player"}</div>
                 </div>

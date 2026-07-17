@@ -6,6 +6,12 @@ export type UserCandidate = {
   id: string;
   handle: string;
   avatarColor: string | null;
+  // Optional: the candidate-search query always supplies these, but a
+  // hand-built preSelected literal (e.g. profile-header.tsx blocking a
+  // user directly) may omit them until that caller is widened -- the
+  // Avatar falls back to the gradient in that case.
+  avatarImage?: string | null;
+  image?: string | null;
 };
 
 const CANDIDATE_LIMIT = 20;
@@ -32,7 +38,13 @@ export async function searchCandidateUsers(query: string, excludeUserId: string)
   }
 
   return db
-    .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor })
+    .select({
+      id: users.id,
+      handle: users.handle,
+      avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
+    })
     .from(users)
     .where(and(...conditions))
     .limit(CANDIDATE_LIMIT)

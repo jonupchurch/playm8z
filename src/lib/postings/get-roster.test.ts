@@ -65,7 +65,13 @@ afterAll(async () => {
 describe("getRoster", () => {
   it("always includes the host as the first row", async () => {
     const roster = await getRoster({ postingId, hostId, seatsTotal: 5 });
-    expect(roster.rows[0]).toEqual({ kind: "host", handle: `rosterhost${runId}`, avatarColor: null });
+    expect(roster.rows[0]).toEqual({
+      kind: "host",
+      handle: `rosterhost${runId}`,
+      avatarColor: null,
+      avatarImage: null,
+      image: null,
+    });
   });
 
   it("includes only accepted applicants as members, not pending ones", async () => {

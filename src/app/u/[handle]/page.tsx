@@ -85,6 +85,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         handle={profile.handle}
         bio={profile.bio}
         avatarColor={profile.avatarColor}
+        avatarImage={profile.avatarImage}
+        image={profile.image}
         createdAt={profile.createdAt}
         stats={profile.stats}
         isOwnProfile={isOwnProfile}

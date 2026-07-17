@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { askQuestion } from "@/lib/actions/ask-question";
 import { replyToQuestion } from "@/lib/actions/reply-to-question";
 import { relativeAge } from "@/components/listings/listing-card";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import { ReportModal, type ReportTarget } from "@/components/reports/report-modal";
 
 export type ThreadQuestion = {
@@ -14,6 +14,8 @@ export type ThreadQuestion = {
   askerId: string;
   askerHandle: string | null;
   askerAvatarColor: string | null;
+  askerAvatarImage: string | null;
+  askerImage: string | null;
   text: string;
   reply: string | null;
   createdAt: Date;
@@ -33,9 +35,6 @@ function QuestionRow({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
-  const avatarGradient =
-    AVATAR_COLORS.find((swatch) => swatch.id === question.askerAvatarColor)?.gradient ??
-    AVATAR_COLORS[0].gradient;
 
   // FR-010 (006-listing-detail's amended, previously-deferred Report
   // action): per-question reports target the asker directly
@@ -64,12 +63,13 @@ function QuestionRow({
 
   return (
     <div className="flex gap-2.5">
-      <div
-        style={{ background: avatarGradient }}
-        className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-on-accent"
-      >
-        {(question.askerHandle?.trim()[0] || "P").toUpperCase()}
-      </div>
+      <Avatar
+        avatarImage={question.askerAvatarImage}
+        googleImage={question.askerImage}
+        avatarColor={question.askerAvatarColor}
+        handle={question.askerHandle}
+        className="h-8.5 w-8.5 shrink-0 rounded-lg text-sm"
+      />
       <div className="flex-1">
         <div className="mb-0.5 flex items-center gap-2">
           <span className="text-[13px] font-bold text-text">@{question.askerHandle ?? "player"}</span>

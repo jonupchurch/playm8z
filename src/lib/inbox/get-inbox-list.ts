@@ -12,6 +12,8 @@ export type InboxItem = {
   lastActivityAt: Date;
   unreadCount: number;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   postingId?: string;
 };
 
@@ -37,7 +39,13 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
       const otherMemberIds = conversation.memberIds.filter((id) => id !== userId);
       const members = otherMemberIds.length
         ? await db
-            .select({ id: users.id, handle: users.handle, avatarColor: users.avatarColor })
+            .select({
+              id: users.id,
+              handle: users.handle,
+              avatarColor: users.avatarColor,
+              avatarImage: users.avatarImage,
+              image: users.image,
+            })
             .from(users)
             .where(inArray(users.id, otherMemberIds))
         : [];
@@ -76,6 +84,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
         lastActivityAt: conversation.lastMessageAt,
         unreadCount: unread?.count ?? 0,
         avatarColor: conversation.isGroup ? null : (members[0]?.avatarColor ?? null),
+        avatarImage: conversation.isGroup ? null : (members[0]?.avatarImage ?? null),
+        image: conversation.isGroup ? null : (members[0]?.image ?? null),
       };
     }),
   );
@@ -90,6 +100,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
       postingGame: postings.game,
       applicantHandle: users.handle,
       applicantAvatarColor: users.avatarColor,
+      applicantAvatarImage: users.avatarImage,
+      applicantImage: users.image,
     })
     .from(applications)
     .innerJoin(postings, eq(applications.postingId, postings.id))
@@ -108,6 +120,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     lastActivityAt: request.createdAt,
     unreadCount: 1,
     avatarColor: request.applicantAvatarColor,
+    avatarImage: request.applicantAvatarImage,
+    image: request.applicantImage,
     postingId: request.postingId,
   }));
 
@@ -123,6 +137,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
       postingGame: postings.game,
       hostHandle: users.handle,
       hostAvatarColor: users.avatarColor,
+      hostAvatarImage: users.avatarImage,
+      hostImage: users.image,
     })
     .from(applications)
     .innerJoin(postings, eq(applications.postingId, postings.id))
@@ -141,6 +157,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     lastActivityAt: invite.createdAt,
     unreadCount: 1,
     avatarColor: invite.hostAvatarColor,
+    avatarImage: invite.hostAvatarImage,
+    image: invite.hostImage,
     postingId: invite.postingId,
   }));
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { assignTeamRole } from "@/lib/actions/assign-team-role";
 import { removeTeamMember } from "@/lib/actions/remove-team-member";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { AssignableRole } from "@/lib/validations/admin-settings";
 import type { TeamMember } from "@/lib/admin/get-team";
 
@@ -14,10 +14,6 @@ const ROLE_OPTIONS: { key: AssignableRole; label: string }[] = [
   { key: "support", label: "Support" },
   { key: "viewer", label: "Viewer" },
 ];
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-007/FR-008: role assignment (both a known member's dropdown and
 // "Invite a team member" share the same assignTeamRole action --
@@ -69,12 +65,13 @@ export function SettingsRoles({ team }: { team: TeamMember[] }) {
         ) : (
           team.map((member) => (
             <div key={member.id} className="flex items-center gap-3.5 border-b border-border px-4.5 py-3.5 last:border-b-0">
-              <div
-                style={{ background: avatarGradient(member.avatarColor) }}
-                className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-[11px] text-sm font-bold text-on-accent"
-              >
-                {member.handle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={member.avatarImage}
+                googleImage={member.image}
+                avatarColor={member.avatarColor}
+                handle={member.handle}
+                className="h-9.5 w-9.5 shrink-0 rounded-[11px] text-sm"
+              />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold text-text">@{member.handle}</div>
                 <div className="truncate font-mono text-[10px] text-text-dim">{member.email}</div>

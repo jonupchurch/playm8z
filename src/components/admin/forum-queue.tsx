@@ -7,13 +7,9 @@ import { categoryLabel } from "@/lib/forum/categories";
 import { resolveForumReport } from "@/lib/actions/resolve-forum-report";
 import { AUTO_FLAG_LABELS, type AutoFlagReason } from "@/lib/moderation/auto-flag-rules";
 import { reasonLabel, reportReasonSeverity, severityBadgeClass, severityLabel, type Severity } from "@/lib/moderation/reason-severity";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { ForumQueueFilter } from "@/lib/validations/admin-forum";
 import type { ForumQueueItem, ForumQueueStats } from "@/lib/admin/get-forum-queue";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 function cardEdgeClass(severity: Severity) {
   if (severity === "high") return "border-[rgba(255,59,107,0.3)]";
@@ -153,12 +149,13 @@ export function ForumQueue({ stats, rows }: { stats: ForumQueueStats; rows: Foru
                   <p className="mb-3 text-[13px] leading-relaxed text-text-muted">{row.content}</p>
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="flex items-center gap-2">
-                      <div
-                        style={{ background: avatarGradient(row.authorAvatarColor) }}
-                        className="flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-bold text-on-accent"
-                      >
-                        {row.authorHandle.trim()[0]?.toUpperCase() || "P"}
-                      </div>
+                      <Avatar
+                        avatarImage={row.authorAvatarImage}
+                        googleImage={row.authorImage}
+                        avatarColor={row.authorAvatarColor}
+                        handle={row.authorHandle}
+                        className="h-6 w-6 rounded-md text-[11px]"
+                      />
                       <span className="font-mono text-[11px] text-text-muted">@{row.authorHandle}</span>
                     </div>
                     {row.reports.length > 0 && <span className="h-3.5 w-px bg-border" aria-hidden="true" />}

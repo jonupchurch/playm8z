@@ -4,12 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { startConversation } from "@/lib/actions/start-conversation";
 import { searchContacts } from "@/lib/inbox/search-contacts";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { ContactCandidate } from "@/lib/inbox/search-contacts";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // research.md #4/FR-005/FR-006: follows Blocked Users' block-modal.tsx
 // dialog-accessibility pattern (focus trap, native showModal()/close(),
@@ -178,12 +174,13 @@ export function ComposeModal({ open, onClose }: { open: boolean; onClose: () => 
                     : "border-border"
                 }`}
               />
-              <div
-                style={{ background: avatarGradient(candidate.avatarColor) }}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-sm font-bold text-on-accent"
-              >
-                {candidate.handle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={candidate.avatarImage}
+                googleImage={candidate.image}
+                avatarColor={candidate.avatarColor}
+                handle={candidate.handle}
+                className="h-9 w-9 shrink-0 rounded-[11px] text-sm"
+              />
               <div className="min-w-0 flex-1 truncate text-sm font-semibold text-text">@{candidate.handle}</div>
             </button>
           );

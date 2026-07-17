@@ -7,12 +7,8 @@ import { resolvePostingReport } from "@/lib/actions/resolve-posting-report";
 import { banPostingAuthor } from "@/lib/actions/ban-posting-author";
 import { AUTO_FLAG_LABELS, type AutoFlagReason } from "@/lib/moderation/auto-flag-rules";
 import { severityBadgeClass, severityLabel } from "@/lib/moderation/reason-severity";
-import { AVATAR_COLORS } from "@/lib/validations/onboarding";
+import { Avatar } from "@/components/ui/avatar";
 import type { PostingReview } from "@/lib/admin/get-posting-review";
-
-function avatarGradient(color: string | null) {
-  return AVATAR_COLORS.find((swatch) => swatch.id === color)?.gradient ?? AVATAR_COLORS[0].gradient;
-}
 
 // FR-006/FR-007/FR-010: a real dialog/panel (native <dialog>, focus
 // trap and Escape-to-close for free) showing the full posting, "why
@@ -129,12 +125,13 @@ export function PostingReviewDrawer({ review }: { review: PostingReview | null }
           <div className="border-b border-border p-5.5">
             <div className="mb-3.5 font-mono text-[10px] tracking-wider text-accent-2 uppercase">Author</div>
             <div className="mb-3.5 flex items-center gap-3">
-              <div
-                style={{ background: avatarGradient(review.authorAvatarColor) }}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-base font-bold text-on-accent"
-              >
-                {review.authorHandle.trim()[0]?.toUpperCase() || "P"}
-              </div>
+              <Avatar
+                avatarImage={review.authorAvatarImage}
+                googleImage={review.authorImage}
+                avatarColor={review.authorAvatarColor}
+                handle={review.authorHandle}
+                className="h-11 w-11 rounded-xl text-base"
+              />
               <div>
                 <div className="text-sm font-bold text-text">@{review.authorHandle}</div>
                 <div className="font-mono text-[11px] text-text-muted">

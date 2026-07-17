@@ -9,6 +9,8 @@ function posting(overrides: Partial<OpenPosting>): OpenPosting {
     hostId: crypto.randomUUID(),
     hostHandle: "host",
     hostAvatarColor: "amber-orange",
+    hostAvatarImage: null,
+    hostImage: null,
     game: "Generic Game",
     title: "A listing",
     blurb: "blurb",

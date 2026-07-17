@@ -10,6 +10,8 @@ export type AdminUserRow = {
   handle: string;
   email: string;
   avatarColor: string | null;
+  avatarImage: string | null;
+  image: string | null;
   region: string | null;
   createdAt: Date;
   postingCount: number;
@@ -50,6 +52,8 @@ const statused = db
     handle: users.handle,
     email: users.email,
     avatarColor: users.avatarColor,
+    avatarImage: users.avatarImage,
+    image: users.image,
     region: users.region,
     createdAt: users.createdAt,
     openReportCount: sql<number>`coalesce(${reportCounts.reportCount}, 0)::int`.as("openReportCount"),

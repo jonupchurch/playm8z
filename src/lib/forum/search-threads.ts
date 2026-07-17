@@ -10,6 +10,8 @@ export type ForumThreadRow = {
   categoryId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   title: string;
   body: string;
   tags: string[];
@@ -84,6 +86,8 @@ export async function searchThreads(filters: ForumSearchParams): Promise<ForumTh
       categoryId: forumThreads.categoryId,
       authorHandle: users.handle,
       authorAvatarColor: users.avatarColor,
+      authorAvatarImage: users.avatarImage,
+      authorImage: users.image,
       title: forumThreads.title,
       body: forumThreads.body,
       tags: forumThreads.tags,

@@ -14,6 +14,8 @@ export default async function BlockedUsersPage() {
       userId: users.id,
       handle: users.handle,
       avatarColor: users.avatarColor,
+      avatarImage: users.avatarImage,
+      image: users.image,
       blockedAt: blocks.createdAt,
     })
     .from(blocks)
@@ -31,6 +33,8 @@ export default async function BlockedUsersPage() {
     blockId: row.blockId,
     handle: row.handle ?? "player",
     avatarColor: row.avatarColor,
+    avatarImage: row.avatarImage,
+    image: row.image,
     blockedAt: row.blockedAt.toISOString(),
     hasReport: reportedIds.has(row.userId),
   }));

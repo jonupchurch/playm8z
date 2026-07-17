@@ -62,6 +62,8 @@ export async function getLandingStats(): Promise<LandingStats> {
         id: postings.id,
         hostHandle: users.handle,
         hostAvatarColor: users.avatarColor,
+        hostAvatarImage: users.avatarImage,
+        hostImage: users.image,
         game: postings.game,
         genre: postings.genre,
         title: postings.title,

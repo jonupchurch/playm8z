@@ -17,6 +17,8 @@ export type ForumQueueItem = {
   authorId: string;
   authorHandle: string;
   authorAvatarColor: string | null;
+  authorAvatarImage: string | null;
+  authorImage: string | null;
   createdAt: Date;
   autoFlagReason: string | null;
   reports: ForumQueueReport[];
@@ -52,6 +54,8 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
         authorId: forumThreads.authorId,
         authorHandle: users.handle,
         authorAvatarColor: users.avatarColor,
+        authorAvatarImage: users.avatarImage,
+        authorImage: users.image,
         createdAt: forumThreads.createdAt,
         autoFlagReason: forumThreads.autoFlagReason,
         moderationReviewedAt: forumThreads.moderationReviewedAt,
@@ -66,6 +70,8 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
         authorId: forumReplies.authorId,
         authorHandle: users.handle,
         authorAvatarColor: users.avatarColor,
+        authorAvatarImage: users.avatarImage,
+        authorImage: users.image,
         createdAt: forumReplies.createdAt,
         autoFlagReason: forumReplies.autoFlagReason,
         moderationReviewedAt: forumReplies.moderationReviewedAt,
@@ -129,6 +135,8 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       authorId: row.authorId,
       authorHandle: row.authorHandle ?? "player",
       authorAvatarColor: row.authorAvatarColor,
+      authorAvatarImage: row.authorAvatarImage,
+      authorImage: row.authorImage,
       createdAt: row.createdAt,
       autoFlagReason: row.autoFlagReason,
       reports: itemReports,
@@ -150,6 +158,8 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       authorId: row.authorId,
       authorHandle: row.authorHandle ?? "player",
       authorAvatarColor: row.authorAvatarColor,
+      authorAvatarImage: row.authorAvatarImage,
+      authorImage: row.authorImage,
       createdAt: row.createdAt,
       autoFlagReason: row.autoFlagReason,
       reports: itemReports,
@@ -189,6 +199,8 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       authorId: item.authorId,
       authorHandle: item.authorHandle,
       authorAvatarColor: item.authorAvatarColor,
+      authorAvatarImage: item.authorAvatarImage,
+      authorImage: item.authorImage,
       createdAt: item.createdAt,
       autoFlagReason: item.autoFlagReason,
       reports: item.reports,
