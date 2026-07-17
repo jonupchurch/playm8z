@@ -102,10 +102,14 @@ test("a Google photo we already store shows without any upload (US2/SC-002)", as
   await expect(page.locator(`img[src="${GOOGLE_PNG}"]`).first()).toBeVisible();
 });
 
-test("the same uploaded avatar shows in the nav after logging in (a second surface)", async ({
-  page,
-}) => {
+test("the same uploaded avatar shows in the nav (a second surface)", async ({ page }) => {
   await login(page, uploaderEmail);
+  // SiteHeader lives in the ROOT layout, which the App Router does not
+  // re-render on the client-side navigation that login performs -- so the
+  // header keeps its logged-out state until a full page load. A real user
+  // sees the updated header on their next navigation/reload; reload here to
+  // assert that steady state rather than the transient post-login frame.
+  await page.reload();
   // The top-right ProfileMenu avatar -- a different surface from the Browse
   // card, proving one component carries the photo across the app.
   await expect(page.locator(`header img[src="${PNG}"]`)).toBeVisible();

@@ -78,10 +78,11 @@ export function Avatar({
     );
   }
 
+  // A plain <img>, not next/image (research.md #4): avoids allowlisting the
+  // Google + Blob hosts in remotePatterns, and preserves the onError
+  // fallback to the gradient block that next/image doesn't give us cleanly.
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- deliberate: a
-    // plain <img> avoids allowlisting Google + Blob hosts in next/image
-    // remotePatterns and gives us the onError fallback (research.md #4).
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={alt ?? (handle ? `${handle}'s avatar` : "avatar")}
