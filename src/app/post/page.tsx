@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { getGameSuggestions } from "@/lib/postings/get-game-suggestions";
+import { getSettings } from "@/lib/settings/get-settings";
 import { PostGameForm } from "@/components/post-game/post-game-form";
 
 // FR-016: a logged-out visitor is routed to log in before reaching this
@@ -17,12 +18,13 @@ export default async function PostGamePage() {
     redirect("/login");
   }
 
-  const [[user], gameSuggestions] = await Promise.all([
+  const [[user], gameSuggestions, { genres }] = await Promise.all([
     db
       .select({ handle: users.handle, avatarColor: users.avatarColor })
       .from(users)
       .where(eq(users.email, session.user.email)),
     getGameSuggestions(),
+    getSettings(),
   ]);
 
   return (
@@ -40,6 +42,7 @@ export default async function PostGamePage() {
           hostHandle={user?.handle ?? "player"}
           hostAvatarColor={user?.avatarColor ?? null}
           gameSuggestions={gameSuggestions}
+          genres={genres}
         />
       </div>
     </main>

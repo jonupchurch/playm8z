@@ -41,6 +41,17 @@ export async function createPosting(input: PostingInput): Promise<CreatePostingR
     db.select({ n: sql<number>`count(*)::int` }).from(postings).where(eq(postings.hostId, host.id)),
     getSettings(),
   ]);
+  // 030 FR-008: genre membership can't be a static z.enum() now the
+  // list is admin-editable (research.md #3), so it's checked here --
+  // strictly, because this value is arriving fresh. manage-posting.ts
+  // is deliberately more tolerant: it also accepts the genre a posting
+  // already stores, so retiring a genre never strands its host.
+  // `moderationSettings` is the same getSettings() read the auto-flag
+  // check above already needed, so this costs no extra query.
+  if (parsed.data.genre && !moderationSettings.genres.includes(parsed.data.genre)) {
+    return { success: false, error: "Pick a genre from the list." };
+  }
+
   const accountAgeDays = (Date.now() - hostRow.createdAt.getTime()) / 86_400_000;
   const autoFlagReason = computeAutoFlagReason(
     `${parsed.data.title} ${parsed.data.blurb}`,

@@ -1,4 +1,5 @@
 import { browseFiltersSchema } from "@/lib/validations/browse-filters";
+import { getSettings } from "@/lib/settings/get-settings";
 import { searchPostings } from "@/lib/postings/search-postings";
 import { getGameFacetCounts, getRegionFacetCounts } from "@/lib/postings/get-facet-counts";
 import { ListingCard } from "@/components/listings/listing-card";
@@ -17,7 +18,23 @@ export default async function BrowsePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const rawParams = await searchParams;
-  const filters = browseFiltersSchema.parse(rawParams);
+  const requested = browseFiltersSchema.parse(rawParams);
+
+  // 030: the genre list is admin-editable, so it can't be a static
+  // z.enum() in the schema (research.md #3) -- the schema checks shape,
+  // membership is applied here.
+  //
+  // FR-009: drop any genre that's no longer offered and keep the rest,
+  // so a stale bookmark (`?genres=FPS&genres=MOBA` after MOBA is
+  // retired) still honours FPS. Passing the unknown value through to
+  // searchPostings would be worse than useless: `inArray` would match
+  // nothing and render an empty Browse, which reads as "there's nothing
+  // here" rather than "that filter no longer exists".
+  const { genres: offeredGenres } = await getSettings();
+  const filters = {
+    ...requested,
+    genres: requested.genres.filter((genre) => offeredGenres.includes(genre)),
+  };
 
   const [results, gameFacets, regionFacets] = await Promise.all([
     searchPostings(filters),
@@ -44,7 +61,7 @@ export default async function BrowsePage({
       </div>
 
       <div className="mx-auto grid max-w-330 grid-cols-1 gap-7 px-8 pt-6 pb-18 lg:grid-cols-[284px_1fr] lg:items-start">
-        <FilterSidebar gameFacets={gameFacets} regionFacets={regionFacets} />
+        <FilterSidebar gameFacets={gameFacets} regionFacets={regionFacets} genres={offeredGenres} />
 
         <div>
           <div className="mb-3.5 flex flex-wrap items-center justify-between gap-3">

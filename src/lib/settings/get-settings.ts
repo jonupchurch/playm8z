@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { db } from "@/db";
 import { settings } from "@/db/schema";
+import { DEFAULT_GENRES } from "@/lib/validations/browse-filters";
 
 // Admin Settings (024) -- the singleton row's full shape, extended here
 // with every section's own fields (research.md #1 there). Falling back
@@ -29,6 +30,10 @@ const settingsSchema = z.object({
   tabletopFlag: z.boolean(),
   openSignups: z.boolean(),
   discoverableByDefault: z.boolean(),
+  // Lists (030). A parse failure here degrades to DEFAULTS below --
+  // i.e. the list that used to be hardcoded -- never to an empty list,
+  // which would leave Post a Game with no genres to offer.
+  genres: z.array(z.string()).min(1),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
@@ -55,6 +60,7 @@ const DEFAULTS: Settings = {
   tabletopFlag: true,
   openSignups: true,
   discoverableByDefault: true,
+  genres: [...DEFAULT_GENRES],
 };
 
 // A few seconds' staleness is acceptable for flags that change rarely
