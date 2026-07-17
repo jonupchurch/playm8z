@@ -4,6 +4,26 @@ Ideas and scope explicitly deferred out of the current build, per the
 constitution's Scope Discipline principle (Principle IV). Nothing here is
 scheduled — it's a parking lot, not a roadmap.
 
+## Primary-button colour contrast (WCAG AA) — accepted for now, 2026-07-16
+
+Measured while fixing the transactional-email layout. White text on the
+primary CTA colours falls short of WCAG AA's 4.5:1 for normal-size text:
+
+- Email button, white on `#7c5cff`: **4.35:1** — a hair under. The button
+  text is large-ish and bold, where the bar is only 3:1, so it plausibly
+  already passes as large text; borderline either way.
+- Site CTA, white on the `#ff6b1a` end of the orange gradient: **2.85:1** —
+  the real gap, and it's the established brand colour on every primary
+  button across the site.
+
+Deliberately **not** changed as part of the email bugfix (that would be a
+sitewide design-system change smuggled into a one-file fix). Confirmed with
+the user (2026-07-16): leave both as-is for now, with this note so it's a
+conscious call rather than an oversight. Body text, muted text, and links
+all pass comfortably (15.7:1, 7.2:1, 6.9:1) — this is only the filled
+buttons. If picked up, it's a small accessibility pass across every primary
+button, email and web, with its own before/after review.
+
 ## Persistent Groups
 
 A "Groups" concept distinct from one-off LFG listings: ongoing
