@@ -9,9 +9,19 @@
 #   symlinks on checkout anyway. Re-run `vercel integration add neon` (or
 #   `npx skills add https://github.com/neondatabase/agent-skills`) to
 #   reinstall locally if needed.
+# - the Resend agent-skills auto-installed by `vercel integration add
+#   resend/resend-email` (2026-07-16): identical case to Neon's above --
+#   same absolute-path symlinks into the already-ignored .agents/, same
+#   reinstall story. Any future `vercel integration add` will do this
+#   again; the pattern, not the list, is the rule.
 .claude/settings.local.json
 .claude/skills/neon
 .claude/skills/neon-postgres
+.claude/skills/resend
+.claude/skills/resend-cli
+.claude/skills/react-email
+.claude/skills/email-best-practices
+.claude/skills/agent-email-inbox
 .agents/
 skills-lock.json
 
