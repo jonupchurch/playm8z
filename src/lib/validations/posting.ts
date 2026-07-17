@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GENRES, REGIONS, TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { REGIONS, TIME_SLOTS } from "@/lib/validations/browse-filters";
 
 // A posting's own platform value, distinct from Browse's facet-filter
 // PLATFORMS (which adds a leading "any" wildcard that doesn't apply to
@@ -26,7 +26,15 @@ function emptyToUndefined(value: unknown): unknown {
 export const postingSchema = z
   .object({
     game: z.string().trim().min(1).max(100),
-    genre: z.preprocess(emptyToUndefined, z.enum(GENRES).optional()),
+    // Shape only. Membership in the admin's genre list is NOT checked
+    // here and deliberately cannot be: the list is admin-editable since
+    // 030, and z.enum() needs its values at module-evaluation time
+    // (research.md #3). The actions check membership instead --
+    // create-posting.ts strictly, manage-posting.ts tolerantly (it must
+    // still accept a genre this posting already stores, or a host whose
+    // genre got retired could never edit their own posting again).
+    // Restoring z.enum() here would silently re-freeze the list.
+    genre: z.preprocess(emptyToUndefined, z.string().trim().max(50).optional()),
     title: z.string().trim().min(1).max(60),
     blurb: z.string().trim().max(240).optional().default(""),
     tags: z.preprocess(toStringArray, z.array(z.string().max(30)).max(6)).default([]),

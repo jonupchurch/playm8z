@@ -6,6 +6,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- **Admin-editable genres** (feature 030). The genres offered on Post a
+  Game and Browse — and counted on the landing page — are now edited
+  from a **Lists** tab in Admin → Settings instead of being hardcoded,
+  and both screens read the one stored list so they can never disagree.
+  Retiring a genre stops it being offered but never touches a posting
+  already using it; that posting keeps and displays its genre, and its
+  host can still edit it. Browse now ignores just an unrecognised genre
+  in a stale link rather than silently discarding the whole filter.
 - Scaffolded the Next.js app: App Router, TypeScript strict, Tailwind
   CSS, `src/` layout, npm.
 - Zod, wired as the validation layer for trust boundaries (starting

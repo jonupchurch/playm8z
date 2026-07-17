@@ -103,8 +103,18 @@ describe("postingSchema", () => {
     expect(() => postingSchema.parse({ ...validPayload, platform: "mobile" })).toThrow();
   });
 
-  it("rejects an invalid genre", () => {
-    expect(() => postingSchema.parse({ ...validPayload, genre: "Not a real genre" })).toThrow();
+  // 030: genre membership is deliberately NOT checked here any more.
+  // The list is admin-editable, so it can't be a z.enum() (which needs
+  // its values at module-evaluation time) -- the schema checks shape and
+  // the actions check membership: create-posting.ts strictly, and
+  // manage-posting.ts tolerantly so a host whose genre got retired can
+  // still edit their own posting. See those two files' own tests.
+  it("accepts any well-shaped genre string -- membership is the actions' job now", () => {
+    expect(postingSchema.parse({ ...validPayload, genre: "Racing" }).genre).toBe("Racing");
+  });
+
+  it("still rejects a genre that's the wrong shape", () => {
+    expect(() => postingSchema.parse({ ...validPayload, genre: "x".repeat(51) })).toThrow();
   });
 
   it("treats an empty genre as absent rather than invalid", () => {

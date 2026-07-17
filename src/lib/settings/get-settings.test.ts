@@ -29,6 +29,7 @@ const FULL_ROW = {
   tabletopFlag: true,
   openSignups: true,
   discoverableByDefault: true,
+  genres: ["FPS", "RPG"],
 };
 
 const DEFAULTS = {
@@ -53,6 +54,7 @@ const DEFAULTS = {
   tabletopFlag: true,
   openSignups: true,
   discoverableByDefault: true,
+  genres: ["FPS", "RPG", "Co-op PvE", "Party", "MOBA", "Sandbox", "TTRPG", "Tabletop"],
 };
 
 function mockRow(row: unknown) {
@@ -91,6 +93,16 @@ describe("getSettings", () => {
     mockRow(undefined);
     const result = await getSettings();
     expect(result).toEqual(DEFAULTS);
+  });
+
+  // 030: a stored empty genre list would leave Post a Game with nothing
+  // to offer, so the schema's .min(1) rejects it and the whole read
+  // degrades to DEFAULTS -- i.e. the list that used to be hardcoded --
+  // rather than to no genres at all.
+  it("falls back to the default genres rather than serving an empty list", async () => {
+    mockRow({ ...FULL_ROW, genres: [] });
+    const result = await getSettings();
+    expect(result.genres).toEqual(DEFAULTS.genres);
   });
 
   it("caches the result -- a second call within the TTL doesn't hit the database again", async () => {

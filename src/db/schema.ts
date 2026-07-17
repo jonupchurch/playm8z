@@ -136,6 +136,12 @@ export const settings = pgTable("settings", {
   // future discovery/search feature consults `privacyDiscoverable`
   // itself.
   discoverableByDefault: boolean("discoverableByDefault").notNull().default(true),
+  // Lists (030) -- the genres offered on Post a Game and Browse. The
+  // default is exactly the list that used to be hardcoded, so behavior
+  // is unchanged until an admin edits it. `postings.genre` is plain
+  // text with no FK to this, deliberately: retiring a genre here must
+  // never touch a posting that already uses it (030 FR-007).
+  genres: text("genres").array().notNull().default(["FPS", "RPG", "Co-op PvE", "Party", "MOBA", "Sandbox", "TTRPG", "Tabletop"]),
 });
 
 // Minimal shape -- Home is the first feature to need this table, so it
