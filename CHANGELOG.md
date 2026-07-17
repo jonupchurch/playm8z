@@ -5,6 +5,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+- **A posting's age group now describes who a party is *for***, rather
+  than a minimum age to join (feature 032, [ADR 0009](docs/adr/0009-posting-age-group-is-a-demographic-range.md)):
+  **Any** (the default) / **18-29** / **30-49** / **50+**. The 18+ and
+  21+ options are gone — "Any" carries the meaning 18+ used to have
+  ("everyone welcome"), and the 21+ signal is dropped outright. It is
+  still only a label and a filter, never an access control: nobody is
+  blocked, warned, or hidden on the basis of it. **A player's own
+  profile age tag is unchanged** and still reads 18+/21+ (ADR 0002) —
+  the two now mean different things on purpose. Postings created before
+  this keep their old tag, still display it, and expire on their own
+  within 30 days; nothing is rewritten.
+
 ### Added
 - **Admin-editable suggested games** (feature 031). The games offered to
   new players while they create their account are now edited from the

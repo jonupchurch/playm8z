@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { applications, postings } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { getSettings } from "@/lib/settings/get-settings";
+import { POSTING_AGE_GROUPS } from "@/lib/postings/age-label";
 import { postingSchema, type PostingInput } from "@/lib/validations/posting";
 
 export type ManagePostingResult = { success: true } | { success: false; error: string };
@@ -17,10 +18,11 @@ export type ManagePostingResult = { success: true } | { success: false; error: s
 export async function editPosting(postingId: string, input: PostingInput): Promise<ManagePostingResult> {
   const user = await requireAuth();
 
-  // `genre` rides along on the ownership check -- no extra query -- so
-  // the tolerance rule below can compare against what's already stored.
+  // `genre`/`ageGroup` ride along on the ownership check -- no extra
+  // query -- so the tolerance rules below can compare against what's
+  // already stored.
   const [posting] = await db
-    .select({ hostId: postings.hostId, genre: postings.genre })
+    .select({ hostId: postings.hostId, genre: postings.genre, ageGroup: postings.ageGroup })
     .from(postings)
     .where(eq(postings.id, postingId));
   if (!posting || posting.hostId !== user.id) {
@@ -35,7 +37,23 @@ export async function editPosting(postingId: string, input: PostingInput): Promi
     return { success: false, error: "This posting can't be edited once an applicant has been accepted." };
   }
 
-  const parsed = postingSchema.safeParse(input);
+  // 032/ADR 0009: strict for values arriving, tolerant of the value
+  // already stored. A posting created before 0009 holds "18"/"21", which
+  // postingSchema deliberately no longer accepts -- but its host must
+  // still be able to fix a typo in the title without being forced to
+  // relabel who their party is for (FR-011, US3 scenario 5).
+  //
+  // The stored value is swapped for a valid placeholder purely so the
+  // REST of the payload can be parsed, then put back before the write.
+  // This never widens what a host can set: it applies only to the exact
+  // value this row already holds, and only when resubmitted unchanged.
+  // Switching TO a retired value still fails, because then
+  // `input.ageGroup !== posting.ageGroup`.
+  const keepsStoredLegacyAge =
+    input.ageGroup === posting.ageGroup &&
+    !(POSTING_AGE_GROUPS as readonly string[]).includes(posting.ageGroup);
+
+  const parsed = postingSchema.safeParse(keepsStoredLegacyAge ? { ...input, ageGroup: "any" } : input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
@@ -56,7 +74,10 @@ export async function editPosting(postingId: string, input: PostingInput): Promi
     }
   }
 
-  await db.update(postings).set(parsed.data).where(eq(postings.id, postingId));
+  // Put the stored legacy age back, so the row is not relabelled by the
+  // placeholder the parse needed.
+  const values = keepsStoredLegacyAge ? { ...parsed.data, ageGroup: posting.ageGroup } : parsed.data;
+  await db.update(postings).set(values).where(eq(postings.id, postingId));
 
   return { success: true };
 }

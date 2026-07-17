@@ -1,6 +1,7 @@
 "use client";
 
 import { PLATFORMS, TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { POSTING_AGE_GROUPS, postingAgeLabel } from "@/lib/postings/age-label";
 import { useBrowseUrlParams } from "@/lib/hooks/use-browse-url-params";
 import type { FacetCount } from "@/lib/postings/get-facet-counts";
 
@@ -223,9 +224,18 @@ export function FilterSidebar({
       <div className="mb-4.5 border-t border-border pt-4">
         <SectionLabel>Age group</SectionLabel>
         <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Age group">
-          <Segment name="ageGroup" value="any" active={ageGroup === "any"} label="Any" onSelect={() => setSingle("ageGroup", "any")} />
-          <Segment name="ageGroup" value="18" active={ageGroup === "18"} label="18+" onSelect={() => setSingle("ageGroup", "18")} />
-          <Segment name="ageGroup" value="21" active={ageGroup === "21"} label="21+" onSelect={() => setSingle("ageGroup", "21")} />
+          {/* "Any" here means "don't filter by age" -- it is NOT a match
+              on postings tagged `any` (ADR 0009). */}
+          {POSTING_AGE_GROUPS.map((option) => (
+            <Segment
+              key={option}
+              name="ageGroup"
+              value={option}
+              active={ageGroup === option}
+              label={postingAgeLabel(option)}
+              onSelect={() => setSingle("ageGroup", option)}
+            />
+          ))}
         </div>
       </div>
 

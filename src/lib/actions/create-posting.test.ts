@@ -25,7 +25,7 @@ const validInput = {
   vibe: "serious" as const,
   platform: "pc" as const,
   region: "eu-west" as const,
-  ageGroup: "18" as const,
+  ageGroup: "18-29" as const,
   timeSlots: ["evening" as const],
   scheduledDate: "",
   recurring: false,

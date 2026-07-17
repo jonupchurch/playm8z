@@ -47,7 +47,12 @@ export const browseFiltersSchema = z.object({
   genres: z.preprocess(toArray, z.array(z.string().max(50)).max(8)).catch([]),
   regions: z.preprocess(toArray, z.array(z.enum(REGIONS)).max(6)).catch([]),
   timeSlots: z.preprocess(toArray, z.array(z.enum(TIME_SLOTS)).max(5)).catch([]),
-  ageGroup: z.enum(["any", "18", "21"]).catch("any"),
+  // ADR 0009's vocabulary. Here "any" means "don't filter by age at
+  // all" -- NOT "match postings tagged any". They share a word and
+  // nothing else (search-postings.ts skips the WHERE clause entirely for
+  // it). `.catch("any")` is what makes a stale bookmark naming a retired
+  // value (?ageGroup=21) load normally instead of erroring.
+  ageGroup: z.enum(["any", "18-29", "30-49", "50plus"]).catch("any"),
   openSlots: z.enum(["any", "1", "2", "3"]).catch("any"),
   platform: z.enum(PLATFORMS).catch("any"),
   micRequired: z.preprocess((value) => value === "true", z.boolean()).catch(false),

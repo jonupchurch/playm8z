@@ -193,7 +193,12 @@ export const postings = pgTable("postings", {
   // correctly (a genre-less posting just never matches an active genre
   // chip), so no other query needed to change.
   genre: text("genre"),
-  // 18|21 only (ADR 0002) -- never 13.
+  // any|18-29|30-49|50plus (ADR 0009) -- a demographic range describing
+  // who the party is FOR, not a minimum age, and never an access
+  // control. Rows created before ADR 0009 still hold the legacy 18|21
+  // and are deliberately never rewritten; they expire within 30 days
+  // (ADR 0003). Note `users.ageGroup` is a DIFFERENT thing and is still
+  // 18|21 (ADR 0002) -- same name, different vocabulary, on purpose.
   ageGroup: text("ageGroup").notNull(),
   timeSlots: text("timeSlots").array().notNull(),
   platform: text("platform").notNull(),

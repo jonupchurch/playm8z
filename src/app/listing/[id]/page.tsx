@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { applications, postings, questions, savedListings, users } from "@/db/schema";
 import { getRoster } from "@/lib/postings/get-roster";
+import { postingAgeLabel } from "@/lib/postings/age-label";
 import { relativeAge } from "@/components/listings/listing-card";
 import { AVATAR_COLORS } from "@/lib/validations/onboarding";
 import { Roster } from "@/components/listing/roster";
@@ -241,7 +242,10 @@ export default async function ListingDetailPage({
                 </div>
                 <div>
                   <div className="mb-1 font-mono text-[10px] text-text-dim">AGE GROUP</div>
-                  <div className="text-sm font-bold text-text">{posting.ageGroup}+</div>
+                  {/* Not `{posting.ageGroup}+` -- that silently renders
+                      "50plus+" / "30-49+" under ADR 0009's vocabulary,
+                      and still has to read "18+" for a legacy posting. */}
+                  <div className="text-sm font-bold text-text">{postingAgeLabel(posting.ageGroup)}</div>
                 </div>
                 <div>
                   <div className="mb-1 font-mono text-[10px] text-text-dim">WHEN</div>
