@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { closePosting, editPosting, reopenPosting } from "@/lib/actions/manage-posting";
 import type { PostingInput } from "@/lib/validations/posting";
+import { POSTING_AGE_GROUPS, postingAgeLabel } from "@/lib/postings/age-label";
 
 export type ManagedPosting = {
   id: string;
@@ -62,6 +63,10 @@ export function PostingManagementCard({ posting }: { posting: ManagedPosting }) 
   const [platform, setPlatform] = useState(posting.platform);
   const [region, setRegion] = useState(posting.region);
   const [ageGroup, setAgeGroup] = useState(posting.ageGroup);
+  // A posting created before ADR 0009 still holds "18"/"21", which are
+  // no longer offered. Detected here so the select can carry the stored
+  // value as its own option rather than silently snapping to the first.
+  const isLegacyAge = !(POSTING_AGE_GROUPS as readonly string[]).includes(posting.ageGroup);
   const [micRequired, setMicRequired] = useState(posting.micRequired);
   const [seatsTotal, setSeatsTotal] = useState(posting.seatsTotal);
   const [seatsOpen, setSeatsOpen] = useState(posting.seatsOpen);
@@ -230,8 +235,23 @@ export function PostingManagementCard({ posting }: { posting: ManagedPosting }) 
               onChange={(event) => setAgeGroup(event.target.value)}
               className="rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text outline-none"
             >
-              <option value="18">18+</option>
-              <option value="21">21+</option>
+              {/* ADR 0009's four values, PLUS -- when this posting still
+                  holds a pre-0009 value like "21" -- that value itself,
+                  labelled and preselected.
+
+                  Without that extra option the browser would select the
+                  FIRST option, because a <select> whose `value` matches
+                  no <option> falls back to it. A host opening an old
+                  posting to fix a typo in the title would find this
+                  control silently showing "Any", and saving would
+                  relabel their posting to something they never chose --
+                  with nothing erroring (FR-011). */}
+              {isLegacyAge && <option value={posting.ageGroup}>{postingAgeLabel(posting.ageGroup)}</option>}
+              {POSTING_AGE_GROUPS.map((option) => (
+                <option key={option} value={option}>
+                  {postingAgeLabel(option)}
+                </option>
+              ))}
             </select>
           </div>
 

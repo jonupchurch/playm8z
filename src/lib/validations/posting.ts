@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { REGIONS, TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { POSTING_AGE_GROUPS } from "@/lib/postings/age-label";
 
 // A posting's own platform value, distinct from Browse's facet-filter
 // PLATFORMS (which adds a leading "any" wildcard that doesn't apply to
@@ -41,7 +42,15 @@ export const postingSchema = z
     vibe: z.enum(["fun", "serious"]).default("fun"),
     platform: z.enum(PLATFORMS),
     region: z.enum(REGIONS),
-    ageGroup: z.enum(["18", "21"]).default("18"),
+    // ADR 0009: who the party is FOR, not a minimum age to join. The
+    // default is "any" -- every other value is a positive claim about
+    // who a party suits, so a pre-selected range would put words in a
+    // host's mouth. "any" carries the meaning "18+" used to have
+    // ("everyone welcome"), which is why the old default was harmless.
+    // Legacy 18/21 are deliberately NOT accepted here: they can never be
+    // created anew. manage-posting.ts is the only path that tolerates
+    // them, and only for a posting that already stores one.
+    ageGroup: z.enum(POSTING_AGE_GROUPS).default("any"),
     timeSlots: z.array(z.enum(TIME_SLOTS)).max(5).default([]),
     scheduledDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
     recurring: z.boolean().default(false),

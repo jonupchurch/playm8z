@@ -37,7 +37,7 @@ beforeAll(async () => {
     blurb: "blurb text",
     seatsTotal: 5,
     micRequired: false,
-    ageGroup: "18",
+    ageGroup: "18-29",
     platform: "pc",
   };
 
@@ -79,7 +79,7 @@ beforeAll(async () => {
       timeSlots: ["weekend"],
       platform: "table",
       seatsOpen: 2,
-      ageGroup: "21",
+      ageGroup: "50plus",
       status: "open",
       createdAt: new Date(Date.now() - 30 * 60_000),
       scheduledDate: new Date(Date.now() + 24 * 60 * 60_000),
@@ -163,7 +163,7 @@ describe("searchPostings", () => {
   });
 
   it("filters by ageGroup", async () => {
-    const result = await searchPostings({ q: runId, ageGroup: "21" });
+    const result = await searchPostings({ q: runId, ageGroup: "50plus" });
     expect(titles(result)).toEqual(["Board game night"]);
   });
 

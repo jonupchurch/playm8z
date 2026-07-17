@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPosting } from "@/lib/actions/create-posting";
 import { TIME_SLOTS } from "@/lib/validations/browse-filters";
+import { POSTING_AGE_GROUPS, postingAgeLabel, type PostingAgeGroup } from "@/lib/postings/age-label";
 import { ListingCard, type ListingCardPosting } from "@/components/listings/listing-card";
 
 type TimeSlot = (typeof TIME_SLOTS)[number];
@@ -164,7 +165,9 @@ export function PostGameForm({
   const [vibe, setVibe] = useState<"fun" | "serious">("fun");
   const [platform, setPlatform] = useState<(typeof PLATFORM_OPTIONS)[number]["id"]>("pc");
   const [region, setRegion] = useState<(typeof REGION_OPTIONS)[number]["id"]>("na-east");
-  const [ageGroup, setAgeGroup] = useState<"18" | "21">("18");
+  // ADR 0009: defaults to "any" -- a host who never touches this field
+  // claims nothing about who their party is for.
+  const [ageGroup, setAgeGroup] = useState<PostingAgeGroup>("any");
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [scheduledDate, setScheduledDate] = useState("");
   const [recurring, setRecurring] = useState(false);
@@ -399,8 +402,16 @@ export function PostGameForm({
             <div>
               <div className="mb-2.5 text-[13px] font-bold text-text">Age group</div>
               <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Age group">
-                <Segment name="ageGroup" value="18" active={ageGroup === "18"} label="18+" onSelect={() => setAgeGroup("18")} />
-                <Segment name="ageGroup" value="21" active={ageGroup === "21"} label="21+" onSelect={() => setAgeGroup("21")} />
+                {POSTING_AGE_GROUPS.map((option) => (
+                  <Segment
+                    key={option}
+                    name="ageGroup"
+                    value={option}
+                    active={ageGroup === option}
+                    label={postingAgeLabel(option)}
+                    onSelect={() => setAgeGroup(option)}
+                  />
+                ))}
               </div>
             </div>
           </div>

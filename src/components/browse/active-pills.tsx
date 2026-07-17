@@ -1,6 +1,7 @@
 "use client";
 
 import { useBrowseUrlParams } from "@/lib/hooks/use-browse-url-params";
+import { postingAgeLabel } from "@/lib/postings/age-label";
 
 const REGION_LABELS: Record<string, string> = {
   "na-east": "NA-East",
@@ -59,7 +60,9 @@ export function ActivePills() {
     );
 
   const ageGroup = searchParams.get("ageGroup");
-  if (ageGroup && ageGroup !== "any") pills.push({ key: "ageGroup", label: `${ageGroup}+` });
+  // Not `${ageGroup}+` -- that renders "30-49+" / "50plus+" under ADR
+  // 0009's vocabulary.
+  if (ageGroup && ageGroup !== "any") pills.push({ key: "ageGroup", label: postingAgeLabel(ageGroup) });
 
   const openSlots = searchParams.get("openSlots");
   if (openSlots && openSlots !== "any") pills.push({ key: "openSlots", label: `${openSlots}+ open` });

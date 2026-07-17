@@ -10,7 +10,7 @@ const validPayload = {
   vibe: "serious" as const,
   platform: "pc" as const,
   region: "eu-west" as const,
-  ageGroup: "18" as const,
+  ageGroup: "30-49" as const,
   timeSlots: ["evening" as const],
   scheduledDate: "",
   recurring: false,
@@ -39,7 +39,9 @@ describe("postingSchema", () => {
       seatsOpen: 3,
     });
     expect(result.vibe).toBe("fun");
-    expect(result.ageGroup).toBe("18");
+    // ADR 0009: the default is "any" -- a host who never touches the
+    // field claims nothing about who their party is for.
+    expect(result.ageGroup).toBe("any");
     expect(result.genre).toBeUndefined();
     expect(result.tags).toEqual([]);
     expect(result.timeSlots).toEqual([]);
@@ -71,8 +73,25 @@ describe("postingSchema", () => {
     expect(result.tags).toEqual(["a", "b", "c", "d", "e", "f", "g"].slice(0, 6));
   });
 
+  // Still true, and still worth keeping -- but now for a second reason
+  // too: under ADR 0009 the vocabulary is a demographic range, and 13
+  // isn't one of them either. ADR 0002's 18+ platform minimum stands.
   it("rejects an ageGroup of 13 (ADR 0002 -- no 13+ tier)", () => {
     expect(() => postingSchema.parse({ ...validPayload, ageGroup: "13" })).toThrow();
+  });
+
+  // ADR 0009 retired these. They can never be created anew -- only
+  // manage-posting.ts tolerates one, and only for a row that already
+  // holds it (see age-group-legacy.test.ts).
+  it("rejects the retired 18 and 21 (ADR 0009)", () => {
+    expect(() => postingSchema.parse({ ...validPayload, ageGroup: "18" })).toThrow();
+    expect(() => postingSchema.parse({ ...validPayload, ageGroup: "21" })).toThrow();
+  });
+
+  it("accepts each of ADR 0009's four values", () => {
+    for (const ageGroup of ["any", "18-29", "30-49", "50plus"]) {
+      expect(postingSchema.parse({ ...validPayload, ageGroup }).ageGroup).toBe(ageGroup);
+    }
   });
 
   it("rejects seatsOpen equal to seatsTotal (must leave at least the host's own seat)", () => {
