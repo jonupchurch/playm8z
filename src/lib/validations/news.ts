@@ -29,11 +29,3 @@ export const newsFiltersSchema = z.object({
   page: z.coerce.number().int().min(1).catch(1),
 });
 export type NewsFilters = z.infer<typeof newsFiltersSchema>;
-
-// Server-side boundary for subscribe-newsletter.ts -- this project's
-// first write action with no session to also check (research.md #3),
-// so this validation is the only trust-boundary control here.
-export const subscribeNewsletterSchema = z.object({
-  email: z.string().trim().email().max(254),
-});
-export type SubscribeNewsletterInput = z.infer<typeof subscribeNewsletterSchema>;

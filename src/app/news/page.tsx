@@ -4,7 +4,6 @@ import { searchNews } from "@/lib/news/search-news";
 import { NewsControls } from "@/components/news/news-controls";
 import { FeaturedPost } from "@/components/news/featured-post";
 import { NewsPostCard } from "@/components/news/news-post-card";
-import { SubscribeStrip } from "@/components/news/subscribe-strip";
 
 // FR-001: public, no login required. Category/search/page all live in
 // the URL (research.md #1, Browse/Forum's precedent) since news posts
@@ -70,8 +69,6 @@ export default async function NewsPage({
             <p className="text-sm text-text-muted">Try another category.</p>
           </div>
         )}
-
-        <SubscribeStrip />
       </div>
     </main>
   );

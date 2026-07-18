@@ -60,6 +60,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   this keep their old tag, still display it, and expire on their own
   within 30 days; nothing is rewritten.
 
+### Removed
+- **The newsletter signup was removed.** The news pages had a "subscribe" widget that
+  collected emails into a table nothing ever sent from — no confirmation, no unsubscribe,
+  no actual newsletter behind it. Rather than build the full compliant pipeline (double
+  opt-in, unsubscribe, broadcasts) for a channel we don't use, the widget, its
+  `subscribeNewsletter` action, its validation, and the `newsletterSubscribers` table are
+  all gone. (The separate forum thread-subscription feature is unaffected.)
+
 ### Added
 - **Web Analytics and Speed Insights** (Vercel observability). The site now
   collects privacy-friendly, anonymous page-view/visitor counts

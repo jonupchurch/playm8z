@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { newsPosts, newsletterSubscribers } from "@/db/schema";
+import { newsPosts } from "@/db/schema";
 
 // Category chips use a visually-hidden native radio input under a
 // visible label span (Tailwind's `.sr-only` uses clip-path, which
@@ -140,32 +140,4 @@ test.describe("News feed (quickstart.md Scenarios 1-2)", () => {
     await expect(page.getByText("No posts here yet.")).toBeVisible();
   });
 
-  test("subscribes with a valid email, rejects a malformed one, and doesn't duplicate on re-subscribe", async ({
-    page,
-  }) => {
-    const email = `news-e2e-${runId}@example.com`;
-    await page.goto("/news");
-
-    const emailInput = page.getByLabel("Email address");
-    await emailInput.fill("not-an-email");
-    await page.getByRole("button", { name: "Subscribe" }).click();
-    await expect(page.getByRole("alert")).toBeVisible();
-
-    await emailInput.fill(email);
-    await page.getByRole("button", { name: "Subscribe" }).click();
-    await expect(page.getByText("Subscribed! Watch your inbox.")).toBeVisible();
-
-    const [row] = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email));
-    expect(row).toBeDefined();
-
-    await page.reload();
-    await page.getByLabel("Email address").fill(email);
-    await page.getByRole("button", { name: "Subscribe" }).click();
-    await expect(page.getByText("You're already subscribed!")).toBeVisible();
-
-    const rows = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email));
-    expect(rows).toHaveLength(1);
-
-    await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.email, email));
-  });
 });

@@ -9,7 +9,6 @@ import { ReadingProgress } from "@/components/news/reading-progress";
 import { ArticleHeader, ArticleTagsShare } from "@/components/news/article-header";
 import { ArticleBody } from "@/components/news/article-body";
 import { ArticleRelated } from "@/components/news/article-related";
-import { SubscribeStrip } from "@/components/news/subscribe-strip";
 
 // FR-001/FR-002: public -- no login required to view. A draft,
 // not-yet-due scheduled, or nonexistent slug all show the same
@@ -65,10 +64,6 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
       </div>
 
       <ArticleRelated posts={related} />
-
-      <div className="mx-auto max-w-250 px-8 py-11">
-        <SubscribeStrip />
-      </div>
     </main>
   );
 }
