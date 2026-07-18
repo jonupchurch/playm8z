@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { addUserGame, removeUserGame } from "@/lib/actions/manage-games";
+import { GameImage } from "@/components/games/game-image";
+import type { ResolvedGameImage } from "@/lib/games/resolve-game-image";
 
 export type UserGameRow = {
   id: string;
   game: string;
   rank: string | null;
   hoursPlayed: number | null;
+  image?: ResolvedGameImage;
 };
 
 // FR-003: add/remove a game (with optional self-reported rank/hours).
@@ -119,7 +122,11 @@ export function GamesList({ games }: { games: UserGameRow[] }) {
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {games.map((entry) => (
-            <div key={entry.id} className="rounded-xl border border-border bg-surface p-3.5">
+            <div key={entry.id} className="overflow-hidden rounded-xl border border-border bg-surface">
+              {entry.image && (
+                <GameImage image={entry.image} name={entry.game} className="h-14 w-full text-sm" />
+              )}
+              <div className="p-3.5">
               <div className="mb-1.5 flex items-start justify-between gap-2">
                 <div className="text-[15px] font-bold text-text">{entry.game}</div>
                 <button
@@ -134,6 +141,7 @@ export function GamesList({ games }: { games: UserGameRow[] }) {
               <div className="flex items-center gap-2 font-mono text-[11px]">
                 {entry.rank && <span className="text-accent">{entry.rank}</span>}
                 {entry.hoursPlayed != null && <span className="text-text-dim">· {entry.hoursPlayed}h</span>}
+              </div>
               </div>
             </div>
           ))}

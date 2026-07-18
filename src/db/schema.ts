@@ -46,6 +46,14 @@ export const users = pgTable("user", {
   // NULL means "never revoked" and MUST stay the default: backfilling
   // now() would sign out every user on the site at deploy.
   sessionsValidAfter: timestamp("sessionsValidAfter", { mode: "date" }),
+  // Connect Steam (038, ADR 0012): the verified SteamID64 from a Steam
+  // OpenID handshake run from account settings -- a settings-time account
+  // LINK, never a sign-in provider, so it lives here on `user` and not in
+  // the Auth.js adapter's `account` table. UNIQUE so one Steam account maps
+  // to at most one playm8z account; NULL = not connected. Written only by
+  // the connect callback and cleared by the disconnect action.
+  steamId: text("steamId").unique(),
+  steamConnectedAt: timestamp("steamConnectedAt", { mode: "date" }),
   // Unique, immutable once set (FR-003). Nullable at the DB level even
   // though it's conceptually required: a Google sign-up's account row is
   // created by the Auth.js adapter before onboarding ever runs, so there's

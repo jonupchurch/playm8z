@@ -4,6 +4,9 @@ import { db } from "@/db";
 import { postings, userGames, users } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { GamesList } from "@/components/profile/games-list";
+import { resolveGameImages } from "@/lib/games/resolve-game-image";
+import { normalizeGame } from "@/lib/games/normalize-game";
+import { generatedVisual } from "@/lib/games/generated-visual";
 import { PLATFORMS } from "@/lib/validations/onboarding";
 
 const REGION_LABELS: Record<string, string> = {
@@ -45,10 +48,16 @@ export default async function ProfileOverviewPage() {
       .where(and(eq(postings.hostId, user.id), inArray(postings.status, ["open", "full"]))),
   ]);
 
+  const gameImages = await resolveGameImages(games.map((entry) => entry.game));
+  const gamesWithImages = games.map((entry) => ({
+    ...entry,
+    image: gameImages.get(normalizeGame(entry.game)) ?? { kind: "generated" as const, visual: generatedVisual(entry.game) },
+  }));
+
   return (
     <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_320px]">
       <div className="flex flex-col gap-5">
-        <GamesList games={games} />
+        <GamesList games={gamesWithImages} />
 
         <section className="rounded-2xl border border-border bg-surface-2 p-5.5">
           <div className="mb-4 flex items-center justify-between">

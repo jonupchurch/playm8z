@@ -24,6 +24,30 @@ all pass comfortably (15.7:1, 7.2:1, 6.9:1) — this is only the filled
 buttons. If picked up, it's a small accessibility pass across every primary
 button, email and web, with its own before/after review.
 
+## Steam: sign-in, live status, and avatar — deferred out of feature 038 (2026-07-17)
+
+Feature 038 added connecting a Steam account (settings-time link) and
+importing the game library. Three adjacent Steam capabilities were
+deliberately left out and parked here ([ADR 0012](adr/0012-steam-account-link-via-settings-openid.md)):
+
+- **Sign in with Steam** (Steam as a login method). Steam is OpenID 2.0 (no
+  Auth.js provider) and supplies **no email**, which clashes with this app's
+  email-centric model (verification, password reset, notification email, the
+  18+ policy). Making Steam a login owes an answer to the emailless-account
+  question first (prompt for email as a second step, or make email optional).
+  038 sidesteps all of that by being a *link on an existing account*, never a
+  sign-in.
+- **Live "playing now / online" status** on profiles. Needs Steam calls on
+  profile *views* (with caching + rate-limit care) and ties into the existing
+  `privacyShowOnline` control — a different shape from 038's user-triggered,
+  never-on-render-path imports.
+- **Steam avatar as a profile picture source.** The avatar system already
+  supports an uploaded image and the Google photo; a Steam source could be
+  added to that precedence later. Not needed to import a library.
+
+Each is its own decision with its own ADR — none is implied by 038. The
+SteamID is now linked and verifiable, which brings all three closer.
+
 ## Persistent Groups
 
 A "Groups" concept distinct from one-off LFG listings: ongoing
