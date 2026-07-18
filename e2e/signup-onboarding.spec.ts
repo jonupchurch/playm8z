@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { userGames, users } from "@/db/schema";
 
 const runId = crypto.randomUUID().slice(0, 8);
 const email = `e2e-signup-${runId}@example.com`;
@@ -58,10 +58,14 @@ test.describe("Sign up and onboarding (quickstart.md Scenario 1)", () => {
     const [row] = await db.select().from(users).where(eq(users.email, email));
     expect(row?.name).toBe("Mara");
     expect(row?.handle).toBe(handle);
-    expect(row?.gamesPlayed).toContain("Valorant");
     expect(row?.region).toBe("na-west");
     expect(row?.ageGroup).toBe("18");
     expect(row?.vibe).toBe("fun");
     expect(row?.emailVerified).toBeNull();
+
+    // 042 (ADR 0015): onboarding games are reconciled into userGames now, not the
+    // retired users.gamesPlayed column, so the picked game must be asserted there.
+    const games = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, row.id));
+    expect(games.map((g) => g.game)).toContain("Valorant");
   });
 });
