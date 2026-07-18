@@ -132,7 +132,13 @@ Deliberately not built there, parked here:
   users, comments. The pattern (owner check + real delete + purge polymorphic
   refs + audit) is reusable, but each type has its own cascade/orphan story (e.g.
   `likes` is polymorphic with no FK and must be purged by hand, as news taught us)
-  and its own confirm UX. One type at a time, when a need arises.
+  and its own confirm UX. One type at a time, when a need arises. **The purge step
+  is now a shared, documented helper** (`src/lib/db/purge-polymorphic-refs.ts`, 2026-07-18):
+  it purges `likes` and deliberately preserves the audit trail, `warnings`, and
+  `reports` — so a new hard-delete type calls one function instead of re-deriving
+  which polymorphic tables to clean. A type that specifically wants a deleted
+  target's `reports` removed from the moderation queue makes that call consciously
+  and extends the helper.
 - **A UI to grant/transfer the owner marker.** Today it's set directly on the
   account (`scripts/set-owner.ts`); there is intentionally no admin control for it
   (single owner). Multi-owner or ownership transfer would need that.
