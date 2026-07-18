@@ -17,6 +17,7 @@ import { Avatar } from "@/components/ui/avatar";
 const TYPE_ICON: Record<string, { icon: string; bg: string }> = {
   join: { icon: "👥", bg: "#ffb000" },
   accepted: { icon: "✓", bg: "#4ec96a" },
+  declined: { icon: "✕", bg: "#e5484d" },
   reply: { icon: "💬", bg: "#35d0e0" },
   mention: { icon: "@", bg: "#ff3b6b" },
   message: { icon: "✉️", bg: "#ff6b1a" },

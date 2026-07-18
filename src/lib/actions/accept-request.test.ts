@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { applications, conversations, messages, postings, users } from "@/db/schema";
+import { applications, conversations, messages, notifications, postings, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -221,5 +221,52 @@ describe("acceptRequest (integration)", () => {
 
     const [updatedPosting] = await db.select().from(postings).where(eq(postings.id, posting.id));
     expect(updatedPosting.seatsOpen).toBe(0);
+  });
+
+  it("notifies the applicant with an accepted notification linking to the listing (040)", async () => {
+    const seeded = await seedPendingApplication();
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+
+    const result = await acceptRequest({ applicationId: seeded.applicationId });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    createdConversationIds.push(result.conversationId);
+
+    const rows = await db.select().from(notifications).where(eq(notifications.userId, applicantId));
+    const accepted = rows.filter((r) => r.targetRef === `/listing/${seeded.postingId}` && r.type === "accepted");
+    expect(accepted).toHaveLength(1);
+    expect(accepted[0].actorId).toBe(hostId);
+  });
+
+  it("a host-initiated invite accepted by the applicant notifies no one (040)", async () => {
+    const [posting] = await db
+      .insert(postings)
+      .values({
+        hostId,
+        game: `Game ${runId}`,
+        title: `Invite notify ${runId}`,
+        blurb: "blurb",
+        vibe: "casual",
+        region: "na-east",
+        seatsTotal: 4,
+        seatsOpen: 1,
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+      })
+      .returning({ id: postings.id });
+    const [invite] = await db
+      .insert(applications)
+      .values({ postingId: posting.id, applicantId, status: "pending", initiatedBy: "host" })
+      .returning({ id: applications.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(applicantEmail));
+    const result = await acceptRequest({ applicationId: invite.id });
+    expect(result.success).toBe(true);
+    if (result.success) createdConversationIds.push(result.conversationId);
+
+    // The applicant is the actor here; the host's side is the synthesized view.
+    const rows = await db.select().from(notifications).where(eq(notifications.userId, applicantId));
+    expect(rows.filter((r) => r.targetRef === `/listing/${posting.id}`)).toHaveLength(0);
   });
 });

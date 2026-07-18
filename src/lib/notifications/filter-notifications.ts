@@ -43,7 +43,7 @@ export type NotificationItem = RequestNotificationItem | PlainNotificationItem;
 
 export type NotificationGroup = { label: "Today" | "Earlier"; items: NotificationItem[] };
 
-// FR-002: 'join'/'accepted' are categorized as "requests"; 'reply'/
+// FR-002: 'join'/'accepted'/'declined' are categorized as "requests"; 'reply'/
 // 'mention' as "forum"; 'rating'/'news'/'system' as "system". 'message'
 // has no dedicated filter chip (the wireframe's own filter set only
 // covers All/Unread/Requests/Forum/System) -- it only ever surfaces
@@ -52,6 +52,7 @@ function categoryOf(item: NotificationItem): "requests" | "forum" | "system" | n
   if (item.kind === "request") return "requests";
   switch (item.type) {
     case "accepted":
+    case "declined":
       return "requests";
     case "reply":
     case "mention":

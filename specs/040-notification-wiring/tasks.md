@@ -26,7 +26,7 @@ Single Next.js app, `src/` layout, `@/*` alias (plan.md Structure Decision).
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm no schema migration is required: verify `notifications.type` is a
+- [x] T001 Confirm no schema migration is required: verify `notifications.type` is a
   free-text `text` column in `src/db/schema.ts` (so `declined` is additive at the
   type level only) and that the feature branch `040-notification-wiring` is checked
   out. No `drizzle-kit push` in this feature.
@@ -37,7 +37,7 @@ Single Next.js app, `src/` layout, `@/*` alias (plan.md Structure Decision).
 
 **Purpose**: the one shared module that all three emitters live in.
 
-- [ ] T002 Create the server-only module `src/lib/notifications/notify-events.ts`
+- [x] T002 Create the server-only module `src/lib/notifications/notify-events.ts`
   with its file-level doc comment and shared imports only (no emitters yet):
   `db`, `createNotification`, `hasActiveBlockBetween` from
   `@/lib/inbox/search-contacts`, and the needed schema tables. Establish the
@@ -58,21 +58,21 @@ entry linking to the thread; self-reply and blocked-pair create none.
 
 ### Tests for User Story 1
 
-- [ ] T003 [US1] Integration tests for `notifyForumReply` in
+- [x] T003 [US1] Integration tests for `notifyForumReply` in
   `src/lib/notifications/notify-events.test.ts` (real DB, seed users/thread):
   notifies the author with `type='reply'`, actor=replier, `targetRef=/forum/thread/{id}`;
   creates nothing when replier === author; creates nothing when a block exists
   between them.
-- [ ] T004 [US1] Amend `src/lib/actions/post-reply.test.ts`: assert the reply still
+- [x] T004 [US1] Amend `src/lib/actions/post-reply.test.ts`: assert the reply still
   succeeds and persists when `createNotification` is forced to throw (best-effort,
   FR-010).
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Implement `notifyForumReply({ threadId, threadTitle, threadAuthorId,
+- [x] T005 [US1] Implement `notifyForumReply({ threadId, threadTitle, threadAuthorId,
   replierId })` in `src/lib/notifications/notify-events.ts` per
   contracts/notify-events.md (self-exclusion, block check, one `reply` row).
-- [ ] T006 [US1] Wire `src/lib/actions/post-reply.ts`: after the reply insert and
+- [x] T006 [US1] Wire `src/lib/actions/post-reply.ts`: after the reply insert and
   `replyCount` update, select the thread's `authorId` + `title`, then
   `await notifyForumReply(...)`. Must not change the existing success/return shape.
 
@@ -92,29 +92,29 @@ none for the others.
 
 ### Tests for User Story 2
 
-- [ ] T007 [P] [US2] Unit tests for `extractMentionHandles` in
+- [x] T007 [P] [US2] Unit tests for `extractMentionHandles` in
   `src/lib/notifications/parse-mentions.test.ts`: dedup+lowercase; email guard
   (`carol@example.com` → none); trailing punctuation (`@carol.` → `carol`);
   invalid starts (`@1bad`, `@_x` → none); empty string.
-- [ ] T008 [US2] Integration tests for `notifyMentions` in
+- [x] T008 [US2] Integration tests for `notifyMentions` in
   `notify-events.test.ts`: resolves a real handle to one `mention` row; ignores
   unknown handles; excludes `excludeUserIds` (actor + thread author); dedups repeated
   handles; skips a blocked mentioned user.
 
 ### Implementation for User Story 2
 
-- [ ] T009 [P] [US2] Implement the pure parser
+- [x] T009 [P] [US2] Implement the pure parser
   `src/lib/notifications/parse-mentions.ts` — `extractMentionHandles(text): string[]`
   with grammar `/(?<![A-Za-z0-9])@([A-Za-z][A-Za-z0-9]{0,23})/g`, deduped
   case-insensitively, lowercased. No `db` import.
-- [ ] T010 [US2] Implement `notifyMentions({ actorId, threadId, threadTitle, body,
+- [x] T010 [US2] Implement `notifyMentions({ actorId, threadId, threadTitle, body,
   excludeUserIds })` in `notify-events.ts`: parse → resolve handles to users
   (case-insensitive) → drop excluded/blocked → one `mention` row each.
-- [ ] T011 [US2] Wire mentions into both writers: in `post-reply.ts` call
+- [x] T011 [US2] Wire mentions into both writers: in `post-reply.ts` call
   `notifyMentions({ excludeUserIds: [replierId, threadAuthorId], ... })`; in
   `src/lib/actions/create-thread.ts`, after the thread insert, call
   `notifyMentions({ excludeUserIds: [authorId], threadTitle: title, body, ... })`.
-- [ ] T012 [US2] Amend `src/lib/actions/create-thread.test.ts`: a thread mentioning a
+- [x] T012 [US2] Amend `src/lib/actions/create-thread.test.ts`: a thread mentioning a
   real other user creates one `mention`; a self-mention creates none; the create
   still succeeds when the notification write throws.
 
@@ -133,16 +133,16 @@ applicant gets one correct notification; host sees no new/doubled item.
 
 ### Type + display (needed by this story only)
 
-- [ ] T013 [P] [US3] Add `"declined"` to the `NotificationType` union in
+- [x] T013 [P] [US3] Add `"declined"` to the `NotificationType` union in
   `src/lib/notifications/create-notification.ts`.
-- [ ] T014 [P] [US3] Add the `"declined"` case to `categoryOf` (→ `"requests"`) in
+- [x] T014 [P] [US3] Add the `"declined"` case to `categoryOf` (→ `"requests"`) in
   `src/lib/notifications/filter-notifications.ts`, and a `declined` entry to
   `TYPE_ICON` (distinct `✕` + muted-red, not the green `✓`) in
   `src/components/notifications/notifications-list.tsx`.
 
 ### Tests for User Story 3
 
-- [ ] T015 [US3] Integration tests for `notifyRequestResolved` + wiring in
+- [x] T015 [US3] Integration tests for `notifyRequestResolved` + wiring in
   `notify-events.test.ts` / the accept+decline test files: applicant gets
   `accepted`/`declined` (actor=host, `targetRef=/listing/{postingId}`); a
   block skips it; a host-initiated invite (`initiatedBy='host'`) notifies no one;
@@ -151,14 +151,14 @@ applicant gets one correct notification; host sees no new/doubled item.
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Implement `notifyRequestResolved({ kind, applicantId, hostId,
+- [x] T016 [US3] Implement `notifyRequestResolved({ kind, applicantId, hostId,
   postingId, game, title })` in `notify-events.ts` (one row of `kind` to the
   applicant, actor=host, block check).
-- [ ] T017 [US3] Wire `src/lib/actions/accept-request.ts`: after the transaction
+- [x] T017 [US3] Wire `src/lib/actions/accept-request.ts`: after the transaction
   resolves, if `application.initiatedBy !== "host"`, read the posting `game`/`title`
   and `await notifyRequestResolved({ kind: "accepted", ... })` — outside the
   transaction.
-- [ ] T018 [US3] Wire `src/lib/actions/decline-request.ts`: after the status update,
+- [x] T018 [US3] Wire `src/lib/actions/decline-request.ts`: after the status update,
   if `application.initiatedBy !== "host"`, read the posting `game`/`title` and
   `await notifyRequestResolved({ kind: "declined", ... })`.
 
@@ -168,15 +168,15 @@ applicant gets one correct notification; host sees no new/doubled item.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T019 [P] Add a `filterAndGroupNotifications` test case in
+- [x] T019 [P] Add a `filterAndGroupNotifications` test case in
   `src/lib/notifications/filter-notifications.test.ts` asserting a `declined` item
   falls under the `requests` filter.
-- [ ] T020 [P] Update `docs/future-work.md`: mark the "Wiring other features' write
+- [x] T020 [P] Update `docs/future-work.md`: mark the "Wiring other features' write
   actions to createNotification()" entry as partially resolved by 040 (reply,
   mention, applicant accept/decline done; DM/news/all-participants still deferred)
   and ensure "notify all thread participants" is explicitly listed.
-- [ ] T021 [P] Update `CHANGELOG.md` and `status.md` for feature 040.
-- [ ] T022 Run `npm run typecheck`, `npm run lint`, `npm test` (Vitest) and confirm
+- [x] T021 [P] Update `CHANGELOG.md` and `status.md` for feature 040.
+- [x] T022 Run `npm run typecheck`, `npm run lint`, `npm test` (Vitest) and confirm
   green; then walk `quickstart.md` US1–US3 against a local dev server (kill any
   stale dev server on :3000 first).
 

@@ -266,18 +266,32 @@ Vercel Functions do support WebSockets (per the platform's current
 capabilities), so this is a viable upgrade path later, not a technical
 blocker — just not built now.
 
-## Wiring other features' write actions to `createNotification()`
+## Wiring other features' write actions to `createNotification()` — mostly resolved 2026-07-17
 
 Notifications + Report modal (`012-notifications-and-report-modal`)
-provides a `createNotification()` mechanism but doesn't itself retrofit
-every already-existing write action to call it. Real triggers this
-would eventually cover: a new Application (Listing detail, `006`) →
-`join` notification to the host; accept/decline (Inbox, `011`) →
-`accepted` notification to the applicant; a forum reply or mention
-(Forum Thread, `010`) → `reply`/`mention` notification; a new direct
-message (Inbox, `011`) → `message` notification. Each is a small,
-self-contained addition to an already-working feature, not urgent
-enough to justify amending four merged features in one pass.
+provides a `createNotification()` mechanism but didn't itself retrofit
+every already-existing write action to call it.
+
+**Resolved by feature `040-notification-wiring`** (ADR 0013): a forum
+reply → `reply` to the thread author; an `@mention` (thread or reply) →
+`mention` to each mentioned player; accept/decline of an
+applicant-initiated request → `accepted`/`declined` to the applicant
+(the new `declined` type). All best-effort; block-suppressed;
+self-excluded; deduped so one post never double-notifies. The `join`
+side stays live-synthesized from `applications` for the host
+(`get-notifications.ts`), so it was never a stored-notification gap.
+
+**Still deferred:**
+- **New direct message → `message` notification.** Intentionally NOT in
+  the bell — the Messages nav badge (`037`) already surfaces unread DMs,
+  so a bell entry would double-notify.
+- **Notify all thread *participants* on a reply** (not just the thread
+  author). 040 notifies the author only; fanning out to everyone who has
+  posted in a thread is a broader design (who counts as a participant,
+  how much fan-out per reply) with its own decisions.
+- **`news`/`system` broadcast notifications** (e.g. a published news post
+  notifying all/followed players) — a mass fan-out with its own
+  delivery/scale design.
 
 ## Adopting the canonical Report modal on existing simpler report flows
 

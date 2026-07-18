@@ -82,6 +82,15 @@ describe("filterAndGroupNotifications (unit)", () => {
     ]);
   });
 
+  it("categorizes a declined notification under the requests filter (040)", () => {
+    const declined = plain({ id: "declined", type: "declined", targetRef: "/listing/x" });
+    expect(filterAndGroupNotifications([declined], "requests").flatMap((g) => g.items.map((i) => i.id))).toEqual([
+      "declined",
+    ]);
+    // and it does not leak into the forum bucket
+    expect(filterAndGroupNotifications([declined], "forum")).toEqual([]);
+  });
+
   it("excludes message-type notifications from every named category filter", () => {
     const message = plain({ id: "msg", type: "message" });
     expect(filterAndGroupNotifications([message], "requests")).toEqual([]);
