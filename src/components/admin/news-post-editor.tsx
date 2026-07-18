@@ -3,6 +3,7 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { saveNewsPost } from "@/lib/actions/save-news-post";
+import { deleteNewsPostPermanently } from "@/lib/actions/delete-news-post";
 import { generateNewsDraft } from "@/lib/actions/generate-news-draft";
 import { improveDraftText } from "@/lib/actions/improve-draft-text";
 import { uploadNewsCoverImage } from "@/lib/actions/upload-news-cover-image";
@@ -42,7 +43,15 @@ function formatDisplayDate(date: Date): string {
 // `key={post?.id ?? "new"}`
 // on the parent remounts this component (and thus resets all local
 // state) whenever a different post is selected.
-export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; isAdmin: boolean }) {
+export function NewsPostEditor({
+  post,
+  isAdmin,
+  isOwner = false,
+}: {
+  post: AdminNewsPost | null;
+  isAdmin: boolean;
+  isOwner?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -61,6 +70,11 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
   const [featured, setFeatured] = useState(post?.featured ?? false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Owner-only permanent delete (041): a two-step confirm so a single click can
+  // never destroy a post.
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const [aiTopic, setAiTopic] = useState("");
   const [aiPending, setAiPending] = useState(false);
@@ -177,6 +191,27 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
     const params = new URLSearchParams(searchParams.toString());
     params.set("postId", result.id);
     router.push(`${pathname}?${params.toString()}`);
+    router.refresh();
+  }
+
+  async function handlePermanentDelete() {
+    if (deleting || !post) return;
+    setDeleting(true);
+    setError(null);
+
+    const result = await deleteNewsPostPermanently({ postId: post.id });
+    if (!result.success) {
+      setDeleting(false);
+      setConfirmingDelete(false);
+      setError(result.error);
+      return;
+    }
+
+    // The post is gone -- drop the selection so the editor returns to a clean
+    // new-post state rather than showing a now-nonexistent post.
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("postId");
+    router.push(params.toString() ? `${pathname}?${params.toString()}` : pathname);
     router.refresh();
   }
 
@@ -454,14 +489,45 @@ export function NewsPostEditor({ post, isAdmin }: { post: AdminNewsPost | null; 
               Save draft
             </button>
             {isExisting && (
-              <button
-                type="button"
-                disabled={submitting}
-                onClick={() => submit("delete")}
-                className="ml-auto rounded-xl border border-[rgba(255,59,107,0.4)] px-4.5 py-3 text-[13px] font-semibold text-pop-text disabled:opacity-50"
-              >
-                Delete
-              </button>
+              <div className="ml-auto flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={submitting || deleting}
+                  onClick={() => submit("delete")}
+                  className="rounded-xl border border-border bg-surface-2 px-4.5 py-3 text-[13px] font-semibold text-text-muted disabled:opacity-50"
+                >
+                  Unpublish
+                </button>
+                {isOwner &&
+                  (confirmingDelete ? (
+                    <>
+                      <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={handlePermanentDelete}
+                        className="rounded-xl bg-pop px-4.5 py-3 text-[13px] font-bold text-white disabled:opacity-50"
+                      >
+                        {deleting ? "Deleting…" : "Confirm permanent delete"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={() => setConfirmingDelete(false)}
+                        className="rounded-xl border border-border bg-surface-2 px-4.5 py-3 text-[13px] font-semibold text-text-muted disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingDelete(true)}
+                      className="rounded-xl border border-[rgba(255,59,107,0.4)] px-4.5 py-3 text-[13px] font-semibold text-pop-text"
+                    >
+                      Delete permanently
+                    </button>
+                  ))}
+              </div>
             )}
           </div>
         </div>

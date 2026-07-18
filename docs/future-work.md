@@ -121,6 +121,24 @@ Content Page editor (heading/paragraph/list/callout/quote/divider)
 supports. It's its own feature now, tracked in `docs/feature-list.md`,
 not a `ContentPage`.
 
+## Owner-only hard delete — extensions (deferred from feature 041, 2026-07-17)
+
+Feature 041 ([ADR 0014](adr/0014-owner-marker-and-scoped-hard-delete.md)) added an
+`isOwner` account marker (orthogonal to `role`) and an owner-only permanent delete
+for **news posts** — a scoped, audited exception to [ADR 0005](adr/0005-no-hard-deletes.md).
+Deliberately not built there, parked here:
+
+- **Owner hard-delete for other content types** — postings, forum threads/replies,
+  users, comments. The pattern (owner check + real delete + purge polymorphic
+  refs + audit) is reusable, but each type has its own cascade/orphan story (e.g.
+  `likes` is polymorphic with no FK and must be purged by hand, as news taught us)
+  and its own confirm UX. One type at a time, when a need arises.
+- **A UI to grant/transfer the owner marker.** Today it's set directly on the
+  account (`scripts/set-owner.ts`); there is intentionally no admin control for it
+  (single owner). Multi-owner or ownership transfer would need that.
+- **A visible "Owner" badge/title.** The marker gates the action but isn't shown
+  anywhere. Displaying it as a cosmetic badge is a small, separate addition.
+
 ## Monetized / premium accounts
 
 No pricing, premium tier, or ads anywhere in the design. Confirmed by the

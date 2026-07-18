@@ -89,6 +89,12 @@ export const users = pgTable("user", {
   // but functionally identical to a plain `user` at every existing
   // gate -- no feature differentiates them further yet.
   role: text("role").notNull().default("user"),
+  // Owner marker (041, ADR 0014): the single site owner. DELIBERATELY
+  // orthogonal to `role` (the owner keeps role='admin'), so no existing
+  // role check changes -- this flag only unlocks owner-only actions (the
+  // scoped hard-delete exception to ADR 0005). Defaults false; provisioned
+  // directly on the account (scripts/set-owner.ts), never via the admin UI.
+  isOwner: boolean("isOwner").notNull().default(false),
 });
 
 export const accounts = pgTable(

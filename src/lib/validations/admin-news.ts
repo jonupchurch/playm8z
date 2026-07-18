@@ -50,3 +50,9 @@ export type SaveNewsPostInput = z.input<typeof saveNewsPostSchema>;
 // just means the editor shows a blank new-post form, never a 400/error
 // state (same convention as every other admin drawer/editor param).
 export const newsPostIdParamSchema = z.string().uuid().optional().catch(undefined);
+
+// Owner-only permanent delete (041, ADR 0014) -- a real hard delete, kept a
+// separate action from the discriminated save above (whose `delete` is the soft
+// unpublish/"draft" path). Just the post to remove; the owner check is the gate.
+export const permanentDeleteSchema = z.object({ postId: z.string().uuid() });
+export type PermanentDeleteInput = z.infer<typeof permanentDeleteSchema>;

@@ -43,9 +43,12 @@ trust boundary (Principle II) — the hidden button is only UX.
 `logAuditEntry({ actorId, action:"permanently deleted a news post",
 category:"content", targetType:"newsPost", targetId, targetLabel:title })`.
 
-**Rationale**: The only FK to `newsPosts.id` (the likes/saves table, schema.ts:773)
-is `onDelete: cascade`, so the row and its engagement rows go together with no
-orphans (FR-007). `auditEntries.targetId` is a plain optional uuid **value**
+**Rationale**: Deletion must remove the post AND all its engagement (FR-007), but
+the two engagement stores differ: `savedNewsPosts` has a real FK to `newsPosts`
+(`onDelete: cascade`) so it goes automatically, whereas `likes` is POLYMORPHIC
+(`targetType='newsPost'`, `targetId`, **no FK**) so it does NOT cascade and must
+be purged explicitly — done in the same transaction as the post delete, or its
+rows would orphan. `auditEntries.targetId` is a plain optional uuid **value**
 (polymorphic target, not an FK — `log-audit-entry.ts` validates it as a uuid and
 inserts it), so the audit row is unaffected by the post's deletion (FR-010). The
 audit insert is append-only and independent of the delete's success path.

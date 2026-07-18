@@ -17,10 +17,12 @@ Add one additive column to the existing `user` table:
 
 ## Permanent delete of a news post
 
-- `DELETE FROM "newsPosts" WHERE id = :postId`.
-- **Cascade**: the only FK to `newsPosts.id` is the news likes/saves table
-  (`onDelete: cascade`, schema.ts:773) — those rows are removed with the post, no
-  orphans (FR-007).
+- Removes the post plus its engagement, atomically (one transaction):
+  - **`savedNewsPosts`** has a real FK to `newsPosts.id` (`onDelete: cascade`,
+    schema.ts:779) — its rows go with the post automatically.
+  - **`likes`** is POLYMORPHIC (`targetType='newsPost'`, `targetId=postId`, **no
+    FK**) — so its rows do NOT cascade and MUST be deleted explicitly, or they
+    orphan (FR-007). The action purges them in the same transaction as the post.
 - Distinct from the existing soft "Unpublish" (`status='draft'`, row retained) —
   that path is unchanged.
 
