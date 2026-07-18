@@ -13,8 +13,12 @@ const hostEmail = `apply-host-${runId}@example.com`;
 const applicantEmail = `apply-applicant-${runId}@example.com`;
 const unverifiedEmail = `apply-unverified-${runId}@example.com`;
 const blockedEmail = `apply-blocked-${runId}@example.com`;
+const raceEmail = `apply-race-${runId}@example.com`;
+const reapplyEmail = `apply-reapply-${runId}@example.com`;
 let hostId: string;
 let blockedId: string;
+let raceId: string;
+let reapplyId: string;
 let openPostingId: string;
 let fullPostingId: string;
 
@@ -39,6 +43,18 @@ beforeAll(async () => {
     .values({ email: blockedEmail, handle: `applyblocked${runId}`, emailVerified: new Date() })
     .returning({ id: users.id });
   blockedId = blocked.id;
+
+  const [race] = await db
+    .insert(users)
+    .values({ email: raceEmail, handle: `applyrace${runId}`, emailVerified: new Date() })
+    .returning({ id: users.id });
+  raceId = race.id;
+
+  const [reapply] = await db
+    .insert(users)
+    .values({ email: reapplyEmail, handle: `applyreapply${runId}`, emailVerified: new Date() })
+    .returning({ id: users.id });
+  reapplyId = reapply.id;
 
   const base = {
     hostId,
@@ -74,11 +90,19 @@ afterAll(async () => {
   await db.delete(applications).where(eq(applications.applicantId, blockedId));
   await db.delete(blocks).where(eq(blocks.blockerId, blockedId));
   await db.delete(blocks).where(eq(blocks.blockedId, blockedId));
+  await db.delete(applications).where(eq(applications.applicantId, raceId));
+  await db.delete(applications).where(eq(applications.applicantId, reapplyId));
   await db.delete(users).where(eq(users.email, hostEmail));
   await db.delete(users).where(eq(users.email, applicantEmail));
   await db.delete(users).where(eq(users.email, unverifiedEmail));
   await db.delete(users).where(eq(users.email, blockedEmail));
+  await db.delete(users).where(eq(users.email, raceEmail));
+  await db.delete(users).where(eq(users.email, reapplyEmail));
 });
+
+async function activeApplicationsFor(applicantId: string) {
+  return db.select().from(applications).where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, applicantId)));
+}
 
 async function applicationsByBlocked() {
   return db.select().from(applications).where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, blockedId)));
@@ -167,5 +191,40 @@ describe("applyToPosting", () => {
     expect(result.success).toBe(true);
     expect(await applicationsByBlocked()).toHaveLength(1);
     await db.delete(blocks).where(eq(blocks.id, block.id));
+  });
+
+  // 046 (ADR 0018): active-uniqueness race + terminal-state re-application.
+  it("under a concurrent double-apply, exactly one active application exists and neither errors", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(raceEmail));
+    mockedAuth.mockResolvedValueOnce(fakeSession(raceEmail));
+    const [a, b] = await Promise.all([applyToPosting(openPostingId, {}), applyToPosting(openPostingId, {})]);
+    const succeeded = [a, b].filter((r) => r.success);
+    const failed = [a, b].filter((r) => !r.success);
+    expect(succeeded).toHaveLength(1);
+    expect(failed).toHaveLength(1);
+    if (failed[0] && !failed[0].success) expect(failed[0].error).toMatch(/already have an active application/i);
+    expect(await activeApplicationsFor(raceId)).toHaveLength(1);
+  });
+
+  it("allows re-application after a decline or a withdrawal (terminal states aren't covered)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(reapplyEmail));
+    expect((await applyToPosting(openPostingId, {})).success).toBe(true);
+
+    await db
+      .update(applications)
+      .set({ status: "declined" })
+      .where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, reapplyId)));
+    mockedAuth.mockResolvedValueOnce(fakeSession(reapplyEmail));
+    expect((await applyToPosting(openPostingId, {})).success).toBe(true);
+
+    await db
+      .update(applications)
+      .set({ status: "withdrawn" })
+      .where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, reapplyId), eq(applications.status, "pending")));
+    mockedAuth.mockResolvedValueOnce(fakeSession(reapplyEmail));
+    expect((await applyToPosting(openPostingId, {})).success).toBe(true);
+
+    const active = (await activeApplicationsFor(reapplyId)).filter((r) => r.status === "pending" || r.status === "accepted");
+    expect(active).toHaveLength(1);
   });
 });

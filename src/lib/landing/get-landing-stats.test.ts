@@ -99,9 +99,13 @@ describe("getLandingStats (integration)", () => {
 
     const [oldApplication] = await db
       .insert(applications)
+      // A DIFFERENT applicant (the host) -- two ACCEPTED rows for the same
+      // (posting, applicant) now violate applications_active_uniq (046). The stat
+      // counts accepted rows by acceptedAt regardless of who applied, so a distinct
+      // pair preserves the test's intent (recent counts, week-old doesn't).
       .values({
         postingId: postingIds[0],
-        applicantId,
+        applicantId: hostId,
         status: "accepted",
         acceptedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       })

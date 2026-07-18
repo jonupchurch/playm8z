@@ -266,10 +266,12 @@ export const postings = pgTable("postings", {
   moderationReviewedAt: timestamp("moderationReviewedAt", { mode: "date" }),
 });
 
-// Listing detail (006) -- its first real writer. A unique active
-// application per (postingId, applicantId) is enforced at the Server
-// Action level (data-model.md), not a DB constraint, since Drizzle's
-// partial-unique-index support varies and the check is cheap in code.
+// Listing detail (006) -- its first real writer. At most one ACTIVE application
+// (pending/accepted) per (postingId, applicantId), now enforced by the
+// `applications_active_uniq` partial unique index below (046, ADR 0018, superseding
+// the earlier "no DB constraint" call) -- it closes the apply/invite TOCTOU race no
+// app-side select-then-insert can. The app-side checks stay as the friendly fast path
+// (defense-in-depth).
 export const applications = pgTable("applications", {
   id: uuid("id").defaultRandom().primaryKey(),
   postingId: uuid("postingId")
@@ -297,7 +299,16 @@ export const applications = pgTable("applications", {
   // formed this week." Never set for pending/declined/withdrawn rows,
   // never cleared afterward.
   acceptedAt: timestamp("acceptedAt", { mode: "date" }),
-});
+}, (table) => [
+  // 046 (ADR 0018): at most one ACTIVE application per (posting, applicant).
+  // `WHERE status IN (pending,accepted)` matches the app-side checks; terminal
+  // states (declined/withdrawn) are excluded, so re-application after them is
+  // allowed. NOTE: unlike 043's expression index, drizzle-kit round-trips this
+  // partial index cleanly -- `drizzle-kit push` leaves it alone on deploy (verified).
+  uniqueIndex("applications_active_uniq")
+    .on(table.postingId, table.applicantId)
+    .where(sql`status IN ('pending','accepted')`),
+]);
 
 // Listing detail (006) -- a listing's public Q&A thread. One reply per
 // question, settable only by the listing's host (reply-to-question.ts).

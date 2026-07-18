@@ -72,12 +72,18 @@ export async function inviteToParty(input: InviteToPartyInput): Promise<InviteTo
     return { success: false, error: "This player already has an active application to this party." };
   }
 
-  await db.insert(applications).values({
-    postingId,
-    applicantId: invitedUserId,
-    status: "pending",
-    initiatedBy: "host",
-  });
+  // 046 (ADR 0018): conflict-safe -- the select-check is the friendly fast path, the
+  // partial unique index the race-proof backstop. A lost race inserts nothing and
+  // surfaces the same rejection, never a raw error.
+  const inserted = await db
+    .insert(applications)
+    .values({ postingId, applicantId: invitedUserId, status: "pending", initiatedBy: "host" })
+    .onConflictDoNothing()
+    .returning({ id: applications.id });
+
+  if (inserted.length === 0) {
+    return { success: false, error: "This player already has an active application to this party." };
+  }
 
   return { success: true };
 }

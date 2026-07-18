@@ -8,9 +8,11 @@ describe("getNotifications (integration)", () => {
   const runId = crypto.randomUUID().slice(0, 8);
   const hostEmail = `notif-host-${runId}@example.com`;
   const applicantEmail = `notif-applicant-${runId}@example.com`;
+  const applicant2Email = `notif-applicant2-${runId}@example.com`;
 
   let hostId: string;
   let applicantId: string;
+  let applicant2Id: string;
   let postingId: string;
   let pendingApplicationId: string;
   let acceptedApplicationId: string;
@@ -28,6 +30,15 @@ describe("getNotifications (integration)", () => {
       .values({ email: applicantEmail, handle: `notifapplicant${runId}` })
       .returning({ id: users.id });
     applicantId = applicant.id;
+
+    // A second applicant: the pending and accepted rows below must be for DIFFERENT
+    // (posting, applicant) pairs -- two active rows for one pair now violate
+    // applications_active_uniq (046). The test asserts by application id, not applicant.
+    const [applicant2] = await db
+      .insert(users)
+      .values({ email: applicant2Email, handle: `notifapplicant2${runId}` })
+      .returning({ id: users.id });
+    applicant2Id = applicant2.id;
 
     const [posting] = await db
       .insert(postings)
@@ -55,7 +66,7 @@ describe("getNotifications (integration)", () => {
 
     const [accepted] = await db
       .insert(applications)
-      .values({ postingId, applicantId, status: "accepted" })
+      .values({ postingId, applicantId: applicant2Id, status: "accepted" })
       .returning({ id: applications.id });
     acceptedApplicationId = accepted.id;
 
@@ -79,6 +90,7 @@ describe("getNotifications (integration)", () => {
     await db.delete(notifications).where(eq(notifications.userId, hostId));
     await db.delete(users).where(eq(users.email, hostEmail));
     await db.delete(users).where(eq(users.email, applicantEmail));
+    await db.delete(users).where(eq(users.email, applicant2Email));
   });
 
   it("includes a real notification row", async () => {

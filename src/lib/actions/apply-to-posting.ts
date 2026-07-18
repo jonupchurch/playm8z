@@ -65,11 +65,19 @@ export async function applyToPosting(
     return { success: false, error: "You already have an active application to this listing." };
   }
 
-  await db.insert(applications).values({
-    postingId,
-    applicantId: applicant.id,
-    message: parsed.data.message,
-  });
+  // 046 (ADR 0018): the select-check above is the friendly fast path; the partial
+  // unique index is the race-proof backstop. If a concurrent apply/invite won the race,
+  // onConflictDoNothing inserts nothing (empty returning) -- surface the SAME rejection,
+  // never a raw error.
+  const inserted = await db
+    .insert(applications)
+    .values({ postingId, applicantId: applicant.id, message: parsed.data.message })
+    .onConflictDoNothing()
+    .returning({ id: applications.id });
+
+  if (inserted.length === 0) {
+    return { success: false, error: "You already have an active application to this listing." };
+  }
 
   return { success: true };
 }

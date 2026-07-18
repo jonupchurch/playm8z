@@ -6,6 +6,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- **Duplicate active applications can no longer be created under a race** (feature 046,
+  [ADR 0018](docs/adr/0018-applications-active-uniqueness-index.md)). A partial unique index now
+  guarantees at most one active (pending/accepted) application per player per party, closing a
+  race between the apply and invite paths where two near-simultaneous requests could both create
+  one and corrupt seat/roster counts. Both paths are conflict-safe (a lost race is a benign
+  rejection, not an error) and re-applying after a decline or withdrawal still works.
+  (Internal correctness — no Patch Notes post.)
 - **Blocking someone now stops them everywhere you interact, not just in messages**
   (feature 045, [ADR 0017](docs/adr/0017-enforce-blocks-on-interaction-write-paths.md)).
   A block already prevented direct messages and hid people from your compose search; now
