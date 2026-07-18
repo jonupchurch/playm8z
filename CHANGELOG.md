@@ -28,7 +28,8 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   pre-checked): it **augments** the profile's existing games, never replaces
   them, de-duplicates by name, and fills in playtime; imported names light up
   the curated game images. One Steam account links to one playm8z account.
-  Disconnecting removes the link but keeps the imported games. This is a
+  The import screen has a **Select all / Clear all** toggle for picking games
+  quickly. Disconnecting removes the link but keeps the imported games. This is a
   settings-time *link*, **not** a way to sign in — signing in with Steam,
   live "playing now" status, and the Steam avatar are deferred
   (`docs/future-work.md`). No change to sign-in, email, or age eligibility.
