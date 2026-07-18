@@ -5,6 +5,16 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Security
+- **Login, signup, and password-reset are now rate-limited**
+  ([ADR 0020](docs/adr/0020-postgres-rate-limiting.md)). Repeated attempts from one source are throttled
+  (login 20 / 15 min; signup and reset 10 / hour, per IP), slowing credential-stuffing and account-enumeration
+  probing. Backed by the database we already have — no new service. (Internal hardening — no Patch Notes post.)
+- **Changing your password or email while signed in now ends your other sessions.** Previously only a password
+  *reset* did this, so an in-session change left other logged-in sessions (a shared or stolen device) alive.
+  Now any credential change signs out everywhere — you sign back in on the current device with the new details.
+  ([ADR 0010](docs/adr/0010-session-revocation-via-sessions-valid-after.md).)
+
 ### Fixed
 - **Robustness fixes from a deep code audit** (internal correctness — no Patch Notes post).
   A multi-lens read-only scan of the codebase surfaced five real defects, all now fixed and

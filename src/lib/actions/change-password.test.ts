@@ -46,6 +46,9 @@ describe("changePassword", () => {
 
     const [row] = await db.select().from(users).where(eq(users.email, emails.update));
     expect(row.passwordHash).not.toBeNull();
+    // #7 (ADR 0010): a password change signs out other sessions by
+    // stamping the revocation timestamp (seeded null above).
+    expect(row.sessionsValidAfter).toBeInstanceOf(Date);
   });
 
   it("rejects an incorrect current password", async () => {

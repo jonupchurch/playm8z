@@ -43,6 +43,8 @@ describe("updateEmail", () => {
     const [row] = await db.select().from(users).where(eq(users.email, newEmail));
     expect(row).toBeDefined();
     expect(row.emailVerified).toBeNull();
+    // #7 (ADR 0010): changing the email signs out other sessions.
+    expect(row.sessionsValidAfter).toBeInstanceOf(Date);
 
     const tokens = await db
       .select()

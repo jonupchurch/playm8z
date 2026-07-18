@@ -1,8 +1,12 @@
 "use server";
 
+import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { checkRateLimit } from "@/lib/rate-limit/check-rate-limit";
+import { clientIp } from "@/lib/rate-limit/client-ip";
+import { RATE_LIMITS } from "@/lib/rate-limit/limits";
 import {
   requestPasswordResetSchema,
   type RequestPasswordResetInput,
@@ -51,6 +55,23 @@ export async function requestPasswordReset(
   }
 
   const { email } = parsed.data;
+
+  // Rate-limit reset requests per client IP (ADR 0020). Enforced BEFORE the
+  // account lookup and returning the SAME identical response when throttled,
+  // so it never becomes a new way to tell whether an address has an account
+  // (FR-004) -- silence, not "slow down". Skipped without a real forwarded IP.
+  // `headers()` throws outside a request scope (e.g. unit tests); treat that
+  // as "no IP" and skip, consistent with the limiter's fail-open stance.
+  let ip: string | null = null;
+  try {
+    ip = clientIp(await headers());
+  } catch {
+    ip = null;
+  }
+  if (ip) {
+    const gate = await checkRateLimit(`reset:${ip}`, RATE_LIMITS.passwordReset.limit, RATE_LIMITS.passwordReset.windowMs);
+    if (!gate.allowed) return IDENTICAL_RESPONSE;
+  }
 
   const [user] = await db
     .select({

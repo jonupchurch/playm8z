@@ -24,6 +24,36 @@ all pass comfortably (15.7:1, 7.2:1, 6.9:1) — this is only the filled
 buttons. If picked up, it's a small accessibility pass across every primary
 button, email and web, with its own before/after review.
 
+## Register reveals whether an email is already in use — accepted, 2026-07-18
+
+`POST /api/auth/register` returns a distinct "That email is already registered." vs "That handle is already
+taken." on a collision (`src/app/api/auth/register/route.ts`). The email branch is an account-enumeration
+oracle: a stranger can learn whether an address has an account. This is deliberately **accepted** (confirmed
+with the user, 2026-07-18):
+
+- It's the standard signup UX — telling someone their email is already registered is what mainstream services
+  do, and the privacy-preserving alternative (accept the attempt, email the existing address "someone tried to
+  sign up") is heavier and more confusing.
+- Handles are public identity anyway ([ADR 0006](adr/0006-handle-only-public-identity.md)), so only the *email*
+  branch is sensitive.
+- The real mass-enumeration risk — scripting the endpoint against many addresses — is now blunted by the
+  per-IP rate limit on register ([ADR 0020](adr/0020-postgres-rate-limiting.md)).
+
+If ever picked up, the fix is the "always answer the same, email the existing address" flow — its own small
+feature, not a one-line change. `request-password-reset.ts` already models the single-response discipline.
+
+## Rate limiting: per-account keying and tuning — deferred out of ADR 0020 (2026-07-18)
+
+The auth rate limiter ([ADR 0020](adr/0020-postgres-rate-limiting.md)) keys on client IP, which covers
+credential stuffing and enumeration without the victim-lockout DoS that per-email keying invites. Two
+follow-ons are parked:
+
+- **Per-account keying alongside IP** — block if *either* an IP or a target account exceeds, to also throttle a
+  distributed brute-force against one specific account. Needs care so it can't be abused to lock a victim out.
+- **Tuning / observability** — the limits (login 20/15 min, register & reset 10/hour) are conservative first
+  guesses; no dashboard or alerting on throttle events yet. If abuse or false-positives show up, revisit both
+  the numbers and whether an Upstash sliding window is worth the upgrade.
+
 ## Steam: sign-in, live status, and avatar — deferred out of feature 038 (2026-07-17)
 
 Feature 038 added connecting a Steam account (settings-time link) and
