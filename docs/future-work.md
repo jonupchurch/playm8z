@@ -4,6 +4,41 @@ Ideas and scope explicitly deferred out of the current build, per the
 constitution's Scope Discipline principle (Principle IV). Nothing here is
 scheduled — it's a parking lot, not a roadmap.
 
+## Deep-scan Tier 3 low-severity items — declined (2026-07-18)
+
+The 2026-07-18 deep audit's lowest-severity findings were reviewed with the user and deliberately **not**
+scheduled (semi-permanent). All are theoretical, low-impact, or fire only in edge conditions this deployment
+doesn't hit:
+
+- **`post-reply.ts`** inserts the reply and bumps `forumThreads.replyCount` in two statements rather than one
+  transaction — an undercount only if the process dies between them.
+- **`start-conversation.ts`** can create two direct conversations for one pair under a near-simultaneous
+  first-contact race (no unique constraint on the member array).
+- **`upsert-settings.ts`** could insert a second `settings` row if two saves race while the table is still
+  empty — a fresh-environment landmine only; prod already has the row.
+- **`steam-import.ts`**'s batched insert has no `onConflictDoNothing` guard, so a double-submitted import throws
+  instead of a graceful no-op.
+- **`editPosting`** has a microscopic check-then-write TOCTOU on the seat count (its "already accepted" guard
+  covers the realistic case).
+
+If any becomes a real-world problem it's a small isolated fix; none is worth the churn now.
+
+## XSS surface and Content-Security-Policy (2026-07-18)
+
+Audited: the app renders no user-authored HTML. Forum threads/replies, DMs, bios, listing text, and handles are
+all plain JSX text (React-escaped); the only `dangerouslySetInnerHTML` is the news body (`article-body.tsx`),
+which is admin/moderator-authored. A CSP + security headers were added (`next.config.ts`) as defense-in-depth.
+Two follow-ons are parked:
+
+- **Nonce-based `script-src`.** The current CSP keeps `'unsafe-inline'`/`'unsafe-eval'` on `script-src` because
+  Next's hydration and dev HMR need inline scripts. A per-request nonce (via `src/proxy.ts`) would let us drop
+  those and actually block injected inline scripts. It's a larger change needing full-page e2e verification
+  against analytics and the Vercel preview toolbar (`vercel.live`, which the current `frame-src 'self'` would
+  block on previews) — deferred while the XSS surface is already closed.
+- **Sanitizing the news body.** Admin-only today, so left as an admin-trust boundary. If news authoring is ever
+  opened wider, run `marked`'s output through a vetted sanitizer (and block `javascript:` link hrefs) before it
+  becomes reachable by anyone but staff.
+
 ## Primary-button colour contrast (WCAG AA) — accepted for now, 2026-07-16
 
 Measured while fixing the transactional-email layout. White text on the
