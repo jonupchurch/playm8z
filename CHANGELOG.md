@@ -6,6 +6,11 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Security
+- **Added a Content-Security-Policy and security response headers** (`next.config.ts`) as defense-in-depth: it
+  blocks browser plugins and cross-origin framing (clickjacking), locks `base-uri`/`form-action`, restricts
+  external scripts to same-origin, and sets `nosniff` / `Referrer-Policy` / `Permissions-Policy`. An audit
+  confirmed the app renders no user-authored HTML anywhere — forum posts, DMs, and profile content are all
+  escaped — so this is depth behind an already-closed surface. (Internal hardening — no Patch Notes post.)
 - **Login, signup, and password-reset are now rate-limited**
   ([ADR 0020](docs/adr/0020-postgres-rate-limiting.md)). Repeated attempts from one source are throttled
   (login 20 / 15 min; signup and reset 10 / hour, per IP), slowing credential-stuffing and account-enumeration
