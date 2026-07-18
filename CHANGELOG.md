@@ -44,6 +44,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   within 30 days; nothing is rewritten.
 
 ### Added
+- **Web Analytics and Speed Insights** (Vercel observability). The site now
+  collects privacy-friendly, anonymous page-view/visitor counts
+  (`@vercel/analytics`) and real-user performance metrics — Core Web Vitals —
+  (`@vercel/speed-insights`), rendered site-wide from the root layout. This is
+  operator-facing telemetry surfaced in the Vercel dashboard; it changes nothing
+  players see or do. (Infra/observability — no Patch Notes post.)
 - **The site owner can permanently delete a news post** (feature 041,
   [ADR 0014](docs/adr/0014-owner-marker-and-scoped-hard-delete.md)). A new
   owner-only "Delete permanently" control (behind a two-step confirm) actually
