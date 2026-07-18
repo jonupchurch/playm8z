@@ -33,6 +33,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   settings-time *link*, **not** a way to sign in — signing in with Steam,
   live "playing now" status, and the Steam avatar are deferred
   (`docs/future-work.md`). No change to sign-in, email, or age eligibility.
+- **Expanded the game catalog from a linked player's Steam library.** The
+  multiplayer games (86) among the owner's most-played (2h+) Steam titles were
+  added to the curated catalog with their official Steam header art (local
+  copies in Blob), so those games get images and Post-a-Game suggestions.
+  **Multiplayer-only** on purpose — single-player titles are kept out of
+  everyone's suggestions. Applied via the idempotent, reusable, scan-cached
+  `scripts/import-steam-library-to-catalog.ts` (works for any linked player).
 - **Seeded the game curation list with popular multiplayer titles.** The
   Post a Game typeahead now suggests ~46 multiplayer/co-op games drawn
   from Steam's most-played chart (single-player titles and non-game
