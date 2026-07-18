@@ -19,6 +19,20 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   within 30 days; nothing is rewritten.
 
 ### Added
+- **The notification bell now lights up for real events** (feature 040,
+  [ADR 0013](docs/adr/0013-notification-wiring-best-effort.md)). The
+  `createNotification()` mechanism built by feature 012 finally has real callers:
+  a **forum reply** notifies the thread's author, an **@mention** in a forum
+  thread or reply notifies each mentioned player, and **accepting or declining**
+  a join request notifies the **applicant** — including the previously silent
+  decline, which told the applicant nothing before. Notifications are
+  **best-effort**: a failure is logged and never breaks or rolls back the reply,
+  thread, accept, or decline. A player never gets more than one notification for
+  a single post (a reply that also @mentions the author collapses to one),
+  self-actions notify no one, unknown @handles are ignored, and a block
+  relationship suppresses the notification. Adds a `declined` notification type
+  with its own ✕ icon. New DMs are intentionally **not** in the bell — the
+  Messages nav badge (037) already counts those. No schema migration.
 - **Connect Steam & import your game library** (feature 038,
   [ADR 0012](docs/adr/0012-steam-account-link-via-settings-openid.md)). From
   account settings a player can connect their Steam account — ownership proven

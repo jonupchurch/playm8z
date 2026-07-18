@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { arrayContains, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { applications, conversations, postings, users } from "@/db/schema";
+import { applications, conversations, notifications, postings, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -145,5 +145,22 @@ describe("declineRequest (integration)", () => {
 
     const [application] = await db.select().from(applications).where(eq(applications.id, invite.id));
     expect(application.status).toBe("declined");
+
+    // The invited applicant is the actor here — no applicant-facing notification.
+    const rows = await db.select().from(notifications).where(eq(notifications.userId, applicantId));
+    expect(rows.filter((r) => r.targetRef === `/listing/${posting.id}`)).toHaveLength(0);
+  });
+
+  it("notifies the applicant with a declined notification linking to the listing (040)", async () => {
+    const seeded = await seedPendingApplication();
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+
+    const result = await declineRequest({ applicationId: seeded.applicationId });
+    expect(result).toEqual({ success: true });
+
+    const rows = await db.select().from(notifications).where(eq(notifications.userId, applicantId));
+    const declined = rows.filter((r) => r.targetRef === `/listing/${seeded.postingId}` && r.type === "declined");
+    expect(declined).toHaveLength(1);
+    expect(declined[0].actorId).toBe(hostId);
   });
 });

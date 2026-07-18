@@ -9,6 +9,7 @@ import { notifications } from "@/db/schema";
 export type NotificationType =
   | "join"
   | "accepted"
+  | "declined"
   | "reply"
   | "mention"
   | "message"

@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { forumReplies, forumThreads, users } from "@/db/schema";
 import { requireVerifiedEmail, UnverifiedEmailError } from "@/lib/auth/require-verified-email";
 import { computeAutoFlagReason } from "@/lib/moderation/auto-flag-rules";
+import { notifyMentions } from "@/lib/notifications/notify-events";
 import { getSettings } from "@/lib/settings/get-settings";
 import { createThreadSchema, type CreateThreadInput } from "@/lib/validations/forum";
 
@@ -52,6 +53,17 @@ export async function createThread(input: CreateThreadInput): Promise<CreateThre
     .insert(forumThreads)
     .values({ authorId: author.id, ...parsed.data, autoFlagReason })
     .returning({ id: forumThreads.id });
+
+  // Best-effort (040): a new thread's original post can @mention people. There
+  // is no one to notify as a `reply` yet, so only mentions apply; the author is
+  // excluded so a self-mention is a no-op.
+  await notifyMentions({
+    actorId: author.id,
+    threadId: row.id,
+    threadTitle: parsed.data.title,
+    body: parsed.data.body,
+    excludeUserIds: [author.id],
+  });
 
   return { success: true, id: row.id };
 }

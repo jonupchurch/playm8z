@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { forumThreads, users } from "@/db/schema";
+import { forumThreads, notifications, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -100,5 +100,33 @@ describe("createThread", () => {
     mockedAuth.mockResolvedValueOnce(null);
     const result = await createThread({ ...validInput, title: `${validInput.title}-anon` });
     expect(result.success).toBe(false);
+  });
+
+  it("notifies a mentioned user but not the self-mentioning author (040)", async () => {
+    const [target] = await db
+      .insert(users)
+      .values({ email: `thread-target-${runId}@example.com`, handle: `threadtarget${runId}`, emailVerified: new Date() })
+      .returning({ id: users.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(verifiedEmail));
+    const result = await createThread({
+      ...validInput,
+      title: `${validInput.title}-mention`,
+      body: `hey @threadtarget${runId} and @threadverified${runId} check this`,
+    });
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const targetNotifs = await db.select().from(notifications).where(eq(notifications.userId, target.id));
+    expect(targetNotifs.filter((n) => n.type === "mention")).toHaveLength(1);
+    expect(targetNotifs[0].targetRef).toBe(`/forum/thread/${result.id}`);
+
+    // The author @mentioned themselves — no self-notification.
+    const [author] = await db.select({ id: users.id }).from(users).where(eq(users.email, verifiedEmail));
+    const authorNotifs = await db.select().from(notifications).where(eq(notifications.userId, author.id));
+    expect(authorNotifs).toHaveLength(0);
+
+    await db.delete(forumThreads).where(eq(forumThreads.id, result.id));
+    await db.delete(users).where(eq(users.id, target.id)); // cascades the notification
   });
 });

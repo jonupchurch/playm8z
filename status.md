@@ -26,7 +26,12 @@ closing a discoverability gap, not adding a messaging capability.
 Feature 38 (Connect Steam & import game library) is the first
 third-party account LINK — a settings-time Steam OpenID connect
 (verified server-side, ADR 0012), NOT a sign-in method — that imports
-a player's real Steam library into their profile.
+a player's real Steam library into their profile. Feature 40
+(notification wiring, ADR 0013) finally connects feature 012's
+`createNotification()` to real events — forum replies, @mentions, and
+applicant-facing accept/decline — best-effort so a notification
+failure never breaks its primary action; the host's inbound-request
+view stays live-synthesized and DMs stay on the Messages badge (037).
 **Last updated**: 2026-07-17
 
 ## Where things stand

@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { forumReplies, forumThreads, users } from "@/db/schema";
 import { requireVerifiedEmail, UnverifiedEmailError } from "@/lib/auth/require-verified-email";
 import { computeAutoFlagReason } from "@/lib/moderation/auto-flag-rules";
+import { notifyForumReply, notifyMentions } from "@/lib/notifications/notify-events";
 import { getSettings } from "@/lib/settings/get-settings";
 import { postReplySchema, type PostReplyInput } from "@/lib/validations/forum-thread";
 
@@ -34,7 +35,10 @@ export async function postReply(input: PostReplyInput): Promise<PostReplyResult>
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
 
-  const [thread] = await db.select({ locked: forumThreads.locked }).from(forumThreads).where(eq(forumThreads.id, parsed.data.threadId));
+  const [thread] = await db
+    .select({ locked: forumThreads.locked, authorId: forumThreads.authorId, title: forumThreads.title })
+    .from(forumThreads)
+    .where(eq(forumThreads.id, parsed.data.threadId));
   if (!thread) {
     return { success: false, error: "Thread not found." };
   }
@@ -65,6 +69,23 @@ export async function postReply(input: PostReplyInput): Promise<PostReplyResult>
     .update(forumThreads)
     .set({ replyCount: sql`${forumThreads.replyCount} + 1` })
     .where(eq(forumThreads.id, parsed.data.threadId));
+
+  // Best-effort notifications (040) — never allowed to fail the reply. The
+  // thread author gets a `reply`; mentions go to everyone else named, with the
+  // author excluded so a reply-that-mentions-the-author notifies once, not twice.
+  await notifyForumReply({
+    threadId: parsed.data.threadId,
+    threadTitle: thread.title,
+    threadAuthorId: thread.authorId,
+    replierId: author.id,
+  });
+  await notifyMentions({
+    actorId: author.id,
+    threadId: parsed.data.threadId,
+    threadTitle: thread.title,
+    body: parsed.data.body,
+    excludeUserIds: [author.id, thread.authorId],
+  });
 
   return { success: true, id: row.id };
 }

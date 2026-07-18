@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { applications, postings } from "@/db/schema";
 import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
+import { notifyRequestResolved } from "@/lib/notifications/notify-events";
 import { requestActionSchema } from "@/lib/validations/inbox";
 
 export type DeclineRequestResult = { success: true } | { success: false; error: string };
@@ -46,7 +47,7 @@ export async function declineRequest(input: { applicationId: string }): Promise<
   }
 
   const [posting] = await db
-    .select({ hostId: postings.hostId })
+    .select({ hostId: postings.hostId, game: postings.game, title: postings.title })
     .from(postings)
     .where(eq(postings.id, application.postingId));
 
@@ -60,6 +61,21 @@ export async function declineRequest(input: { applicationId: string }): Promise<
     .update(applications)
     .set({ status: "declined" })
     .where(and(eq(applications.id, application.id), eq(applications.status, "pending")));
+
+  // Best-effort (040): tell the applicant their request was declined — today
+  // this is the ONLY signal they get (decline creates no conversation). Only
+  // the applicant-initiated flow; a host-initiated invite declined by the
+  // applicant is the host's own synthesized view (research.md #3).
+  if (application.initiatedBy !== "host") {
+    await notifyRequestResolved({
+      kind: "declined",
+      applicantId: application.applicantId,
+      hostId: posting.hostId,
+      postingId: application.postingId,
+      game: posting.game,
+      title: posting.title,
+    });
+  }
 
   // The client navigates back to /inbox right after this resolves --
   // revalidating server-side (rather than the client calling

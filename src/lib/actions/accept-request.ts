@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { applications, conversations, messages, postings, users } from "@/db/schema";
 import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
+import { notifyRequestResolved } from "@/lib/notifications/notify-events";
 import { requestActionSchema } from "@/lib/validations/inbox";
 
 export type AcceptRequestResult = { success: true; conversationId: string } | { success: false; error: string };
@@ -51,7 +52,13 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
       }
 
       const [posting] = await tx
-        .select({ id: postings.id, hostId: postings.hostId, seatsOpen: postings.seatsOpen })
+        .select({
+          id: postings.id,
+          hostId: postings.hostId,
+          seatsOpen: postings.seatsOpen,
+          game: postings.game,
+          title: postings.title,
+        })
         .from(postings)
         .where(eq(postings.id, application.postingId));
 
@@ -104,7 +111,15 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
             : `You accepted — @${applicant?.handle ?? "player"} joined the party.`,
       });
 
-      return { conversationId: conversation.id, postingId: posting.id };
+      return {
+        conversationId: conversation.id,
+        postingId: posting.id,
+        applicantId: application.applicantId,
+        hostId: posting.hostId,
+        initiatedBy: application.initiatedBy,
+        game: posting.game,
+        title: posting.title,
+      };
     });
 
     // The client navigates to the new conversation right after this
@@ -116,6 +131,23 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
     // the newly-accepted member.
     revalidatePath("/inbox", "layout");
     revalidatePath(`/listing/${result.postingId}`, "page");
+
+    // Best-effort (040), strictly AFTER the transaction so a notification
+    // failure can never roll back the seat/conversation accounting. Only the
+    // applicant-initiated flow notifies the applicant; a host-initiated invite
+    // being accepted by that applicant is covered by the host's live request
+    // synthesis instead (research.md #3).
+    if (result.initiatedBy !== "host") {
+      await notifyRequestResolved({
+        kind: "accepted",
+        applicantId: result.applicantId,
+        hostId: result.hostId,
+        postingId: result.postingId,
+        game: result.game,
+        title: result.title,
+      });
+    }
+
     return { success: true, conversationId: result.conversationId };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Couldn't accept this request." };

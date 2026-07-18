@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { forumReplies, forumThreads, users } from "@/db/schema";
+import { forumReplies, forumThreads, notifications, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -111,6 +111,27 @@ describe("postReply", () => {
 
     await db.delete(forumReplies).where(eq(forumReplies.id, result.id));
     await db.delete(users).where(eq(users.id, newAuthor.id));
+  });
+
+  it("notifies the thread author when a different user replies (040)", async () => {
+    const replierEmail = `reply-other-${runId}@example.com`;
+    const [replier] = await db
+      .insert(users)
+      .values({ email: replierEmail, handle: `replyother${runId}`, emailVerified: new Date() })
+      .returning({ id: users.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(replierEmail));
+    const result = await postReply({ threadId, body: "Great thread, thanks!" });
+    expect(result.success).toBe(true);
+
+    const authorNotifs = await db.select().from(notifications).where(eq(notifications.userId, authorId));
+    const reply = authorNotifs.find((n) => n.type === "reply");
+    expect(reply).toBeDefined();
+    expect(reply?.actorId).toBe(replier.id);
+    expect(reply?.targetRef).toBe(`/forum/thread/${threadId}`);
+
+    // Deleting the actor cascades the notification row (actorId FK onDelete cascade).
+    await db.delete(users).where(eq(users.id, replier.id));
   });
 
   it("rejects a reply to a locked thread (Admin Forum, 018 research.md #6)", async () => {
