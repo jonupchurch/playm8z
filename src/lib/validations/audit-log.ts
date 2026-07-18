@@ -16,7 +16,7 @@ export type AuditLogActorFilter = z.infer<typeof auditLogActorFilterSchema>;
 // query (Principle II), same pattern as Browse's/Admin Users' own
 // searchParams schemas.
 export const searchAuditLogSchema = z.object({
-  q: z.string().max(200).optional().default(""),
+  q: z.string().max(200).optional().default("").catch(""),
   actor: auditLogActorFilterSchema,
   category: auditCategoryFilterSchema.catch("all"),
   page: z.coerce.number().int().min(1).catch(1),

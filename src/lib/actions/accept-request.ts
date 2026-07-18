@@ -53,6 +53,13 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
         throw new Error("This request is no longer pending.");
       }
 
+      // Locked with `FOR UPDATE` so two concurrent accepts of DIFFERENT
+      // pending applications on the same posting serialize here instead
+      // of both reading the same seatsOpen and both writing seatsOpen-1
+      // -- a lost update that overbooks the party and leaves the seat
+      // count wrong. The application-row guard below only stops the SAME
+      // application being accepted twice; it does nothing for two
+      // different rows racing the shared seat counter.
       const [posting] = await tx
         .select({
           id: postings.id,
@@ -62,7 +69,8 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
           title: postings.title,
         })
         .from(postings)
-        .where(eq(postings.id, application.postingId));
+        .where(eq(postings.id, application.postingId))
+        .for("update");
 
       const authorized =
         application.initiatedBy === "host"

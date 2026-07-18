@@ -28,6 +28,12 @@ describe("newsFiltersSchema", () => {
   it("accepts a search query", () => {
     expect(newsFiltersSchema.parse({ q: "beta" }).q).toBe("beta");
   });
+
+  it("falls back to an empty q for an over-long search value rather than throwing", () => {
+    // A tampered/oversized ?q= must degrade like every other field here,
+    // not throw an uncaught ZodError that crashes the page render.
+    expect(newsFiltersSchema.parse({ q: "x".repeat(201) }).q).toBe("");
+  });
 });
 
 describe("newsCategoryColor", () => {

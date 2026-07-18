@@ -14,12 +14,23 @@ const logAuditEntrySchema = z.object({
 });
 export type LogAuditEntryInput = z.input<typeof logAuditEntrySchema>;
 
-// FR-007: the reusable mechanism future admin features (Admin Users/
-// Postings/Forum/News -- none spec'd yet) will call to record an
-// entry. Nothing calls this yet (research.md #3); ships fully built
-// and tested so those features can adopt it directly once they exist.
+// FR-007: the reusable mechanism admin features call to record an entry.
 // Append-only, matching auditEntries' own no-update/no-delete design.
+//
+// Validation still throws (a malformed call is a programmer error worth
+// surfacing in dev/test), but the INSERT is best-effort: every caller
+// records the entry AFTER its real mutation has already committed (a ban,
+// a removal, a password reset). A transient DB failure on this secondary
+// write must not surface as a failure of that already-durable action --
+// the caller would report an error for work that actually succeeded, and
+// a retry could double-apply it. Same never-throw-after-commit contract
+// send-email.ts holds, for the same reason. The failure is logged loudly
+// so a dropped entry is still visible in server logs.
 export async function logAuditEntry(input: LogAuditEntryInput): Promise<void> {
   const parsed = logAuditEntrySchema.parse(input);
-  await db.insert(auditEntries).values(parsed);
+  try {
+    await db.insert(auditEntries).values(parsed);
+  } catch (err) {
+    console.error(`[audit] failed to record "${parsed.action}":`, err);
+  }
 }

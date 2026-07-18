@@ -35,7 +35,7 @@ function toArray(value: unknown): unknown[] {
 // database WHERE clause (search-postings.ts) -- every facet value is
 // validated here before it can reach the query builder (Principle II).
 export const browseFiltersSchema = z.object({
-  q: z.string().max(200).optional().default(""),
+  q: z.string().max(200).optional().default("").catch(""),
   vibe: z.enum(["any", "fun", "serious"]).catch("any"),
   games: z.preprocess(toArray, z.array(z.string().max(100)).max(20)).catch([]),
   // Shape only -- membership can't be a static enum now the list is

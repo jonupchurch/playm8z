@@ -6,6 +6,25 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- **Robustness fixes from a deep code audit** (internal correctness — no Patch Notes post).
+  A multi-lens read-only scan of the codebase surfaced five real defects, all now fixed and
+  covered by regression tests:
+  - *Party seats could be overbooked under a race.* Accepting two different pending requests
+    on the same party at the same moment could decrement the open-seat count only once (a lost
+    update), making a full party still look like it had a seat free. The accept now locks the
+    party row so concurrent accepts settle the count correctly.
+  - *Double-tapping "Save" on a listing could error instead of doing nothing.* A raced second
+    save now degrades to a harmless idempotent success, matching every other save/follow/like
+    toggle.
+  - *A forum like/unlike counter could drift.* Two simultaneous "unlike" taps could subtract
+    from the like count twice for one real removal (even going negative); the count is now only
+    adjusted when a row is actually removed.
+  - *A rare audit-log write failure could make a completed moderation action report as failed.*
+    Recording an audit entry now never fails the already-committed action it describes (it logs
+    the problem instead), so a moderator won't see a false error and retry a ban that already
+    happened.
+  - *An over-long search term in a URL could crash the News or Browse page.* A tampered/oversized
+    `?q=` value now degrades to an empty search like every other filter, instead of throwing.
 - **Duplicate active applications can no longer be created under a race** (feature 046,
   [ADR 0018](docs/adr/0018-applications-active-uniqueness-index.md)). A partial unique index now
   guarantees at most one active (pending/accepted) application per player per party, closing a
