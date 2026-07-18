@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { hash } from "bcrypt-ts";
 import { eq, inArray, like } from "drizzle-orm";
 import { db } from "@/db";
-import { settings, users } from "@/db/schema";
+import { settings, userGames, users } from "@/db/schema";
 
 // 031. The suggestions only ever appear during account creation, so an
 // existing session cannot exercise the main path -- these tests create a
@@ -88,13 +88,20 @@ test.describe("Admin-editable suggested games (quickstart Scenarios 1-2)", () =>
   test("removing a game leaves an existing player's games untouched", async ({ page }) => {
     // A player who lists a game we're about to retire.
     const holderEmail = `e2e-games-new-${runId}-holder@example.com`;
-    await db.insert(users).values({
-      email: holderEmail,
-      passwordHash: await hash(password, 10),
-      handle: `e2egamesholder${runId}`,
-      emailVerified: new Date(),
-      gamesPlayed: ["CS2", NEW_GAME],
-    });
+    const [holderUser] = await db
+      .insert(users)
+      .values({
+        email: holderEmail,
+        passwordHash: await hash(password, 10),
+        handle: `e2egamesholder${runId}`,
+        emailVerified: new Date(),
+      })
+      .returning({ id: users.id });
+    // The player's games live in userGames (ADR 0015), not the retired column.
+    await db.insert(userGames).values([
+      { userId: holderUser.id, game: "CS2" },
+      { userId: holderUser.id, game: NEW_GAME },
+    ]);
 
     await login(page, adminEmail);
     await addSuggestedGame(page, NEW_GAME);
@@ -108,7 +115,7 @@ test.describe("Admin-editable suggested games (quickstart Scenarios 1-2)", () =>
 
     // FR-006: the player still has it. An admin edit must never reach
     // into anybody's profile.
-    const [holder] = await db.select({ gamesPlayed: users.gamesPlayed }).from(users).where(eq(users.email, holderEmail));
-    expect(holder.gamesPlayed).toEqual(["CS2", NEW_GAME]);
+    const holderGames = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, holderUser.id));
+    expect(holderGames.map((g) => g.game).sort()).toEqual(["CS2", NEW_GAME].sort());
   });
 });

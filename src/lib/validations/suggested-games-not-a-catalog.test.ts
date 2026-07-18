@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { settings, users } from "@/db/schema";
+import { settings, userGames, users } from "@/db/schema";
 import { gamesPlayedSchema } from "@/lib/validations/onboarding";
 import { getSettings, invalidateSettingsCache } from "@/lib/settings/get-settings";
 
@@ -26,9 +26,15 @@ let originalGames: string[];
 beforeAll(async () => {
   const [player] = await db
     .insert(users)
-    .values({ email: playerEmail, handle: `notcatalog${runId}`, gamesPlayed: ["CS2", OBSCURE] })
+    .values({ email: playerEmail, handle: `notcatalog${runId}` })
     .returning({ id: users.id });
   playerId = player.id;
+  // A player's games live in userGames (ADR 0015) and are free text (ADR 0001) --
+  // an obscure game that never was, and isn't, a suggestion persists fine.
+  await db.insert(userGames).values([
+    { userId: playerId, game: "CS2" },
+    { userId: playerId, game: OBSCURE },
+  ]);
   originalGames = (await getSettings()).suggestedGames;
 });
 
@@ -55,8 +61,8 @@ describe("a player's games are free text, not the suggestion list", () => {
     await db.update(settings).set({ suggestedGames: originalGames.filter((game) => game !== "CS2") });
     invalidateSettingsCache();
 
-    const [player] = await db.select({ gamesPlayed: users.gamesPlayed }).from(users).where(eq(users.id, playerId));
-    expect(player.gamesPlayed).toEqual(["CS2", OBSCURE]);
+    const games = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, playerId));
+    expect(games.map((g) => g.game).sort()).toEqual(["CS2", OBSCURE].sort());
 
     // And it's still a perfectly valid value to submit.
     expect(gamesPlayedSchema.parse(["CS2"])).toEqual(["CS2"]);

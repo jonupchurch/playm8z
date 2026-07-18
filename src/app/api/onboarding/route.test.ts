@@ -77,10 +77,6 @@ describe("POST /api/onboarding", () => {
     // Response reflects userGames, deduped by normalized name.
     expect([...data.gamesPlayed].sort()).toEqual(["CS2", "Valorant"]);
 
-    // The deprecated column is NOT written.
-    const [row] = await db.select({ gamesPlayed: users.gamesPlayed }).from(users).where(eq(users.email, email));
-    expect(row.gamesPlayed).toBeNull();
-
     // userGames holds exactly the deduped set.
     const ug = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, userId));
     expect(ug.map((g) => g.game).sort()).toEqual(["CS2", "Valorant"]);

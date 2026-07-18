@@ -49,6 +49,35 @@ describe("addUserGame", () => {
     const result = await addUserGame({ game: "" });
     expect(result.success).toBe(false);
   });
+
+  // 043 (ADR 0016) US1/US3 -- app-side dedup layer: re-adding a game the player
+  // already has (exact / different case / padded) is a benign success and never
+  // creates a second row, without relying on a DB error.
+  it("does not duplicate when the same game is added again (exact, case, padded)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(email));
+    expect((await addUserGame({ game: "Stardew Valley" })).success).toBe(true);
+
+    for (const variant of ["Stardew Valley", "stardew valley", "  Stardew Valley  "]) {
+      mockedAuth.mockResolvedValueOnce(fakeSession(email));
+      expect((await addUserGame({ game: variant })).success).toBe(true); // "already in your list"
+    }
+
+    const rows = await db.select().from(userGames).where(eq(userGames.userId, userId));
+    expect(rows.filter((r) => r.game.trim().toLowerCase() === "stardew valley")).toHaveLength(1);
+  });
+
+  // 043 (ADR 0016) US1/US3 -- DB backstop layer: two concurrent adds of the same
+  // game can both pass the app-side check before either inserts; the unique index
+  // + onConflictDoNothing keeps it to one row and neither call errors.
+  it("tolerates a concurrent double-submit, leaving a single row (DB backstop)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(email));
+    mockedAuth.mockResolvedValueOnce(fakeSession(email));
+    const [r1, r2] = await Promise.all([addUserGame({ game: "Nova Drift" }), addUserGame({ game: "Nova Drift" })]);
+    expect(r1.success && r2.success).toBe(true);
+
+    const rows = await db.select().from(userGames).where(eq(userGames.userId, userId));
+    expect(rows.filter((r) => r.game.trim().toLowerCase() === "nova drift")).toHaveLength(1);
+  });
 });
 
 describe("removeUserGame", () => {
