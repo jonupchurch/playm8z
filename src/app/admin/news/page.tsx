@@ -1,4 +1,5 @@
 import { getCurrentRole, requireRole } from "@/lib/auth/require-role";
+import { isCurrentUserOwner } from "@/lib/auth/require-owner";
 import { getNewsPosts } from "@/lib/admin/get-news-posts";
 import { newsPostIdParamSchema } from "@/lib/validations/admin-news";
 import { NewsPostList } from "@/components/admin/news-post-list";
@@ -20,6 +21,7 @@ export default async function AdminNewsPage({
 }) {
   await requireRole("moderator");
   const role = await getCurrentRole();
+  const isOwner = await isCurrentUserOwner();
 
   const rawParams = await searchParams;
   const postId = newsPostIdParamSchema.parse(rawParams.postId);
@@ -30,7 +32,7 @@ export default async function AdminNewsPage({
   return (
     <main className="grid grow grid-cols-[308px_1fr] bg-bg text-text">
       <NewsPostList posts={posts} />
-      <NewsPostEditor key={selectedPost?.id ?? "new"} post={selectedPost} isAdmin={role === "admin"} />
+      <NewsPostEditor key={selectedPost?.id ?? "new"} post={selectedPost} isAdmin={role === "admin"} isOwner={isOwner} />
     </main>
   );
 }

@@ -32,6 +32,13 @@ a player's real Steam library into their profile. Feature 40
 applicant-facing accept/decline — best-effort so a notification
 failure never breaks its primary action; the host's inbound-request
 view stays live-synthesized and DMs stay on the Messages badge (037).
+Feature 41 (owner-only news hard-delete, ADR 0014) adds an `isOwner`
+account marker — orthogonal to `role`, so the role hierarchy is
+untouched — that unlocks a permanent-delete of a news post, a scoped,
+audit-logged exception to ADR 0005; the misleading "Delete" button is
+relabeled "Unpublish". Also this session: a standing workflow where a
+user-facing CHANGELOG entry publishes a "Patch Notes" news post to prod
+via `scripts/publish-patch-note.ts`.
 **Last updated**: 2026-07-17
 
 ## Where things stand

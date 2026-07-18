@@ -6,6 +6,12 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Changed
+- **The news editor's "Delete" button is now labeled "Unpublish"** (feature 041,
+  [ADR 0014](docs/adr/0014-owner-marker-and-scoped-hard-delete.md)). It always
+  only moved a post to draft (nothing is hard-deleted, [ADR 0005](docs/adr/0005-no-hard-deletes.md));
+  the label now says what it does. Behavior is unchanged — the post leaves the
+  public feed, keeps its row and original publish date, and can be re-published.
+  (Admin-facing only — no Patch Notes post.)
 - **A posting's age group now describes who a party is *for***, rather
   than a minimum age to join (feature 032, [ADR 0009](docs/adr/0009-posting-age-group-is-a-demographic-range.md)):
   **Any** (the default) / **18-29** / **30-49** / **50+**. The 18+ and
@@ -19,6 +25,15 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   within 30 days; nothing is rewritten.
 
 ### Added
+- **The site owner can permanently delete a news post** (feature 041,
+  [ADR 0014](docs/adr/0014-owner-marker-and-scoped-hard-delete.md)). A new
+  owner-only "Delete permanently" control (behind a two-step confirm) actually
+  removes a news post — a deliberate, audit-logged exception to the
+  no-hard-delete policy, scoped to the owner and to news posts only. "Owner" is a
+  standalone account marker (`isOwner`), orthogonal to the moderation role, so it
+  changes no existing role-based access. The permanent delete cleans up the
+  post's likes and saves too, and the moderator audit log keeps a record of the
+  deletion after the post is gone. (Admin/owner-facing only — no Patch Notes post.)
 - **The notification bell now lights up for real events** (feature 040,
   [ADR 0013](docs/adr/0013-notification-wiring-best-effort.md)). The
   `createNotification()` mechanism built by feature 012 finally has real callers:
