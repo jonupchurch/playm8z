@@ -39,7 +39,16 @@ export async function changePassword(input: {
   }
 
   const newHash = await hash(parsed.data.newPassword, 10);
-  await db.update(users).set({ passwordHash: newHash }).where(eq(users.id, authUser.id));
+  // ADR 0010: changing the password ends every session, this one included
+  // (the user re-logs in with the new password) -- "sign out everywhere".
+  // Sessions are JWTs, so revocation is this one timestamp bump, checked in
+  // auth.ts. A reset already does the same in complete-password-reset.ts;
+  // an in-session change must not be the one credential change that leaves
+  // a stolen session alive.
+  await db
+    .update(users)
+    .set({ passwordHash: newHash, sessionsValidAfter: new Date() })
+    .where(eq(users.id, authUser.id));
 
   return { success: true };
 }

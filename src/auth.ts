@@ -11,6 +11,9 @@ import { reactivateOnSignIn } from "@/lib/auth/reactivate-on-sign-in";
 import { verifyGoogleEmail } from "@/lib/auth/verify-google-email";
 import { initializeDiscoverableDefault } from "@/lib/auth/initialize-discoverable-default";
 import { isSessionRevoked } from "@/lib/auth/is-session-revoked";
+import { checkRateLimit } from "@/lib/rate-limit/check-rate-limit";
+import { clientIp } from "@/lib/rate-limit/client-ip";
+import { RATE_LIMITS } from "@/lib/rate-limit/limits";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -88,9 +91,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
-      authorize: async (rawCredentials) => {
+      authorize: async (rawCredentials, request) => {
         const parsed = credentialsSchema.safeParse(rawCredentials);
         if (!parsed.success) return null;
+
+        // Rate-limit brute-force login per client IP (ADR 0020). Keyed by
+        // IP, not email, so an attacker can't lock a victim out by spamming
+        // their address. A throttled attempt returns null -- to the client
+        // it's indistinguishable from a bad password, which is fine: the
+        // goal is to stop the guessing, not to explain the block. Skipped
+        // when there's no real forwarded IP (local dev / e2e / CI).
+        const ip = clientIp(request?.headers ?? new Headers());
+        if (ip) {
+          const gate = await checkRateLimit(`login:${ip}`, RATE_LIMITS.login.limit, RATE_LIMITS.login.windowMs);
+          if (!gate.allowed) return null;
+        }
 
         const [user] = await db
           .select()

@@ -33,7 +33,10 @@ export async function updateEmail(input: { email: string }): Promise<UpdateEmail
   try {
     await db
       .update(users)
-      .set({ email: newEmail, emailVerified: null })
+      // ADR 0010: an in-session identity change signs out every other
+      // session too (the same "sign out everywhere" timestamp bump a
+      // password change/reset uses). The current device re-logs in after.
+      .set({ email: newEmail, emailVerified: null, sessionsValidAfter: new Date() })
       .where(eq(users.id, authUser.id));
   } catch (err) {
     // Drizzle wraps the raw postgres.js error in a `DrizzleQueryError`,

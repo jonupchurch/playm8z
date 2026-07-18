@@ -734,6 +734,25 @@ export const warnings = pgTable("warnings", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+// Rate limiting (ADR 0020): a Postgres-backed fixed-window counter shared
+// by the auth entry points (login, register, password-reset request) -- no
+// new vendor, reuses the DB we already have. One row per (bucket, window);
+// check-rate-limit.ts increments the current window atomically and sweeps
+// this bucket's older windows on each check, so the table stays at roughly
+// one row per currently-active bucket without a separate cron. `windowStart`
+// is always an explicit JS Date computed app-side (never defaultNow), so the
+// postgres.js timestamp-skew gotcha doesn't apply.
+export const rateLimitHits = pgTable(
+  "rateLimitHits",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    bucket: text("bucket").notNull(),
+    windowStart: timestamp("windowStart", { mode: "date" }).notNull(),
+    count: integer("count").notNull().default(1),
+  },
+  (t) => [uniqueIndex("rateLimitHits_bucket_window_uniq").on(t.bucket, t.windowStart)],
+);
+
 // Public Profile (022) -- a simple, asymmetric social relation, hard-
 // deleted on unfollow (research.md #4 -- the same "no trust/safety
 // history value" exception already applied to `SavedListing`/`Likes`/

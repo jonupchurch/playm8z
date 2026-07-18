@@ -7,6 +7,9 @@ import { users, verificationTokens } from "@/db/schema";
 import { registerSchema } from "@/lib/validations/auth";
 import { sendVerificationEmail } from "@/lib/email/send-verification-email";
 import { getSettings } from "@/lib/settings/get-settings";
+import { checkRateLimit } from "@/lib/rate-limit/check-rate-limit";
+import { clientIp } from "@/lib/rate-limit/client-ip";
+import { RATE_LIMITS } from "@/lib/rate-limit/limits";
 
 const VERIFICATION_TOKEN_TTL_MS = 1000 * 60 * 60 * 24; // 24h
 
@@ -19,6 +22,18 @@ export async function POST(request: NextRequest) {
       { error: issue?.message ?? "Invalid input.", field: issue?.path[0] },
       { status: 400 },
     );
+  }
+
+  // Rate-limit signups per client IP (ADR 0020) -- blunts mass account
+  // creation and the email-enumeration probing that #8 leaves as an accepted
+  // UX tradeoff (docs/future-work.md). Skipped when there's no real forwarded
+  // IP (local dev / e2e / CI).
+  const ip = clientIp(request.headers);
+  if (ip) {
+    const gate = await checkRateLimit(`register:${ip}`, RATE_LIMITS.register.limit, RATE_LIMITS.register.windowMs);
+    if (!gate.allowed) {
+      return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429 });
+    }
   }
 
   // Admin Settings (024)/FR-009: rejects a brand-new Credentials sign-up
@@ -45,6 +60,10 @@ export async function POST(request: NextRequest) {
     .where(or(eq(users.email, email), eq(users.handle, handle)));
 
   if (existing) {
+    // This deliberately reveals whether the EMAIL is already registered --
+    // an accepted enumeration tradeoff (standard signup UX; handles are
+    // public identity anyway, ADR 0006), documented in docs/future-work.md.
+    // The per-IP rate limit above blunts scripted mass enumeration.
     const field = existing.email === email ? "email" : "handle";
     return NextResponse.json(
       {
