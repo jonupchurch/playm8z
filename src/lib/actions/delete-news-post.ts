@@ -1,12 +1,13 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { likes, newsPosts } from "@/db/schema";
+import { newsPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { isCurrentUserOwner } from "@/lib/auth/require-owner";
 import { logAuditEntry } from "@/lib/admin/log-audit-entry";
+import { purgePolymorphicRefs } from "@/lib/db/purge-polymorphic-refs";
 import { permanentDeleteSchema } from "@/lib/validations/admin-news";
 
 export type DeleteNewsPostResult = { success: true } | { success: false; error: string };
@@ -42,11 +43,11 @@ export async function deleteNewsPostPermanently(input: { postId: string }): Prom
   }
 
   // Real row removal, atomically. `savedNewsPosts` has a real FK
-  // (onDelete: cascade) so it goes with the post; `likes` is polymorphic
-  // (targetType='newsPost', NO FK), so its rows must be purged explicitly or
-  // they'd orphan (FR-007).
+  // (onDelete: cascade) so it goes with the post; FK-less polymorphic refs
+  // (`likes`) must be purged by hand or they'd orphan (FR-007). The shared
+  // helper owns which polymorphic tables get purged vs. deliberately preserved.
   await db.transaction(async (tx) => {
-    await tx.delete(likes).where(and(eq(likes.targetType, "newsPost"), eq(likes.targetId, parsed.data.postId)));
+    await purgePolymorphicRefs(tx, "newsPost", parsed.data.postId);
     await tx.delete(newsPosts).where(eq(newsPosts.id, parsed.data.postId));
   });
 
