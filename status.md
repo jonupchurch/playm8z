@@ -43,7 +43,15 @@ ADR 0015) makes `userGames` the single source of truth — onboarding
 reconciles into it instead of the now-retired `users.gamesPlayed`, and
 a seed-empty-only backfill recovered pre-fix players — fixing the bug
 where onboarding game picks never reached the profile or matching.
-**Last updated**: 2026-07-17
+Feature 43 (userGames lockdown, ADR 0016) completes 42's two deferred
+follow-ups: a per-player unique index (on the normalized game name)
+makes duplicate games impossible at the data layer, `addUserGame` is
+now conflict-safe (a duplicate add is a benign "already in your list"),
+and the retired `users.gamesPlayed` column is dropped for good (its
+defunct backfill code retired with it). Also fixed a 042 regression on
+the way in: the signup-onboarding e2e still asserted the retired column
+and had reddened `main`.
+**Last updated**: 2026-07-18
 
 ## Where things stand
 

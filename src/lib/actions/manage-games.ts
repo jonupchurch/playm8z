@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { userGames } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
+import { normalizeGame } from "@/lib/games/normalize-game";
 import { userGameSchema } from "@/lib/validations/profile";
 
 export type ManageGamesResult = { success: true } | { success: false; error: string };
@@ -22,7 +23,19 @@ export async function addUserGame(input: {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
 
-  await db.insert(userGames).values({ userId: user.id, ...parsed.data });
+  // 043 (ADR 0016): userGames is unique per player on the normalized game name.
+  // Two layers keep that clean. App-side: if the player already has this
+  // (normalized) game, no-op with a benign success ("already in your list") so
+  // the common case never depends on catching a DB error. DB backstop:
+  // onConflictDoNothing swallows the unique-index violation from a concurrent
+  // double-submit, so the constraint never surfaces as a raw error.
+  const target = normalizeGame(parsed.data.game);
+  const existing = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, user.id));
+  if (existing.some((row) => normalizeGame(row.game) === target)) {
+    return { success: true };
+  }
+
+  await db.insert(userGames).values({ userId: user.id, ...parsed.data }).onConflictDoNothing();
 
   return { success: true };
 }

@@ -6,6 +6,14 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- **You can no longer end up with the same game listed twice on your profile**
+  (feature 043, [ADR 0016](docs/adr/0016-usergames-uniqueness-and-drop-gamesplayed.md)).
+  Adding a game you already have — even with different capitalization or spacing —
+  now simply keeps the one you've got instead of quietly creating a duplicate. This
+  finishes the games cleanup started in 042: a player's games live in exactly one
+  place, and now that place is guaranteed never to hold a duplicate. (Behind the
+  scenes, the long-retired `users.gamesPlayed` column was dropped for good, and the
+  guarantee is enforced by the database itself, not just app code.)
 - **The games you pick during signup now actually show on your profile — and
   drive matching** (feature 042, [ADR 0015](docs/adr/0015-usergames-single-source-of-truth.md)).
   Onboarding used to save your game picks to a place nothing else read, so a new

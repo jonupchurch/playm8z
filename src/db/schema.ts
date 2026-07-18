@@ -4,6 +4,7 @@ import {
   text,
   primaryKey,
   index,
+  uniqueIndex,
   integer,
   uuid,
   boolean,
@@ -66,13 +67,9 @@ export const users = pgTable("user", {
   ageGroup: text("ageGroup"),
   vibe: text("vibe"),
   playTimeSlots: text("playTimeSlots").array(),
-  // DEPRECATED / RETIRED (042, ADR 0015): was onboarding's flat game snapshot,
-  // but the profile/matching/public-profile all read `userGames`, which is now
-  // the single source of truth -- onboarding reconciles into it and a one-time
-  // backfill seeded it from here. NO product code reads or writes this column
-  // any more; kept in place (not dropped) so nothing is destroyed. Dropping it
-  // is a separate, later cleanup (docs/future-work.md).
-  gamesPlayed: text("gamesPlayed").array(),
+  // (043, ADR 0016) The retired onboarding-only `gamesPlayed` text[] was DROPPED
+  // here -- `userGames` is the single source of truth (042/ADR 0015) and a
+  // one-time backfill already moved its data there. Nothing reads or writes it.
   // Added by Profile + Account settings (007).
   bio: text("bio"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
@@ -341,20 +338,35 @@ export const savedListings = pgTable(
   (savedListing) => [primaryKey({ columns: [savedListing.userId, savedListing.postingId] })],
 );
 
-// Profile + Account settings (007) -- richer, user-editable version of
-// onboarding's flat gamesPlayed list (game + optional self-reported
-// rank/hours). No soft-delete concern (ADR 0005): removing a game a
-// user no longer plays is a real delete, same reasoning as SavedListing.
-export const userGames = pgTable("userGames", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  game: text("game").notNull(),
-  rank: text("rank"),
-  hoursPlayed: integer("hoursPlayed"),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-});
+// Profile + Account settings (007) -- the richer, user-editable store of a
+// player's games (game + optional self-reported rank/hours), and the single
+// source of truth for them (042/ADR 0015). No soft-delete concern (ADR 0005):
+// removing a game a user no longer plays is a real delete, same reasoning as
+// SavedListing.
+export const userGames = pgTable(
+  "userGames",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    game: text("game").notNull(),
+    rank: text("rank"),
+    hoursPlayed: integer("hoursPlayed"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [
+    // 043 (ADR 0016): one row per player per NORMALIZED game name --
+    // lower(btrim(game)) reproduces normalizeGame (trim + lowercase), so
+    // "Halo"/"halo"/" Halo " can't coexist for a player. Makes duplicates
+    // impossible at the data layer for every write path; app-side dedup
+    // (manage-games, sync-onboarding, steam-import) is kept as defense-in-depth.
+    // NOTE: drizzle-kit can't round-trip this expression index, so `drizzle-kit
+    // push` re-drops/creates it on every deploy (harmless churn -- all write
+    // paths dedup app-side, so the recreate can never hit a duplicate). See ADR 0016.
+    uniqueIndex("userGames_userId_normgame_uniq").on(table.userId, sql`lower(btrim(${table.game}))`),
+  ],
+);
 
 // Blocked Users (008) -- a block is "active" when unblockedAt IS NULL.
 // Not hard-deleted on unblock (ADR 0005 -- unlike SavedListing/

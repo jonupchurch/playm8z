@@ -45,7 +45,6 @@ describe("getPublicProfileByHandle (integration)", () => {
         region: "na-west",
         ageGroup: "18",
         platforms: ["pc"],
-        gamesPlayed: ["Stale Onboarding Game"],
       })
       .returning({ id: users.id });
     ownerId = owner.id;
@@ -135,9 +134,8 @@ describe("getPublicProfileByHandle (integration)", () => {
     expect(profile.showRegion).toBe(true);
     expect(profile.showAgeGroup).toBe(true);
 
-    // Reads from userGames, not the stale users.gamesPlayed onboarding snapshot.
+    // Games come from userGames, the single source of truth (ADR 0015).
     expect(profile.games).toEqual(["Real Current Game"]);
-    expect(profile.games).not.toContain("Stale Onboarding Game");
 
     expect(profile.openPostings.map((p) => p.id)).toEqual([openPostingId]);
     expect(profile.openPostings.some((p) => p.id === closedPostingId)).toBe(false);

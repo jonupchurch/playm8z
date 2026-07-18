@@ -358,13 +358,17 @@ seed-empty-only idempotent backfill (`scripts/backfill-user-games.ts`) recovered
 pre-fix players without touching curated lists. It turned out to be an active bug,
 not just tech debt — onboarding game picks never reached the profile or matching.
 
-Two follow-ups deliberately deferred from 042:
-- **Drop the `users.gamesPlayed` column.** It is retired (no readers/writers) but
-  kept in place; a destructive `DROP COLUMN` is a separate, later cleanup once the
-  backfill has run everywhere and stayed stable.
-- **A `userGames` uniqueness/normalized constraint.** Dedup is application-side
-  (`normalizeGame`), matching the Steam import. A DB constraint would need its own
-  de-dup migration of any pre-existing duplicate rows — its own decision.
+Two follow-ups deliberately deferred from 042 — **both RESOLVED 2026-07-18 by feature
+`043-usergames-lockdown` ([ADR 0016](adr/0016-usergames-uniqueness-and-drop-gamesplayed.md)):**
+- ~~**Drop the `users.gamesPlayed` column.**~~ **Done.** Dropped from the schema and
+  database (local + prod); its defunct one-time backfill code was retired with it.
+- ~~**A `userGames` uniqueness/normalized constraint.**~~ **Done.** Enforced by a Postgres
+  expression unique index on `(userId, lower(btrim(game)))` (matching `normalizeGame`),
+  after a one-time idempotent dedup collapsed any pre-existing duplicate rows. App-side
+  dedup is kept as defense-in-depth; `addUserGame` is now conflict-safe. Note recorded in
+  ADR 0016: drizzle-kit can't round-trip the expression index, so `drizzle-kit push`
+  re-drops/creates it on every deploy — harmless churn, since every write path dedups
+  app-side so the recreate can never hit a duplicate.
 
 Original note (kept for context):
 
