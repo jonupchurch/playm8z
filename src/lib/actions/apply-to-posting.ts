@@ -4,6 +4,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, postings } from "@/db/schema";
 import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
+import { refuseIfBlocked } from "@/lib/inbox/block-guard";
 import { applyMessageSchema } from "@/lib/validations/listing-detail";
 
 export type ApplyResult = { success: true } | { success: false; error: string };
@@ -43,6 +44,11 @@ export async function applyToPosting(
   if (posting.seatsOpen <= 0) {
     return { success: false, error: "This listing has no open spots." };
   }
+
+  // 045 (ADR 0017): a block in either direction between the applicant and host
+  // refuses the application (fail-closed, neutral message).
+  const refusal = await refuseIfBlocked(applicant.id, posting.hostId, "You can't apply to this listing.");
+  if (refusal) return refusal;
 
   const [existing] = await db
     .select({ id: applications.id })

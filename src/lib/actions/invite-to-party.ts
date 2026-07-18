@@ -4,6 +4,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, postings } from "@/db/schema";
 import { requireVerifiedEmail, UnverifiedEmailError } from "@/lib/auth/require-verified-email";
+import { refuseIfBlocked } from "@/lib/inbox/block-guard";
 import { inviteToPartySchema, type InviteToPartyInput } from "@/lib/validations/public-profile";
 
 export type InviteToPartyResult = { success: true } | { success: false; error: string };
@@ -51,6 +52,11 @@ export async function inviteToParty(input: InviteToPartyInput): Promise<InviteTo
   if (posting.status !== "open" || posting.seatsOpen <= 0) {
     return { success: false, error: "This party has no open spots right now." };
   }
+
+  // 045 (ADR 0017): a block in either direction between host and invited player
+  // refuses the invite (fail-closed, neutral message).
+  const refusal = await refuseIfBlocked(host.id, invitedUserId, "You can't invite this player.");
+  if (refusal) return refusal;
 
   const [existing] = await db
     .select({ id: applications.id })

@@ -427,3 +427,24 @@ Reviewed and **accepted as-is** — this is not debt to pay down:
 
 If a genuine role tier above `admin` is ever added, revisit these three
 lines then — but nothing today makes them wrong.
+
+## Block enforcement: follow / report / forum still unguarded (deferred from 045, 2026-07-18)
+
+Feature `045-enforce-blocks` ([ADR 0017](adr/0017-enforce-blocks-on-interaction-write-paths.md))
+added the bidirectional block guard to the four party/listing interaction write paths (apply,
+ask-question, invite, accept), joining DMs and notifications. Three surfaces were deliberately
+left out, each its own decision:
+
+- **Follow (public profile).** Should following someone you blocked (or who blocked you) be
+  refused? Probably yes for symmetry, but a follow is a lower-stakes, one-directional interest
+  signal, not contact — its own call. Not guarded yet.
+- **Report submission.** A report is a safety valve you may need *because* of a block — refusing
+  a blocked user from reporting the person they blocked would be actively wrong. So report should
+  likely stay unguarded, but that's a conscious policy to record, not an oversight.
+- **Forum write paths** (threads/replies) — a separate surface from the party/listing paths 045
+  scoped; whether/how a block suppresses forum interaction (a public square, not 1:1 contact) is
+  unresolved.
+
+Whoever picks this up should decide the block-vs-follow and block-vs-report policies explicitly
+and, if guarding more paths, reuse `refuseIfBlocked` / `hasActiveBlockBetween` (the invariant is
+now established — the next path should call it, per ADR 0017).

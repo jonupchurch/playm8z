@@ -6,6 +6,13 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- **Blocking someone now stops them everywhere you interact, not just in messages**
+  (feature 045, [ADR 0017](docs/adr/0017-enforce-blocks-on-interaction-write-paths.md)).
+  A block already prevented direct messages and hid people from your compose search; now
+  it also stops someone you've blocked — or who has blocked you — from applying to your
+  listing, asking a question on it, being invited to your party, or being accepted onto
+  your roster. The block works in both directions and never reveals to the other person
+  that it exists.
 - **You can no longer end up with the same game listed twice on your profile**
   (feature 043, [ADR 0016](docs/adr/0016-usergames-uniqueness-and-drop-gamesplayed.md)).
   Adding a game you already have — even with different capitalization or spacing —

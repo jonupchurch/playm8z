@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { applications, conversations, messages, postings, users } from "@/db/schema";
 import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
+import { hasActiveBlockBetween } from "@/lib/inbox/search-contacts";
 import { notifyRequestResolved } from "@/lib/notifications/notify-events";
 import { requestActionSchema } from "@/lib/validations/inbox";
 
@@ -67,6 +68,15 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
           ? application.applicantId === actingUser.id
           : posting?.hostId === actingUser.id;
       if (!posting || !authorized) {
+        throw new Error("You can't accept this request.");
+      }
+
+      // 045 (ADR 0017): refuse if a block exists in either direction between the host
+      // and applicant. Throwing here rolls the whole accept back (no seat decrement, no
+      // conversation), so the refusal is atomic; a lookup throw is likewise caught by the
+      // outer try/catch (fail-closed). `blocks` isn't mutated in this txn, so the pooled
+      // read via db is a correct, stable read.
+      if (await hasActiveBlockBetween(application.applicantId, posting.hostId)) {
         throw new Error("You can't accept this request.");
       }
 
