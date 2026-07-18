@@ -428,6 +428,14 @@ Reviewed and **accepted as-is** — this is not debt to pay down:
 If a genuine role tier above `admin` is ever added, revisit these three
 lines then — but nothing today makes them wrong.
 
+**Related (2026-07-18):** the role *vocabulary* is also defined in three places
+(`ROLE_RANK`, `assignableRoleSchema`, `ASSIGNABLE_ROLES`) — a tech-debt sweep flagged the
+drift risk. Closed by decision, not code: [ADR 0019](adr/0019-roles-closed-ranked-set-entitlements-are-markers.md)
+establishes that moderation roles are a **closed, ranked set** and that entitlements/markers
+(owner, a future Premium tier, …) are **orthogonal columns, never new role tiers** — so the set
+won't change and the triplication can't drift. The derive-from-one-source refactor is deferred to
+*if/when* a real moderation tier is ever added (YAGNI).
+
 ## Block enforcement: follow / report / forum still unguarded (deferred from 045, 2026-07-18)
 
 Feature `045-enforce-blocks` ([ADR 0017](adr/0017-enforce-blocks-on-interaction-write-paths.md))
