@@ -34,12 +34,25 @@ export async function createContentPage(): Promise<CreateContentPageResult> {
   await requireRole("moderator");
   const moderator = await requireAuth();
 
-  const slug = await generateUniqueSlug();
-
-  const [row] = await db
-    .insert(contentPages)
-    .values({ slug, title: "Untitled page", status: "draft", system: false })
-    .returning({ id: contentPages.id });
+  // generateUniqueSlug() is a best-effort check, not a guarantee: two concurrent
+  // "+ New page" clicks can both pick the same base slug and race the unique index.
+  // Insert with onConflictDoNothing and, on a lost race (empty returning), regenerate
+  // and retry -- the INSERT analog of save-content-page.ts's rename 23505 catch, so a
+  // concurrent create gets the next suffix instead of a 500.
+  let row: { id: string } | undefined;
+  let slug = "";
+  for (let attempt = 0; attempt < 5 && !row; attempt += 1) {
+    slug = await generateUniqueSlug();
+    const inserted = await db
+      .insert(contentPages)
+      .values({ slug, title: "Untitled page", status: "draft", system: false })
+      .onConflictDoNothing()
+      .returning({ id: contentPages.id });
+    if (inserted.length) row = inserted[0];
+  }
+  if (!row) {
+    return { success: false, error: "Couldn't create a new page. Please try again." };
+  }
 
   // 025's own gap fix (research.md #2) -- this feature never wired
   // logAuditEntry() despite 015's own spec anticipating it.

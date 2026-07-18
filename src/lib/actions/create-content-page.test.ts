@@ -87,4 +87,16 @@ describe("createContentPage", () => {
     expect(second.slug).not.toBe(first.slug);
     expect(new Set(createdSlugs).size).toBe(createdSlugs.length);
   });
+
+  // Tech-debt #4: two concurrent "+ New page" clicks race the unique slug index --
+  // both must succeed with distinct slugs (retry-on-conflict), not 500.
+  it("survives a concurrent create with distinct slugs and no error", async () => {
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const [a, b] = await Promise.all([createContentPage(), createContentPage()]);
+    expect(a.success && b.success).toBe(true);
+    if (a.success) createdSlugs.push(a.slug);
+    if (b.success) createdSlugs.push(b.slug);
+    if (a.success && b.success) expect(a.slug).not.toBe(b.slug);
+  });
 });
