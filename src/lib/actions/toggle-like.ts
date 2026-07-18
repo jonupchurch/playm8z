@@ -66,8 +66,17 @@ export async function toggleLike(input: ToggleLikeInput): Promise<ToggleLikeResu
     .where(and(eq(likes.userId, user.id), eq(likes.targetType, targetType), eq(likes.targetId, targetId)));
 
   if (existing) {
-    await db.delete(likes).where(eq(likes.id, existing.id));
-    await adjustDenormalizedCount(targetType, targetId, -1);
+    // Only decrement if this call actually removed the row. Two concurrent
+    // unlikes both pass the `existing` SELECT above; the second DELETE is a
+    // no-op (row already gone), so decrementing unconditionally would drop
+    // the denormalized count twice for one real removal -- a permanent
+    // drift that can even go negative. `.returning()` tells us who really
+    // deleted. (The insert branch below is already race-safe via the unique
+    // constraint; this makes the delete branch symmetric.)
+    const deleted = await db.delete(likes).where(eq(likes.id, existing.id)).returning({ id: likes.id });
+    if (deleted.length > 0) {
+      await adjustDenormalizedCount(targetType, targetId, -1);
+    }
     return { success: true, liked: false };
   }
 

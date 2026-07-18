@@ -101,4 +101,34 @@ describe("toggleLike", () => {
     const result = await toggleLike({ targetType: "thread", targetId: threadId });
     expect(result.success).toBe(false);
   });
+
+  it("keeps the denormalized count consistent with the like rows under a raced double-unlike", async () => {
+    // Clean, liked baseline: count 1, one like row.
+    await db.delete(likes).where(and(eq(likes.userId, userId), eq(likes.targetId, threadId)));
+    await db.update(forumThreads).set({ likes: 0 }).where(eq(forumThreads.id, threadId));
+
+    mockedAuth.mockResolvedValue(fakeSession(verifiedEmail));
+    await toggleLike({ targetType: "thread", targetId: threadId });
+
+    // Two concurrent unlikes: the losing DELETE removes no row, so the
+    // count must not be decremented twice. Pre-fix this drove likes to -1.
+    await Promise.all([
+      toggleLike({ targetType: "thread", targetId: threadId }),
+      toggleLike({ targetType: "thread", targetId: threadId }),
+    ]);
+    mockedAuth.mockReset();
+
+    const [thread] = await db.select().from(forumThreads).where(eq(forumThreads.id, threadId));
+    const rows = await db
+      .select()
+      .from(likes)
+      .where(and(eq(likes.userId, userId), eq(likes.targetId, threadId)));
+    // The invariant the bug violated: the denormalized count equals the
+    // real number of like rows and never goes negative, in every interleaving.
+    expect(thread.likes).toBeGreaterThanOrEqual(0);
+    expect(thread.likes).toBe(rows.length);
+
+    await db.delete(likes).where(and(eq(likes.userId, userId), eq(likes.targetId, threadId)));
+    await db.update(forumThreads).set({ likes: 0 }).where(eq(forumThreads.id, threadId));
+  });
 });

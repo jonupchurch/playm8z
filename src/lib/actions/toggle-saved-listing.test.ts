@@ -91,4 +91,37 @@ describe("toggleSavedListing", () => {
     const result = await toggleSavedListing(postingId);
     expect(result.success).toBe(false);
   });
+
+  it("a raced double-save degrades to an idempotent success instead of throwing", async () => {
+    // Start from not-saved so the concurrent calls race the INSERT path.
+    await db
+      .delete(savedListings)
+      .where(and(eq(savedListings.userId, userId), eq(savedListings.postingId, postingId)));
+
+    mockedAuth.mockResolvedValue(fakeSession(verifiedEmail));
+    // Pre-fix, whichever call lost the INSERT race threw an uncaught
+    // DrizzleQueryError, rejecting the whole Promise.all. Post-fix the
+    // composite-PK violation is caught and every call returns a success.
+    const results = await Promise.all([
+      toggleSavedListing(postingId),
+      toggleSavedListing(postingId),
+      toggleSavedListing(postingId),
+    ]);
+    mockedAuth.mockReset();
+
+    for (const r of results) {
+      expect(r.success).toBe(true);
+    }
+
+    // The composite PK held: never more than one row for the pair.
+    const rows = await db
+      .select()
+      .from(savedListings)
+      .where(and(eq(savedListings.userId, userId), eq(savedListings.postingId, postingId)));
+    expect(rows.length).toBeLessThanOrEqual(1);
+
+    await db
+      .delete(savedListings)
+      .where(and(eq(savedListings.userId, userId), eq(savedListings.postingId, postingId)));
+  });
 });

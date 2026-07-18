@@ -9,7 +9,7 @@ export type AdminUserStatusFilter = z.infer<typeof adminUserStatusFilterSchema>;
 // A visitor-controlled URL query string feeds this into search-admin-
 // users.ts's query (Principle II), same pattern as browse-filters.ts.
 export const searchAdminUsersSchema = z.object({
-  q: z.string().max(200).optional().default(""),
+  q: z.string().max(200).optional().default("").catch(""),
   status: adminUserStatusFilterSchema.catch("all"),
 });
 export type AdminUsersFilters = z.infer<typeof searchAdminUsersSchema>;

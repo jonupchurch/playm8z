@@ -7,6 +7,16 @@ import { requireVerifiedEmail } from "@/lib/auth/require-verified-email";
 
 export type ToggleSavedResult = { success: true; saved: boolean } | { success: false; error: string };
 
+const UNIQUE_VIOLATION = "23505";
+
+// Drizzle wraps the raw postgres.js error in a `DrizzleQueryError`, whose
+// own `code` is undefined -- the real code lives at `err.cause.code`.
+function isUniqueViolation(err: unknown): boolean {
+  if (typeof err !== "object" || err === null) return false;
+  const code = (err as { code?: unknown }).code ?? (err as { cause?: { code?: unknown } }).cause?.code;
+  return code === UNIQUE_VIOLATION;
+}
+
 // FR-014/FR-018: gated the same as applying or asking. Unsaving is a
 // real delete, not a status flag -- a bookmark carries no
 // moderation/audit history worth preserving under ADR 0005's spirit
@@ -32,6 +42,18 @@ export async function toggleSavedListing(postingId: string): Promise<ToggleSaved
     return { success: true, saved: false };
   }
 
-  await db.insert(savedListings).values({ userId: user.id, postingId });
+  // The composite PK on (userId, postingId) is the real duplicate guard:
+  // a raced double-tap "Save" that both miss the SELECT above degrades to
+  // an idempotent success instead of an uncaught DrizzleQueryError, the
+  // same pattern every other toggle action (follow/like/subscription)
+  // already uses.
+  try {
+    await db.insert(savedListings).values({ userId: user.id, postingId });
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      return { success: true, saved: true };
+    }
+    throw err;
+  }
   return { success: true, saved: true };
 }

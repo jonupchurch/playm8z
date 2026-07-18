@@ -71,4 +71,10 @@ describe("browseFiltersSchema", () => {
   it("accepts a valid sort value", () => {
     expect(browseFiltersSchema.parse({ sort: "soon" }).sort).toBe("soon");
   });
+
+  it("falls back to an empty q for an over-long search value rather than throwing", () => {
+    // An oversized ?q= must degrade like every other facet here -- the
+    // page uses .parse(), so a throw would crash the whole Browse render.
+    expect(browseFiltersSchema.parse({ q: "x".repeat(201) }).q).toBe("");
+  });
 });

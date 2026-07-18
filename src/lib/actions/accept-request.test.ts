@@ -185,6 +185,65 @@ describe("acceptRequest (integration)", () => {
     expect(posting.seatsOpen).toBe(0);
   });
 
+  // Regression guard for the FOR UPDATE lock on the posting row: two
+  // DIFFERENT pending applications accepted concurrently must each
+  // decrement seatsOpen exactly once. The pre-fix read-modify-write left
+  // it decremented only once (a lost update) -- the party looked like it
+  // had an extra open seat, so it could be overbooked.
+  it("under concurrent accepts of two different applications, seatsOpen decrements exactly once per accept", async () => {
+    const [posting] = await db
+      .insert(postings)
+      .values({
+        hostId,
+        game: `Game ${runId}`,
+        title: `Posting seat-race ${runId}`,
+        blurb: "blurb",
+        vibe: "casual",
+        region: "na-east",
+        seatsTotal: 4,
+        seatsOpen: 3,
+        ageGroup: "18",
+        timeSlots: ["evening"],
+        platform: "pc",
+      })
+      .returning({ id: postings.id });
+
+    // Feature 046's partial unique index forbids two active applications
+    // from the SAME applicant on one posting, so the race needs two people.
+    const [applicant2] = await db
+      .insert(users)
+      .values({ email: `accept-applicant2-${runId}@example.com`, handle: `acceptapplicant2${runId}`, emailVerified: new Date() })
+      .returning({ id: users.id });
+
+    const [app1] = await db
+      .insert(applications)
+      .values({ postingId: posting.id, applicantId, message: "me", status: "pending" })
+      .returning({ id: applications.id });
+    const [app2] = await db
+      .insert(applications)
+      .values({ postingId: posting.id, applicantId: applicant2.id, message: "me too", status: "pending" })
+      .returning({ id: applications.id });
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+
+    const [r1, r2] = await Promise.all([
+      acceptRequest({ applicationId: app1.id }),
+      acceptRequest({ applicationId: app2.id }),
+    ]);
+    expect(r1.success).toBe(true);
+    expect(r2.success).toBe(true);
+    if (r1.success) createdConversationIds.push(r1.conversationId);
+    if (r2.success) createdConversationIds.push(r2.conversationId);
+
+    // Both accepts committed, so both decrements must land: 3 -> 1.
+    const [updated] = await db.select().from(postings).where(eq(postings.id, posting.id));
+    expect(updated.seatsOpen).toBe(1);
+
+    await db.delete(applications).where(eq(applications.applicantId, applicant2.id));
+    await db.delete(users).where(eq(users.id, applicant2.id));
+  });
+
   // Public Profile (022): a host-initiated invite reverses who's
   // authorized -- the INVITED applicant, not the inviting host.
   it("for a host-initiated invite, the invited applicant (not the host) may accept", async () => {

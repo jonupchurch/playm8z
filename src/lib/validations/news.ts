@@ -25,7 +25,7 @@ export function newsCategoryColor(category: string): string {
 // whole page.
 export const newsFiltersSchema = z.object({
   category: z.enum(["all", ...NEWS_CATEGORIES]).catch("all"),
-  q: z.string().max(200).optional().default(""),
+  q: z.string().max(200).optional().default("").catch(""),
   page: z.coerce.number().int().min(1).catch(1),
 });
 export type NewsFilters = z.infer<typeof newsFiltersSchema>;
