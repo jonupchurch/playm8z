@@ -85,11 +85,25 @@ export function SteamImportDialog({ onDone }: { onDone?: () => void }) {
   }
 
   const items = state.items;
+  const selectableIdx = items.map((item, i) => (item.alreadyOnProfile ? -1 : i)).filter((i) => i >= 0);
+  const allSelected = selectableIdx.length > 0 && selectableIdx.every((i) => selected.has(i));
+
+  function toggleAll() {
+    setSelected(allSelected ? new Set() : new Set(selectableIdx));
+  }
+
   return (
     <div className="mt-3 flex flex-col gap-3">
-      <p className="text-[13px] text-text-dim">
-        Recently-played games are pre-selected. Choose which to add — your existing games are left as they are.
-      </p>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-[13px] text-text-dim">
+          Recently-played games are pre-selected. Choose which to add — your existing games are left as they are.
+        </p>
+        {selectableIdx.length > 0 && (
+          <button type="button" onClick={toggleAll} className="shrink-0 font-mono text-xs font-bold text-accent-2">
+            {allSelected ? "Clear all" : "Select all"}
+          </button>
+        )}
+      </div>
       <ul className="flex max-h-96 flex-col gap-1.5 overflow-y-auto rounded-xl border border-border bg-surface p-2">
         {items.map((item, i) => (
           <li key={`${item.name}-${i}`}>

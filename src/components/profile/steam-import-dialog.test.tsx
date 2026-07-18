@@ -34,6 +34,29 @@ describe("SteamImportDialog", () => {
     expect(await screen.findByText(/Added 1 game/)).toBeInTheDocument();
   });
 
+  it("Select all toggles every selectable game and flips to Clear all", async () => {
+    mockRead.mockResolvedValueOnce({
+      kind: "list",
+      items: [
+        { name: "Bravo", hoursPlayed: 100, recentlyPlayed: true, alreadyOnProfile: false },
+        { name: "Charlie", hoursPlayed: 5, recentlyPlayed: false, alreadyOnProfile: false },
+        { name: "Alpha", hoursPlayed: 2, recentlyPlayed: false, alreadyOnProfile: true },
+      ],
+    });
+    render(<SteamImportDialog />);
+    await screen.findByRole("checkbox", { name: /Bravo/ });
+    expect(screen.getByRole("checkbox", { name: /Charlie/ })).not.toBeChecked();
+
+    fireEvent.click(screen.getByRole("button", { name: "Select all" }));
+    expect(screen.getByRole("checkbox", { name: /Bravo/ })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /Charlie/ })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /Alpha/ })).toBeDisabled(); // already-added, untouched
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear all" }));
+    expect(screen.getByRole("checkbox", { name: /Bravo/ })).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /Charlie/ })).not.toBeChecked();
+  });
+
   it("shows the private-library message, not an error", async () => {
     mockRead.mockResolvedValueOnce({ kind: "private" });
     render(<SteamImportDialog />);
