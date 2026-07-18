@@ -17,11 +17,11 @@ backfill's safety guarantees are all covered.
 
 ## Phase 1: Foundational
 
-- [ ] T001 Create `src/lib/games/sync-onboarding-games.ts` —
+- [x] T001 Create `src/lib/games/sync-onboarding-games.ts` —
   `syncOnboardingGames(userId, names)`: dedup `names` by `normalizeGame`, load the
   user's `userGames`, insert missing (rank/hours null), delete de-selected rows
   (by id, scoped to `userId`), never write `users.gamesPlayed`.
-- [ ] T002 `src/lib/games/sync-onboarding-games.test.ts` (real DB): inserts new,
+- [x] T002 `src/lib/games/sync-onboarding-games.test.ts` (real DB): inserts new,
   removes deselected, dedups normalized-equal names, is idempotent on the same set,
   and only touches the target user's rows.
 
@@ -35,14 +35,14 @@ count in matching.
 **Independent Test**: finish onboarding with 2 games → both appear on `/profile`
 and in "in common"; deselect one → absent; duplicates collapse to one.
 
-- [ ] T003 [US1] Edit `src/app/api/onboarding/route.ts`: when the validated patch
+- [x] T003 [US1] Edit `src/app/api/onboarding/route.ts`: when the validated patch
   has `gamesPlayed`, `await syncOnboardingGames(userId, patch.gamesPlayed)` and
   `delete patch.gamesPlayed` (so `users` update never writes the column and an
   empty patch skips the update). Return `gamesPlayed` derived from the user's
   current `userGames` names.
-- [ ] T004 [US1] Edit `src/app/(auth)/onboarding/page.tsx`: prefill the wizard's
+- [x] T004 [US1] Edit `src/app/(auth)/onboarding/page.tsx`: prefill the wizard's
   games from the user's `userGames` names, not `users.gamesPlayed`.
-- [ ] T005 [US1] Test the onboarding route (mock `@/auth`, seed a user): a games
+- [x] T005 [US1] Test the onboarding route (mock `@/auth`, seed a user): a games
   PATCH creates the expected `userGames` rows, writes NOTHING to
   `users.gamesPlayed`, dedups, and removes a game on a follow-up PATCH without it.
 
@@ -57,14 +57,14 @@ and in "in common"; deselect one → absent; duplicates collapse to one.
 **Independent Test**: empty-`userGames` player with `gamesPlayed` → seeded; curated
 player → untouched; re-run → no change.
 
-- [ ] T006 [US2] Create `scripts/backfill-user-games.ts` (idempotent): for each
+- [x] T006 [US2] Create `scripts/backfill-user-games.ts` (idempotent): for each
   user, skip if they have ≥1 `userGames` row; else if `gamesPlayed` non-empty,
   insert deduped (`normalizeGame`) names (rank/hours null). Report seeded /
   skipped-curated / empty. Reads `DATABASE_URL` (loadEnvFile `.env.local` fallback).
-- [ ] T007 [US2] `scripts` logic test (or a colocated helper test): seed-empty-only,
+- [x] T007 [US2] `scripts` logic test (or a colocated helper test): seed-empty-only,
   curated-untouched, idempotent on re-run, dedup. (Extract the per-user decision
   into a testable helper if cleaner than testing the script end-to-end.)
-- [ ] T008 [US2] Run the backfill against LOCAL; verify seeded/curated/idempotent by
+- [x] T008 [US2] Run the backfill against LOCAL; verify seeded/curated/idempotent by
   query.
 
 **Checkpoint**: existing players recovered; nobody's curated list disturbed.
@@ -73,7 +73,7 @@ player → untouched; re-run → no change.
 
 ## Phase 4: User Story 3 — retire `users.gamesPlayed` (P3)
 
-- [ ] T009 [US3] Update the `users.gamesPlayed` schema comment to "deprecated /
+- [x] T009 [US3] Update the `users.gamesPlayed` schema comment to "deprecated /
   retired (042)"; grep the product and confirm no remaining read/write of
   `users.gamesPlayed` beyond the field definition and `gamesPlayedSchema` input
   shape. Fix any stragglers (e.g. the onboarding route's `profileColumns` select).
@@ -82,14 +82,14 @@ player → untouched; re-run → no change.
 
 ## Phase 5: Prod, docs, patch note
 
-- [ ] T010 [P] Update `CHANGELOG.md` (player-facing bug fix), `status.md`, and
+- [x] T010 [P] Update `CHANGELOG.md` (player-facing bug fix), `status.md`, and
   `docs/future-work.md` (mark the two-stores entry resolved by 042; log the
   deferred column DROP + the possible `userGames` unique constraint).
-- [ ] T011 Run the backfill against PROD (prod `DATABASE_URL` pulled to a temp path
+- [x] T011 Run the backfill against PROD (prod `DATABASE_URL` pulled to a temp path
   outside the repo, used, deleted); verify the report.
-- [ ] T012 Run `npm run typecheck`, `npm run lint`, `npm test` green; walk
+- [x] T012 Run `npm run typecheck`, `npm run lint`, `npm test` green; walk
   `quickstart.md` US1 + US2 locally.
-- [ ] T013 [P] Publish a **Patch Notes** post to prod for the fix (player-facing:
+- [x] T013 [P] Publish a **Patch Notes** post to prod for the fix (player-facing:
   "the games you pick at signup now show on your profile and drive matching"),
   dry-run local first, per the patch-notes workflow.
 

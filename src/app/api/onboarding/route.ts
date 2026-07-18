@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { userGames, users } from "@/db/schema";
+import { syncOnboardingGames } from "@/lib/games/sync-onboarding-games";
 import { onboardingPatchSchema } from "@/lib/validations/onboarding";
 
 // Never include passwordHash -- this response is echoed straight to the
@@ -17,7 +18,8 @@ const profileColumns = {
   ageGroup: users.ageGroup,
   vibe: users.vibe,
   playTimeSlots: users.playTimeSlots,
-  gamesPlayed: users.gamesPlayed,
+  // 042: games are NOT read from the deprecated users.gamesPlayed column any
+  // more -- the response's `gamesPlayed` is derived from userGames below.
   email: users.email,
   emailVerified: users.emailVerified,
   image: users.image,
@@ -67,6 +69,21 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // 042 (ADR 0015): games go to userGames (the single source of truth), never the
+  // deprecated users.gamesPlayed column. Pull the games out of the patch and
+  // reconcile them separately so the players's profile + matching actually
+  // reflect their onboarding picks.
+  const gamesInput = patch.gamesPlayed;
+  delete patch.gamesPlayed;
+
+  const [me] = await db.select({ id: users.id }).from(users).where(eq(users.email, userEmail));
+  if (!me) {
+    return NextResponse.json({ error: "Account not found." }, { status: 404 });
+  }
+  if (gamesInput !== undefined) {
+    await syncOnboardingGames(me.id, gamesInput);
+  }
+
   const updated =
     Object.keys(patch).length > 0
       ? (
@@ -78,5 +95,9 @@ export async function POST(request: NextRequest) {
         )[0]
       : (await db.select(profileColumns).from(users).where(eq(users.email, userEmail)))[0];
 
-  return NextResponse.json(updated);
+  // The completion summary is client-state-driven, but keep the response truthful:
+  // report games from userGames, not the retired column.
+  const games = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, me.id));
+
+  return NextResponse.json({ ...updated, gamesPlayed: games.map((row) => row.game) });
 }

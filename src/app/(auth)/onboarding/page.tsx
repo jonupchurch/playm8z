@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { userGames, users } from "@/db/schema";
 import { getSettings } from "@/lib/settings/get-settings";
 import { OnboardingWizard } from "@/components/auth/onboarding-wizard";
 
@@ -17,10 +17,10 @@ export default async function OnboardingPage() {
 
   const [user] = await db
     .select({
+      id: users.id,
       handle: users.handle,
       name: users.name,
       avatarColor: users.avatarColor,
-      gamesPlayed: users.gamesPlayed,
       region: users.region,
       platforms: users.platforms,
       ageGroup: users.ageGroup,
@@ -32,6 +32,10 @@ export default async function OnboardingPage() {
 
   if (!user) redirect("/login");
 
+  // 042 (ADR 0015): prefill games from userGames (the single source of truth),
+  // not the deprecated users.gamesPlayed column.
+  const games = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, user.id));
+
   return (
     <OnboardingWizard
       needsHandle={!user.handle}
@@ -39,7 +43,7 @@ export default async function OnboardingPage() {
       initialProfile={{
         name: user.name ?? "",
         avatarColor: user.avatarColor ?? "amber-orange",
-        gamesPlayed: user.gamesPlayed ?? [],
+        gamesPlayed: games.map((row) => row.game),
         region: user.region ?? "",
         platforms: user.platforms ?? [],
         ageGroup: user.ageGroup ?? "",

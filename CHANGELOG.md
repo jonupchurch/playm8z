@@ -5,6 +5,17 @@ follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- **The games you pick during signup now actually show on your profile — and
+  drive matching** (feature 042, [ADR 0015](docs/adr/0015-usergames-single-source-of-truth.md)).
+  Onboarding used to save your game picks to a place nothing else read, so a new
+  player's games silently never appeared on their profile or in "games in common"
+  matching, despite onboarding promising to "surface matching parties first." Now
+  a player's games live in one place (`userGames`): onboarding writes into it, and
+  a one-time backfill recovered existing players who were affected — while leaving
+  anyone who'd already curated their profile games completely untouched (that list
+  always wins). The old `users.gamesPlayed` column is retired (kept, not dropped).
+
 ### Changed
 - **The news editor's "Delete" button is now labeled "Unpublish"** (feature 041,
   [ADR 0014](docs/adr/0014-owner-marker-and-scoped-hard-delete.md)). It always

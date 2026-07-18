@@ -349,7 +349,24 @@ feature's scope rather than also building a net-new "edit a flagged
 reply before republishing" surface as a side effect. Revisit if Admin
 Forum ever grows a real admin-authored-text surface.
 
-## A player's games are stored in two different places (future state)
+## A player's games are stored in two different places — RESOLVED 2026-07-17 (feature 042)
+
+**Resolved** by feature `042-unify-player-games` ([ADR 0015](adr/0015-usergames-single-source-of-truth.md)):
+`userGames` is now the single source of truth. Onboarding reconciles into it
+(set-sync, dedup by `normalizeGame`) instead of writing `users.gamesPlayed`; a
+seed-empty-only idempotent backfill (`scripts/backfill-user-games.ts`) recovered
+pre-fix players without touching curated lists. It turned out to be an active bug,
+not just tech debt — onboarding game picks never reached the profile or matching.
+
+Two follow-ups deliberately deferred from 042:
+- **Drop the `users.gamesPlayed` column.** It is retired (no readers/writers) but
+  kept in place; a destructive `DROP COLUMN` is a separate, later cleanup once the
+  backfill has run everywhere and stayed stable.
+- **A `userGames` uniqueness/normalized constraint.** Dedup is application-side
+  (`normalizeGame`), matching the Steam import. A DB constraint would need its own
+  de-dup migration of any pre-existing duplicate rows — its own decision.
+
+Original note (kept for context):
 
 Surfaced while building Admin-editable Suggested Games (031, 2026-07-16)
 and deliberately **not** fixed there.
