@@ -13,11 +13,15 @@ const hostEmail = `invite-host-${runId}@example.com`;
 const unverifiedEmail = `invite-unverified-${runId}@example.com`;
 const otherHostEmail = `invite-otherhost-${runId}@example.com`;
 const blockedInviteeEmail = `invite-blocked-${runId}@example.com`;
+const raceInviteeEmail = `invite-race-${runId}@example.com`;
+const crossEmail = `invite-cross-${runId}@example.com`;
 
 let hostId: string;
 let otherHostId: string;
 let invitedUserId: string;
 let blockedInviteeId: string;
+let raceInviteeId: string;
+let crossId: string;
 let openPostingId: string;
 let fullPostingId: string;
 let otherHostPostingId: string;
@@ -52,6 +56,18 @@ beforeAll(async () => {
     .values({ email: blockedInviteeEmail, handle: `inviteblocked${runId}` })
     .returning({ id: users.id });
   blockedInviteeId = blockedInvitee.id;
+
+  const [raceInvitee] = await db
+    .insert(users)
+    .values({ email: raceInviteeEmail, handle: `inviterace${runId}` })
+    .returning({ id: users.id });
+  raceInviteeId = raceInvitee.id;
+
+  const [cross] = await db
+    .insert(users)
+    .values({ email: crossEmail, handle: `invitecross${runId}` })
+    .returning({ id: users.id });
+  crossId = cross.id;
 
   const postingDefaults = {
     game: "Valorant",
@@ -95,6 +111,8 @@ afterAll(async () => {
   await db.delete(users).where(eq(users.email, unverifiedEmail));
   await db.delete(users).where(eq(users.id, invitedUserId));
   await db.delete(users).where(eq(users.id, blockedInviteeId));
+  await db.delete(users).where(eq(users.id, raceInviteeId));
+  await db.delete(users).where(eq(users.id, crossId));
 });
 
 async function invitesForBlocked() {
@@ -183,5 +201,35 @@ describe("inviteToParty", () => {
     expect(result).toEqual({ success: true });
     expect(await invitesForBlocked()).toHaveLength(1);
     await db.delete(blocks).where(eq(blocks.id, block.id));
+  });
+
+  // 046 (ADR 0018): active-uniqueness race + cross-path.
+  it("under a concurrent double-invite, exactly one active application exists and neither errors", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    const [a, b] = await Promise.all([
+      inviteToParty({ postingId: openPostingId, invitedUserId: raceInviteeId }),
+      inviteToParty({ postingId: openPostingId, invitedUserId: raceInviteeId }),
+    ]);
+    expect([a, b].filter((r) => r.success)).toHaveLength(1);
+    expect([a, b].filter((r) => !r.success)).toHaveLength(1);
+    const rows = await db
+      .select()
+      .from(applications)
+      .where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, raceInviteeId)));
+    expect(rows).toHaveLength(1);
+  });
+
+  it("refuses an invite when the player already has an active application (cross-path)", async () => {
+    await db.insert(applications).values({ postingId: openPostingId, applicantId: crossId, status: "pending" });
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    const result = await inviteToParty({ postingId: openPostingId, invitedUserId: crossId });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.error).toMatch(/already has an active application/i);
+    const rows = await db
+      .select()
+      .from(applications)
+      .where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, crossId)));
+    expect(rows).toHaveLength(1);
   });
 });

@@ -448,3 +448,16 @@ left out, each its own decision:
 Whoever picks this up should decide the block-vs-follow and block-vs-report policies explicitly
 and, if guarding more paths, reuse `refuseIfBlocked` / `hasActiveBlockBetween` (the invariant is
 now established — the next path should call it, per ADR 0017).
+
+## Seat reconciliation for a duplicate-accepted application (deferred from 046, 2026-07-18)
+
+Feature `046-applications-unique-active` ([ADR 0018](adr/0018-applications-active-uniqueness-index.md))
+added a partial unique index preventing duplicate ACTIVE applications, preceded by a one-time dedup.
+The dedup removes the extra application row but does NOT re-derive a party's `seatsOpen`. If the
+apply/invite race had ever produced two *accepted* applications for one pair before the fix (each
+having decremented a seat on accept), the dedup would delete one row but leave `seatsOpen`
+under-counted by one — a party showing fewer open seats than it really has. This is vanishingly
+unlikely (the race window is tiny, the user base small, and the prod dedup found zero), so no
+automatic seat-recompute was built. If it ever surfaces, reconcile that party's `seatsOpen` by hand
+(or add a one-off recompute) — the audit trail and remaining accepted rows make the correct count
+recoverable.

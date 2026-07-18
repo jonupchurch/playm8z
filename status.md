@@ -59,8 +59,15 @@ it — preventive, no live orphan today. Feature 45 (enforce blocks, ADR
 check now guards the four party/listing interaction write paths (apply,
 ask-question, invite, accept), fail-closed with neutral messages — a
 block finally stops interaction everywhere, not just DMs/notifications.
-Also enabled Vercel Web Analytics + Speed Insights (operator-facing
-observability, no patch note).
+Feature 46 (applications active-uniqueness, ADR 0018, tech-debt #2) adds a
+partial unique index on (postingId, applicantId) WHERE status IN
+(pending,accepted), closing the apply/invite TOCTOU race that could create
+duplicate active applications and corrupt seat/roster counts; both writers
+are conflict-safe, re-application after decline/withdraw still works, and a
+one-time dedup (accepted>pending>oldest) precedes the index. Notably the
+partial index round-trips cleanly through drizzle-kit push (no deploy churn,
+unlike 043's expression index). Also enabled Vercel Web Analytics + Speed
+Insights (operator-facing observability, no patch note).
 **Last updated**: 2026-07-18
 
 ## Where things stand

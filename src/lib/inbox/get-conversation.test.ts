@@ -143,17 +143,40 @@ describe("getConversationOrRequest (integration)", () => {
   // inviting host.
   describe("host-initiated invites (022)", () => {
     let inviteId: string;
+    let invitePostingId: string;
 
     beforeAll(async () => {
+      // A SEPARATE posting (still hosted by userA) -- userB already has a pending
+      // application on `postingId`, and two active rows for one (posting, applicant)
+      // now violate applications_active_uniq (046). userB stays the invited applicant.
+      const [invitePosting] = await db
+        .insert(postings)
+        .values({
+          hostId: userAId,
+          game: `Invite Game ${runId}`,
+          title: `Invite posting ${runId}`,
+          blurb: "blurb",
+          vibe: "casual",
+          region: "na-east",
+          seatsTotal: 4,
+          seatsOpen: 2,
+          ageGroup: "18",
+          timeSlots: ["evening"],
+          platform: "pc",
+        })
+        .returning({ id: postings.id });
+      invitePostingId = invitePosting.id;
+
       const [invite] = await db
         .insert(applications)
-        .values({ postingId, applicantId: userBId, status: "pending", initiatedBy: "host" })
+        .values({ postingId: invitePostingId, applicantId: userBId, status: "pending", initiatedBy: "host" })
         .returning({ id: applications.id });
       inviteId = invite.id;
     });
 
     afterAll(async () => {
       await db.delete(applications).where(eq(applications.id, inviteId));
+      await db.delete(postings).where(eq(postings.id, invitePostingId));
     });
 
     it("returns a request view for the invited applicant, naming the host", async () => {
