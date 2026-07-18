@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
@@ -70,7 +71,7 @@ export async function SiteHeader() {
     .slice(0, 4)
     .map((item) => ({
       id: item.id,
-      actorLabel: `@${item.actorHandle ?? "player"}`,
+      actorLabel: `@${item.actorHandle ?? FALLBACK_HANDLE}`,
       text: item.kind === "request" ? "wants to join your party" : item.text,
       targetRef: item.targetRef,
       type: item.kind === "request" ? "join" : item.type,
@@ -91,7 +92,7 @@ export async function SiteHeader() {
         <MessagesLink unreadCount={unreadMessages} />
         <NotificationBell unreadCount={unreadCount} preview={preview} />
         <ProfileMenu
-          handle={user.handle ?? "player"}
+          handle={user.handle ?? FALLBACK_HANDLE}
           avatarColor={user.avatarColor}
           avatarImage={user.avatarImage}
           image={user.image}

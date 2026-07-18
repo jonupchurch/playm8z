@@ -1,5 +1,6 @@
 "use client";
 
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -82,7 +83,7 @@ export function MessageThread({
               <div className="max-w-[72%]">
                 {showSender && (
                   <div className="mb-0.5 ml-1 font-mono text-[10px] text-accent">
-                    @{message.senderHandle ?? "player"}
+                    @{message.senderHandle ?? FALLBACK_HANDLE}
                   </div>
                 )}
                 <div

@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { eq, ne, and } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, notifications, postings, users } from "@/db/schema";
@@ -69,7 +70,7 @@ export async function getNotifications(userId: string): Promise<NotificationItem
 
   const requestItems: RequestNotificationItem[] = requestRows.map((row) => {
     const status = row.status as "pending" | "accepted" | "declined";
-    const actorHandle = row.applicantHandle ?? "player";
+    const actorHandle = row.applicantHandle ?? FALLBACK_HANDLE;
     return {
       kind: "request",
       id: row.applicationId,

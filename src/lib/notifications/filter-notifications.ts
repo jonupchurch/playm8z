@@ -1,3 +1,4 @@
+import { startOfToday } from "@/lib/dates";
 import type { NotificationType } from "./create-notification";
 
 // Split out of get-notifications.ts (which also holds the DB-touching
@@ -73,8 +74,7 @@ export function filterAndGroupNotifications(
   items: NotificationItem[],
   filter: NotificationFilter,
 ): NotificationGroup[] {
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
+  const start = startOfToday();
 
   const matches = items
     .filter((item) => {
@@ -84,8 +84,8 @@ export function filterAndGroupNotifications(
     })
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-  const today = matches.filter((item) => item.createdAt >= startOfToday);
-  const earlier = matches.filter((item) => item.createdAt < startOfToday);
+  const today = matches.filter((item) => item.createdAt >= start);
+  const earlier = matches.filter((item) => item.createdAt < start);
 
   const groups: NotificationGroup[] = [];
   if (today.length) groups.push({ label: "Today", items: today });

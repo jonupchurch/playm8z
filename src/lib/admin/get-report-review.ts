@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { conversations, forumReplies, forumThreads, messages, postings, reports, users, warnings } from "@/db/schema";
@@ -138,7 +139,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
     severity,
     reason: representativeReason,
     reportCount: openReports.length,
-    reporterHandle: representative.reporterHandle ?? "player",
+    reporterHandle: representative.reporterHandle ?? FALLBACK_HANDLE,
     reporterAvatarColor: representative.reporterAvatarColor,
     reporterAvatarImage: representative.reporterAvatarImage,
     reporterImage: representative.reporterImage,
@@ -164,7 +165,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       crossLinkHref: `/admin/postings?postingId=${targetId}`,
       crossLinkLabel: "Postings",
       ownerId: owner.id,
-      ownerHandle: owner.handle ?? "player",
+      ownerHandle: owner.handle ?? FALLBACK_HANDLE,
       ownerAvatarColor: owner.avatarColor,
       ownerAvatarImage: owner.avatarImage,
       ownerImage: owner.image,
@@ -195,7 +196,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
         crossLinkHref: `/admin/forum?targetType=forumThread&targetId=${targetId}`,
         crossLinkLabel: "Forum",
         ownerId: owner.id,
-        ownerHandle: owner.handle ?? "player",
+        ownerHandle: owner.handle ?? FALLBACK_HANDLE,
         ownerAvatarColor: owner.avatarColor,
         ownerAvatarImage: owner.avatarImage,
         ownerImage: owner.image,
@@ -225,7 +226,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       crossLinkHref: `/admin/forum?targetType=forumReply&targetId=${targetId}`,
       crossLinkLabel: "Forum",
       ownerId: owner.id,
-      ownerHandle: owner.handle ?? "player",
+      ownerHandle: owner.handle ?? FALLBACK_HANDLE,
       ownerAvatarColor: owner.avatarColor,
       ownerAvatarImage: owner.avatarImage,
       ownerImage: owner.image,
@@ -258,7 +259,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
       crossLinkHref: null,
       crossLinkLabel: null,
       ownerId: owner.id,
-      ownerHandle: owner.handle ?? "player",
+      ownerHandle: owner.handle ?? FALLBACK_HANDLE,
       ownerAvatarColor: owner.avatarColor,
       ownerAvatarImage: owner.avatarImage,
       ownerImage: owner.image,
@@ -280,7 +281,7 @@ export async function getReportReview(targetType: ReportTargetType, targetId: st
     crossLinkHref: `/admin/users?userId=${targetId}`,
     crossLinkLabel: "Users",
     ownerId: owner.id,
-    ownerHandle: owner.handle ?? "player",
+    ownerHandle: owner.handle ?? FALLBACK_HANDLE,
     ownerAvatarColor: owner.avatarColor,
     ownerAvatarImage: owner.avatarImage,
     ownerImage: owner.image,

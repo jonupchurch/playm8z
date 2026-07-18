@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq, ilike, isNotNull, isNull, notInArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import { blocks, users } from "@/db/schema";
@@ -48,5 +49,5 @@ export async function searchCandidateUsers(query: string, excludeUserId: string)
     .from(users)
     .where(and(...conditions))
     .limit(CANDIDATE_LIMIT)
-    .then((rows) => rows.map((row) => ({ ...row, handle: row.handle ?? "player" })));
+    .then((rows) => rows.map((row) => ({ ...row, handle: row.handle ?? FALLBACK_HANDLE })));
 }

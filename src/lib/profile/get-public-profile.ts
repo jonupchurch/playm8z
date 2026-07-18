@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, postings, reviews, userGames, users } from "@/db/schema";
@@ -127,7 +128,7 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
 
   return {
     id: user.id,
-    handle: user.handle ?? "player",
+    handle: user.handle ?? FALLBACK_HANDLE,
     bio: user.bio,
     avatarColor: user.avatarColor,
     avatarImage: user.avatarImage,
@@ -141,7 +142,7 @@ export async function getPublicProfileByHandle(handle: string): Promise<PublicPr
     showAgeGroup: user.showAgeGroup,
     games: gameRows.map((row) => row.game),
     openPostings: openPostingRows,
-    reviews: reviewRows.map((row) => ({ ...row, reviewerHandle: row.reviewerHandle ?? "player" })),
+    reviews: reviewRows.map((row) => ({ ...row, reviewerHandle: row.reviewerHandle ?? FALLBACK_HANDLE })),
     stats: {
       sessions,
       avgRating: reviewAgg[0]?.avg ?? null,

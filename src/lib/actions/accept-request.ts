@@ -1,5 +1,6 @@
 "use server";
 
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
@@ -117,8 +118,8 @@ export async function acceptRequest(input: { applicationId: string }): Promise<A
         type: "system",
         body:
           application.initiatedBy === "host"
-            ? `@${applicant?.handle ?? "player"} accepted the invite and joined the party.`
-            : `You accepted — @${applicant?.handle ?? "player"} joined the party.`,
+            ? `@${applicant?.handle ?? FALLBACK_HANDLE} accepted the invite and joined the party.`
+            : `You accepted — @${applicant?.handle ?? FALLBACK_HANDLE} joined the party.`,
       });
 
       return {

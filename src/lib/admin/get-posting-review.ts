@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, reports, users, warnings } from "@/db/schema";
@@ -65,7 +66,7 @@ export async function getPostingReview(postingId: string): Promise<PostingReview
 
   const reviewReports: ReviewReport[] = reportRows.map((row) => ({
     reason: row.reason ?? "other",
-    reporterHandle: row.reporterHandle ?? "player",
+    reporterHandle: row.reporterHandle ?? FALLBACK_HANDLE,
   }));
 
   return {
@@ -81,7 +82,7 @@ export async function getPostingReview(postingId: string): Promise<PostingReview
     ),
     reports: reviewReports,
     authorId: author.id,
-    authorHandle: author.handle ?? "player",
+    authorHandle: author.handle ?? FALLBACK_HANDLE,
     authorAvatarColor: author.avatarColor,
     authorAvatarImage: author.avatarImage,
     authorImage: author.image,

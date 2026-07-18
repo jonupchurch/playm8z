@@ -1,8 +1,9 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, asc, desc, eq, ilike, isNull, or, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { auditEntries, users } from "@/db/schema";
 import type { SearchAuditLogInput } from "@/lib/validations/audit-log";
-import { isSameDay, startOfToday } from "./activity-data";
+import { isSameDay, startOfToday } from "@/lib/dates";
 
 export type AuditLogCategory = "moderation" | "content" | "access" | "system";
 
@@ -103,7 +104,7 @@ async function getAuditLogActors(): Promise<AuditLogActor[]> {
     .from(auditEntries)
     .innerJoin(users, eq(auditEntries.actorId, users.id))
     .orderBy(asc(users.handle));
-  return rows.map((row) => ({ id: row.id, handle: row.handle ?? "player" }));
+  return rows.map((row) => ({ id: row.id, handle: row.handle ?? FALLBACK_HANDLE }));
 }
 
 // FR-002/FR-003/research.md #6: a real, server-side searched/filtered/
@@ -129,7 +130,7 @@ export async function getAuditLog(filters: SearchAuditLogInput): Promise<AuditLo
   const hasMore = rows.length > limit;
   const entries: AuditLogEntry[] = rows.slice(0, limit).map((row) => ({
     ...row,
-    actorHandle: row.actorId ? (row.actorHandle ?? "player") : "System",
+    actorHandle: row.actorId ? (row.actorHandle ?? FALLBACK_HANDLE) : "System",
     category: row.category as AuditLogCategory,
   }));
 

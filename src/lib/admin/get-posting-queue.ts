@@ -1,8 +1,9 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, gte, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, reports, users } from "@/db/schema";
 import type { PostingQueueFilter } from "@/lib/validations/admin-postings";
-import { startOfToday } from "./activity-data";
+import { startOfToday } from "@/lib/dates";
 import { computeSeverity, meetsEscalationThreshold, type Severity } from "@/lib/moderation/reason-severity";
 import { getSettings } from "@/lib/settings/get-settings";
 
@@ -80,7 +81,7 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
   const reportsByPosting = new Map<string, QueueReport[]>();
   for (const row of openReportRows) {
     const list = reportsByPosting.get(row.targetId) ?? [];
-    list.push({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? "player" });
+    list.push({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? FALLBACK_HANDLE });
     reportsByPosting.set(row.targetId, list);
   }
 
@@ -100,7 +101,7 @@ export async function getPostingQueue(filter: PostingQueueFilter): Promise<Posti
         blurb: posting.blurb,
         createdAt: posting.createdAt,
         authorId: posting.authorId,
-        authorHandle: posting.authorHandle ?? "player",
+        authorHandle: posting.authorHandle ?? FALLBACK_HANDLE,
         authorAvatarColor: posting.authorAvatarColor,
         authorAvatarImage: posting.authorAvatarImage,
         authorImage: posting.authorImage,

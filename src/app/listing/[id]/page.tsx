@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { and, eq, inArray } from "drizzle-orm";
@@ -197,7 +198,7 @@ export default async function ListingDetailPage({
                   className="h-11.5 w-11.5 shrink-0 rounded-xl text-lg"
                 />
                 <div>
-                  <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? "player"}</div>
+                  <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? FALLBACK_HANDLE}</div>
                   <div className="font-mono text-[11px] text-text-muted">
                     Posted {relativeAge(posting.createdAt)} · {REGION_LABELS[posting.region] ?? posting.region}
                   </div>
@@ -294,7 +295,7 @@ export default async function ListingDetailPage({
             <ApplyPanel
               postingId={posting.id}
               hostId={posting.hostId}
-              hostHandle={posting.hostHandle ?? "player"}
+              hostHandle={posting.hostHandle ?? FALLBACK_HANDLE}
               title={posting.title}
               viewerState={viewerState}
               applicationId={application?.id}
@@ -314,7 +315,7 @@ export default async function ListingDetailPage({
                   className="h-12 w-12 shrink-0 rounded-xl text-lg"
                 />
                 <div>
-                  <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? "player"}</div>
+                  <div className="text-[15px] font-bold text-text">@{posting.hostHandle ?? FALLBACK_HANDLE}</div>
                 </div>
               </div>
               <Link

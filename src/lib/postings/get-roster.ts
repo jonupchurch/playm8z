@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, users } from "@/db/schema";
@@ -36,14 +37,14 @@ export async function getRoster(params: {
   const rows: RosterRow[] = [
     {
       kind: "host",
-      handle: host?.handle ?? "player",
+      handle: host?.handle ?? FALLBACK_HANDLE,
       avatarColor: host?.avatarColor ?? null,
       avatarImage: host?.avatarImage ?? null,
       image: host?.image ?? null,
     },
     ...members.map((member) => ({
       kind: "member" as const,
-      handle: member.handle ?? "player",
+      handle: member.handle ?? FALLBACK_HANDLE,
       avatarColor: member.avatarColor,
       avatarImage: member.avatarImage,
       image: member.image,

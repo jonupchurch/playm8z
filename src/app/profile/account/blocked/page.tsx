@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import Link from "next/link";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
@@ -31,7 +32,7 @@ export default async function BlockedUsersPage() {
 
   const initialBlocked = rows.map((row) => ({
     blockId: row.blockId,
-    handle: row.handle ?? "player",
+    handle: row.handle ?? FALLBACK_HANDLE,
     avatarColor: row.avatarColor,
     avatarImage: row.avatarImage,
     image: row.image,

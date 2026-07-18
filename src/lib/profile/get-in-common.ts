@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { follows, userGames, users } from "@/db/schema";
@@ -37,7 +38,7 @@ export async function getInCommon(viewerId: string, profileOwnerId: string): Pro
   const sharedGames = [...new Set(viewerGames.map((row) => row.game).filter((game) => ownerGameSet.has(game)))];
 
   return {
-    mutualFollows: mutualFollows.map((row) => ({ ...row, handle: row.handle ?? "player" })),
+    mutualFollows: mutualFollows.map((row) => ({ ...row, handle: row.handle ?? FALLBACK_HANDLE })),
     sharedGames,
   };
 }
