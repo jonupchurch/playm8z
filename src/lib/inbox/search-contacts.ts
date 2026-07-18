@@ -1,5 +1,6 @@
 "use server";
 
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq, ilike, isNotNull, isNull, notInArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import { blocks, users } from "@/db/schema";
@@ -65,7 +66,7 @@ export async function searchContacts(query: string): Promise<ContactCandidate[]>
     .where(and(...conditions))
     .limit(CONTACT_LIMIT);
 
-  return rows.map((row) => ({ ...row, handle: row.handle ?? "player" }));
+  return rows.map((row) => ({ ...row, handle: row.handle ?? FALLBACK_HANDLE }));
 }
 
 // Server-side re-check for start-conversation.ts (edge case in

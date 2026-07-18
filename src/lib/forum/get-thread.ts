@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, arrayOverlaps, asc, desc, eq, inArray, isNull, ne, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
@@ -156,13 +157,13 @@ export async function getThread(threadId: string, sort: ReplySort, viewerId?: st
 
   return {
     ...thread,
-    authorHandle: thread.authorHandle ?? "player",
+    authorHandle: thread.authorHandle ?? FALLBACK_HANDLE,
     hot: isHotThread(thread.replyCount, thread.createdAt, thread.pinned),
     likedByViewer: likedTargetIds.has(thread.id),
     isSubscribedByViewer,
     replies: replyRows.map((row) => ({
       ...row,
-      authorHandle: row.authorHandle ?? "player",
+      authorHandle: row.authorHandle ?? FALLBACK_HANDLE,
       isOP: row.authorId === thread.authorId,
       likedByViewer: likedTargetIds.has(row.id),
     })),

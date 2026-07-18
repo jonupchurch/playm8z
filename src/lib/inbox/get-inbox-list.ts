@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, arrayOverlaps, desc, eq, gt, inArray, isNull, ne, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, conversations, messages, postings, users } from "@/db/schema";
@@ -51,8 +52,8 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
         : [];
 
       const name = conversation.isGroup
-        ? conversation.name?.trim() || members.map((member) => `@${member.handle ?? "player"}`).join(", ")
-        : `@${members[0]?.handle ?? "player"}`;
+        ? conversation.name?.trim() || members.map((member) => `@${member.handle ?? FALLBACK_HANDLE}`).join(", ")
+        : `@${members[0]?.handle ?? FALLBACK_HANDLE}`;
 
       const [lastMessage] = await db
         .select({ body: messages.body })
@@ -114,7 +115,7 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     kind: "request" as const,
     id: request.applicationId,
     isGroup: false,
-    name: `@${request.applicantHandle ?? "player"}`,
+    name: `@${request.applicantHandle ?? FALLBACK_HANDLE}`,
     context: `${request.postingGame} · ${request.postingTitle}`,
     preview: request.message?.trim() || "Wants to join your party.",
     lastActivityAt: request.createdAt,
@@ -151,7 +152,7 @@ export async function getInboxList(userId: string): Promise<InboxItem[]> {
     kind: "request" as const,
     id: invite.applicationId,
     isGroup: false,
-    name: `@${invite.hostHandle ?? "player"}`,
+    name: `@${invite.hostHandle ?? FALLBACK_HANDLE}`,
     context: `${invite.postingGame} · ${invite.postingTitle}`,
     preview: "Invited you to join their party.",
     lastActivityAt: invite.createdAt,

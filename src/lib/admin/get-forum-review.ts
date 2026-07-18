@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { forumReplies, forumThreads, reports, users, warnings } from "@/db/schema";
@@ -34,7 +35,7 @@ async function loadReports(targetId: string): Promise<ForumReviewReport[]> {
     .from(reports)
     .innerJoin(users, eq(reports.reporterId, users.id))
     .where(and(eq(reports.targetType, "forum"), eq(reports.targetId, targetId), eq(reports.status, "open")));
-  return rows.map((row) => ({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? "player" }));
+  return rows.map((row) => ({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? FALLBACK_HANDLE }));
 }
 
 // "Prior warnings" spans the generalized, cross-feature `warnings`
@@ -102,7 +103,7 @@ export async function getForumReview(targetType: ForumTargetType, targetId: stri
       reports: itemReports,
       precedingContext: null,
       authorId: author.id,
-      authorHandle: author.handle ?? "player",
+      authorHandle: author.handle ?? FALLBACK_HANDLE,
       authorAvatarColor: author.avatarColor,
       authorAvatarImage: author.avatarImage,
       authorImage: author.image,
@@ -147,10 +148,10 @@ export async function getForumReview(targetType: ForumTargetType, targetId: stri
   // thread's own OP (research.md's spec.md Edge Cases).
   let precedingContext: ForumReviewContext;
   if (precedingReply) {
-    precedingContext = { authorHandle: precedingReply.authorHandle ?? "player", content: precedingReply.body };
+    precedingContext = { authorHandle: precedingReply.authorHandle ?? FALLBACK_HANDLE, content: precedingReply.body };
   } else {
     const [opAuthor] = await db.select({ handle: users.handle }).from(users).where(eq(users.id, thread.authorId));
-    precedingContext = { authorHandle: opAuthor?.handle ?? "player", content: thread.body };
+    precedingContext = { authorHandle: opAuthor?.handle ?? FALLBACK_HANDLE, content: thread.body };
   }
 
   return {
@@ -168,7 +169,7 @@ export async function getForumReview(targetType: ForumTargetType, targetId: stri
     reports: itemReports,
     precedingContext,
     authorId: author.id,
-    authorHandle: author.handle ?? "player",
+    authorHandle: author.handle ?? FALLBACK_HANDLE,
     authorAvatarColor: author.avatarColor,
     authorAvatarImage: author.avatarImage,
     authorImage: author.image,

@@ -1,5 +1,6 @@
 "use client";
 
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -44,7 +45,7 @@ function QuestionRow({
   const reportTarget: ReportTarget = {
     targetType: "user",
     targetId: question.askerId,
-    label: `Question by @${question.askerHandle ?? "player"}`,
+    label: `Question by @${question.askerHandle ?? FALLBACK_HANDLE}`,
     blockUserId: question.askerId,
   };
 
@@ -72,7 +73,7 @@ function QuestionRow({
       />
       <div className="flex-1">
         <div className="mb-0.5 flex items-center gap-2">
-          <span className="text-[13px] font-bold text-text">@{question.askerHandle ?? "player"}</span>
+          <span className="text-[13px] font-bold text-text">@{question.askerHandle ?? FALLBACK_HANDLE}</span>
           <span className="font-mono text-[10px] text-text-dim">{relativeAge(question.createdAt)}</span>
           {isLoggedIn && (
             <button

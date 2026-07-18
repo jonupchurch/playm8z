@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { auditEntries, users } from "@/db/schema";
@@ -36,7 +37,7 @@ export async function exportAuditLogCsv(filters: Pick<SearchAuditLogInput, "q" |
 
   const lines = [CSV_HEADER.join(",")];
   for (const row of rows) {
-    const actor = row.actorId ? (row.actorHandle ?? "player") : "System";
+    const actor = row.actorId ? (row.actorHandle ?? FALLBACK_HANDLE) : "System";
     const cells = [
       row.createdAt.toISOString(),
       actor,

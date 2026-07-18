@@ -4,7 +4,9 @@ import { and, eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { contentPages } from "@/db/schema";
+import { requireAuth } from "@/lib/auth/require-auth";
 import { requireRole } from "@/lib/auth/require-role";
+import { logAuditEntry } from "@/lib/admin/log-audit-entry";
 import { saveContentPageSchema, type SaveContentPageInput } from "@/lib/validations/content-page";
 
 // `slug` is echoed back because a rename changes the page's own URL --
@@ -76,6 +78,19 @@ export async function saveContentPage(currentSlug: string, input: SaveContentPag
     }
     throw error;
   }
+
+  // Tech-debt #7: audit content-page edits, matching create/delete/toggle-page-status
+  // (015 anticipated the log; only the edit path was left out). requireAuth here is safe
+  // -- requireRole above already established a valid admin session.
+  const moderator = await requireAuth();
+  await logAuditEntry({
+    actorId: moderator.id,
+    action: renaming ? "renamed a content page" : "edited a content page",
+    category: "content",
+    targetType: "contentPage",
+    targetId: existing.id,
+    targetLabel: parsed.data.title,
+  });
 
   revalidatePath(`/pages/${currentSlug}`);
   if (renaming) revalidatePath(`/pages/${nextSlug}`);

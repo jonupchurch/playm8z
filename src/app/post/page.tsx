@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
@@ -46,7 +47,7 @@ export default async function PostGamePage() {
         </div>
 
         <PostGameForm
-          hostHandle={user?.handle ?? "player"}
+          hostHandle={user?.handle ?? FALLBACK_HANDLE}
           hostAvatarColor={user?.avatarColor ?? null}
           hostAvatarImage={user?.avatarImage ?? null}
           hostImage={user?.image ?? null}

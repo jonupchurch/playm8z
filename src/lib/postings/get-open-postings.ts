@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, users } from "@/db/schema";
@@ -53,5 +54,5 @@ export async function getOpenPostings(): Promise<OpenPosting[]> {
     .where(and(...conditions))
     .orderBy(desc(postings.createdAt));
 
-  return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));
+  return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? FALLBACK_HANDLE }));
 }

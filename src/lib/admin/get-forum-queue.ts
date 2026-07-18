@@ -1,10 +1,11 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq, gte, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { auditEntries, forumReplies, forumThreads, reports, users } from "@/db/schema";
 import type { ForumQueueFilter } from "@/lib/validations/admin-forum";
 import { computeSeverity, meetsEscalationThreshold, type Severity } from "@/lib/moderation/reason-severity";
 import { getSettings } from "@/lib/settings/get-settings";
-import { startOfToday } from "./activity-data";
+import { startOfToday } from "@/lib/dates";
 
 export type ForumQueueReport = { reason: string; reporterHandle: string };
 
@@ -103,7 +104,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
   const reportsByTarget = new Map<string, ForumQueueReport[]>();
   for (const row of openReportRows) {
     const list = reportsByTarget.get(row.targetId) ?? [];
-    list.push({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? "player" });
+    list.push({ reason: row.reason ?? "other", reporterHandle: row.reporterHandle ?? FALLBACK_HANDLE });
     reportsByTarget.set(row.targetId, list);
   }
 
@@ -133,7 +134,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       threadTitle: row.title,
       content: row.body,
       authorId: row.authorId,
-      authorHandle: row.authorHandle ?? "player",
+      authorHandle: row.authorHandle ?? FALLBACK_HANDLE,
       authorAvatarColor: row.authorAvatarColor,
       authorAvatarImage: row.authorAvatarImage,
       authorImage: row.authorImage,
@@ -156,7 +157,7 @@ export async function getForumQueue(filter: ForumQueueFilter): Promise<ForumQueu
       threadTitle: row.threadTitle,
       content: row.body,
       authorId: row.authorId,
-      authorHandle: row.authorHandle ?? "player",
+      authorHandle: row.authorHandle ?? FALLBACK_HANDLE,
       authorAvatarColor: row.authorAvatarColor,
       authorAvatarImage: row.authorAvatarImage,
       authorImage: row.authorImage,

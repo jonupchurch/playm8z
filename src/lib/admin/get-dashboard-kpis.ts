@@ -1,7 +1,8 @@
 import { and, eq, gte, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { postings, reports, users } from "@/db/schema";
-import { countDistinctUsersOnDay, getActiveUserRowsSince, startOfToday } from "./activity-data";
+import { countDistinctUsersOnDay, getActiveUserRowsSince } from "./activity-data";
+import { startOfToday } from "@/lib/dates";
 
 export type DashboardKpis = {
   totalUsers: number;

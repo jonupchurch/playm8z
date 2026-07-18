@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, asc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
@@ -68,8 +69,8 @@ export async function getConversationOrRequest(
       : [];
 
     const name = conversation.isGroup
-      ? conversation.name?.trim() || otherMembers.map((member) => `@${member.handle ?? "player"}`).join(", ")
-      : `@${otherMembers[0]?.handle ?? "player"}`;
+      ? conversation.name?.trim() || otherMembers.map((member) => `@${member.handle ?? FALLBACK_HANDLE}`).join(", ")
+      : `@${otherMembers[0]?.handle ?? FALLBACK_HANDLE}`;
 
     const messageRows = await db
       .select({
@@ -140,7 +141,7 @@ export async function getConversationOrRequest(
     kind: "request",
     applicationId: request.applicationId,
     postingId: request.postingId,
-    applicantHandle: request.applicantHandle ?? "player",
+    applicantHandle: request.applicantHandle ?? FALLBACK_HANDLE,
     applicantAvatarColor: request.applicantAvatarColor,
     applicantAvatarImage: request.applicantAvatarImage,
     applicantImage: request.applicantImage,
@@ -149,7 +150,7 @@ export async function getConversationOrRequest(
     message: request.message,
     createdAt: request.createdAt,
     initiatedBy: request.initiatedBy === "host" ? "host" : "applicant",
-    hostHandle: request.hostHandle ?? "player",
+    hostHandle: request.hostHandle ?? FALLBACK_HANDLE,
   };
 }
 

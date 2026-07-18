@@ -1,6 +1,7 @@
 import { gte } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, forumReplies, forumThreads, messages, postings } from "@/db/schema";
+import { isSameDay, startOfToday } from "@/lib/dates";
 
 export type TimestampedRow = { createdAt: Date };
 export type ActiveUserRow = { userId: string; createdAt: Date };
@@ -37,26 +38,15 @@ export async function getActiveUserRowsSince(since: Date): Promise<ActiveUserRow
   return rows.filter((row): row is ActiveUserRow => row.userId !== null);
 }
 
-// Local-calendar-day bucketing (not a SQL date_trunc/GROUP BY), matching
-// this project's existing "today" convention (filter-notifications.ts's
-// startOfToday) rather than depending on the database's own timezone
-// setting.
-export function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-
+// Local-calendar-day bucketing (not a SQL date_trunc/GROUP BY), matching this
+// project's existing "today" convention. `isSameDay`/`startOfToday` live in the
+// DB-free `@/lib/dates` (shared with client-safe filter-notifications.ts).
 export function countOnDay(rows: TimestampedRow[], day: Date): number {
   return rows.filter((row) => isSameDay(row.createdAt, day)).length;
 }
 
 export function countDistinctUsersOnDay(rows: ActiveUserRow[], day: Date): number {
   return new Set(rows.filter((row) => isSameDay(row.createdAt, day)).map((row) => row.userId)).size;
-}
-
-export function startOfToday(): Date {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  return date;
 }
 
 export function last7Days(): Date[] {

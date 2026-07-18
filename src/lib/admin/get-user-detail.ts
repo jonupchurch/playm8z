@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { forumThreads, postings, reports, users } from "@/db/schema";
@@ -90,7 +91,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
 
   return {
     ...user,
-    handle: user.handle ?? "player",
+    handle: user.handle ?? FALLBACK_HANDLE,
     openReportCount: reportRow.n,
     postings: postingRows,
     forumThreads: threadRows,

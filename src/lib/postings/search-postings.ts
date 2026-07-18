@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, arrayOverlaps, asc, desc, eq, gte, ilike, inArray, isNull, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
@@ -117,5 +118,5 @@ export async function searchPostings(filters: BrowseFilters): Promise<BrowseResu
     .where(and(...conditions))
     .orderBy(...orderBy);
 
-  return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" }));
+  return rows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? FALLBACK_HANDLE }));
 }

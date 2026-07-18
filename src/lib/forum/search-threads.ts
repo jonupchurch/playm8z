@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { db } from "@/db";
@@ -105,7 +106,7 @@ export async function searchThreads(filters: ForumSearchParams): Promise<ForumTh
 
   return rows.map((row) => ({
     ...row,
-    authorHandle: row.authorHandle ?? "player",
+    authorHandle: row.authorHandle ?? FALLBACK_HANDLE,
     hot: isHotThread(row.replyCount, row.createdAt, row.pinned),
   }));
 }

@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, eq, gte, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { applications, postings, users } from "@/db/schema";
@@ -101,7 +102,7 @@ export async function getLandingStats(): Promise<LandingStats> {
     totalPlayers: totalPlayersRow.n,
     gamesAndTables: gamesRow.n,
     partiesFormedThisWeek: partiesThisWeekRow.n,
-    heroPostings: heroRows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? "player" })),
+    heroPostings: heroRows.map((row) => ({ ...row, hostHandle: row.hostHandle ?? FALLBACK_HANDLE })),
     genreCounts,
   };
 }

@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { forumThreads, postings, reports, users } from "@/db/schema";
@@ -106,6 +107,6 @@ export async function searchAdminUsers(filters: AdminUsersFilters): Promise<Admi
 
   return {
     stats: statsRow,
-    rows: rows.map((row) => ({ ...row, handle: row.handle ?? "player" })),
+    rows: rows.map((row) => ({ ...row, handle: row.handle ?? FALLBACK_HANDLE })),
   };
 }

@@ -1,3 +1,4 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { desc, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -35,5 +36,5 @@ export async function getTeam(): Promise<TeamMember[]> {
     .where(inArray(users.role, ASSIGNABLE_ROLES))
     .orderBy(desc(users.createdAt));
 
-  return rows.map((row) => ({ ...row, handle: row.handle ?? "player", role: row.role as AssignableRole }));
+  return rows.map((row) => ({ ...row, handle: row.handle ?? FALLBACK_HANDLE, role: row.role as AssignableRole }));
 }

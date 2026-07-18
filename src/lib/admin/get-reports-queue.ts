@@ -1,10 +1,11 @@
+import { FALLBACK_HANDLE } from "@/lib/fallback-handle";
 import { and, asc, eq, gte, inArray, isNotNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { conversations, forumReplies, forumThreads, messages, postings, reports, users } from "@/db/schema";
 import type { ReportsQueueFilter, ReportTargetType } from "@/lib/validations/admin-reports";
 import { computeSeverity, meetsEscalationThreshold, reasonLabel, type Severity } from "@/lib/moderation/reason-severity";
 import { getSettings } from "@/lib/settings/get-settings";
-import { startOfToday } from "./activity-data";
+import { startOfToday } from "@/lib/dates";
 
 export type ReportsQueueItem = {
   targetType: ReportTargetType;
@@ -113,7 +114,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
           reason,
           details: row.details,
           createdAt: row.createdAt,
-          reporterHandle: row.reporterHandle ?? "player",
+          reporterHandle: row.reporterHandle ?? FALLBACK_HANDLE,
           reporterAvatarColor: row.reporterAvatarColor,
           reporterAvatarImage: row.reporterAvatarImage,
           reporterImage: row.reporterImage,
@@ -243,7 +244,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       allRows.push({
         ...base,
         ownerId: posting.hostId,
-        ownerHandle: posting.hostHandle ?? "player",
+        ownerHandle: posting.hostHandle ?? FALLBACK_HANDLE,
         ownerAvatarColor: posting.hostAvatarColor,
         ownerAvatarImage: posting.hostAvatarImage,
         ownerImage: posting.hostImage,
@@ -256,7 +257,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
         allRows.push({
           ...base,
           ownerId: thread.authorId,
-          ownerHandle: thread.authorHandle ?? "player",
+          ownerHandle: thread.authorHandle ?? FALLBACK_HANDLE,
           ownerAvatarColor: thread.authorAvatarColor,
           ownerAvatarImage: thread.authorAvatarImage,
           ownerImage: thread.authorImage,
@@ -271,7 +272,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       allRows.push({
         ...base,
         ownerId: reply.authorId,
-        ownerHandle: reply.authorHandle ?? "player",
+        ownerHandle: reply.authorHandle ?? FALLBACK_HANDLE,
         ownerAvatarColor: reply.authorAvatarColor,
         ownerAvatarImage: reply.authorAvatarImage,
         ownerImage: reply.authorImage,
@@ -287,7 +288,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       allRows.push({
         ...base,
         ownerId: message.senderId,
-        ownerHandle: message.senderHandle ?? "player",
+        ownerHandle: message.senderHandle ?? FALLBACK_HANDLE,
         ownerAvatarColor: message.senderAvatarColor,
         ownerAvatarImage: message.senderAvatarImage,
         ownerImage: message.senderImage,
@@ -300,7 +301,7 @@ export async function getReportsQueue(filter: ReportsQueueFilter): Promise<Repor
       allRows.push({
         ...base,
         ownerId: user.id,
-        ownerHandle: user.handle ?? "player",
+        ownerHandle: user.handle ?? FALLBACK_HANDLE,
         ownerAvatarColor: user.avatarColor,
         ownerAvatarImage: user.avatarImage,
         ownerImage: user.image,
