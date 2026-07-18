@@ -66,6 +66,12 @@ export const users = pgTable("user", {
   ageGroup: text("ageGroup"),
   vibe: text("vibe"),
   playTimeSlots: text("playTimeSlots").array(),
+  // DEPRECATED / RETIRED (042, ADR 0015): was onboarding's flat game snapshot,
+  // but the profile/matching/public-profile all read `userGames`, which is now
+  // the single source of truth -- onboarding reconciles into it and a one-time
+  // backfill seeded it from here. NO product code reads or writes this column
+  // any more; kept in place (not dropped) so nothing is destroyed. Dropping it
+  // is a separate, later cleanup (docs/future-work.md).
   gamesPlayed: text("gamesPlayed").array(),
   // Added by Profile + Account settings (007).
   bio: text("bio"),

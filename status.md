@@ -38,7 +38,11 @@ untouched — that unlocks a permanent-delete of a news post, a scoped,
 audit-logged exception to ADR 0005; the misleading "Delete" button is
 relabeled "Unpublish". Also this session: a standing workflow where a
 user-facing CHANGELOG entry publishes a "Patch Notes" news post to prod
-via `scripts/publish-patch-note.ts`.
+via `scripts/publish-patch-note.ts`. Feature 42 (unify player games,
+ADR 0015) makes `userGames` the single source of truth — onboarding
+reconciles into it instead of the now-retired `users.gamesPlayed`, and
+a seed-empty-only backfill recovered pre-fix players — fixing the bug
+where onboarding game picks never reached the profile or matching.
 **Last updated**: 2026-07-17
 
 ## Where things stand

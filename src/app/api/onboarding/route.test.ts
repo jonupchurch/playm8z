@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { userGames, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -11,6 +11,11 @@ const mockedAuth = auth as unknown as ReturnType<typeof vi.fn>;
 
 const runId = crypto.randomUUID().slice(0, 8);
 const email = `onboarding-${runId}@example.com`;
+let userId: string;
+
+function fakeSession() {
+  return { user: { email }, expires: new Date(Date.now() + 1000 * 60).toISOString() };
+}
 
 function request(body: unknown) {
   return new NextRequest("http://localhost:3000/api/onboarding", {
@@ -21,7 +26,8 @@ function request(body: unknown) {
 }
 
 beforeAll(async () => {
-  await db.insert(users).values({ email });
+  const [u] = await db.insert(users).values({ email }).returning({ id: users.id });
+  userId = u.id;
 });
 
 afterAll(async () => {
@@ -61,5 +67,31 @@ describe("POST /api/onboarding", () => {
 
     const res = await POST(request({ ageGroup: "13" }));
     expect(res.status).toBe(400);
+  });
+
+  it("reconciles onboarding games into userGames, not users.gamesPlayed (042)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession());
+    const res = await POST(request({ gamesPlayed: ["Valorant", "valorant", "CS2"] }));
+    const data = await res.json();
+    expect(res.status).toBe(200);
+    // Response reflects userGames, deduped by normalized name.
+    expect([...data.gamesPlayed].sort()).toEqual(["CS2", "Valorant"]);
+
+    // The deprecated column is NOT written.
+    const [row] = await db.select({ gamesPlayed: users.gamesPlayed }).from(users).where(eq(users.email, email));
+    expect(row.gamesPlayed).toBeNull();
+
+    // userGames holds exactly the deduped set.
+    const ug = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, userId));
+    expect(ug.map((g) => g.game).sort()).toEqual(["CS2", "Valorant"]);
+  });
+
+  it("removes a de-selected game on a follow-up patch (042)", async () => {
+    mockedAuth.mockResolvedValueOnce(fakeSession());
+    const res = await POST(request({ gamesPlayed: ["Valorant"] }));
+    expect(res.status).toBe(200);
+
+    const ug = await db.select({ game: userGames.game }).from(userGames).where(eq(userGames.userId, userId));
+    expect(ug.map((g) => g.game)).toEqual(["Valorant"]);
   });
 });
