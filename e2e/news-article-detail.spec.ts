@@ -100,7 +100,7 @@ test.afterAll(async () => {
 });
 
 test.describe("News Article detail (quickstart.md Scenarios 1-4)", () => {
-  test("reads a published article, logged out: meta/title/author/cover/body/tags/related/subscribe, real read time, axe clean", async ({
+  test("reads a published article, logged out: meta/title/author/cover/body/tags/related, real read time, axe clean", async ({
     page,
   }) => {
     const response = await page.goto(`/news/${publishedSlug}`);
@@ -117,7 +117,6 @@ test.describe("News Article detail (quickstart.md Scenarios 1-4)", () => {
     await expect(page.getByText("#launch")).toBeVisible();
     await expect(page.getByText("#beta")).toBeVisible();
     await expect(page.getByText("Keep reading")).toBeVisible();
-    await expect(page.getByText("Never miss an update")).toBeVisible();
 
     // Real computed read time: 260+ words -> 2 min read, not blank/zero.
     await expect(page.getByText("2 min read")).toBeVisible();

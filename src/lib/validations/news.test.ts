@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { newsCategoryColor, newsFiltersSchema, subscribeNewsletterSchema } from "./news";
+import { newsCategoryColor, newsFiltersSchema } from "./news";
 
 describe("newsFiltersSchema", () => {
   it("defaults category to 'all', q to '', page to 1", () => {
@@ -27,25 +27,6 @@ describe("newsFiltersSchema", () => {
 
   it("accepts a search query", () => {
     expect(newsFiltersSchema.parse({ q: "beta" }).q).toBe("beta");
-  });
-});
-
-describe("subscribeNewsletterSchema", () => {
-  it("accepts a valid email", () => {
-    expect(subscribeNewsletterSchema.parse({ email: "player@example.com" }).email).toBe("player@example.com");
-  });
-
-  it("trims whitespace", () => {
-    expect(subscribeNewsletterSchema.parse({ email: "  player@example.com  " }).email).toBe("player@example.com");
-  });
-
-  it("rejects a malformed email", () => {
-    expect(() => subscribeNewsletterSchema.parse({ email: "not-an-email" })).toThrow();
-  });
-
-  it("rejects an email over 254 characters", () => {
-    const longEmail = `${"a".repeat(250)}@example.com`;
-    expect(() => subscribeNewsletterSchema.parse({ email: longEmail })).toThrow();
   });
 });
 

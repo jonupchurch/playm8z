@@ -660,18 +660,6 @@ export const newsPosts = pgTable("newsPosts", {
   tags: text("tags").array().notNull().default([]),
 });
 
-// News feed (013) -- this feature's only writer. No relationship to
-// `user` -- subscribing needs no account (research.md #3), this
-// project's first write action with no auth check at all. `email`'s
-// database-level unique constraint (not an application-level check)
-// is the actual duplicate-prevention mechanism, same reasoning as
-// `likes`' own unique constraint.
-export const newsletterSubscribers = pgTable("newsletterSubscribers", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  email: text("email").notNull().unique(),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-});
-
 // Content Page (014) -- this feature's only writer, for an EXISTING
 // page's content/blocks/status; creating a new page (choosing its
 // slug) is the future Admin Content Pages feature's job, extending
