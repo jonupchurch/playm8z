@@ -19,6 +19,19 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   within 30 days; nothing is rewritten.
 
 ### Added
+- **Connect Steam & import your game library** (feature 038,
+  [ADR 0012](docs/adr/0012-steam-account-link-via-settings-openid.md)). From
+  account settings a player can connect their Steam account — ownership proven
+  by a Steam OpenID handshake that's **verified server-side** before anything
+  is linked — then import the games they actually own/play. Import is
+  review-and-select (owned games shown most-played first, recently-played
+  pre-checked): it **augments** the profile's existing games, never replaces
+  them, de-duplicates by name, and fills in playtime; imported names light up
+  the curated game images. One Steam account links to one playm8z account.
+  Disconnecting removes the link but keeps the imported games. This is a
+  settings-time *link*, **not** a way to sign in — signing in with Steam,
+  live "playing now" status, and the Steam avatar are deferred
+  (`docs/future-work.md`). No change to sign-in, email, or age eligibility.
 - **Seeded the game curation list with popular multiplayer titles.** The
   Post a Game typeahead now suggests ~46 multiplayer/co-op games drawn
   from Steam's most-played chart (single-player titles and non-game

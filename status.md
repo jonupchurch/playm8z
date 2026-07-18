@@ -23,6 +23,10 @@ profile images, game images, game typeahead). Feature 37 (Messages in
 the top nav with an unread badge) surfaces the already-built inbox
 (011) as a first-class nav entry beside the notification bell —
 closing a discoverability gap, not adding a messaging capability.
+Feature 38 (Connect Steam & import game library) is the first
+third-party account LINK — a settings-time Steam OpenID connect
+(verified server-side, ADR 0012), NOT a sign-in method — that imports
+a player's real Steam library into their profile.
 **Last updated**: 2026-07-17
 
 ## Where things stand

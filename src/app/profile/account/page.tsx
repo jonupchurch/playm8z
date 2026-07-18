@@ -5,10 +5,12 @@ import { users } from "@/db/schema";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { AccountForms } from "@/components/profile/account-forms";
 import { PrivacyToggles } from "@/components/profile/privacy-toggles";
+import { SteamConnectSection } from "@/components/profile/steam-connect-section";
 import { DangerZone } from "@/components/profile/danger-zone";
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<{ steam?: string }> }) {
   const authUser = await requireAuth();
+  const { steam } = await searchParams;
   const [user] = await db
     .select({
       handle: users.handle,
@@ -20,6 +22,7 @@ export default async function AccountPage() {
       avatarImage: users.avatarImage,
       image: users.image,
       passwordHash: users.passwordHash,
+      steamId: users.steamId,
       privacyShowAge: users.privacyShowAge,
       privacyShowRegion: users.privacyShowRegion,
       privacyShowOnline: users.privacyShowOnline,
@@ -49,6 +52,7 @@ export default async function AccountPage() {
           privacyDiscoverable: user.privacyDiscoverable,
         }}
       />
+      <SteamConnectSection connected={!!user.steamId} status={steam} />
       <section className="rounded-2xl border border-border bg-surface-2 p-6">
         <h2 className="mb-1 text-lg font-bold text-text">Blocked users</h2>
         <p className="mb-4 text-[13px] text-text-dim">
