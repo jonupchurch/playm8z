@@ -389,3 +389,31 @@ cannot see this, the feature has no need to touch either store, and
 reconciling them is a data migration with its own decisions (which store
 wins? what happens to a player whose two lists disagree?). It wants its
 own feature, not a side effect of one.
+
+## `role === "admin"` exact checks vs `ROLE_RANK` — reviewed, non-issue (2026-07-18)
+
+Raised during a tech-debt sweep: three sites compare `role === "admin"`
+by exact string equality — `nav-links.tsx:66`, `app/pages/[slug]/page.tsx:42`,
+and `app/admin/news/page.tsx:35` — while access control everywhere else goes
+through the rank-based `requireRole()` / `ROLE_RANK` helper
+(`src/lib/auth/require-role.ts`). Two idioms for "how privileged is this user?".
+
+Reviewed and **accepted as-is** — this is not debt to pay down:
+
+- None of the three is an access *gate*. Each page is already gated by
+  `requireRole("moderator")`; the exact-admin check only decides whether to
+  render an *extra* control that admins get and moderators don't (the Admin
+  nav dropdown, the ContentPage admin affordance, the News editor's admin
+  view). Getting it "wrong" shows/hides a button, never grants access.
+- Exact equality is arguably *more* correct here than `>=`: the intent is
+  literally "the admin tier specifically," not "at least admin." `admin` is
+  already the top of `ROLE_RANK` (3), so `role === "admin"` and
+  `ROLE_RANK[role] >= ROLE_RANK.admin` are equivalent today.
+- The hypothetical break — a tier *above* admin (e.g. a superadmin) that
+  these checks would wrongly exclude — is exactly the `isOwner` case, and we
+  deliberately made owner an **orthogonal flag, not a higher role tier**
+  (041, ADR 0014), precisely so it wouldn't perturb any `role === "admin"`
+  check. So the one "higher than admin" concept we have is already immune.
+
+If a genuine role tier above `admin` is ever added, revisit these three
+lines then — but nothing today makes them wrong.
