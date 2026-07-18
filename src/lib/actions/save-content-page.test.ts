@@ -1,18 +1,26 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { inArray } from "drizzle-orm";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { contentPages } from "@/db/schema";
+import { auditEntries, contentPages, users } from "@/db/schema";
 
 // requireRole is mocked directly (rather than mocking @/auth + letting
 // the real requireRole run) so this test proves the Server Action's own
 // persistence logic, decoupled from the role plumbing Admin Settings
 // (024) shipped -- which admin-content-pages.spec.ts exercises for real
-// through a seeded admin session.
+// through a seeded admin session. `@/auth` is separately mocked so
+// requireAuth() (used to attribute the edit's logAuditEntry, tech-debt #7)
+// succeeds against a seeded moderator.
 vi.mock("@/lib/auth/require-role", () => ({ requireRole: vi.fn() }));
+vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { requireRole } = await import("@/lib/auth/require-role");
+const { auth } = await import("@/auth");
 const { saveContentPage } = await import("./save-content-page");
 const mockedRequireRole = requireRole as unknown as ReturnType<typeof vi.fn>;
+const mockedAuth = auth as unknown as ReturnType<typeof vi.fn>;
+
+function fakeSession(email: string) {
+  return { user: { email }, expires: new Date(Date.now() + 60_000).toISOString() };
+}
 
 const runId = crypto.randomUUID().slice(0, 8);
 const slug = `save-cp-${runId}`;
@@ -22,6 +30,8 @@ const renameFrom = `save-cp-rename-${runId}`;
 const renameTo = `save-cp-renamed-${runId}`;
 const occupiedSlug = `save-cp-occupied-${runId}`;
 const systemSlug = `save-cp-system-${runId}`;
+const moderatorEmail = `save-cp-mod-${runId}@example.com`;
+let moderatorId: string;
 
 // Cleanup is keyed on id, not slug: these tests rename pages by design,
 // so a slug-keyed afterAll can miss a row that moved -- which is exactly
@@ -30,6 +40,13 @@ const systemSlug = `save-cp-system-${runId}`;
 let createdIds: string[] = [];
 
 beforeAll(async () => {
+  const [moderator] = await db
+    .insert(users)
+    .values({ email: moderatorEmail, handle: `savecpmod${runId}` })
+    .returning({ id: users.id });
+  moderatorId = moderator.id;
+  mockedAuth.mockResolvedValue(fakeSession(moderatorEmail));
+
   createdIds = (
     await db
       .insert(contentPages)
@@ -45,6 +62,8 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await db.delete(contentPages).where(inArray(contentPages.id, createdIds));
+  await db.delete(auditEntries).where(eq(auditEntries.actorId, moderatorId));
+  await db.delete(users).where(eq(users.id, moderatorId));
 });
 
 describe("saveContentPage", () => {
@@ -85,6 +104,21 @@ describe("saveContentPage", () => {
 
     const [row] = await db.select().from(contentPages).where(eq(contentPages.slug, slug));
     expect(row.title).toBe("Updated title");
+  });
+
+  // Tech-debt #7: the edit path now logs, matching create/delete/toggle-page-status.
+  // Runs after the invalid-input check above so it doesn't disturb that title assertion.
+  it("logs a content-category audit entry attributing the edit", async () => {
+    mockedRequireRole.mockResolvedValueOnce(undefined);
+    const result = await saveContentPage(slug, { title: "Audited title", slug, blocks: [] });
+    expect(result.success).toBe(true);
+
+    const [row] = await db.select().from(contentPages).where(eq(contentPages.slug, slug));
+    const entries = await db.select().from(auditEntries).where(eq(auditEntries.targetId, row.id));
+    const edit = entries.find((e) => e.action === "edited a content page" && e.targetLabel === "Audited title");
+    expect(edit).toBeDefined();
+    expect(edit?.actorId).toBe(moderatorId);
+    expect(edit?.category).toBe("content");
   });
 
   // The reported bug: there was no way to change a page's URL at all, so
