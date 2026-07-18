@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { applications, postings, users } from "@/db/schema";
+import { applications, blocks, postings, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -12,7 +12,9 @@ const runId = crypto.randomUUID().slice(0, 8);
 const hostEmail = `apply-host-${runId}@example.com`;
 const applicantEmail = `apply-applicant-${runId}@example.com`;
 const unverifiedEmail = `apply-unverified-${runId}@example.com`;
+const blockedEmail = `apply-blocked-${runId}@example.com`;
 let hostId: string;
+let blockedId: string;
 let openPostingId: string;
 let fullPostingId: string;
 
@@ -31,6 +33,12 @@ beforeAll(async () => {
     { email: applicantEmail, handle: `applyapplicant${runId}`, emailVerified: new Date() },
     { email: unverifiedEmail, handle: `applyunverified${runId}` },
   ]);
+
+  const [blocked] = await db
+    .insert(users)
+    .values({ email: blockedEmail, handle: `applyblocked${runId}`, emailVerified: new Date() })
+    .returning({ id: users.id });
+  blockedId = blocked.id;
 
   const base = {
     hostId,
@@ -63,10 +71,18 @@ afterAll(async () => {
   await db.delete(applications).where(eq(applications.postingId, openPostingId));
   await db.delete(postings).where(eq(postings.id, openPostingId));
   await db.delete(postings).where(eq(postings.id, fullPostingId));
+  await db.delete(applications).where(eq(applications.applicantId, blockedId));
+  await db.delete(blocks).where(eq(blocks.blockerId, blockedId));
+  await db.delete(blocks).where(eq(blocks.blockedId, blockedId));
   await db.delete(users).where(eq(users.email, hostEmail));
   await db.delete(users).where(eq(users.email, applicantEmail));
   await db.delete(users).where(eq(users.email, unverifiedEmail));
+  await db.delete(users).where(eq(users.email, blockedEmail));
 });
+
+async function applicationsByBlocked() {
+  return db.select().from(applications).where(and(eq(applications.postingId, openPostingId), eq(applications.applicantId, blockedId)));
+}
 
 describe("applyToPosting", () => {
   it("creates a pending application for a verified, non-host applicant", async () => {
@@ -118,5 +134,38 @@ describe("applyToPosting", () => {
       .from(applications)
       .where(eq(applications.postingId, fullPostingId));
     expect(rows).toHaveLength(0);
+  });
+
+  // 045 (ADR 0017): block enforcement.
+  it("refuses when the host has blocked the applicant, creating nothing (neutral message)", async () => {
+    const [block] = await db.insert(blocks).values({ blockerId: hostId, blockedId }).returning({ id: blocks.id });
+    mockedAuth.mockResolvedValueOnce(fakeSession(blockedEmail));
+    const result = await applyToPosting(openPostingId, {});
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toMatch(/can't apply/i);
+      expect(result.error).not.toMatch(/block/i);
+    }
+    expect(await applicationsByBlocked()).toHaveLength(0);
+    await db.delete(blocks).where(eq(blocks.id, block.id));
+  });
+
+  it("refuses in the opposite direction (applicant blocked the host)", async () => {
+    const [block] = await db.insert(blocks).values({ blockerId: blockedId, blockedId: hostId }).returning({ id: blocks.id });
+    mockedAuth.mockResolvedValueOnce(fakeSession(blockedEmail));
+    const result = await applyToPosting(openPostingId, {});
+    expect(result.success).toBe(false);
+    expect(await applicationsByBlocked()).toHaveLength(0);
+    await db.delete(blocks).where(eq(blocks.id, block.id));
+  });
+
+  it("allows the application once the block is lifted (unblockedAt set)", async () => {
+    const [block] = await db.insert(blocks).values({ blockerId: hostId, blockedId }).returning({ id: blocks.id });
+    await db.update(blocks).set({ unblockedAt: new Date() }).where(eq(blocks.id, block.id));
+    mockedAuth.mockResolvedValueOnce(fakeSession(blockedEmail));
+    const result = await applyToPosting(openPostingId, {});
+    expect(result.success).toBe(true);
+    expect(await applicationsByBlocked()).toHaveLength(1);
+    await db.delete(blocks).where(eq(blocks.id, block.id));
   });
 });

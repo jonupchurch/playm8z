@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { applications, conversations, messages, notifications, postings, users } from "@/db/schema";
+import { applications, blocks, conversations, messages, notifications, postings, users } from "@/db/schema";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 const { auth } = await import("@/auth");
@@ -72,6 +72,8 @@ describe("acceptRequest (integration)", () => {
       await db.delete(conversations).where(eq(conversations.id, id));
     }
     await db.delete(applications).where(eq(applications.applicantId, applicantId));
+    await db.delete(blocks).where(eq(blocks.blockerId, hostId));
+    await db.delete(blocks).where(eq(blocks.blockedId, hostId));
     await db.delete(postings).where(eq(postings.hostId, hostId));
     await db.delete(users).where(eq(users.email, hostEmail));
     await db.delete(users).where(eq(users.email, applicantEmail));
@@ -268,5 +270,48 @@ describe("acceptRequest (integration)", () => {
     // The applicant is the actor here; the host's side is the synthesized view.
     const rows = await db.select().from(notifications).where(eq(notifications.userId, applicantId));
     expect(rows.filter((r) => r.targetRef === `/listing/${posting.id}`)).toHaveLength(0);
+  });
+
+  // 045 (ADR 0017): block enforcement -- an accept that would put a blocked pair on a
+  // roster is refused atomically (seats/status unchanged), in either block direction.
+  it("refuses the accept under a block, leaving seats and status unchanged (both directions)", async () => {
+    const seeded = await seedPendingApplication();
+
+    for (const [blockerId, blockedId] of [
+      [hostId, applicantId],
+      [applicantId, hostId],
+    ]) {
+      const [block] = await db.insert(blocks).values({ blockerId, blockedId }).returning({ id: blocks.id });
+      mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+      const result = await acceptRequest({ applicationId: seeded.applicationId });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toMatch(/can't accept/i);
+        expect(result.error).not.toMatch(/block/i);
+      }
+
+      const [application] = await db.select().from(applications).where(eq(applications.id, seeded.applicationId));
+      expect(application.status).toBe("pending");
+      const [posting] = await db.select().from(postings).where(eq(postings.id, seeded.postingId));
+      expect(posting.seatsOpen).toBe(1);
+      expect(posting.status).not.toBe("full");
+
+      await db.delete(blocks).where(eq(blocks.id, block.id));
+    }
+  });
+
+  it("allows the accept once the block is lifted, decrementing seats", async () => {
+    const seeded = await seedPendingApplication();
+    const [block] = await db.insert(blocks).values({ blockerId: hostId, blockedId: applicantId }).returning({ id: blocks.id });
+    await db.update(blocks).set({ unblockedAt: new Date() }).where(eq(blocks.id, block.id));
+
+    mockedAuth.mockResolvedValueOnce(fakeSession(hostEmail));
+    const result = await acceptRequest({ applicationId: seeded.applicationId });
+    expect(result.success).toBe(true);
+    if (result.success) createdConversationIds.push(result.conversationId);
+
+    const [posting] = await db.select().from(postings).where(eq(postings.id, seeded.postingId));
+    expect(posting.seatsOpen).toBe(0);
+    await db.delete(blocks).where(eq(blocks.id, block.id));
   });
 });

@@ -50,7 +50,17 @@ now conflict-safe (a duplicate add is a benign "already in your list"),
 and the retired `users.gamesPlayed` column is dropped for good (its
 defunct backfill code retired with it). Also fixed a 042 regression on
 the way in: the signup-onboarding e2e still asserted the retired column
-and had reddened `main`.
+and had reddened `main`. Feature 44 (polymorphic-ref purge helper, ADR
+0016... 0017-adjacent) extracts the news hard-delete's inline `likes`
+purge into a shared, documented `purgePolymorphicRefs()` (purges likes,
+preserves audit/warnings/reports) so the next hard-delete type inherits
+it — preventive, no live orphan today. Feature 45 (enforce blocks, ADR
+0017, tech-debt #1) closes a trust/safety gap: the bidirectional block
+check now guards the four party/listing interaction write paths (apply,
+ask-question, invite, accept), fail-closed with neutral messages — a
+block finally stops interaction everywhere, not just DMs/notifications.
+Also enabled Vercel Web Analytics + Speed Insights (operator-facing
+observability, no patch note).
 **Last updated**: 2026-07-18
 
 ## Where things stand
