@@ -39,6 +39,9 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   always wins). The old `users.gamesPlayed` column is retired (kept, not dropped).
 
 ### Changed
+- **News posts without an uploaded cover image now show a default header image** instead of a
+  plain gradient — patch notes included. Any post that hasn't had a real image uploaded falls back
+  to the shared default header; uploading a cover image still overrides it. (Cosmetic — no Patch Notes post.)
 - **The news editor's "Delete" button is now labeled "Unpublish"** (feature 041,
   [ADR 0014](docs/adr/0014-owner-marker-and-scoped-hard-delete.md)). It always
   only moved a post to draft (nothing is hard-deleted, [ADR 0005](docs/adr/0005-no-hard-deletes.md));

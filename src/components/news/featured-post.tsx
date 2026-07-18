@@ -22,7 +22,7 @@ export function FeaturedPost({ post }: { post: NewsPostRow }) {
     >
       <div
         className="relative min-h-60"
-        style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
+        style={newsCoverStyle(post.cover)}
       >
         <span className="absolute top-4 left-4 rounded-md bg-white/90 px-2.5 py-1 font-mono text-[10px] font-bold text-bg">
           📌 Featured

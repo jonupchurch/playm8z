@@ -280,7 +280,7 @@ export function NewsPostEditor({
         <div className="flex flex-col gap-5">
           <div>
             <label className="mb-2.5 block text-[13px] font-bold text-text">Cover</label>
-            <div className="mb-2.5 h-30 rounded-2xl" style={newsCoverStyle(cover, cover)} />
+            <div className="mb-2.5 h-30 rounded-2xl" style={newsCoverStyle(cover)} />
             <div className="mb-2.5 flex items-center gap-2">
               <label
                 htmlFor="news-cover-upload"
@@ -535,7 +535,7 @@ export function NewsPostEditor({
         <div className="sticky top-6">
           <div className="mb-3 font-mono text-[10px] tracking-wider text-text-dim uppercase">Feed preview</div>
           <div className="overflow-hidden rounded-2xl border border-border bg-surface-2">
-            <div className="relative h-30" style={newsCoverStyle(cover, cover)}>
+            <div className="relative h-30" style={newsCoverStyle(cover)}>
               {featured && (
                 <span className="absolute top-2.5 left-2.5 rounded-md bg-[#ffb000] px-2.5 py-1 font-mono text-[10px] font-bold text-bg">
                   📌 Pinned

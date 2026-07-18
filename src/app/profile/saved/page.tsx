@@ -136,7 +136,7 @@ export default async function SavedListingsPage() {
               <div key={article.newsPostId} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface">
                 <div
                   className="h-24"
-                  style={newsCoverStyle(article.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
+                  style={newsCoverStyle(article.cover)}
                 />
                 <div className="flex flex-1 flex-col p-4.5">
                   <div className="mb-2 flex items-center justify-between gap-2">

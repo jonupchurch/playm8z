@@ -20,7 +20,7 @@ export function NewsPostCard({ post }: { post: NewsPostRow }) {
     >
       <div
         className="relative h-32.5"
-        style={newsCoverStyle(post.cover, `linear-gradient(135deg, ${color}, var(--color-accent-2))`)}
+        style={newsCoverStyle(post.cover)}
       >
         {post.upcoming && (
           <span className="absolute top-3 left-3 rounded-md bg-info px-2.5 py-1 font-mono text-[10px] font-bold text-bg">
